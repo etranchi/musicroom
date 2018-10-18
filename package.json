@@ -1,0 +1,27 @@
+{
+	"name": "music_room",
+	"version": "1.0.0",
+	"description": "Project Music Room 42",
+	"authors": [
+		"Kevin Vignau <kvignau@student.42.fr>",
+		"Jules Tranchier <jtranchi@student.42.fr>",
+		"Etienne Tranchier <etranchi@student.42.fr>",
+		"Damien Galidie <dgalide@student.42.fr>"
+	],
+	"main": "server.js",
+	"scripts": {
+		"start": "node server.js"
+	},
+	"dependencies": {
+		"express": "^4.16.4",
+		"passport": "0.4.0",
+		"passport-facebook-token": "3.3.0",
+		"passport-twitter-token": "1.3.0",
+		"passport-http-bearer": "1.0.1",
+		"passport-local": "1.0.0",
+		"passport-strategy": "1.0.0"
+	},
+	"devDependencies": {
+		"nodemon": "^1.18.4"
+	}
+}
