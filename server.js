@@ -1,16 +1,18 @@
-'use strict';
-
+'use strict'
 const express = require('express');
-
-// Constants
-const PORT = 4242;
-const HOST = '0.0.0.0';
-
-// App
 const app = express();
-app.get('/', (req, res) => {
+const oauth = require('./modules/oauth/routes');
+const config = require('./config/config.json');
+
+module.exports = function() {
+  var app = express();
+  return app;
+};
+
+app.use('/oauth', oauth);
+
+
+app.get('/', ( req, res) =>  {
 	res.json(403, {'jules':'toto'});
 });
-
-app.listen(PORT, HOST);
-console.log(`Running on http://${HOST}:${PORT}`);
+app.listen(config.port, config.host);
