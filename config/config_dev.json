@@ -6,7 +6,7 @@
 		"clientSecret": "",
 		"callbackURL": "/oauth/deezer/callback",
 		"scope": [
-			"basic_access", 
+			"basic_access",
 			"email"
 		]
 	},
