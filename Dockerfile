@@ -13,4 +13,4 @@ COPY package*.json ./
 # COPY . .
 ADD . .
 EXPOSE 4242
-CMD [ "nodemon", "-L" ]
+CMD [ "nodemon", "-L"]
