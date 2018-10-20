@@ -20,7 +20,7 @@ function(accessToken, refreshToken, profile, done) {
 
 router.get('/',
 	   	passport.authenticate('deezer'), 
-		(req , res) => {res.json(200, {'/oauth/deezer': 'working'});});
+		controller.index);
 
 router.get('/callback',
 		passport.authenticate('deezer', { session: false, failureRedirect: '/login/error' }),
