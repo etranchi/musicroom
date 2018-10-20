@@ -8,7 +8,7 @@ const db = require('./db/mongo.js');
 app.use('/', routes);
 
 app.get('/', ( req, res) =>  {
-	res.json(403, {'jules':'toto'});
+	res.status(200).json({'jules':'toto'});
 });
 
 module.exports = app;
