@@ -1,3 +1,5 @@
+const playlist = require('./model');
+
 exports.getPlaylists = (req, res) => {
 	res.json(
 			[
