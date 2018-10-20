@@ -8,18 +8,20 @@
 		"Etienne Tranchier <etranchi@student.42.fr>",
 		"Damien Galidie <dgalide@student.42.fr>"
 	],
-	"main": "server.js",
+	"main": "./bin/start",
 	"scripts": {
-		"start": "node server.js"
+		"start": "node ./bin/start"
 	},
 	"dependencies": {
 		"express": "^4.16.4",
+		"express-session": "^1.15.6",
 		"passport": "0.4.0",
+		"passport-deezer": "0.2.0",
 		"passport-facebook-token": "3.3.0",
-		"passport-twitter-token": "1.3.0",
 		"passport-http-bearer": "1.0.1",
 		"passport-local": "1.0.0",
-		"passport-strategy": "1.0.0"
+		"passport-strategy": "1.0.0",
+		"passport-twitter-token": "1.3.0"
 	},
 	"devDependencies": {
 		"nodemon": "^1.18.4"
