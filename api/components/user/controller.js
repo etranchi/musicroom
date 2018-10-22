@@ -9,3 +9,14 @@ exports.getUsers = async (req, res) => {
 		res.status(400).send(err)
 	}
 }
+
+exports.postUser = async (req, res) => {
+	try {
+		console.log(req.body);
+		let user = await modelManager.createUser(req.body);
+		res.status(200).json("user created");
+	} catch (err) {
+		console.log("ERROR");
+		res.status(400).send(err)
+	}
+}

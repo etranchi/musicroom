@@ -9,7 +9,7 @@ router.get('/', controller.getUsers);
 
 // router.get('/:id', controller.getUserById);
 
-// router.post('/', controller.postUser);
+router.post('/', controller.postUser);
 
 // router.post('/register', controller.registerUser);
 

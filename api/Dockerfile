@@ -5,7 +5,6 @@ RUN echo "deb http://deb.debian.org/debian stretch main" >> /etc/apt/sources.lis
 RUN apt-get update && apt-get install -y vim htop net-tools build-essential libsodium-dev
 WORKDIR /usr/src/musicroom
 RUN npm install -g nodemon
-RUN mkdir -p /data/db
 
 COPY package*.json ./
 # If you are building your code for production
@@ -13,5 +12,6 @@ COPY package*.json ./
 
 # COPY . .
 ADD . .
+RUN npm install
 EXPOSE 4242
 CMD ["nodemon", "-L"]
