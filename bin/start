@@ -1,6 +1,0 @@
-#!/usr/bin/env node
-const app = require('../app');
-const config = require('../config/config.json');
-
-app.listen(config.port, config.host);
-

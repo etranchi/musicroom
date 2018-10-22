@@ -1,0 +1,20 @@
+version: '2.2'
+services:
+  app:
+    container_name: music_room
+    restart: always
+    build: api/.
+    volumes:
+      - ./api:/usr/src/musicroom
+    ports:
+      - '4242:4242'
+    links:
+      - mongo
+  mongo:
+    container_name: mongo
+    image: mongo
+    build: db/.
+    volumes:
+      - ./data:/data/db
+    ports:
+      - '27017:27017'

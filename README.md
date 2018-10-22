@@ -4,10 +4,7 @@ STEP 1:
 	- cp config/config_dev.json config/config.json -> and add all credentials
 
 STEP 2:
-	- docker build -t music_room .
-
-STEP 3:
-	- docker run -p 4242:4242 -v $(PWD):/usr/src/musicroom music_room
+	- docker-compose up --build
 
 ACCESS THE CONTAINER:
 	- docker exec -it <container-id> /bin/bash

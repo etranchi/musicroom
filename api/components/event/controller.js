@@ -1,7 +1,7 @@
 'use strict'
 
 exports.getEvents = (req, res) => {
-	res.json(200,
+	res.status(200).json(
 			[
 				{
 					'id': '1',
@@ -15,7 +15,7 @@ exports.getEvents = (req, res) => {
 }
 
 exports.getEventById = (req, res) => {
-	res.json(200,
+	res.status(200).json(
 			{
 				'id' : '1',
 				'eventname': '42 folies'
@@ -23,7 +23,7 @@ exports.getEventById = (req, res) => {
 }
 
 exports.postEvent = (req, res) => {
-	res.json(200,
+	res.status(200).json(
 			{
 				'id': 'last',
 				'eventname': 'new event name'
@@ -31,7 +31,7 @@ exports.postEvent = (req, res) => {
 }
 
 exports.putEventById = (req, res) => {
-	res.json(
+	res.status(200).json(
 			{
 				'id': '1',
 				'eventname' : 'new event name'
@@ -39,7 +39,7 @@ exports.putEventById = (req, res) => {
 }
 
 exports.deleteEventById = (req, res) => {
-	res.json(200, 
+	res.status(200).json(
 			{
 				'deleted': 'success'
 			});
