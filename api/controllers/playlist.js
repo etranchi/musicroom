@@ -1,49 +1,36 @@
 const playlist = require('../models/playlist');
 
 exports.getPlaylists = async (req, res) => {
-	try {
-		let playlists = await manager.getUsers();
-		res.status(200).json(playlists);
-	} catch (err) {
-		res.status(400).send(err)
-	}
+	playlist.find(null, (err, event) => {
+			if (err) res.status(400).json(err);
+			res.status(200).json(event);
+	});
 }
 
 exports.getPlaylistById = (req, res) => {
-	res.json(
-			{
-				'id': '1',
-				'musics':
-					[
-					'toto and the jumbo',
-					'titi and the jumbi'
-					]
-			});
+	playlist.findById(req.params.id, (err, event) => {
+		if (err) res.status(400).json(err);
+		res.status(200).json(event);
+	})
 }
 
 exports.postPlaylist = (req, res) => {
-	res.json(
-			{
-				'id' : 'last',
-				'musics':
-					[
-					'toto and the jumbo',
-					'titi and the jumbi'
-					]
-			});
+	playlist.create(req.body, (err, event) => {
+		if(err) return res.status(400).json(err);
+		res.status(200).json(event);
+	});
 }
 
 exports.putPlaylistById = (req, res) => {
-	res.json(
-			{
-				'id' : '1',
-				'data': 'newdata'
-			});
+	playlist.findByIdAndUpdate(req.params.id, req.body, {new: true},  (err, event) => {
+		if(err) return res.status(400).json(err);
+		res.status(200).json(event);
+	});
 }
 
 exports.deletePlaylistById = (req, res) => {
-	res.json(
-			{
-				'delete': 'success'
-			});
+	playlist.findByIdAndRemove(req.params.id, (err, event) => {
+		if(err) return res.status(400).json(err);
+		res.status(200).json(event);
+	});
 }
