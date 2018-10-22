@@ -1,7 +1,7 @@
 'use strict'
 const express = require('express');
 const router = express.Router();
-const deezer = require('./deezer/routes');
+const deezer = require('../routes/deezer');
 
 
 router.use('/deezer', deezer);

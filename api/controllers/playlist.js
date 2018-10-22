@@ -1,6 +1,4 @@
-'use strict'
-
-const playlist = require('../../models/playlist');
+const playlist = require('../models/playlist');
 
 exports.getPlaylists = async (req, res) => {
 	try {

@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const oauth = require('./components/oauth/routes.js');
-const user = require('./components/user/routes.js');
-const events = require('./components/event/routes.js');
-const music = require('./components/music/routes.js');
-const playlist = require('./components/playlist/routes.js');
+const oauth = require('./routes/oauth');
+const user = require('./routes/user');
+const events = require('./routes/event');
+const music = require('./routes/music');
+const playlist = require('./routes/playlist');
 
 router.use('/oauth', oauth);
 
