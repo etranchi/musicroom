@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const mongoDB = 'mongodb://172.18.0.2:27017/music_room';
+const mongoDB = 'mongodb://mongo/music_room';
 
 mongoose.connect(mongoDB, { useNewUrlParser: true });
 

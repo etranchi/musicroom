@@ -19,5 +19,6 @@ app.get('/', ( req, res) =>  {
 	res.status(200).json({'jules':'toto'});
 });
 
-module.exports = app;
 app.listen(config.port, config.host);
+
+module.exports = app;
