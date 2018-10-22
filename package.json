@@ -8,9 +8,9 @@
 		"Etienne Tranchier <etranchi@student.42.fr>",
 		"Damien Galidie <dgalide@student.42.fr>"
 	],
-	"main": "./bin/start",
+	"main": "./app.js",
 	"scripts": {
-		"start": "node ./bin/start"
+		"start": "node ./app.js"
 	},
 	"dependencies": {
 		"express": "^4.16.4",

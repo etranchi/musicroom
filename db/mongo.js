@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const mongoDB = 'mongodb://127.0.0.1/music_room';
+const mongoDB = 'mongodb://172.17.0.2:27017/music_room';
 
-mongoose.connect(mongoDB);
+mongoose.connect(mongoDB, { useNewUrlParser: true });
 
 mongoose.Promise = global.Promise;
 

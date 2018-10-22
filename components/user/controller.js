@@ -1,51 +1,11 @@
-exports.getUsers = (req, res) => {
-	res.json(200,
-				[
-				{
-					'id': '1',
-					'name': 'Jules'
-				},
-				{
-					'id': '2',
-					'name': 'toto'
-				}
-				]);
-}
+const modelManager = require('./modelManager');
 
-exports.getUserById = (req, res) => {
-	res.json(200,
-			{
-					'id': '1',
-					'name': 'Jules'
-			});
-}
-
-exports.postUser = (req, res) => {
-	res.json(200,
-			{
-					'id': 'last',
-					'name': 'yourname'
-			})
-}
-
-exports.registerUser = (req, res) => {
-	res.json(200,
-			{
-				'response': 'success'
-			});
-}
-
-exports.putUserById = (req, res) => {
-	res.json(200,
-			{
-				'id' : '1',
-				'name' : 'newname'
-			});
-}
-
-exports.deleteUserById = (req, res) => {
-	res.json(200,
-			{
-				'delete': 'success'
-			});
+exports.getUsers = async (req, res) => {
+	try {
+		let user = await modelManager.getUsers();
+		res.status(200).json(user);
+	} catch (err) {
+		console.log("ERROR");
+		res.status(400).send(err)
+	}
 }

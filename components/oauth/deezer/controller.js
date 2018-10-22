@@ -1,13 +1,13 @@
 exports.index = (req, res) => {
-	res.json(200, {'deezer_res' : 'toto'});
+	res.status(200).json({'deezer_res' : 'toto'});
 }
 
 exports.callback = (req, res) => {
-	res.json(200, {'login': 'success'});
+	res.status(200).json({'login': 'success'});
 }
 
 exports.login_error = (req,res) => {
-	res.json(403, {'login': 'failed'});
+	res.status(403).json({'login': 'failed'});
 }
 
 
