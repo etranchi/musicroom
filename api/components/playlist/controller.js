@@ -1,26 +1,14 @@
-const playlist = require('./model');
+'use strict'
 
-exports.getPlaylists = (req, res) => {
-	res.json(
-			[
-			{
-				'id': '1',
-				'musics':
-					[
-					'toto and the jumbo',
-					'titi and the jumbi'
-					]
-			},
-			{
-				'id': '2',
-				'musics':
-					[
-					'tutu and the jumbu',
-					'tata and the jumba'
-					]
-			},
+const playlist = require('../../models/playlist');
 
-			]);
+exports.getPlaylists = async (req, res) => {
+	try {
+		let playlists = await manager.getUsers();
+		res.status(200).json(playlists);
+	} catch (err) {
+		res.status(400).send(err)
+	}
 }
 
 exports.getPlaylistById = (req, res) => {

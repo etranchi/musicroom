@@ -1,9 +1,12 @@
-const modelManager = require('./modelManager');
+const user = require('../../models/user.js');
 
-exports.getUsers = async (req, res) => {
+exports.getUsers = (req, res) => {
 	try {
-		let user = await modelManager.getUsers();
-		res.status(200).json(user);
+		user.find(null, (err, user) => {
+			if (err)
+				res.status(400).json(err)
+			res.status(200).json(user);
+		});
 	} catch (err) {
 		console.log("ERROR");
 		res.status(400).send(err)
@@ -13,7 +16,7 @@ exports.getUsers = async (req, res) => {
 exports.postUser = async (req, res) => {
 	try {
 		console.log(req.body);
-		let user = await modelManager.createUser(req.body);
+		let user = await manager.createUser(req.body);
 		res.status(200).json("user created");
 	} catch (err) {
 		console.log("ERROR");
