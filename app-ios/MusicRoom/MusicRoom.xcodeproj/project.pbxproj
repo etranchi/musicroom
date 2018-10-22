@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		44DDC15C2B65D5FA9ACDDDBA /* Pods_MusicRoom.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D51DCE12F8FB175C830AD515 /* Pods_MusicRoom.framework */; };
 		8F364B83217E5B9100B57FC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F364B82217E5B9100B57FC8 /* AppDelegate.swift */; };
 		8F364B85217E5B9100B57FC8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F364B84217E5B9100B57FC8 /* ViewController.swift */; };
 		8F364B88217E5B9100B57FC8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F364B86217E5B9100B57FC8 /* Main.storyboard */; };
@@ -24,6 +25,9 @@
 		8F364B8C217E5B9200B57FC8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8F364B8F217E5B9200B57FC8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8F364B91217E5B9200B57FC8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A8CDC1A465B679D47E207D9A /* Pods-MusicRoom.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicRoom.release.xcconfig"; path = "Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom.release.xcconfig"; sourceTree = "<group>"; };
+		D1916F2EAA33E337ADF4970D /* Pods-MusicRoom.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicRoom.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom.debug.xcconfig"; sourceTree = "<group>"; };
+		D51DCE12F8FB175C830AD515 /* Pods_MusicRoom.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MusicRoom.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,17 +35,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				44DDC15C2B65D5FA9ACDDDBA /* Pods_MusicRoom.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1862AF345A10C88729006599 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D51DCE12F8FB175C830AD515 /* Pods_MusicRoom.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		8F364B76217E5B9100B57FC8 = {
 			isa = PBXGroup;
 			children = (
 				8F364B81217E5B9100B57FC8 /* MusicRoom */,
 				8F364B80217E5B9100B57FC8 /* Products */,
+				F12E4C824B6042C313688697 /* Pods */,
+				1862AF345A10C88729006599 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -67,6 +82,15 @@
 			path = MusicRoom;
 			sourceTree = "<group>";
 		};
+		F12E4C824B6042C313688697 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				D1916F2EAA33E337ADF4970D /* Pods-MusicRoom.debug.xcconfig */,
+				A8CDC1A465B679D47E207D9A /* Pods-MusicRoom.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -74,9 +98,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8F364B94217E5B9200B57FC8 /* Build configuration list for PBXNativeTarget "MusicRoom" */;
 			buildPhases = (
+				5D362D897625AC16A361D48A /* [CP] Check Pods Manifest.lock */,
 				8F364B7B217E5B9100B57FC8 /* Sources */,
 				8F364B7C217E5B9100B57FC8 /* Frameworks */,
 				8F364B7D217E5B9100B57FC8 /* Resources */,
+				3E1CFFCC700128C045A922E9 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -132,6 +158,47 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3E1CFFCC700128C045A922E9 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom-resources.sh",
+				"${PODS_ROOT}/Deezer/deezer-ios-sdk-0.8.2/deezer-ios-0.8.2/Resources/DeezerLibClose.png",
+				"${PODS_ROOT}/Deezer/deezer-ios-sdk-0.8.2/deezer-ios-0.8.2/Resources/DeezerLibClose@2x.png",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/DeezerLibClose.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/DeezerLibClose@2x.png",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5D362D897625AC16A361D48A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MusicRoom-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8F364B7B217E5B9100B57FC8 /* Sources */ = {
@@ -284,6 +351,7 @@
 		};
 		8F364B95217E5B9200B57FC8 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D1916F2EAA33E337ADF4970D /* Pods-MusicRoom.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -301,6 +369,7 @@
 		};
 		8F364B96217E5B9200B57FC8 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A8CDC1A465B679D47E207D9A /* Pods-MusicRoom.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
