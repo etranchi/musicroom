@@ -1,0 +1,21 @@
+{
+	"port": 4242,
+	"host": "0.0.0.0",
+	"deezer": {
+		"clientID": "306704",
+		"clientSecret": "3c34bd9fa50ab2f38ebc3f59855df5a3",
+		"callbackURL": "/oauth/deezer/callback",
+		"scope": [
+			"basic_access", 
+			"email"
+		]
+	},
+	"db": {
+		"type": "mysql",
+		"name": "musicroom",
+		"host": "127.0.0.1",
+		"user": "root",
+		"password": "",
+		"umzug": true
+	}
+}
