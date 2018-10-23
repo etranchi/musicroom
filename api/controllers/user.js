@@ -1,15 +1,27 @@
-const user = require('../models/user');
+const model = require('../models/user');
 
-exports.getUsers = (req, res) => {
-	user.find(null, (err, event) => {
-			if (err) res.status(400).json(err);
-			res.status(200).json(event);
-	});
+
+class User {
+
+	static async getUsers() {
+		try {
+			let user = await model.find();
+			return user;
+		} catch (err) {
+			console.log("Error: " + err);
+			throw (err);
+		}
+	}
+
+	static async postUser(user) {
+		try {
+			user.creationDate = Date();
+			return await model.create(user);
+		} catch (err) {
+			console.log("creation Error: " + err);
+			throw (err);
+		}
+	}
 }
 
-exports.postUser = async (req, res) => {
-	user.create(req.body, (err, event) => {
-		if(err) return res.status(400).json(err);
-		res.status(200).json(event);
-	});
-}
+module.exports = User;
