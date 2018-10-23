@@ -1,27 +1,22 @@
 const model = require('../models/user');
 
-
-class User {
-
-	static async getUsers() {
-		try {
-			let user = await model.find();
-			return user;
-		} catch (err) {
-			console.log("Error: " + err);
-			throw (err);
-		}
-	}
-
-	static async postUser(user) {
-		try {
-			user.creationDate = Date();
-			return await model.create(user);
-		} catch (err) {
-			console.log("creation Error: " + err);
-			throw (err);
-		}
+exports.getUsers = async (req, res) => {
+	try {
+		let user = await model.find();
+		res.status(200).send(user);
+	} catch (err) {
+		console.log("Error: " + err);
+		res.status(400).send(err);
 	}
 }
 
-module.exports = User;
+exports.postUser = async (req, res) => {
+	try {
+		let user = req.body;
+		user.creationDate = Date();
+		res.status(201).send(await model.create(user));
+	} catch (err) {
+		console.log("creation Error: " + err);
+		res.status(400).send(err);
+	}
+}
