@@ -10,5 +10,6 @@
 #define bridge_h
 #import "../DeezerSDK/include/Deezer+Compatibility.h"
 #import "../DeezerSDK/include/DZRPodcast.h"
+#import "../DeezerSDK/include/DZRRequestManager.h"
 
 #endif /* bridge_h */
