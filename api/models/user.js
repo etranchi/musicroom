@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
  
 const User = new Schema({
 	id : Schema.Types.ObjectId,
-	pseudo:{
+	login:{
 		type: String,
 		default: 'Created'
 	},
