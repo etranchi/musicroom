@@ -2,9 +2,13 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
  
 const Music = new Schema({
-  login: String,
-  email: String,
-  creationDate: Date
+	id: {
+		type: Number,
+		required: true
+	},
+	title: {
+		type: String,
+	}
 });
 
 module.exports = mongoose.model('music', Music);;

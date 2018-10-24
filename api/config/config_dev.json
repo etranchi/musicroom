@@ -3,6 +3,7 @@
 	"httpsPort": 4343,
 	"host": "0.0.0.0",
 	"deezer": {
+		"apiUrl": "https://api.deezer.com",
 		"clientID": "",
         "clientSecret": "",
 		"callbackURL": "/oauth/deezer/callback",
@@ -24,13 +25,5 @@
 			"photos",
 			"email"
 		]
-	},
-	"db": {
-		"type": "mysql",
-		"name": "musicroom",
-		"host": "127.0.0.1",
-		"user": "root",
-		"password": "",
-		"umzug": true
 	}
 }
