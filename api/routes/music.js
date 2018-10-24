@@ -10,4 +10,6 @@ router.get('/:id', musicController.getMusicById);
 
 router.post('/:id', musicController.postMusicVote);
 
+router.delete('/:id', musicController.deleteMusicById);
+
 module.exports = router;

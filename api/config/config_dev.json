@@ -24,13 +24,5 @@
 			"photos",
 			"email"
 		]
-	},
-	"db": {
-		"type": "mysql",
-		"name": "musicroom",
-		"host": "127.0.0.1",
-		"user": "root",
-		"password": "",
-		"umzug": true
 	}
 }
