@@ -1,6 +1,10 @@
 const model = require('../models/user');
+const fs 	= require('fs')
+  	, Log 	= require('log')
+  	, log 	= new Log('debug', fs.createWriteStream('user.log'));
 
 exports.getUsers = async (req, res) => {
+	log.info('getting user : %s', req.body.email);
 	try {
 		let user = await model.find();
 		res.status(200).send(user);
