@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 const User = new Schema({
   login: String,
   email: String,
-  creationDate: Date
+  creationDate: {type: Date, default: Date()}
 });
 
 module.exports = mongoose.model('user', User);
