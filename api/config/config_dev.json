@@ -4,7 +4,7 @@
 	"host": "0.0.0.0",
 	"deezer": {
 		"clientID": "",
-		"clientSecret": "",
+        "clientSecret": "",
 		"callbackURL": "/oauth/deezer/callback",
 		"scope": [
 			"basic_access",
@@ -13,7 +13,7 @@
 	},
 	"facebook": {
 		"clientID": "",
-		"clientSecret": "",
+        "clientSecret": "",
 		"callbackURL": "/oauth/facebook/callback",
 		"scope": [
 			"email"
