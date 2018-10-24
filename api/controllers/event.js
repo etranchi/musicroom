@@ -1,7 +1,4 @@
-// const mongoose = require('mongoose');
-// // const Event = mongoose.model('Event');
-// const Event = require('./model');
-const event = require('../../models/event');
+const event = require('../models/event');
 
 exports.getEvents = async (req, res) => {
 	event.find(null, (err, event) => {
