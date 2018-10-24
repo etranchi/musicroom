@@ -1,5 +1,13 @@
 'use strict'
 
+var fs = require('fs');
+var https = require('https');
+var privateKey  = fs.readFileSync('./sslcert/server.key', 'utf8');
+var certificate = fs.readFileSync('./sslcert/server.crt', 'utf8');
+
+var credentials = {key: privateKey, cert: certificate};
+
+
 const express = require('express');
 const app = express();
 const routes = require('./routes')
@@ -16,9 +24,12 @@ app.use(bodyParser.json());
 app.use('/', routes);
 
 app.get('/', ( req, res) =>  {
-	res.status(200).json({'jules':'toto'});
+	res.status(200).json({"music_room":"Here we are !"});
 });
 
-app.listen(config.port, config.host);
+var httpsServer = https.createServer(credentials, app);
 
-module.exports = app;
+httpsServer.listen(config.port, config.host);
+
+console.log("Server listen on " + config.httpsPort);
+module.exports = httpsServer;

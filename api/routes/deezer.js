@@ -3,9 +3,9 @@ const express = require('express')
 const router = express.Router()
 const passport = require('passport');
 const DeezerStrategy = require('passport-deezer').Strategy;
-const config = require('../../../config/config.json');
+const config = require('../config/config.json');
 const util = require('util');
-const controller = require('./controller');
+const controller = require('../controllers/deezer');
 
 passport.use(new DeezerStrategy({
 	clientID: config.deezer.clientID,
@@ -28,5 +28,6 @@ router.get('/callback',
 );
 
 router.get('/login/error', controller.login_error);
+
 module.exports = router;
 

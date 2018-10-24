@@ -1,4 +1,4 @@
-version: '2.2'
+version: '2'
 services:
   app:
     container_name: music_room
@@ -19,3 +19,4 @@ services:
       - ./db/data:/data/db
     ports:
       - '27017:27017'
+      
