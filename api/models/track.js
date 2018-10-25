@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
  
-const Music = new Schema({
+const Track = new Schema({
 	id: {
 		type: Number,
 		required: true
@@ -65,4 +65,4 @@ const Music = new Schema({
 	},
 });
 
-module.exports = mongoose.model('music', Music);;
+module.exports = mongoose.model('track', Track);
