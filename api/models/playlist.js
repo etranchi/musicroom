@@ -5,7 +5,8 @@ const Playlist = new Schema({
 	id: Schema.Types.ObjectId,
 	status:{
 		type: String,
-		enum: ['Active', 'Suspended', 'Created']
+		enum: ['Active', 'Suspended', 'Created'],
+		default: 'Created'
 	}
 });
 
