@@ -1,5 +1,5 @@
 const modelEvent = require('../models/event');
-
+// geolib pour le calcul de radius
 module.exports = {
 	getEvents: async (req, res) => {
 		try {

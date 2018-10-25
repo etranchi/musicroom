@@ -29,7 +29,7 @@ module.exports = {
 	postPlaylist: (req, res) => {
 		playlistModel.create(req.body, (err, event) => {
 			if(err) return res.status(400).json(err);
-			res.status(200).json(event);
+			res.status(201).json(event);
 		});
 	},
 	putPlaylistById: (req, res) => {

@@ -18,6 +18,7 @@ const Event = new Schema({
 			long: {type: Number}
 		}
 	},
+	visibility: {type:Number},
 	public: {type: Boolean},
 	creation_date: {type: Date, default: Date.now},
 	playlist_id: {type: String, required: true},
