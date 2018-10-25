@@ -19,6 +19,7 @@ class MyProfileViewController: UIViewController, UISearchBarDelegate , UITableVi
     var profilItem : UIBarButtonItem?
     var profileIsVisible : Bool = false
     var selectedCell = 0
+    var apiManager : APIManager = APIManager()
     
     @IBAction func panAction(_ sender: UISwipeGestureRecognizer) {
         print("pan")
@@ -35,6 +36,7 @@ class MyProfileViewController: UIViewController, UISearchBarDelegate , UITableVi
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         searchBar = UISearchBar()
         searchBar?.sizeToFit()
         searchBar?.delegate = self
@@ -55,7 +57,9 @@ class MyProfileViewController: UIViewController, UISearchBarDelegate , UITableVi
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         displayProfile()
         let vc = ContainerViewController()
-        vc.data = settings[indexPath.row]
+        if settings[indexPath.row] == "Musics" {
+            vc.data = apiManager.getMusic()
+        }
         self.title = settings[indexPath.row]
         viewToHideProfile.insertSubview(vc.view, at: 0)
     }

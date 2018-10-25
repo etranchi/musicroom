@@ -9,13 +9,14 @@
 import UIKit
 
 class ContainerViewController: UITableViewController {
-    var data : String? {
+    var data : [NSDictionary]? {
         didSet {
             if let d = data {
-                self.title = d
+                self.tableView.reloadData()
             }
         }
     }
+    var APIManager : APIManager?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,18 +42,19 @@ class ContainerViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 1
+        return (data?.count)!
     }
 
-    /*
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
 
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MusicCell") as! MusicCell
+        cell.data = data?[indexPath.row]
+        
         // Configure the cell...
 
         return cell
     }
-    */
+
 
     /*
     // Override to support conditional editing of the table view.

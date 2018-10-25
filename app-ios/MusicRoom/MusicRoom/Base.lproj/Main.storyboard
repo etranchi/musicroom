@@ -19,13 +19,30 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="KiK-Ho-Caw">
-                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="MusicCell" rowHeight="108" id="KiK-Ho-Caw" customClass="MusicCell" customModule="MusicRoom" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="375" height="108"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="KiK-Ho-Caw" id="CSW-sI-Zfp">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="107.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Titre" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wqT-cX-erz">
+                                            <rect key="frame" x="166" y="43" width="42" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
                                 </tableViewCellContentView>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="wqT-cX-erz" secondAttribute="bottom" constant="44" id="OY8-1w-Axz"/>
+                                    <constraint firstAttribute="trailing" secondItem="wqT-cX-erz" secondAttribute="trailing" constant="167" id="SUW-w9-uMa"/>
+                                    <constraint firstItem="wqT-cX-erz" firstAttribute="top" secondItem="KiK-Ho-Caw" secondAttribute="top" constant="43" id="gZl-jG-g5E"/>
+                                    <constraint firstItem="wqT-cX-erz" firstAttribute="leading" secondItem="KiK-Ho-Caw" secondAttribute="leading" constant="166" id="o4Q-mq-F7R"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="titreLabel" destination="wqT-cX-erz" id="5DA-ye-TfF"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -36,7 +53,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dEj-vB-HTs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2103" y="20"/>
+            <point key="canvasLocation" x="-2103.1999999999998" y="19.340329835082461"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -156,7 +173,6 @@
                         <outlet property="tableView" destination="dHq-a8-L1J" id="VwL-AP-DiE"/>
                         <outlet property="trailingProfile" destination="cp4-0q-WCd" id="vyr-mh-oI3"/>
                         <outlet property="viewToHideProfile" destination="SC8-et-GkB" id="GYp-me-NzT"/>
-                        <segue destination="q99-mI-aZX" kind="show" identifier="GoToDetails" id="qpU-BM-BVH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="a9P-qR-NzR" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -191,7 +207,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0aZ-FS-iQa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="140" y="170"/>
+            <point key="canvasLocation" x="-4" y="331"/>
         </scene>
     </scenes>
 </document>
