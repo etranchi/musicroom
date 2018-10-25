@@ -15,7 +15,6 @@ exports.getMusicById = (req, res) => {
 			res.json(err)
 		else if (event == null) 
 		{
-			console.log('getting from deezer');
 			request(
 			{uri: config.deezer.apiUrl + '/track/' + req.params.id},
 			(err, head, body) => {
@@ -27,16 +26,13 @@ exports.getMusicById = (req, res) => {
 				});
 			})
 		} else
-		{
 			res.status(200).json(event);
-		}
 	});
 }
 
 exports.postMusicVote = (req, res) => {
 	music.create(req.body, (err, event) => {
 		if(err) return res.status(400).json(err);
-		console.log(req.body);
 		res.status(200).json(event);
 	});
 }
