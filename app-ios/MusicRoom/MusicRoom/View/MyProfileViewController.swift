@@ -8,17 +8,28 @@
 
 import UIKit
 
-let settings = ["Musics", "Playlists", "Rooms", "Settings"]
+let settings = ["Home", "Musics", "Playlists", "Rooms", "Settings"]
 class MyProfileViewController: UIViewController, UISearchBarDelegate , UITableViewDelegate, UITableViewDataSource {
     
+    @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var viewToHideProfile: UIView!
     var searchBar : UISearchBar?
     var searchItem : UIBarButtonItem?
     var cancelItem : UIBarButtonItem?
     var profilItem : UIBarButtonItem?
     var profileIsVisible : Bool = false
-    var swipeGesture : UIPanGestureRecognizer?
+    var selectedCell = 0
     
+    @IBAction func panAction(_ sender: UISwipeGestureRecognizer) {
+        print("pan")
+        if sender.direction == .right && !profileIsVisible {
+            displayProfile()
+        }
+        if sender.direction == .left && profileIsVisible{
+            displayProfile()
+        }
+        
+    }
     @IBOutlet weak var trailingProfile: NSLayoutConstraint!
     @IBOutlet weak var leadingProfile: NSLayoutConstraint!
     
@@ -27,7 +38,7 @@ class MyProfileViewController: UIViewController, UISearchBarDelegate , UITableVi
         searchBar = UISearchBar()
         searchBar?.sizeToFit()
         searchBar?.delegate = self
-        swipeGesture = UIPanGestureRecognizer(target: viewToHideProfile, action: #selector(swipeAction))
+        tableView.selectRow(at: [0,selectedCell], animated: true, scrollPosition: UITableViewScrollPosition(rawValue: selectedCell)!)
         self.navigationItem.hidesSearchBarWhenScrolling = true
         searchItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButton(_:)))
         profilItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(displayProfile))
@@ -40,10 +51,13 @@ class MyProfileViewController: UIViewController, UISearchBarDelegate , UITableVi
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
-
-    @objc func swipeAction() {
-        print("swipppe")
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         displayProfile()
+        let vc = ContainerViewController()
+        vc.data = settings[indexPath.row]
+        self.title = settings[indexPath.row]
+        viewToHideProfile.insertSubview(vc.view, at: 0)
     }
     
     override func didReceiveMemoryWarning() {
@@ -67,9 +81,7 @@ class MyProfileViewController: UIViewController, UISearchBarDelegate , UITableVi
         profileIsVisible = !profileIsVisible
         UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseIn, animations: {
             self.view.layoutIfNeeded()
-        }) { (success) in
-            print("succes")
-        }
+        })
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

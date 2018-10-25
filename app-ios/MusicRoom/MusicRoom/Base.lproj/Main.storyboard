@@ -10,6 +10,34 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Container View Controller-->
+        <scene sceneID="CX5-Sg-vCR">
+            <objects>
+                <tableViewController id="q99-mI-aZX" customClass="ContainerViewController" customModule="MusicRoom" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="XB9-EG-WbO">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="KiK-Ho-Caw">
+                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="KiK-Ho-Caw" id="CSW-sI-Zfp">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="q99-mI-aZX" id="PxG-R5-8ry"/>
+                            <outlet property="delegate" destination="q99-mI-aZX" id="LgU-2K-vaO"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dEj-vB-HTs" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2103" y="20"/>
+        </scene>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
@@ -98,11 +126,13 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
                                 <connections>
-                                    <outletCollection property="gestureRecognizers" destination="W8s-Xz-KiH" appends="YES" id="gzm-R0-XPZ"/>
+                                    <outletCollection property="gestureRecognizers" destination="gCG-zk-aF1" appends="YES" id="2Sb-2H-nL7"/>
+                                    <outletCollection property="gestureRecognizers" destination="4cZ-NT-zVT" appends="YES" id="mzR-4L-ZGT"/>
                                 </connections>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="SC8-et-GkB" firstAttribute="leading" secondItem="Jbs-wC-h6j" secondAttribute="leading" id="5iH-qY-IIn"/>
                             <constraint firstItem="SC8-et-GkB" firstAttribute="centerX" secondItem="Jbs-wC-h6j" secondAttribute="centerX" id="7g0-NQ-CpC"/>
@@ -115,20 +145,33 @@
                             <constraint firstItem="SC8-et-GkB" firstAttribute="bottom" secondItem="Jbs-wC-h6j" secondAttribute="bottom" id="tl9-IN-aC4"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Jbs-wC-h6j"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="4cZ-NT-zVT" appends="YES" id="Onv-2C-w54"/>
+                            <outletCollection property="gestureRecognizers" destination="gCG-zk-aF1" appends="YES" id="p8b-nq-hi9"/>
+                        </connections>
                     </view>
                     <navigationItem key="navigationItem" id="bCt-JQ-aYF"/>
                     <connections>
                         <outlet property="leadingProfile" destination="5iH-qY-IIn" id="kgY-QM-5dn"/>
+                        <outlet property="tableView" destination="dHq-a8-L1J" id="VwL-AP-DiE"/>
                         <outlet property="trailingProfile" destination="cp4-0q-WCd" id="vyr-mh-oI3"/>
                         <outlet property="viewToHideProfile" destination="SC8-et-GkB" id="GYp-me-NzT"/>
+                        <segue destination="q99-mI-aZX" kind="show" identifier="GoToDetails" id="qpU-BM-BVH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="a9P-qR-NzR" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <screenEdgePanGestureRecognizer minimumNumberOfTouches="1" id="W8s-Xz-KiH">
+                <swipeGestureRecognizer direction="left" id="gCG-zk-aF1">
                     <connections>
-                        <action selector="displayProfile" destination="OGD-FZ-j9j" id="Z8I-h4-0Oe"/>
+                        <action selector="panAction:" destination="OGD-FZ-j9j" id="m3O-fx-5TW"/>
+                        <outlet property="delegate" destination="OGD-FZ-j9j" id="Oc7-WW-zmc"/>
                     </connections>
-                </screenEdgePanGestureRecognizer>
+                </swipeGestureRecognizer>
+                <swipeGestureRecognizer direction="right" id="4cZ-NT-zVT">
+                    <connections>
+                        <action selector="panAction:" destination="OGD-FZ-j9j" id="eZu-9b-Jbx"/>
+                        <outlet property="delegate" destination="OGD-FZ-j9j" id="9wl-pL-WOV"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="791.20000000000005" y="-230.73463268365819"/>
         </scene>
