@@ -15,7 +15,7 @@ class Crypto {
 	}
 
 	static createToken(user) {
-		const token = jwt.sign({
+		let token = jwt.sign({
 			id: user._id,
 			salt: user.salt
 			// expirationToken: expirationToken
@@ -23,6 +23,7 @@ class Crypto {
 		// {
 		// 	// expiresIn: expiresIn
 		// });
+		// token = Buffer.from(JSON.stringify({token: token}), 'utf8').toString('base64');
 		return token;
 	}
 }

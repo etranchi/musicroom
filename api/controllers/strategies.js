@@ -5,6 +5,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const config = require('../config/config.json');
 const Crypto = require('../modules/crypto');
 const modelUser = require('../models/user');
+const argon = require('argon2');
 
 module.exports = function () {
 	passport.use(new DeezerStrategy({
@@ -32,14 +33,12 @@ module.exports = function () {
             	console.log(err);
                 return done(null, false);
             }
-            //No user was found... so create a new user with values from Facebook (all the profile. stuff)
             if (!user) {
                 user = new modelUser({
                 	facebookId: profile.id,
                     email: profile.emails[0].value,
                     login: !profile.username ? profile.displayName : profile.username,
 					picture: profile.photos.length > 0 ? profile.photos[0].value : undefined,
-					salt: Crypto.randomString(16),
 					status: 'Active'
                 });
                 modelUser.create(user, function(err) {
@@ -50,7 +49,6 @@ module.exports = function () {
                     return done(null, user);
                 });
             } else {
-                //found user. Return
                 return done(null, user);
             }
         });
@@ -58,19 +56,27 @@ module.exports = function () {
 
 	passport.use(new LocalStrategy({
 		usernameField: 'email',
-        passwordField: 'password'
+        passwordField: 'password',
+        passReqToCallback: true,
+        session: false
 	},
-	function (email, password, cb) {
-        //this one is typically a DB call. Assume that the returned user object is pre-formatted and ready for storing in JWT
-        return UserModel.findOne({email, password})
-           .then(user => {
-               if (!user) {
-                   return cb(null, false, {message: 'Incorrect email or password.'});
-               }
-               return cb(null, user, {message: 'Logged In Successfully'});
-          })
-          .catch(err => cb(err));
-    }
-));
-
+	function (req, email, password, cb) {
+		modelUser.findOne({
+			'email': email
+		}, function(err, user) {
+			if (err || !user)
+				return cb(null, false);
+			argon.verify(user.password, password)
+			.then(match => {
+				if (match) {
+					return cb(null, user);
+				} else {
+					return cb(null, false);
+				}
+			})
+			.catch(err => {
+				return cb(null, false);
+			});
+		})
+	}));
 }

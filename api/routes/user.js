@@ -39,9 +39,9 @@ const passport = require('passport');
 
 // });
 
-// router.post('/login',
-//     	passport.authenticate('local', {session: false}, userController.connect)
-//     );
+router.post('/login',
+    	passport.authenticate('local', {session: false}), userController.connect
+    );
 
 router.get('/login/facebook',
 		passport.authenticate('facebook', { session: false, scope: config.facebook.scope })
