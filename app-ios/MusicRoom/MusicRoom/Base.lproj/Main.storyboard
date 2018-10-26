@@ -107,21 +107,55 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="131.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cHn-Lu-D1A">
-                                                            <rect key="frame" x="20" y="20" width="335" height="91.5"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Music" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cHn-Lu-D1A">
+                                                            <rect key="frame" x="120" y="20" width="235" height="24"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="24" id="dcK-Gk-LLy"/>
+                                                            </constraints>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="sxS-Ez-HnE">
+                                                            <rect key="frame" x="20" y="20" width="92" height="92"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="92" id="5yO-p7-K4c"/>
+                                                                <constraint firstAttribute="height" constant="92" id="gfb-2r-910"/>
+                                                            </constraints>
+                                                        </imageView>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7r5-vM-crW">
+                                                            <rect key="frame" x="120" y="87" width="235" height="15"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Auteur" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="khl-bs-sU9">
+                                                            <rect key="frame" x="120" y="55" width="235" height="24"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
                                                     <constraints>
-                                                        <constraint firstAttribute="bottom" secondItem="cHn-Lu-D1A" secondAttribute="bottom" constant="20" symbolic="YES" id="6rK-1r-w5S"/>
-                                                        <constraint firstItem="cHn-Lu-D1A" firstAttribute="top" secondItem="7wI-m2-x3H" secondAttribute="top" constant="20" symbolic="YES" id="NaH-hB-igf"/>
-                                                        <constraint firstItem="cHn-Lu-D1A" firstAttribute="leading" secondItem="7wI-m2-x3H" secondAttribute="leading" constant="20" symbolic="YES" id="S7q-lC-Dxd"/>
-                                                        <constraint firstAttribute="trailing" secondItem="cHn-Lu-D1A" secondAttribute="trailing" constant="20" symbolic="YES" id="tvO-oz-XMd"/>
+                                                        <constraint firstItem="cHn-Lu-D1A" firstAttribute="top" secondItem="sxS-Ez-HnE" secondAttribute="top" id="0Ic-1f-x2S"/>
+                                                        <constraint firstAttribute="bottom" secondItem="7r5-vM-crW" secondAttribute="bottom" constant="30" id="2YK-zV-LVZ"/>
+                                                        <constraint firstItem="sxS-Ez-HnE" firstAttribute="leading" secondItem="7wI-m2-x3H" secondAttribute="leading" constant="20" symbolic="YES" id="3uR-Cc-IER"/>
+                                                        <constraint firstItem="cHn-Lu-D1A" firstAttribute="leading" secondItem="khl-bs-sU9" secondAttribute="leading" id="FXM-0U-KE9"/>
+                                                        <constraint firstAttribute="trailing" secondItem="khl-bs-sU9" secondAttribute="trailing" constant="20" symbolic="YES" id="I35-bD-uCw"/>
+                                                        <constraint firstItem="7r5-vM-crW" firstAttribute="top" secondItem="khl-bs-sU9" secondAttribute="bottom" constant="8" id="JYh-0B-26H"/>
+                                                        <constraint firstItem="7r5-vM-crW" firstAttribute="leading" secondItem="sxS-Ez-HnE" secondAttribute="trailing" constant="8" symbolic="YES" id="KrI-DN-UN6"/>
+                                                        <constraint firstAttribute="bottom" secondItem="sxS-Ez-HnE" secondAttribute="bottom" constant="20" symbolic="YES" id="MN2-8e-vbc"/>
+                                                        <constraint firstAttribute="trailing" secondItem="7r5-vM-crW" secondAttribute="trailing" constant="20" symbolic="YES" id="NUd-oT-das"/>
+                                                        <constraint firstItem="cHn-Lu-D1A" firstAttribute="trailing" secondItem="khl-bs-sU9" secondAttribute="trailing" id="QK6-8w-y5O"/>
+                                                        <constraint firstItem="sxS-Ez-HnE" firstAttribute="top" secondItem="7wI-m2-x3H" secondAttribute="top" constant="20" symbolic="YES" id="aUh-by-TXc"/>
+                                                        <constraint firstItem="khl-bs-sU9" firstAttribute="leading" secondItem="sxS-Ez-HnE" secondAttribute="trailing" constant="8" symbolic="YES" id="wC8-f2-7Yr"/>
+                                                        <constraint firstItem="khl-bs-sU9" firstAttribute="top" secondItem="cHn-Lu-D1A" secondAttribute="bottom" constant="11" id="xTa-BL-vNc"/>
                                                     </constraints>
                                                 </tableViewCellContentView>
                                                 <connections>
+                                                    <outlet property="auteurLabel" destination="khl-bs-sU9" id="iTx-VK-OkS"/>
+                                                    <outlet property="imageLayout" destination="sxS-Ez-HnE" id="RIZ-YH-rpA"/>
+                                                    <outlet property="timeLabel" destination="7r5-vM-crW" id="wBU-qV-hyu"/>
                                                     <outlet property="titreLabel" destination="cHn-Lu-D1A" id="pdF-Xo-mkB"/>
                                                 </connections>
                                             </tableViewCell>

@@ -11,22 +11,19 @@ import UIKit
 var settings : [String] = ["Home", "Musics", "Playlists", "Rooms", "Settings"]
 
 
-enum Type {
-    case Musics
-    case Playlists
-}
-
-class MyProfileViewController: UIViewController, UISearchBarDelegate , UITableViewDelegate, UITableViewDataSource {
+class MyProfileViewController: UIViewController, UISearchBarDelegate , UITableViewDelegate, UITableViewDataSource, DZRPlayerDelegate{
     
     @IBOutlet weak var tableViewBack: UITableView!
     @IBOutlet weak var tableViewFront: UITableView!
     @IBOutlet weak var viewToHideProfile: UIView!
-    var tracks : [Track] = []
+    var tracks : [DZRTrack] = []
     var playlists : [Playlist] = []
     var searchBar : UISearchBar?
     var searchItem : UIBarButtonItem?
     var cancelItem : UIBarButtonItem?
     var profilItem : UIBarButtonItem?
+    var player : DZRPlayer?
+    var deezer : DeezerManager = DeezerManager()
     var profileIsVisible : Bool = false
     var selectedCell = 0
     var apiManager : APIManager = APIManager()
@@ -49,6 +46,8 @@ class MyProfileViewController: UIViewController, UISearchBarDelegate , UITableVi
         searchBar = UISearchBar()
         searchBar?.sizeToFit()
         searchBar?.delegate = self
+        player = DZRPlayer(connection: deezer.connect)
+        player?.delegate = self
         tableViewBack.selectRow(at: [0,selectedCell], animated: true, scrollPosition: UITableViewScrollPosition(rawValue: selectedCell)!)
         self.navigationItem.hidesSearchBarWhenScrolling = true
         searchItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButton(_:)))
@@ -72,9 +71,19 @@ class MyProfileViewController: UIViewController, UISearchBarDelegate , UITableVi
             }
             if settings[indexPath.row] == "Musics" {
                 tracks = self.apiManager.getMusic()
+                print(tracks)
             }
             self.title = settings[indexPath.row]
-            tableView.reloadData()
+            tableViewFront.reloadData()
+        }
+        if tableView == tableViewFront {
+            switch settings[selectedCell] {
+            case "Musics" :
+                let music = tracks[indexPath.row]
+                
+                
+            default :print("yo")
+            }
         }
     }
     
@@ -90,8 +99,10 @@ class MyProfileViewController: UIViewController, UISearchBarDelegate , UITableVi
         }
         else if tableView == tableViewFront {
             switch settings[selectedCell] {
-                case "Musics" : return tracks.count
-                case "Playlists" : return playlists.count
+                case "Musics" :
+                    return tracks.count
+                case "Playlists" :
+                    return playlists.count
                 default : return 0
             }
         }
@@ -116,7 +127,7 @@ class MyProfileViewController: UIViewController, UISearchBarDelegate , UITableVi
         
         if tableView == tableViewFront {
             let cell = tableView.dequeueReusableCell(withIdentifier: "MusicCell") as! MusicCell
-            switch settings[indexPath.row] {
+            switch settings[selectedCell] {
                 case "Musics" :
                     cell.data = tracks[indexPath.row]
                 default : cell.titreLabel.text = "Bug"

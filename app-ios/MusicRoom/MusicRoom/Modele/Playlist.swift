@@ -8,13 +8,13 @@
 
 import Foundation
 
-enum Status : String {
+enum Status : String, Decodable {
     case Active
     case Suspended
     case Created
 }
 
-struct Playlist {
+struct Playlist : Decodable {
     let id : Int
     let status : Status
 }

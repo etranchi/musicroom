@@ -16,6 +16,7 @@
 		77B444742181CCB600B3F536 /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B444732181CCB600B3F536 /* ContainerViewController.swift */; };
 		77B444762181CD0200B3F536 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B444752181CD0200B3F536 /* APIManager.swift */; };
 		77B444782181F4D900B3F536 /* MusicCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B444772181F4D900B3F536 /* MusicCell.swift */; };
+		77D1C3262183895C0050B2B8 /* Playable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D1C3252183895C0050B2B8 /* Playable.swift */; };
 		8F189888217F22EE00CE1A8D /* libDeezer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F189867217F22EE00CE1A8D /* libDeezer.a */; };
 		8F189889217F22EE00CE1A8D /* DZRResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 8F189887217F22EE00CE1A8D /* DZRResources.bundle */; };
 		8F18988C217F230D00CE1A8D /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F18988B217F230D00CE1A8D /* CoreAudio.framework */; };
@@ -45,6 +46,7 @@
 		77B444732181CCB600B3F536 /* ContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
 		77B444752181CD0200B3F536 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		77B444772181F4D900B3F536 /* MusicCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicCell.swift; sourceTree = "<group>"; };
+		77D1C3252183895C0050B2B8 /* Playable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playable.swift; sourceTree = "<group>"; };
 		8F189867217F22EE00CE1A8D /* libDeezer.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libDeezer.a; sourceTree = "<group>"; };
 		8F189869217F22EE00CE1A8D /* DZRPlaylist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DZRPlaylist.h; sourceTree = "<group>"; };
 		8F18986A217F22EE00CE1A8D /* Deezer+Compatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Deezer+Compatibility.h"; sourceTree = "<group>"; };
@@ -141,6 +143,7 @@
 				778BF9AA218355BB00448FE6 /* Playlist.swift */,
 				778BF9AC218356DF00448FE6 /* Event.swift */,
 				778BF9AE2183571100448FE6 /* User.swift */,
+				77D1C3252183895C0050B2B8 /* Playable.swift */,
 			);
 			path = Modele;
 			sourceTree = "<group>";
@@ -340,6 +343,7 @@
 				778BF9AB218355BB00448FE6 /* Playlist.swift in Sources */,
 				77820B962180840700CB04A7 /* MyProfileCell.swift in Sources */,
 				8F364B8B217E5B9100B57FC8 /* MusicRoom.xcdatamodeld in Sources */,
+				77D1C3262183895C0050B2B8 /* Playable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

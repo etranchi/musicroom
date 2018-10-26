@@ -9,7 +9,7 @@
 import Foundation
 
 
-struct Event {
+struct Event : Decodable {
     let email : String
     let creation_date : Date
     let playlist_id : String

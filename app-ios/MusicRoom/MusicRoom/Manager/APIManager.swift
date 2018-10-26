@@ -15,12 +15,12 @@ class APIManager: NSObject, URLSessionDelegate {
         return  "https://\(self.ip):4242/"
     }
     
-    func getMusic() -> [Track] {
+    func getMusic() -> [DZRTrack] {
         let url = self.url + "track"
         var request = URLRequest(url: URL(string: url)!)
         request.httpMethod = "GET"
         // request.setValue("Bearer " + token!, forHTTPHeaderField: "Authorization")
-        let ret = execute(request: request) { (tracks : [Track]) in}
+        let ret = execute(request: request) { (tracks : [DZRTrack]) in}
         return ret
     }
     

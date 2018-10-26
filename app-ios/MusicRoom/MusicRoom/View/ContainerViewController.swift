@@ -38,7 +38,7 @@ class ContainerViewController: UIViewController, UITableViewDataSource,UITableVi
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MusicCell") as! MusicCell
-        cell.data = data[indexPath.row]
+        // cell.data = data[indexPath.row]
         print("j'ai une cell")
         
         // Configure the cell...

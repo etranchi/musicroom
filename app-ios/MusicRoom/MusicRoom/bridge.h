@@ -11,5 +11,7 @@
 #import "../DeezerSDK/include/Deezer+Compatibility.h"
 #import "../DeezerSDK/include/DZRPodcast.h"
 #import "../DeezerSDK/include/DZRRequestManager.h"
-
+#import "../DeezerSDK/include/NSError+DZRPlayer.h"
+#import "../DeezerSDK/include/DZRPlayer.h"
+#import "../DeezerSDK/include/DZRObject.h"
 #endif /* bridge_h */
