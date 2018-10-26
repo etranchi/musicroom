@@ -8,11 +8,21 @@
 
 import UIKit
 
-let settings = ["Home", "Musics", "Playlists", "Rooms", "Settings"]
+var settings : [String] = ["Home", "Musics", "Playlists", "Rooms", "Settings"]
+
+
+enum Type {
+    case Musics
+    case Playlists
+}
+
 class MyProfileViewController: UIViewController, UISearchBarDelegate , UITableViewDelegate, UITableViewDataSource {
     
-    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var tableViewBack: UITableView!
+    @IBOutlet weak var tableViewFront: UITableView!
     @IBOutlet weak var viewToHideProfile: UIView!
+    var tracks : [Track] = []
+    var playlists : [Playlist] = []
     var searchBar : UISearchBar?
     var searchItem : UIBarButtonItem?
     var cancelItem : UIBarButtonItem?
@@ -36,11 +46,10 @@ class MyProfileViewController: UIViewController, UISearchBarDelegate , UITableVi
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         searchBar = UISearchBar()
         searchBar?.sizeToFit()
         searchBar?.delegate = self
-        tableView.selectRow(at: [0,selectedCell], animated: true, scrollPosition: UITableViewScrollPosition(rawValue: selectedCell)!)
+        tableViewBack.selectRow(at: [0,selectedCell], animated: true, scrollPosition: UITableViewScrollPosition(rawValue: selectedCell)!)
         self.navigationItem.hidesSearchBarWhenScrolling = true
         searchItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButton(_:)))
         profilItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(displayProfile))
@@ -55,13 +64,18 @@ class MyProfileViewController: UIViewController, UISearchBarDelegate , UITableVi
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        displayProfile()
-        let vc = ContainerViewController()
-        if settings[indexPath.row] == "Musics" {
-            vc.data = apiManager.getMusic()
+        if tableView == tableViewBack {
+            displayProfile()
+            selectedCell = indexPath.row
+            if settings[indexPath.row] == "Playlists" {
+                playlists = self.apiManager.getPlaylist()
+            }
+            if settings[indexPath.row] == "Musics" {
+                tracks = self.apiManager.getMusic()
+            }
+            self.title = settings[indexPath.row]
+            tableView.reloadData()
         }
-        self.title = settings[indexPath.row]
-        viewToHideProfile.insertSubview(vc.view, at: 0)
     }
     
     override func didReceiveMemoryWarning() {
@@ -71,7 +85,17 @@ class MyProfileViewController: UIViewController, UISearchBarDelegate , UITableVi
 
     // MARK: - Table view data source
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return settings.count
+        if tableView == tableViewBack {
+            return settings.count
+        }
+        else if tableView == tableViewFront {
+            switch settings[selectedCell] {
+                case "Musics" : return tracks.count
+                case "Playlists" : return playlists.count
+                default : return 0
+            }
+        }
+        return 0
     }
 
     @IBAction func displayProfile() {
@@ -89,10 +113,22 @@ class MyProfileViewController: UIViewController, UISearchBarDelegate , UITableVi
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "MyProfile") as! MyProfileCell
-        cell.data = settings[indexPath.row]
-        return cell
+        
+        if tableView == tableViewFront {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "MusicCell") as! MusicCell
+            switch settings[indexPath.row] {
+                case "Musics" :
+                    cell.data = tracks[indexPath.row]
+                default : cell.titreLabel.text = "Bug"
+            }
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "MyProfile") as! MyProfileCell
+            cell.data = settings[indexPath.row]
+            return cell
+        }
     }
+    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         self.navigationItem.rightBarButtonItem = nil
         self.navigationItem.rightBarButtonItem = searchItem

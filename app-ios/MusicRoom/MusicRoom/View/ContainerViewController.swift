@@ -8,19 +8,13 @@
 
 import UIKit
 
-class ContainerViewController: UITableViewController {
-    var data : [NSDictionary]? {
-        didSet {
-            if let d = data {
-                self.tableView.reloadData()
-            }
-        }
-    }
+class ContainerViewController: UIViewController, UITableViewDataSource,UITableViewDelegate {
+    @IBOutlet weak var tableView: UITableView!
+    var data : [Track] = []
     var APIManager : APIManager?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = String(describing: data)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -35,20 +29,17 @@ class ContainerViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 1
-    }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return (data?.count)!
+        print("je count")
+        return (data.count)
     }
 
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MusicCell") as! MusicCell
-        cell.data = data?[indexPath.row]
+        cell.data = data[indexPath.row]
+        print("j'ai une cell")
         
         // Configure the cell...
 

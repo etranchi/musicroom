@@ -10,14 +10,15 @@ import UIKit
 
 class MusicCell: UITableViewCell {
     
-    var data : NSDictionary? {
+    @IBOutlet weak var titreLabel: UILabel!
+    var data : Track? {
         didSet {
             if let d = data {
-                titreLabel.text = String(describing: d["title"])
+                titreLabel.text = d.title
+                
             }
         }
     }
-    @IBOutlet weak var titreLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
