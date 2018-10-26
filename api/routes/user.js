@@ -7,6 +7,42 @@ const userController = require('../controllers/user');
 const strategies = require('../controllers/strategies')();
 const passport = require('passport');
 
+// router.post('/login', function (req, res, next) {
+
+//     passport.authenticate('local', {session: false}, (err, user, info) => {
+//         console.log(err);
+//         if (err || !user) {
+//             return res.status(400).json({
+//                 message: info ? info.message : 'Login failed',
+//                 user   : user
+//             });
+//         }
+
+//         req.login(user, {session: false}, (err) => {
+//             if (err) {
+//                 res.send(err);
+//             }
+
+//             const token = JWT.sign({
+// 				id: user.id,
+// 				salt: user.salt,
+// 				expirationToken: expirationToken
+// 			}, {
+// 				jwtid: Crypto.randomString(16),
+// 				expiresIn: expiresIn
+// 			});
+
+//             return res.json({user, token});
+//         });
+//     })
+//     (req, res);
+
+// });
+
+// router.post('/login',
+//     	passport.authenticate('local', {session: false}, userController.connect)
+//     );
+
 router.get('/login/facebook',
 		passport.authenticate('facebook', { session: false, scope: config.facebook.scope })
 	);
