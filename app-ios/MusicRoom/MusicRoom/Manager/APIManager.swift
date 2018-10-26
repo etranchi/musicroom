@@ -8,7 +8,7 @@
 
 import UIKit
 
-class APIManager: NSObject {
+class APIManager: NSObject, URLSessionDelegate {
     let ip : String = "192.168.99.100"
     let token : String? = nil
     
@@ -17,18 +17,19 @@ class APIManager: NSObject {
         var request = URLRequest(url: URL(string: url)!)
         request.httpMethod = "GET"
         // request.setValue("Bearer " + token!, forHTTPHeaderField: "Authorization")
-        let ret = request.execute()
+        let ret = execute(request: request)
         print(ret)
         return ret
     }
-    
-}
 
-extension URLRequest {
-    func    execute() -> [NSDictionary] {
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        completionHandler(.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
+    }
+
+    func    execute(request: URLRequest) -> [NSDictionary] {
         var dictionnary : [NSDictionary] = []
         var requestTokenDone : Bool = false
-        let task = URLSession.shared.dataTask(with: self) {
+        let task = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: OperationQueue.main).dataTask(with: request) {
             (data, response, error) in
 
             if let err = error {
