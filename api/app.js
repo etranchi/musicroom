@@ -31,5 +31,4 @@ var httpsServer = https.createServer(credentials, app);
 
 httpsServer.listen(config.port, config.host);
 
-console.log("Server listen on " + config.httpsPort);
 module.exports = httpsServer;

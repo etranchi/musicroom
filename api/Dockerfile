@@ -5,6 +5,7 @@ RUN echo "deb http://deb.debian.org/debian stretch main" >> /etc/apt/sources.lis
 RUN apt-get update && apt-get install -y vim htop net-tools build-essential libsodium-dev
 WORKDIR /usr/src/musicroom
 RUN npm install -g pm2
+RUN npm install node-gyp -g
 
 COPY package*.json ./
 # If you are building your code for production
