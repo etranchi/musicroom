@@ -2,7 +2,7 @@ FROM node:8 as react-build
 WORKDIR /usr/src/react
 ADD . .
 RUN npm install -g pm2
-# RUN yarn
+RUN yarn install
 EXPOSE 3000
 CMD ["pm2-runtime", "ecosystem.config.js"]
 # CMD ["yarn", "run", "start", "--watch"]
