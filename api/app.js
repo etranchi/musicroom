@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 app.use('/', routes);
 
 app.get('/', ( req, res) =>  {
-	res.status(200).json({"music_room":"Here we are !"});
+	res.status(200).json({"message":"Welcome to Music vroom!"});
 });
 
 var httpsServer = https.createServer(credentials, app);
