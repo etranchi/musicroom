@@ -28,39 +28,55 @@ module.exports = function () {
 		callbackURL: config.facebook.callbackURL
 	},
 	function(accessToken, refreshToken, profile, done) {
+		if (!profile.emails[0] || !profile.emails[0].value)
+			return done(null, false);
 		modelUser.findOne({
-            'facebookId': profile.id 
-        }, function(err, user) {
-            if (err) {
-            	console.log(err);
-                return done(null, false);
-            }
-            if (!user) {
-                user = new modelUser({
-                	facebookId: profile.id,
-                    email: profile.emails[0].value,
-                    login: !profile.username ? profile.displayName : profile.username,
+			'email': profile.emails[0].value
+		}, function(err, user) {
+			if (err) {
+				console.log(err);
+				return done(null, false);
+			}
+			if (!user) {
+				user = new modelUser({
+					facebookId: profile.id,
+					email: profile.emails[0].value,
+					login: !profile.username ? profile.displayName : profile.username,
 					picture: profile.photos.length > 0 ? profile.photos[0].value : undefined,
 					status: 'Active'
-                });
-                modelUser.create(user, function(err) {
-                    if (err) {
-                    	console.log(err);
-                    	return done(null, false);
-                    }
-                    return done(null, user);
-                });
-            } else {
-                return done(null, user);
-            }
-        });
+				});
+				modelUser.create(user, function(err) {
+					if (err) {
+						console.log(err);
+						return done(null, false);
+					}
+					return done(null, user);
+				});
+			} else {
+				if (!user.facebookId)
+				{
+					// ADD FACEBOOK TOKEN AND REFRESH TOKEN
+					modelUser.updateOne({_id: user._id}, {
+						facebookId: profile.id,
+						status: 'Active'
+					}, function(err, user) {
+						if (err) {
+							console.log(err);
+							return done(null, false);
+						}
+						return done(null, user);
+					});
+				}
+				return done(null, user);
+			}
+		});
 	}));
 
 	passport.use(new LocalStrategy({
 		usernameField: 'email',
-        passwordField: 'password',
-        passReqToCallback: true,
-        session: false
+		passwordField: 'password',
+		passReqToCallback: true,
+		session: false
 	},
 	function (req, email, password, cb) {
 		modelUser.findOne({
