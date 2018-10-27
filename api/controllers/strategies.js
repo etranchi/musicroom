@@ -2,10 +2,12 @@ const passport = require('passport');
 const FacebookStrategy = require('passport-facebook').Strategy;
 const DeezerStrategy = require('passport-deezer').Strategy;
 const LocalStrategy = require('passport-local').Strategy;
+const BearerStrategy = require('passport-bearer-strategy').Strategy;
 const config = require('../config/config.json');
 const Crypto = require('../modules/crypto');
 const modelUser = require('../models/user');
 const argon = require('argon2');
+const jwt = require('jsonwebtoken');
 
 module.exports = function () {
 	passport.use(new DeezerStrategy({
@@ -78,5 +80,21 @@ module.exports = function () {
 				return cb(null, false);
 			});
 		})
+	}));
+
+	passport.use(new BearerStrategy({
+		passReqToCallback: true
+	}, function(req, token, done) {
+			token = jwt.verify(token, config.token.secret);
+			modelUser.findOne({
+				'_id': token.id
+			}, function (err, user) {
+				if (err)
+					return done(err);
+				if (!user || user.status != 'Active') {
+					return done(null, false);
+				}
+				return done(null, user, { scope: 'all' });
+		});
 	}));
 }
