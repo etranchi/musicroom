@@ -1,5 +1,8 @@
+'use strict'
+
 const model = require('../models/user');
 const Crypto = require('../modules/crypto');
+const Utils = require('../modules/utils');
 const jwt = require('jsonwebtoken');
 const Joi 	= require('joi');
 const config = require('../config/config.json');
@@ -12,7 +15,11 @@ exports.connect = (req, res) => {
 exports.getUsers = async (req, res) => {
 	try {
 		console.info("getUser: getting all users ...");
-		res.status(200).send(await model.find());
+		let users = await model.find()
+		users.map((user) => {
+			return Utils.filter(model.schema.obj, user, 0)
+		})
+		res.status(200).send(users);
 	} catch (err) {
 		console.error("Error getUsers : %s", err);
 		res.status(400).send(err);
@@ -34,11 +41,9 @@ exports.postUser = async (req, res) => {
 	
 		console.info("PostUser: creating user %s ...",  req.body.login);
 		let user = req.body
-		delete user.status
-		delete user._id
-		delete user.facebookId
-		delete user.creationDate
+		user.email = Utils.normalize(user.email)
 		user.password = await argon.hash(user.password);
+		console.log(user);
 		res.status(201).send(await model.create(req.body));
 	} catch (err) {
 		console.error("Error postUser : %s" + err);

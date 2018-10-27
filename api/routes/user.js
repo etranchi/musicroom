@@ -19,9 +19,12 @@ router.get('/login/facebook',
 // 		passport.authenticate('deezer', { session: false, scope: config.deezer.scope })
 // 	);
 
-router.get('/',
-		passport.authenticate('bearer'), userController.getUsers
-	);
+// TO ADD BEARER TOKEN ON ROUTE ->
+// router.get('/',
+// 		passport.authenticate('bearer'), userController.getUsers
+// 	);
+
+router.get('/', userController.getUsers);
 
 router.get('/:id', userController.getUserById);
 

@@ -2,19 +2,17 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
  
 const User = new Schema({
-	// _id : {
-	// 	type: Schema.Types.ObjectId,
-	// 	primaryKey: true,
-	// 	unique: true
-	// },
-	facebookId : String,
+	facebookId: {
+		type: String
+	},
 	login:{
 		type: String,
 		allowNull: false
 	},
 	password:{
 		type: String,
-		allowNull: false
+		allowNull: false,
+		visibility: 1
 	},
 	status:{
 		type: String,
