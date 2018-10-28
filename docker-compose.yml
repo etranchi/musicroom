@@ -1,7 +1,15 @@
 version: '2'
 services:
-  app:
-    container_name: music_room
+  mongo:
+    container_name: mongo
+    image: mongo
+    build: db/.
+    volumes:
+      - ./db/data:/data/db
+    ports:
+      - '27017:27017'
+  api:
+    container_name: api
     restart: always
     build: api/.
     volumes:
@@ -11,11 +19,14 @@ services:
       - '4242:4242'
     links:
       - mongo
-  mongo:
-    container_name: mongo
-    image: mongo
-    build: db/.
+  react-front:
+    container_name: react
+    restart: always
+    build: react-front/.
     volumes:
-      - ./db/data:/data/db
+      - ./react-front:/usr/src/react
+      - /usr/src/react/node_modules
+    links:
+      - api
     ports:
-      - '27017:27017'
+      - '80:80'

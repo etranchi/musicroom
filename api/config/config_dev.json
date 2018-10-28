@@ -1,10 +1,10 @@
 {
 	"port": 4242,
-	"httpsPort": 4343,
 	"host": "0.0.0.0",
 	"deezer": {
+		"apiUrl": "https://api.deezer.com",
 		"clientID": "",
-		"clientSecret": "",
+        "clientSecret": "",
 		"callbackURL": "/oauth/deezer/callback",
 		"scope": [
 			"basic_access",
@@ -13,7 +13,7 @@
 	},
 	"facebook": {
 		"clientID": "",
-		"clientSecret": "",
+        "clientSecret": "",
 		"callbackURL": "/oauth/facebook/callback",
 		"scope": [
 			"email"
@@ -24,13 +24,5 @@
 			"photos",
 			"email"
 		]
-	},
-	"db": {
-		"type": "mysql",
-		"name": "musicroom",
-		"host": "127.0.0.1",
-		"user": "root",
-		"password": "",
-		"umzug": true
 	}
 }

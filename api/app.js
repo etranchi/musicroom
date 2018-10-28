@@ -24,12 +24,11 @@ app.use(bodyParser.json());
 app.use('/', routes);
 
 app.get('/', ( req, res) =>  {
-	res.status(200).json({'jules':'toto'});
+	res.status(200).json({"message":"Welcome to Music vroom!"});
 });
 
 var httpsServer = https.createServer(credentials, app);
 
 httpsServer.listen(config.port, config.host);
 
-console.log("Server listen on " + config.httpsPort);
 module.exports = httpsServer;
