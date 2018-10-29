@@ -285,13 +285,21 @@
                                     <outlet property="delegate" destination="iyv-u3-dyr" id="V9c-ac-gtO"/>
                                 </connections>
                             </searchBar>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="RJU-Wm-YJc">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="Gie-wQ-gFg" firstAttribute="trailing" secondItem="RJU-Wm-YJc" secondAttribute="trailing" id="4lQ-gR-R7Z"/>
                             <constraint firstItem="yI9-2V-4uB" firstAttribute="top" secondItem="Gie-wQ-gFg" secondAttribute="top" id="6Lf-pE-3i0"/>
                             <constraint firstItem="Gie-wQ-gFg" firstAttribute="trailing" secondItem="yI9-2V-4uB" secondAttribute="trailing" id="Hhw-W4-ele"/>
                             <constraint firstItem="Gie-wQ-gFg" firstAttribute="bottom" secondItem="yI9-2V-4uB" secondAttribute="bottom" constant="547" id="R9e-dr-wFr"/>
                             <constraint firstItem="yI9-2V-4uB" firstAttribute="leading" secondItem="Gie-wQ-gFg" secondAttribute="leading" id="XkG-0T-835"/>
+                            <constraint firstItem="RJU-Wm-YJc" firstAttribute="top" secondItem="Gie-wQ-gFg" secondAttribute="top" id="cCZ-M8-5Ns"/>
+                            <constraint firstItem="RJU-Wm-YJc" firstAttribute="leading" secondItem="Gie-wQ-gFg" secondAttribute="leading" id="fkY-2m-lIJ"/>
+                            <constraint firstItem="Gie-wQ-gFg" firstAttribute="bottom" secondItem="RJU-Wm-YJc" secondAttribute="bottom" id="o4h-lw-ySG"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Gie-wQ-gFg"/>
                     </view>
@@ -301,7 +309,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OKI-QH-sGB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1068" y="609"/>
+            <point key="canvasLocation" x="1068" y="608.54572713643188"/>
         </scene>
     </scenes>
 </document>

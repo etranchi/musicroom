@@ -24,6 +24,28 @@ class APIManager: NSObject, URLSessionDelegate {
         return ret
     }
     
+    func getSearch(_ search: String) -> ResearchData {
+        let researchFilter = ["artist", "album", "track"]
+        var resSearch = ResearchData()
+        
+        for res in researchFilter {
+            var url = self.url + "search?q=\(res):\(search)"
+            var request = URLRequest(url: URL(string: url)!)
+            request.httpMethod = "GET"
+            switch res {
+                case "artist":
+                    resSearch.artists =  execute(request: request) { (tracks: Research) in }
+                case "album" :
+                    resSearch.albums = execute(request: request){ (tracks: Research) in }
+                case "track" :
+                    resSearch.tracks = execute(request: request){ (tracks: Research) in }
+            default :
+                break
+            }
+        }
+        return resSearch
+    }
+    
     func getPlaylist() -> [Playlist] {
         let url = self.url + "playlist"
         var request = URLRequest(url: URL(string: url)!)
@@ -51,19 +73,9 @@ class APIManager: NSObject, URLSessionDelegate {
                     if let dic : T = try JSONDecoder().decode(T.self, from: d){
                         dictionnary = dic
                     }
-//                    else if let dic : T = try JSONDecoder().decode(T.self, from: d) {
-//                        dictionnary.append(dic)
-//                    }
                     else {
                         print("Error when fetching")
                     }
-                    /*if let dic : [T] = try JSONSerialization.jsonObject(with: d, options: JSONSerialization.ReadingOptions.mutableContainers) as? [NSDictionary] {
-                        dictionnary = dic
-                    } else if let dic : T = try JSONSerialization.jsonObject(with: d, options: JSONSerialization.ReadingOptions.mutableContainers) as? NSDictionary {
-                        dictionnary.append(dic)
-                    } else {
-                        print("task dictionnary error: failed")
-                    }*/
                 } catch (let err) {
                     print("task dictionnary error: \(err)")
                 }
@@ -73,8 +85,6 @@ class APIManager: NSObject, URLSessionDelegate {
             requestTokenDone = true;
         }
         task.resume()
-        
-        //wait for task to terminate, making async useless
         repeat {
             RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
         } while !requestTokenDone

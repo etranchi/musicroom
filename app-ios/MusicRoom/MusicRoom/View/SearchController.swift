@@ -10,11 +10,21 @@ import UIKit
 
 class SearchController: UIViewController, UISearchBarDelegate {
     var manager : APIManager?
+    var resultSearch : ResearchData?
+    
     @IBOutlet weak var searchBar: UISearchBar!
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBar.becomeFirstResponder()
         // Do any additional setup after loading the view.
+    }
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        if let text = searchBar.text {
+            resultSearch = manager?.getSearch(text)
+            searchBar.resignFirstResponder()
+            print(resultSearch)
+        }
     }
 
 
