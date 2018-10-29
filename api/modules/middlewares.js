@@ -1,11 +1,11 @@
 'use strict';
 
 const middlewares = {
-isConfirmed: function isConfirm(request, response, next) {
-		if (request.user.status === 'Active') {
+	isConfirmed: function isConfirm(req, res, next) {
+		if (req.user.status === 'Active') {
 			next();
 		} else {
-			return response.send(401, {message: "Account not confirmed"});
+			return res.send(401, {message: "Account not confirmed"});
 		}
 	}
 };

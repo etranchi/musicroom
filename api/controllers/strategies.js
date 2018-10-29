@@ -14,11 +14,24 @@ module.exports = function () {
 		clientID: config.deezer.clientID,
 		clientSecret: config.deezer.clientSecret,
 		callbackURL: config.deezer.callbackURL,
+		passReqToCallback: true
 	},
-	function(accessToken, refreshToken, profile, done) {
-		console.log(profile);
-		console.log("token -> " + accessToken);
-		return done(null, profile);
+	function(req, accessToken, refreshToken, profile, done) {
+		if (!req.user) {
+			return done(null, false)
+		}
+		modelUser.updateOne({_id: req.user._id}, {
+			deezerId: profile.id,
+			deezerToken: accessToken,
+			deezerRefreshToken: refreshToken
+		}, function(err, user) {
+				console.log(req)
+				if (err) {
+					console.log(err);
+					return done(null, false);
+				}
+				return done(null, true);
+			});
 	}));
 
 	passport.use(new FacebookStrategy({
@@ -80,7 +93,8 @@ module.exports = function () {
 	},
 	function (req, email, password, cb) {
 		modelUser.findOne({
-			'email': email
+			'email': email,
+			'status': 'Active'
 		}, function(err, user) {
 			if (err || !user)
 				return cb(null, false);
@@ -102,17 +116,13 @@ module.exports = function () {
 		passReqToCallback: true
 	}, function(req, token, done) {
 			token = jwt.verify(token, config.token.secret);
-			console.log(token.id)
-			console.log(token.status)
-			console.log(token.password)
 			modelUser.findOne({
 				'_id': token.id,
-				'status': token.status,
-				'password': token.password
+				'status': token.status
 			}, function (err, user) {
 				if (err)
 					return done(err);
-				if (!user) { // || user.status != 'Active') {
+				if (!user) {
 					return done(null, false);
 				}
 				return done(null, user, { scope: 'all' });

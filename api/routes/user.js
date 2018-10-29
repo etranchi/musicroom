@@ -16,11 +16,10 @@ router.get('/login/facebook',
 		passport.authenticate('facebook', { session: false, scope: config.facebook.scope })
 	);
 
-// router.get('/login/deezer',
-// 		passport.authenticate('deezer', { session: false, scope: config.deezer.scope })
-// 	);
+router.get('/login/deezer',
+		passport.authenticate('deezer', { session: false, scope: config.deezer.scope })
+	);
 
-// TO ADD BEARER TOKEN ON ROUTE ->
 router.get('/',
 		passport.authenticate('bearer'),
 		middlewares.isConfirmed,
@@ -32,14 +31,31 @@ router.put('/confirm',
 		userController.confirmUser
 	);
 
-// router.get('/', userController.getUsers);
+router.post('/resendMail',
+		userController.resendMail
+	);
 
-router.get('/:id', userController.getUserById);
+router.get('/me',
+	passport.authenticate('bearer'),
+	middlewares.isConfirmed,
+	userController.getMe
+);
+
+router.put('/me',
+	passport.authenticate('bearer'),
+	middlewares.isConfirmed,
+	userController.modifyUserById);
+
+router.delete('/me',
+	passport.authenticate('bearer'),
+	middlewares.isConfirmed,
+	userController.deleteUserById);
+
+router.get('/:id',
+	passport.authenticate('bearer'),
+	middlewares.isConfirmed,
+	userController.getUserById);
 
 router.post('/', userController.postUser);
-
-router.delete('/:id', userController.deleteUserById);
-
-router.put('/:id', userController.modifyUserById);
 
 module.exports = router;
