@@ -2,10 +2,17 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
  
 const User = new Schema({
-	id : Schema.Types.ObjectId,
+	facebookId: {
+		type: String
+	},
 	login:{
 		type: String,
-		default: 'Created'
+		allowNull: false
+	},
+	password:{
+		type: String,
+		allowNull: false,
+		visibility: 1
 	},
 	status:{
 		type: String,
@@ -16,9 +23,14 @@ const User = new Schema({
 		type: String
 	},
 	email:{
-		type: String
+		type: String,
+		unique: true,
+		allowNull: false
 	},
-	creationDate: {type: Date, default: Date()}
+	creationDate: {
+		type: Date,
+		default: Date()
+	}
 });
 
 module.exports = mongoose.model('user', User);

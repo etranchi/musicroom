@@ -7,13 +7,22 @@ const userController = require('../controllers/user');
 const strategies = require('../controllers/strategies')();
 const passport = require('passport');
 
+router.post('/login',
+    	passport.authenticate('local', {session: false}), userController.connect
+    );
+
 router.get('/login/facebook',
 		passport.authenticate('facebook', { session: false, scope: config.facebook.scope })
 	);
 
-router.get('/login/deezer',
-		passport.authenticate('deezer', { session: false, scope: config.deezer.scope })
-	);
+// router.get('/login/deezer',
+// 		passport.authenticate('deezer', { session: false, scope: config.deezer.scope })
+// 	);
+
+// TO ADD BEARER TOKEN ON ROUTE ->
+// router.get('/',
+// 		passport.authenticate('bearer'), userController.getUsers
+// 	);
 
 router.get('/', userController.getUsers);
 

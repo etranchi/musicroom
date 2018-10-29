@@ -8,8 +8,8 @@ services:
       - ./db/data:/data/db
     ports:
       - '27017:27017'
-  app:
-    container_name: music_room
+  api:
+    container_name: api
     restart: always
     build: api/.
     volumes:
@@ -19,4 +19,14 @@ services:
       - '4242:4242'
     links:
       - mongo
-      
+  react-front:
+    container_name: react
+    restart: always
+    build: react-front/.
+    volumes:
+      - ./react-front:/usr/src/react
+      - /usr/src/react/node_modules
+    links:
+      - api
+    ports:
+      - '80:80'

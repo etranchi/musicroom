@@ -1,6 +1,5 @@
 {
 	"port": 4242,
-	"httpsPort": 4343,
 	"host": "0.0.0.0",
 	"deezer": {
 		"apiUrl": "https://api.deezer.com",
