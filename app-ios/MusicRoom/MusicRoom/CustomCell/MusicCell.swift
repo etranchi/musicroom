@@ -14,13 +14,9 @@ class MusicCell: UITableViewCell {
     @IBOutlet weak var titreLabel: UILabel!
     @IBOutlet weak var imageLayout: UIImageView!
     @IBOutlet weak var timeLabel: UILabel!
-    var data : DZRTrack? {
+    var data : Track? {
         didSet {
-            
             if let d = data {
-                auteurLabel.text = d.identifier()
-            }
-            /*
                 titreLabel.text = d.title
                 timeLabel.text = String(d.duration / 60) + ":" + String(d.duration % 60)
                 do {
@@ -31,8 +27,7 @@ class MusicCell: UITableViewCell {
                     print("Error when loading image")
                 }
                 auteurLabel.text = d.artist.name
-                
-            }*/
+            }
         }
     }
     

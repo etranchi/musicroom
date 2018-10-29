@@ -7,13 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		77820B942180833D00CB04A7 /* MyProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77820B932180833D00CB04A7 /* MyProfileViewController.swift */; };
-		77820B962180840700CB04A7 /* MyProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77820B952180840700CB04A7 /* MyProfileCell.swift */; };
+		773F0D012187184F005FA297 /* MusicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773F0D002187184F005FA297 /* MusicController.swift */; };
+		773F0D0321871FB2005FA297 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773F0D0221871FB2005FA297 /* SettingsController.swift */; };
+		773F0D05218728E4005FA297 /* PlaylistController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773F0D04218728E4005FA297 /* PlaylistController.swift */; };
+		773F0D0721872946005FA297 /* SearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773F0D0621872946005FA297 /* SearchController.swift */; };
+		77820B942180833D00CB04A7 /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77820B932180833D00CB04A7 /* HomeController.swift */; };
+		77820B962180840700CB04A7 /* HomeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77820B952180840700CB04A7 /* HomeCell.swift */; };
 		778BF9A921832CB800448FE6 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778BF9A821832CB800448FE6 /* Track.swift */; };
 		778BF9AB218355BB00448FE6 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778BF9AA218355BB00448FE6 /* Playlist.swift */; };
 		778BF9AD218356DF00448FE6 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778BF9AC218356DF00448FE6 /* Event.swift */; };
 		778BF9AF2183571100448FE6 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778BF9AE2183571100448FE6 /* User.swift */; };
-		77B444742181CCB600B3F536 /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B444732181CCB600B3F536 /* ContainerViewController.swift */; };
 		77B444762181CD0200B3F536 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B444752181CD0200B3F536 /* APIManager.swift */; };
 		77B444782181F4D900B3F536 /* MusicCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B444772181F4D900B3F536 /* MusicCell.swift */; };
 		77D1C3262183895C0050B2B8 /* Playable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D1C3252183895C0050B2B8 /* Playable.swift */; };
@@ -37,13 +40,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		77820B932180833D00CB04A7 /* MyProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileViewController.swift; sourceTree = "<group>"; };
-		77820B952180840700CB04A7 /* MyProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileCell.swift; sourceTree = "<group>"; };
+		773F0D002187184F005FA297 /* MusicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicController.swift; sourceTree = "<group>"; };
+		773F0D0221871FB2005FA297 /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
+		773F0D04218728E4005FA297 /* PlaylistController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistController.swift; sourceTree = "<group>"; };
+		773F0D0621872946005FA297 /* SearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchController.swift; sourceTree = "<group>"; };
+		77820B932180833D00CB04A7 /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
+		77820B952180840700CB04A7 /* HomeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCell.swift; sourceTree = "<group>"; };
 		778BF9A821832CB800448FE6 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		778BF9AA218355BB00448FE6 /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
 		778BF9AC218356DF00448FE6 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		778BF9AE2183571100448FE6 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		77B444732181CCB600B3F536 /* ContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
 		77B444752181CD0200B3F536 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		77B444772181F4D900B3F536 /* MusicCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicCell.swift; sourceTree = "<group>"; };
 		77D1C3252183895C0050B2B8 /* Playable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playable.swift; sourceTree = "<group>"; };
@@ -121,8 +127,11 @@
 		77820B92218082EA00CB04A7 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				77820B932180833D00CB04A7 /* MyProfileViewController.swift */,
-				77B444732181CCB600B3F536 /* ContainerViewController.swift */,
+				77820B932180833D00CB04A7 /* HomeController.swift */,
+				773F0D002187184F005FA297 /* MusicController.swift */,
+				773F0D0221871FB2005FA297 /* SettingsController.swift */,
+				773F0D04218728E4005FA297 /* PlaylistController.swift */,
+				773F0D0621872946005FA297 /* SearchController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -130,7 +139,7 @@
 		77820B972180841000CB04A7 /* CustomCell */ = {
 			isa = PBXGroup;
 			children = (
-				77820B952180840700CB04A7 /* MyProfileCell.swift */,
+				77820B952180840700CB04A7 /* HomeCell.swift */,
 				77B444772181F4D900B3F536 /* MusicCell.swift */,
 			);
 			path = CustomCell;
@@ -331,17 +340,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				778BF9AF2183571100448FE6 /* User.swift in Sources */,
+				773F0D05218728E4005FA297 /* PlaylistController.swift in Sources */,
 				77B444762181CD0200B3F536 /* APIManager.swift in Sources */,
 				778BF9A921832CB800448FE6 /* Track.swift in Sources */,
-				77820B942180833D00CB04A7 /* MyProfileViewController.swift in Sources */,
+				77820B942180833D00CB04A7 /* HomeController.swift in Sources */,
 				77B444782181F4D900B3F536 /* MusicCell.swift in Sources */,
 				778BF9AD218356DF00448FE6 /* Event.swift in Sources */,
 				8F18989C217F3B4D00CE1A8D /* DeezerManager.swift in Sources */,
-				77B444742181CCB600B3F536 /* ContainerViewController.swift in Sources */,
+				773F0D0321871FB2005FA297 /* SettingsController.swift in Sources */,
 				8F364B85217E5B9100B57FC8 /* ViewController.swift in Sources */,
+				773F0D0721872946005FA297 /* SearchController.swift in Sources */,
 				8F364B83217E5B9100B57FC8 /* AppDelegate.swift in Sources */,
 				778BF9AB218355BB00448FE6 /* Playlist.swift in Sources */,
-				77820B962180840700CB04A7 /* MyProfileCell.swift in Sources */,
+				773F0D012187184F005FA297 /* MusicController.swift in Sources */,
+				77820B962180840700CB04A7 /* HomeCell.swift in Sources */,
 				8F364B8B217E5B9100B57FC8 /* MusicRoom.xcdatamodeld in Sources */,
 				77D1C3262183895C0050B2B8 /* Playable.swift in Sources */,
 			);

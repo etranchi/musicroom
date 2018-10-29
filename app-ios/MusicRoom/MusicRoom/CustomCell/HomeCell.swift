@@ -8,24 +8,22 @@
 
 import UIKit
 
-class MyProfileCell: UITableViewCell {
+class HomeCell: UITableViewCell {
  
-    
-    @IBOutlet weak var imageLayout: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     var data : String? {
         didSet {
             if let d = data {
                 titleLabel.text = d
-                imageLayout.image = UIImage(named: "arrowR")
             }
         }
     }
     override func awakeFromNib() {
         super.awakeFromNib()
-        let bezierPath = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: [.bottomLeft, .topLeft], cornerRadii: self.frame.size)
+        let bP = UIBezierPath(rect: self.bounds)
+        // let bezierPath = UIBezierPath(roundedRect: self.frame, byRoundingCorners: [.bottomLeft, .topLeft, .topRight, .bottomRight], cornerRadii: self.frame.size)
         let shape = CAShapeLayer()
-        shape.path = bezierPath.cgPath
+        shape.path = bP.cgPath
         self.layer.mask = shape
         self.layer.masksToBounds = true
         
