@@ -79,7 +79,8 @@ exports.getUserById = async (req, res) => {
 exports.deleteUserById = async (req, res) => {
 	try {
 		console.info("deleteUserById : delete _id -> %s", req.user._id);
-		res.status(200).send(await model.deleteOne({"_id": req.user._id}));
+		await model.deleteOne({"_id": req.user._id})
+		res.status(204).send();
 	} catch (err) {
 		console.error("Error deleteUserById: %s", err);
 		res.status(400).send({message: err.toString()});
