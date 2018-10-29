@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import './App.css';
+import './reset.css';
+import './App.css'
+import Sidebar from './components/sidebar/sidebar.js'
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-         <p>Welcome to Music vroom front test 3</p>
-        </header>
+        <Sidebar></Sidebar>
       </div>
     );
   }
