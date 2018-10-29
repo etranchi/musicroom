@@ -11,7 +11,6 @@ const User = new Schema({
 	},
 	password:{
 		type: String,
-		allowNull: false,
 		visibility: 1
 	},
 	status:{

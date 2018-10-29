@@ -38,12 +38,11 @@ exports.postUser = async (req, res) => {
 			console.error('Error postUser : %s or %s is already used.', req.body.login, req.body.mail);
 			return res.status(400).send("Login or Email already used.");
 		}
-	
 		console.info("PostUser: creating user %s ...",  req.body.login);
 		let user = req.body
+		user = Utils.filter(model.schema.obj, user, 1)
 		user.email = Utils.normalize(user.email)
 		user.password = await argon.hash(user.password);
-		console.log(user);
 		res.status(201).send(await model.create(req.body));
 	} catch (err) {
 		console.error("Error postUser : %s" + err);
@@ -69,12 +68,11 @@ exports.getUserById = async (req, res) => {
 
 exports.deleteUserById = async (req, res) => {
 	try {
-		// const { error } = validateId(req.params.id);
-		// if (error) {
-		// 	console.error("Error deleteUserById : invalid _id : %s", _id);
-		// 	return res.status(400).send(error.details[0].message);
-		// }
-
+		const { error } = validateId(req.params);
+		if (error) {
+			console.error('Error getUserById : %s.', error.details[0].message);
+			return res.status(400).send(error.details[0].message);
+		}
 		console.info("deleteUserById : delete _id -> %s", req.params.id);
 		res.status(200).send(await model.deleteOne({"_id": req.params.id}));
 	} catch (err) {
@@ -88,22 +86,16 @@ exports.modifyUserById = async (req, res) => {
 	try {
 		if (!req.body)
 			return res.status(204);
-		let { error } = validateUser(req.body);
+		let { error } = validateUpdateUser(req.body);
 		if (error) {
 			console.error("Error modifyUserById : invalid user format.");
 			return res.status(400).send(error.details[0].message);
 		}
-		const { error1 }  = validateId(req.params);
-		if (error1) {
-			console.error("Error modifyUserById : invalid _id : %s", req.params.id);
-			return res.status(400).send(error.details[0].message);
-		}
-		const exist = await model.findOne({_id : req.params.id});
-		if (!exist) {
-			console.error('Error modifyUserById : %s don\'t exist', req.body.login, req.body.email);
-			return res.status(400).send("This _id don't exist.");
-		}
-		await model.update({"_id": req.params.id}, { $set: { login: req.body.login, email: req.body.email}});
+		let user = req.body
+		user = Utils.filter(model.schema.obj, user, 1)
+		if (user.password)
+			user.password = await argon.hash(user.password);
+		await model.updateOne({"_id": req.params.id}, user);
 		console.info("modifyUserById : modify _id : %s", req.params.id);
 		return res.status(200).send("User modified");
 	} catch (err) {
@@ -126,6 +118,15 @@ function validateUser(user) {
 		login: Joi.string().min(3).max(9).required(),
 		email: Joi.string().email({ minDomainAtoms: 2 }).required(),
 		password: Joi.string().min(8).max(30).required()
+	};
+
+	return Joi.validate(user, schema);
+}
+function validateUpdateUser(user) {
+
+	const schema = {
+		login: Joi.string().min(3).max(9),
+		password: Joi.string().min(8).max(30)
 	};
 
 	return Joi.validate(user, schema);
