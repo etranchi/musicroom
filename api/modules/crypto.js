@@ -7,8 +7,8 @@ class Crypto {
 	static createToken(user) {
 		let token = jwt.sign({
 			id: user._id,
-			salt: user.salt
-			// expirationToken: expirationToken
+			status: user.status,
+			password: user.password
 		}, config.token.secret);
 		// {
 		// 	// expiresIn: expiresIn

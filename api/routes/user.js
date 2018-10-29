@@ -6,6 +6,7 @@ const router = express.Router();
 const userController = require('../controllers/user');
 const strategies = require('../controllers/strategies')();
 const passport = require('passport');
+const middlewares = require('../modules/middlewares');
 
 router.post('/login',
     	passport.authenticate('local', {session: false}), userController.connect
@@ -20,11 +21,18 @@ router.get('/login/facebook',
 // 	);
 
 // TO ADD BEARER TOKEN ON ROUTE ->
-// router.get('/',
-// 		passport.authenticate('bearer'), userController.getUsers
-// 	);
+router.get('/',
+		passport.authenticate('bearer'),
+		middlewares.isConfirmed,
+		userController.getUsers
+	);
 
-router.get('/', userController.getUsers);
+router.put('/confirm',
+		passport.authenticate('bearer'),
+		userController.confirmUser
+	);
+
+// router.get('/', userController.getUsers);
 
 router.get('/:id', userController.getUserById);
 

@@ -102,12 +102,17 @@ module.exports = function () {
 		passReqToCallback: true
 	}, function(req, token, done) {
 			token = jwt.verify(token, config.token.secret);
+			console.log(token.id)
+			console.log(token.status)
+			console.log(token.password)
 			modelUser.findOne({
-				'_id': token.id
+				'_id': token.id,
+				'status': token.status,
+				'password': token.password
 			}, function (err, user) {
 				if (err)
 					return done(err);
-				if (!user || user.status != 'Active') {
+				if (!user) { // || user.status != 'Active') {
 					return done(null, false);
 				}
 				return done(null, user, { scope: 'all' });

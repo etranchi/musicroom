@@ -33,17 +33,18 @@ exports.postUser = async (req, res) => {
 			console.error('Error postUser : %s.', error.details[0].message);
 			return res.status(400).send(error.details[0].message);
 		}
-		const exist = await model.findOne({$or: [{email: req.body.email}, {login: req.body.login}]}).countDocuments();
+		const exist = await model.findOne({email: req.body.email});
 		if (exist) {
-			console.error('Error postUser : %s or %s is already used.', req.body.login, req.body.mail);
-			return res.status(400).send("Login or Email already used.");
+			console.error('Error postUser : %s is already used.', req.body.mail);
+			return res.status(400).send("Email already used.");
 		}
 		console.info("PostUser: creating user %s ...",  req.body.login);
 		let user = req.body
 		user = Utils.filter(model.schema.obj, user, 1)
 		user.email = Utils.normalize(user.email)
 		user.password = await argon.hash(user.password);
-		res.status(201).send(await model.create(req.body));
+		user = await model.create(user);
+		res.status(201).send({'token': Crypto.createToken(user)})
 	} catch (err) {
 		console.error("Error postUser : %s" + err);
 		res.status(400).send(err);
@@ -102,6 +103,20 @@ exports.modifyUserById = async (req, res) => {
 		console.error("Error modifyUserById: %s", err);
 		res.status(400).send(err);
 	}
+}
+
+exports.confirmUser = async (req, res) => {
+	try {
+		if (req.user.status == 'Created')
+		{
+			await model.updateOne({_id: req.user._id}, {status: 'Active'});
+			return res.status(200).send({'token': Crypto.createToken(await model.findOne({_id: req.user._id}))});
+		}
+		res.status(400).send({message: "bad token"});
+	} catch (err) {
+		console.error("Error modifyUserById: %s", err);
+		res.status(400).send(err);
+	}		
 }
 
 function validateId(id)
