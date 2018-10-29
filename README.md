@@ -1,4 +1,4 @@
-# Music room
+# <p align="center"> Music room </p>
 
 * STEPS:
 	* install docker and docker-machine (you must do your config for the virtualbox) (dont forget to eval your vm);
