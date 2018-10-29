@@ -64,10 +64,11 @@ exports.getUserById = async (req, res) => {
 		const { error } = validateId(req.params);
 		if (error) {
 			console.error('Error getUserById : %s.', error.details[0].message);
-			throw new Error('Invalid token');
+			throw new Error('Invalid id');
 		}
 		console.info("getUserById: search _id -> %s", req.params.id);
-		res.status(200).send(Utils.filter(model.schema.obj, await model.findOne({"_id": req.params.id}), 0));
+		let user = await model.findOne({"_id": req.params.id})
+		res.status(200).send(Utils.filter(model.schema.obj, user, 0));
 	} catch (err) {
 		console.error("Error getUserById: %s", err);
 		res.status(400).send({message: err.toString()});
@@ -77,11 +78,6 @@ exports.getUserById = async (req, res) => {
 
 exports.deleteUserById = async (req, res) => {
 	try {
-		const { error } = validateId(req.user._id);
-		if (error) {
-			console.error('Error getUserById : %s.', error.details[0].message);
-			throw new Error('Invalid token');
-		}
 		console.info("deleteUserById : delete _id -> %s", req.user._id);
 		res.status(200).send(await model.deleteOne({"_id": req.user._id}));
 	} catch (err) {
@@ -158,7 +154,6 @@ function validateUser(user) {
 		email: Joi.string().email({ minDomainAtoms: 2 }).required(),
 		password: Joi.string().min(8).max(30).required()
 	};
-
 	return Joi.validate(user, schema);
 }
 function validateUpdateUser(user) {
@@ -167,6 +162,5 @@ function validateUpdateUser(user) {
 		login: Joi.string().min(3).max(9),
 		password: Joi.string().min(8).max(30)
 	};
-
 	return Joi.validate(user, schema);
 }
