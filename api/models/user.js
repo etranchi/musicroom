@@ -5,13 +5,21 @@ const User = new Schema({
 	facebookId: {
 		type: String
 	},
+	deezerToken: {
+		type: String
+	},
+	deezerRefreshToken: {
+		type: String
+	},
+	deezerId: {
+		type: String
+	},
 	login:{
 		type: String,
 		allowNull: false
 	},
 	password:{
 		type: String,
-		allowNull: false,
 		visibility: 1
 	},
 	status:{
