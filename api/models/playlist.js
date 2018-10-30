@@ -1,9 +1,12 @@
 const mongoose 		= require('mongoose');
-const Schema 			= mongoose.Schema;
+const Schema 		= mongoose.Schema;
 const Track 		= require('../models/track');
 
 const Playlist = new Schema({
-	id: {type: Number, required: true},
+	idUser: {
+		type: Schema.Types.ObjectId
+	},
+	id: {type: Number},
 	title: {type: String},
 	description: {type: String},
 	duration: {type: Number},
@@ -29,8 +32,13 @@ const Playlist = new Schema({
 		type: {type: String},
 	},
 	type: {type: String},
-	tracks : {data: [Track.schema]}
+	tracks : {
+		data: [
+			Track.schema
+		],
+		checksum: {type: String}
+	}
 });
 
-module.exports = mongoose.model('playlist', Playlist);;
+module.exports = mongoose.model('playlist', Playlist);
 
