@@ -38,10 +38,13 @@ module.exports = {
 			res.status(200).json(event);
 		});
 	},
-	deletePlaylistById: (req, res) => {
-		playlistModel.findOneAndDelete({'id':req.params.id}, (err, data) => {
-			if(err) return res.status(400).json(err);
-			res.status(200).json(data);
-		});
+	deletePlaylistById: async (req, res) => {
+		try {
+			await playlistModel.deleteOne({'_id': req.params.id})
+			res.status(204).send();
+		} catch (err) {
+			console.log(err)
+			res.status(400).send(err);
+		}
 	}
 };
