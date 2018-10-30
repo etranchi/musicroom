@@ -2,19 +2,21 @@ import React, { Component } from 'react';
 import './sidebar.css';
 
 class Sidebar extends Component {
-
-	handleClick() {
-		console.log("coucou");
-	        this.setState({
-            	active: 'test'
-        	});
-	    }
+	update = (e) => {
+		this.props.onUpdate(e);
+	}
 	render() {
 	return (
 	  <div className="sidebar">
 	    <ul>
-	    <li onClick={this.handleClick}>toto</li>
-	    <li onClick={this.handleClick}>titi</li>
+		    <li
+			onClick={this.update.bind(this, "login")}>
+			login
+			</li>
+			<li
+			onClick={this.update.bind(this, "register")}>
+			register
+			</li>
 	    </ul>
 	  </div>
 	);
