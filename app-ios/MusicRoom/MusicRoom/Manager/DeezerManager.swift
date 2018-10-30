@@ -8,37 +8,32 @@
 
 import UIKit
 let APP_ID = "306764"
-class DeezerManager: NSObject, DeezerRequestDelegate{
-    var connect : DeezerConnect?
-    var request : DZRRequestManager = DZRRequestManager()
-    var delegate : DeezerSessionDelegate? {
-        didSet {
-            if let del = delegate {
-                connect = DeezerConnect.init(appId: APP_ID, andDelegate: del)
-                connect?.sessionDelegate = del
-                request.dzrConnect = connect
-            }
+enum SessionState {
+    case connected, disconnected
+}
+
+class DeezerManager: NSObject, DeezerSessionDelegate {
+    // Needed to handle every types of request from DeezerSDK
+    var deezerConnect: DeezerConnect?
+    
+    // .diconnected / .connected
+    var sessionState: SessionState {
+        if let connect = deezerConnect {
+            return connect.isSessionValid() ? .connected : .disconnected
         }
-    }
-    override init() {
-        super.init()
+        return .disconnected
     }
     
+    // Set a function or callback to this property if you want to get the result after login
     
-    func request(_ request: DZRNetworkRequest!, didReceiveResponse response: Data!) {
-        print("receive response")
-    }
+    static let sharedInstance : DeezerManager = {
+        let instance = DeezerManager()
+        instance.startDeezer()
+        return instance
+    }()
     
-    func request(_ request: DZRNetworkRequest!, didFailWithError error: Error!) {
-        print("fail request")
-    }
-    func deezerDidLogin() {
-        print("login&")
-    }
-    func deezerDidLogout() {
-        print("logout&")
-    }
-    func deezerDidNotLogin(_ cancelled: Bool) {
-        print("Not login&")
+    func startDeezer() {
+        deezerConnect = DeezerConnect.init(appId: APP_ID, andDelegate: self)
+        DZRRequestManager.default().dzrConnect = deezerConnect
     }
 }

@@ -27,8 +27,6 @@ class ViewController: UIViewController , DeezerSessionDelegate, SFSafariViewCont
     var deezerManager : DeezerManager?
     override func viewDidLoad() {
         super.viewDidLoad()
-        deezerManager = DeezerManager()
-        deezerManager?.delegate = self
         
         // Do any additional setup after loading the view, typically from a nib.
     }

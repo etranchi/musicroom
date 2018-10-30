@@ -12,7 +12,6 @@ import Foundation
 struct User : Decodable {
     let id : Int
     let login : String
-    let status : Status
     let picture : String
     let email : String
     let creationDate : Date

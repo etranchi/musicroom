@@ -10,21 +10,27 @@ import UIKit
 
 class MusicController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var tableView: UITableView!
-    
-    var manager : APIManager? {
-        didSet {
-            self.tracks = (manager?.getMusic())!
-        }
-    }
-    var tracks : [Track] = []
+    var tracks : [Track]?
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tracks.count
+        return tracks!.count
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let vc = segue.destination as? PlayerController {
+            if let index = sender as? Int {
+                vc.title = tracks?[index].title
+                vc.input = tracks?[index]
+            }
+        }
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "GoToPlayer", sender: indexPath.row)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MusicCell") as! MusicCell
-        cell.data = tracks[indexPath.row]
+        cell.data = tracks?[indexPath.row]
         return cell
     }
     

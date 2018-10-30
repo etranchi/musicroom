@@ -30,7 +30,7 @@ class HomeController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if let txt = sender as? String {
             if let musicVC = segue.destination as? MusicController {
                 musicVC.title = txt
-                musicVC.manager = apiManager
+                musicVC.tracks = apiManager.getMusic()
             }
             if let settingsVC = segue.destination as? SettingsController {
                 settingsVC.title = txt
@@ -52,8 +52,6 @@ class HomeController: UIViewController, UITableViewDelegate, UITableViewDataSour
         /* searchBar = UISearchBar()
         searchBar?.sizeToFit()
         searchBar?.delegate = self*/
-        player = DZRPlayer(connection: deezer.connect)
-        player?.delegate = self
         // tableViewBack.selectRow(at: [0,selectedCell], animated: true, scrollPosition: UITableViewScrollPosition(rawValue: selectedCell)!)
         // self.navigationItem.hidesSearchBarWhenScrolling = true
         // searchItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButton(_:)))
@@ -90,7 +88,7 @@ class HomeController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
     // MARK: - Table view data source
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return settings.count
+        return settings.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

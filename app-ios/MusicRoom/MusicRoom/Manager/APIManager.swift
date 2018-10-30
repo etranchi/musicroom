@@ -24,28 +24,6 @@ class APIManager: NSObject, URLSessionDelegate {
         return ret
     }
     
-    func getSearch(_ search: String) -> ResearchData {
-        let researchFilter = ["artist", "album", "track"]
-        var resSearch = ResearchData()
-        
-        for res in researchFilter {
-            var url = self.url + "search?q=\(res):\(search)"
-            var request = URLRequest(url: URL(string: url)!)
-            request.httpMethod = "GET"
-            switch res {
-                case "artist":
-                    resSearch.artists =  execute(request: request) { (tracks: Research) in }
-                case "album" :
-                    resSearch.albums = execute(request: request){ (tracks: Research) in }
-                case "track" :
-                    resSearch.tracks = execute(request: request){ (tracks: Research) in }
-            default :
-                break
-            }
-        }
-        return resSearch
-    }
-    
     func getPlaylist() -> [Playlist] {
         let url = self.url + "playlist"
         var request = URLRequest(url: URL(string: url)!)
@@ -54,6 +32,29 @@ class APIManager: NSObject, URLSessionDelegate {
         let ret = execute(request: request) { (tracks : [Playlist]) in}
         return ret
     }
+    
+    func getSearch(_ search: String) -> ResearchData {
+        let researchFilter = ["track", "album", "playlist"]
+        var resSearch = ResearchData()
+        for res in researchFilter {
+            let realSearch = search.addingPercentEncoding(withAllowedCharacters : .urlQueryAllowed)!
+            let url = self.url + "search?q=\(res):\(realSearch)"
+            var request = URLRequest(url: URL(string: url)!)
+            request.httpMethod = "GET"
+            switch res {
+                case "album" :
+                    resSearch.albums = execute(request: request){ (tracks: Research) in }
+                case "track" :
+                    resSearch.tracks = execute(request: request){ (tracks: Research) in }
+                case "playlist" :
+                    resSearch.playlists = execute(request: request){ (tracks: Research) in }
+            default :
+                break
+            }
+        }
+        return resSearch
+    }
+
     
 
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
