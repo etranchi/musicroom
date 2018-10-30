@@ -25,16 +25,15 @@ class APIManager: NSObject, URLSessionDelegate {
     }
     
     func getSearch(_ search: String) -> ResearchData {
-        let researchFilter = ["artist", "album", "track"]
+        let researchFilter = ["album", "track"]
         var resSearch = ResearchData()
         
         for res in researchFilter {
-            var url = self.url + "search?q=\(res):\(search)"
+            let w = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+            let url = self.url + "search?q=\(res):\(w)"
             var request = URLRequest(url: URL(string: url)!)
             request.httpMethod = "GET"
             switch res {
-                case "artist":
-                    resSearch.artists =  execute(request: request) { (tracks: Research) in }
                 case "album" :
                     resSearch.albums = execute(request: request){ (tracks: Research) in }
                 case "track" :

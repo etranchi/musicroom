@@ -16,10 +16,8 @@ struct Research : Decodable {
 struct ResearchData {
     var tracks : Research
     var albums : Research
-    var artists : Research
     init() {
         tracks = Research(data: [], total: -1)
         albums = Research(data: [], total: -1)
-        artists = Research(data: [], total: -1)
     }
 }
