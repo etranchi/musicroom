@@ -1,42 +1,58 @@
 const playlistModel 	= require('../models/playlist');
+const trackModel 	= require('../models/track');
 const config 			= require('../config/config');
-const request 			= require('request');
+const request 			= require('request-promise');
 const mongoose 			= require('mongoose');
 
 module.exports = {
 	getPlaylists: async (req, res) => {
-		playlistModel.find(null, (err, event) => {
-				if (err) res.status(400).json(err);
-				res.status(200).json(event);
-		});
+		try {
+			res.status(200).json(await playlistModel.find())
+		} catch (err) {
+			res.status(400).json(err)
+		}
 	},
-	getPlaylistById: (req, res) => {
-		playlistModel.findOne({'id':req.params.id}, (err, event) => {
-			if (err) return res.json(err)
-			else if (event == null) {
-				request(
-				{uri: config.deezer.apiUrl + '/playlist/' + req.params.id},
-				(err, head, body) => {
-					if (err) return res.json(err)
-					playlistModel.create(JSON.parse(body), (err, event) => {
-						if(err) return res.status(400).json(err);
-						return res.status(200).json(event);
-					});
-				})
-			} else return res.status(200).json(event);
-		});
+	getPlaylistById: async (req, res) => {
+		try {
+			let playlist = null
+			if (!Number(req.params.id))
+				return res.status(200).json(await playlistModel.findOne({'_id': req.params.id}) || {})
+			else
+				playlist = await playlistModel.findOne({'id': req.params.id})
+			if (!playlist) {
+				let options = {
+					method: 'GET',
+					uri: config.deezer.apiUrl + '/playlist/' + req.params.id,
+					json: true
+				};
+				let rp = await request(options)
+				if (rp.id)
+				{
+					playlist = await playlistModel.create(rp)
+					trackModel.insertMany(playlist.tracks.data, (err, event) => {})
+				}
+			}
+			res.status(200).json(playlist || {});
+		} catch (err) {
+			console.log("Bad Request getPlaylistById" + err)
+			res.status(400).json(err);
+		}
 	},
-	postPlaylist: (req, res) => {
-		playlistModel.create(req.body, (err, event) => {
-			if(err) return res.status(400).json(err);
-			res.status(201).json(event);
-		});
+	postPlaylist: async (req, res) => {
+		try {
+			req.body.userId = req.user._id
+			res.status(201).json(await playlistModel.create(req.body));
+		} catch (err) {
+			res.status(400).json(err);
+		}
 	},
-	putPlaylistById: (req, res) => {
-		playlistModel.findByIdAndUpdate(req.params.id, req.body, {new: true},  (err, event) => {
-			if(err) return res.status(400).json(err);
+	putPlaylistById: async (req, res) => {
+		try {
+			let event = await playlistModel.updateOne(req.params.id, req.body, {new: true})
 			res.status(200).json(event);
-		});
+		} catch (err) {
+			res.status(400).json(err)
+		}
 	},
 	deletePlaylistById: async (req, res) => {
 		try {
