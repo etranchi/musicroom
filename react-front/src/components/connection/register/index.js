@@ -31,9 +31,9 @@ class Register extends Component {
 				'password': this.state.password
 		})
 		.then((resp) => {
-			localStorage.setItem('token', resp.data.token);
 			axios.put('https://192.168.99.100:4242/user/confirm', null, {'headers':{'Authorization': 'Bearer '+ resp.data.token}})
 			.then((resp) => {
+				localStorage.setItem('token', resp.data.token);
 				console.log("confirm success");
 				this.props.updateParent({'token':resp.data.token});
 			})

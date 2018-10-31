@@ -14,21 +14,24 @@ class App extends Component {
 	}
 
   updateState = (val) => {
+    console.log('old state');
+    console.log(this.state);
     this.setState(val);
-    if (!val.token)
-      localStorage.setItem('token', '');
+    console.log('new state');
+    console.log(this.state);
   };
 
   render() {
   	// const current = this.state.current;
-    const token = this.state.token
-
+    const token = localStorage.getItem('token')
+    console.log('token ->');
+    console.log(token);
     return (
       <div className="App">
       {token ? (
         <Connected updateParent={this.updateState} currentComponent={this.state.currentComponent}/>
       ) : (
-            <Connection updateParent={this.updateState} currentComponent={this.state.currentComponent}/>
+        <Connection updateParent={this.updateState} currentComponent={this.state.currentComponent}/>
       )}
       </div>
     );
