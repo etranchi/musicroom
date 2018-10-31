@@ -5,24 +5,30 @@ import './styles.css';
 class Setting extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {user: {}}
+		this.state = {
+			user: {},
+			error: {}
+		}
+		this.getUser();
+	}
+
+	getUser() {
 		axios.get('https://192.168.99.100:4242/user/me', 
 		{'headers':{'Authorization':'Bearer '+ localStorage.getItem('token')}})
 		.then((resp) => {
-			console.log(resp);
 			this.setState({user:resp.data});
-			console.log(this.state);
 		}).
 		catch((err) => {
-			console.log('err ->');
+			this.setState({error: err})
 			console.log(err);
 		})
 	}
 	render() {
 	return (
 		<div>
-			<p> Bienvenue {this.state.user.login}</p>
-			'Setting component'
+			<p> Login: {this.state.user.login}</p>
+			<p> email: {this.state.user.email}</p>
+			<p> Status: {this.state.user.status}</p>
 		</div>
 	);
   }
