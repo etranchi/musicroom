@@ -9,15 +9,29 @@
 import UIKit
 
 class PlayerController: UIViewController, DZRPlayerDelegate {
-    var player : DZRPlayer?
     var networkType : DZRPlayerNetworkType?
     var request : DZRRequestManager?
     var cancelable : DZRCancelable?
     var deezer = DeezerManager()
     var track : DZRTrack?
-    
+    var pause : Bool =  false
+    @IBOutlet weak var playPauseButton: UIButton!
     @IBOutlet weak var imageLayout: UIImageView!
     var input : Track?
+    var previewTime = 30 // User connected or not
+    @IBOutlet weak var allTime: UILabel!
+    @IBOutlet weak var currentTime: UILabel!
+    @IBOutlet weak var progress: UIProgressView!
+    private lazy var player: DZRPlayer? = {
+        guard let deezerConnect = DeezerManager.sharedInstance.deezerConnect,
+            var _player = DZRPlayer(connection: deezerConnect) else {
+                return nil
+        }
+        _player.shouldUpdateNowPlayingInfo = true
+        _player.delegate = self
+        return _player
+    }()
+    
     
     func getImage(_ track : Track) {
         do {
@@ -33,10 +47,12 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        player = DZRPlayer.init(connection: deezer.deezerConnect)
-        player?.networkType = .wifiOnly
-        player?.delegate = self
+        currentTime.text = "0:00"
+        allTime.text = "0:30"
+        player?.networkType = .wifiAnd3G
+        player?.shouldUpdateNowPlayingInfo = true
         request = DZRRequestManager.default().sub()
+        progress.progress = 0
         if (input != nil) {
             getImage(input!)
         }
@@ -50,27 +66,57 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     }
     
     @IBAction func playButton(_ sender: Any) {
-        self.cancelable?.cancel()
-        self.player?.stop()
-        let url = "https://api.deezer.com/track/" + String(describing: input?.id)
-        // self.player.
-        self.cancelable = DZRTrack.object(withIdentifier: String(input!.id), requestManager: request) { (response, err) in
-            if err != nil {
-                print("Error")
-            } else {
-                print(response)
-                print(self.input?.id)
-                if let res = response as? DZRPlayable {
-                    print(res.isKind(of: DZRPlayable.self))
-                    print("before ready")
-                    print(self.player?.isReady())
+        if (player?.isPlaying())! {
+            self.player?.pause()
+            pause = true
+        }
+        else if pause == true {
+            pause = false
+            self.player?.play()
+            
+        }
+        else {
+            self.cancelable?.cancel()
+            self.player?.stop()
+            self.cancelable = DZRTrack.object(withIdentifier: String(input!.id), requestManager: request) { (response, err) in
+                if err != nil {
+                    print("Error")
                 } else {
-                    print("Error DZRplayable")
+                    if let res = response as? DZRTrack {
+                        self.player?.play(res)
+                    } else {
+                        print("Error DZRplayable")
+                    }
                 }
             }
         }
     }
     
+    func player(_ player: DZRPlayer!, didEncounterError error: Error!) {
+        print("error")
+    }
+    
+    func player(_ player: DZRPlayer!, didStartPlaying track: DZRTrack!) {
+        print("start")
+    }
+    
+    func player(_ player: DZRPlayer!, didPlay playedBytes: Int64, outOf totalBytes: Int64) {
+        let progress = Float(playedBytes) /  Float(totalBytes)
+        self.progress.progress = progress
+        let current = Float(previewTime) * progress
+        currentTime.text = "0:" + String(Int(current))
+        print("play")
+        playPauseButton.imageView?.image = UIImage(named: "pause")
+    }
+    
+    func player(_ player: DZRPlayer!, didBuffer bufferedBytes: Int64, outOf totalBytes: Int64) {
+        print("buffer")
+    }
+    
+    func playerDidPause(_ player: DZRPlayer!) {
+        playPauseButton.imageView?.image = UIImage(named: "play")
+        print("pause")
+    }
     /*
     // MARK: - Navigation
 

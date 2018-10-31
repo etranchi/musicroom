@@ -20,12 +20,8 @@ class HomeCell: UITableViewCell {
     }
     override func awakeFromNib() {
         super.awakeFromNib()
-        let bP = UIBezierPath(rect: self.bounds)
-        // let bezierPath = UIBezierPath(roundedRect: self.frame, byRoundingCorners: [.bottomLeft, .topLeft, .topRight, .bottomRight], cornerRadii: self.frame.size)
-        let shape = CAShapeLayer()
-        shape.path = bP.cgPath
-        self.layer.mask = shape
-        self.layer.masksToBounds = true
+     
+        // let bezierPath = UIBezierPath(roundedRect: self.frame, byRoundingCorners: [.bottomLeft, .topLeft, .topRight, .bottomRight], cornerRadii: self.frame.size
         
     }
     

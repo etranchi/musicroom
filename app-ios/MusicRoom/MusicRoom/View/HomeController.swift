@@ -11,19 +11,11 @@ import UIKit
 var settings : [String] = ["Search", "Musics", "Playlists", "Settings"]
 
 
-class HomeController: UIViewController, UITableViewDelegate, UITableViewDataSource, DZRPlayerDelegate{
+class HomeController: UIViewController, UITableViewDelegate, UITableViewDataSource{
     
     // @IBOutlet weak var tableViewFront: UITableView!
     var tracks : [Track] = []
     var playlists : [Playlist] = []
-    var searchBar : UISearchBar?
-    var searchItem : UIBarButtonItem?
-    var cancelItem : UIBarButtonItem?
-    var profilItem : UIBarButtonItem?
-    var player : DZRPlayer?
-    var deezer : DeezerManager = DeezerManager()
-    var profileIsVisible : Bool = false
-    var selectedCell = 0
     var apiManager : APIManager = APIManager()
     
     @IBAction override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

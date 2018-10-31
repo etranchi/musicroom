@@ -34,20 +34,19 @@ class APIManager: NSObject, URLSessionDelegate {
     }
     
     func getSearch(_ search: String) -> ResearchData {
-        let researchFilter = ["track", "album", "playlist"]
+        let researchFilter = ["track", "album"]
         var resSearch = ResearchData()
         for res in researchFilter {
             let realSearch = search.addingPercentEncoding(withAllowedCharacters : .urlQueryAllowed)!
-            let url = self.url + "search?q=\(res):\(realSearch)"
+            let url = self.url + "search?q=\(res)?:\(realSearch)"
+            print("URLLLLL \(url)")
             var request = URLRequest(url: URL(string: url)!)
             request.httpMethod = "GET"
             switch res {
-                case "album" :
-                    resSearch.albums = execute(request: request){ (tracks: Research) in }
                 case "track" :
                     resSearch.tracks = execute(request: request){ (tracks: Research) in }
-                case "playlist" :
-                    resSearch.playlists = execute(request: request){ (tracks: Research) in }
+                case "album" :
+                    resSearch.albums = execute(request: request){ (tracks: ResearchAlbum) in }
             default :
                 break
             }
@@ -71,6 +70,7 @@ class APIManager: NSObject, URLSessionDelegate {
                 print("task session error: \(err)")
             } else if let d = data {
                 do {
+                    print(d)
                     if let dic : T = try JSONDecoder().decode(T.self, from: d){
                         dictionnary = dic
                     }

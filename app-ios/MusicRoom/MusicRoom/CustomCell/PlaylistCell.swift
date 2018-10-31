@@ -27,7 +27,7 @@ class PlaylistCell: UITableViewCell {
                 } catch {
                     print("Error when loading image")
                 }
-                auteurLabel.text = d.creator.name
+                auteurLabel.text = d.title
             }
         }
     }

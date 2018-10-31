@@ -11,7 +11,7 @@ import UIKit
 class SearchController: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource {
     var manager : APIManager?
     var resultSearch : ResearchData?
-    var typeOfSearch = ["Track", "Album" ,"Playlist"]
+    var typeOfSearch = ["Track","Album"]
     var bool : Bool = false
     
     @IBOutlet weak var tableView: UITableView!
@@ -35,11 +35,9 @@ class SearchController: UIViewController, UISearchBarDelegate, UITableViewDelega
         let cell = tableView.dequeueReusableCell(withIdentifier: "MusicCell") as! MusicCell
         if indexPath.section == 0 {
             cell.data = resultSearch?.tracks.data[indexPath.row]
-        } else if indexPath.section == 1 {
-            cell.data = resultSearch?.albums.data[indexPath.row]
         }
-        else if indexPath.section == 1 {
-            cell.data = resultSearch?.playlists.data[indexPath.row]
+        else {
+            cell.search = resultSearch?.albums.data[indexPath.row]
         }
         return cell
     }
@@ -52,6 +50,34 @@ class SearchController: UIViewController, UISearchBarDelegate, UITableViewDelega
         return bool ? typeOfSearch.count : 0
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "SearchMusic" {
+            if let vc = segue.destination as? PlayerController {
+                if let music = sender as? Track {
+                    vc.input = music
+                }
+               
+            }
+        }
+        if segue.identifier == "SearchPlaylist" {
+            if let vc = segue.destination as? MusicController{
+                if let playlist = sender as? Playlist {
+
+                }
+            }
+        }
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 0 {
+            print("section 000000 ")
+            performSegue(withIdentifier: "SearchMusic", sender: resultSearch?.tracks.data[indexPath.row])
+        }
+        if indexPath.section == 1 {
+            print("section 11111 ")
+            performSegue(withIdentifier: "SearchPlaylist", sender: resultSearch?.albums.data[indexPath.row])
+        }
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if !bool {
             return 0
@@ -61,8 +87,6 @@ class SearchController: UIViewController, UISearchBarDelegate, UITableViewDelega
             return (resultSearch?.tracks.data.count)! > 3 ? 3 : (resultSearch?.tracks.data.count)!
         case 1:
             return (resultSearch?.albums.data.count)! > 3 ? 3 : (resultSearch?.albums.data.count)!
-        case 2:
-            return (resultSearch?.playlists.data.count)! > 3 ? 3 : (resultSearch?.playlists.data.count)!
         default:
             return 0
         }

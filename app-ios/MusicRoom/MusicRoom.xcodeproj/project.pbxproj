@@ -10,6 +10,7 @@
 		770F5B1C218870FF00CC0FF7 /* PlaylistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770F5B1B218870FE00CC0FF7 /* PlaylistCell.swift */; };
 		770F5B1E218876FB00CC0FF7 /* DisplayPlaylistController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770F5B1D218876FB00CC0FF7 /* DisplayPlaylistController.swift */; };
 		770F5B202188895100CC0FF7 /* PlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770F5B1F2188895100CC0FF7 /* PlayerController.swift */; };
+		7732E7AC218A017E00F7B7DB /* AlbumCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7732E7AB218A017E00F7B7DB /* AlbumCell.swift */; };
 		773F0D012187184F005FA297 /* MusicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773F0D002187184F005FA297 /* MusicController.swift */; };
 		773F0D0321871FB2005FA297 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773F0D0221871FB2005FA297 /* SettingsController.swift */; };
 		773F0D05218728E4005FA297 /* PlaylistController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773F0D04218728E4005FA297 /* PlaylistController.swift */; };
@@ -47,6 +48,7 @@
 		770F5B1B218870FE00CC0FF7 /* PlaylistCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistCell.swift; sourceTree = "<group>"; };
 		770F5B1D218876FB00CC0FF7 /* DisplayPlaylistController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayPlaylistController.swift; sourceTree = "<group>"; };
 		770F5B1F2188895100CC0FF7 /* PlayerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerController.swift; sourceTree = "<group>"; };
+		7732E7AB218A017E00F7B7DB /* AlbumCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumCell.swift; sourceTree = "<group>"; };
 		773F0D002187184F005FA297 /* MusicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicController.swift; sourceTree = "<group>"; };
 		773F0D0221871FB2005FA297 /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		773F0D04218728E4005FA297 /* PlaylistController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistController.swift; sourceTree = "<group>"; };
@@ -152,6 +154,7 @@
 				77820B952180840700CB04A7 /* HomeCell.swift */,
 				77B444772181F4D900B3F536 /* MusicCell.swift */,
 				770F5B1B218870FE00CC0FF7 /* PlaylistCell.swift */,
+				7732E7AB218A017E00F7B7DB /* AlbumCell.swift */,
 			);
 			path = CustomCell;
 			sourceTree = "<group>";
@@ -360,6 +363,7 @@
 				778BF9AD218356DF00448FE6 /* Event.swift in Sources */,
 				770F5B1C218870FF00CC0FF7 /* PlaylistCell.swift in Sources */,
 				8F18989C217F3B4D00CE1A8D /* DeezerManager.swift in Sources */,
+				7732E7AC218A017E00F7B7DB /* AlbumCell.swift in Sources */,
 				773F0D0321871FB2005FA297 /* SettingsController.swift in Sources */,
 				8F364B85217E5B9100B57FC8 /* ViewController.swift in Sources */,
 				770F5B202188895100CC0FF7 /* PlayerController.swift in Sources */,

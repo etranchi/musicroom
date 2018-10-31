@@ -13,13 +13,21 @@ struct Research : Decodable {
     var total : Int
 }
 
+struct SearchAlbum : Decodable {
+    let id : Int
+    let title : String
+    let link : String
+    let artist : Artist
+}
+struct ResearchAlbum : Decodable {
+    let data : [SearchAlbum]
+}
+
 struct ResearchData {
     var tracks : Research
-    var albums : Research
-    var playlists : Research
+    var albums : ResearchAlbum
     init() {
         tracks = Research(data: [], total: -1)
-        albums = Research(data: [], total: -1)
-        playlists = Research(data: [], total: -1)
+        albums = ResearchAlbum(data: [])
     }
 }

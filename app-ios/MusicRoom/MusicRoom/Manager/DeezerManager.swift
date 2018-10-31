@@ -33,7 +33,7 @@ class DeezerManager: NSObject, DeezerSessionDelegate {
     }()
     
     func startDeezer() {
-        deezerConnect = DeezerConnect.init(appId: APP_ID, andDelegate: self)
+        deezerConnect = DeezerConnect(appId: APP_ID, andDelegate: self)
         DZRRequestManager.default().dzrConnect = deezerConnect
     }
 }

@@ -1,47 +1,31 @@
 //
-//  MusicCell.swift
+//  AlbumCell.swift
 //  MusicRoom
 //
-//  Created by Etienne TRANCHIER on 10/25/18.
+//  Created by Etienne TRANCHIER on 10/31/18.
 //  Copyright © 2018 Etienne Tranchier. All rights reserved.
 //
 
 import UIKit
 
-class MusicCell: UITableViewCell {
-    
+class AlbumCell: UITableViewCell {
+
     @IBOutlet weak var auteurLabel: UILabel!
+    @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var titreLabel: UILabel!
     @IBOutlet weak var imageLayout: UIImageView!
-    @IBOutlet weak var timeLabel: UILabel!
-    var search : SearchAlbum? {
-        didSet {
-            if let d = search {
-                titreLabel.text = d.title
-                timeLabel.text = ""
-                do {
-                    let url = URL(string: d.artist.picture)
-                    let image = try Data(contentsOf: url!, options: Data.ReadingOptions.mappedIfSafe)
-                    imageLayout.image = UIImage(data: image)
-                } catch {
-                    print("Error when loading image")
-                }
-                auteurLabel.text = d.artist.name
-            }
-        }
-    }
-    var data : Track? {
+    var data : SearchAlbum? {
         didSet {
             if let d = data {
                 titreLabel.text = d.title
-                timeLabel.text = String(d.duration / 60) + ":" + String(d.duration % 60)
-                do {
-                    let url = URL(string: d.album.cover)
+                timeLabel.text = ""
+                /*do {
+                    let url = URL(string: d.picture)
                     let image = try Data(contentsOf: url!, options: Data.ReadingOptions.mappedIfSafe)
                     imageLayout.image = UIImage(data: image)
                 } catch {
                     print("Error when loading image")
-                }
+                }*/
                 auteurLabel.text = d.artist.name
             }
         }
