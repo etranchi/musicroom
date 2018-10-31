@@ -1,11 +1,11 @@
-STEP 1:
-	- install docker and docker-machine (you must do your config for the virtualbox) (dont forget to eval your vm);
-	- sh < <(curl "https://gist.githubusercontent.com/gcamerli/b8cf836f8627cb285f33086db10096a2/raw/8bb015464dfc8716f5fed322221fdc43b3e6ac88/docker_setup.sh")
-	- cp config/config_dev.json config/config.json -> and add all credentials
+# <p align="center"> Music room </p>
 
-STEP 2:
-	- docker-compose up --build
+* STEPS:
+	* install docker and docker-machine (you must do your config for the virtualbox) _dont forget to eval your vm_
+	* `sh < <(curl "https://gist.githubusercontent.com/smurfy92/b72e24f04a7a96efa262a366c9628175/raw/9d988b733a2cabb54ed339dea17c47e2d6e7a568/42_symlinks")` _run one time this script to create symslinks on your sgoinfre_
+	* cp config/config_dev.json config/config.json _and add all credentials_
+	* docker-compose up --build
 
-ACCESS THE CONTAINER:
-	- docker exec -it <container-id> /bin/bash
+* ACCESS THE CONTAINER:
+	* docker exec -it <container-id> /bin/bash
 

@@ -3,7 +3,7 @@ exports.index = (req, res) => {
 }
 
 exports.callback = (req, res) => {
-	res.status(200).json({'login': 'success'});
+	res.status(200).json({'login': "yo"});
 }
 
 exports.login_error = (req,res) => {

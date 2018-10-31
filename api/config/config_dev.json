@@ -1,6 +1,9 @@
 {
 	"port": 4242,
 	"host": "0.0.0.0",
+	"token": {
+		"secret": ""
+	},
 	"deezer": {
 		"apiUrl": "https://api.deezer.com",
 		"clientID": "",
