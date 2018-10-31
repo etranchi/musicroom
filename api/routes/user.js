@@ -36,25 +36,28 @@ router.post('/resendMail',
 	);
 
 router.get('/me',
-	passport.authenticate('bearer'),
-	middlewares.isConfirmed,
-	userController.getMe
-);
+		passport.authenticate('bearer'),
+		middlewares.isConfirmed,
+		userController.getMe
+	);
 
 router.put('/me',
-	passport.authenticate('bearer'),
-	middlewares.isConfirmed,
-	userController.modifyUserById);
+		passport.authenticate('bearer'),
+		middlewares.isConfirmed,
+		userController.modifyUserById
+	);
 
 router.delete('/me',
-	passport.authenticate('bearer'),
-	middlewares.isConfirmed,
-	userController.deleteUserById);
+		passport.authenticate('bearer'),
+		middlewares.isConfirmed,
+		userController.deleteUserById
+	);
 
 router.get('/:id',
-	passport.authenticate('bearer'),
-	middlewares.isConfirmed,
-	userController.getUserById);
+		passport.authenticate('bearer'),
+		middlewares.isConfirmed,
+		userController.getUserById
+	);
 
 router.post('/', userController.postUser);
 

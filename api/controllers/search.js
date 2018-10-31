@@ -15,7 +15,7 @@ module.exports = {
 			(err, head, body) => {
 				if (err)
 					res.json(err)
-				res.json(body);
+				res.json(JSON.parse(body));
 			})
 	}
 }

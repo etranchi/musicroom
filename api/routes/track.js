@@ -8,7 +8,7 @@ router.get('/', trackController.getTracks);
 
 router.get('/:id', trackController.getTrackById);
 
-router.post('/:id', trackController.postTrackVote);
+// router.put('/:id', trackController.postTrackVote);
 
 router.delete('/:id', trackController.deleteTrackById);
 
