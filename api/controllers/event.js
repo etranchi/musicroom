@@ -20,6 +20,11 @@ module.exports = {
 	postEvent: async (req, res) => {
 		try {
 			// ADD JOI.VALIDATION
+			if (req.body.picture) {
+				// console.log(req.body.picture);
+				// console.log(JSON.parse(req.body.picture));
+				// console.log(JSON.stringify(req.body.picture));	
+			}
 			res.status(200).json(await modelEvent.create(req.body))
 		} catch (err) {
 			res.status(400).json(err);
