@@ -20,11 +20,11 @@ class Connected extends Component {
 		      email: 'jdandturk@gmail.com'
 		    }}
 		  />
-		  <SideNavItem href='#!icon' icon='cloud' onClick={this.props.updateParent.bind(this, {'currentComponent':'event'})}>Event</SideNavItem>
+		  <SideNavItem icon='cloud' onClick={this.props.updateParent.bind(this, {'currentComponent':'event'})}>Event</SideNavItem>
 		  <SideNavItem divider />
-		  <SideNavItem href='#!icon' icon='cloud' onClick={this.props.updateParent.bind(this, {'currentComponent':'playlist'})}>Playlist</SideNavItem>
+		  <SideNavItem icon='cloud' onClick={this.props.updateParent.bind(this, {'currentComponent':'playlist'})}>Playlist</SideNavItem>
 		  <SideNavItem divider />
-		  <SideNavItem href='#!icon' icon='cloud' onClick={this.props.updateParent.bind(this, {'currentComponent':'setting'})}>Setting</SideNavItem>
+		  <SideNavItem icon='cloud' onClick={this.props.updateParent.bind(this, {'currentComponent':'setting'})}>Setting</SideNavItem>
 		</SideNav>
 	)
   }
