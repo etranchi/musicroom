@@ -9,7 +9,10 @@ const config = require('../config/config.json');
 const argon = require('argon2');
 
 exports.connect = (req, res) => {
-		res.status(200).json({'token': Crypto.createToken(req.user)});
+		res.status(200).json({
+			'token': Crypto.createToken(req.user),
+			'user': Utils.filter(model.schema.obj, req.user, 0)
+		});
     }
 
 exports.getUsers = async (req, res) => {
@@ -79,7 +82,8 @@ exports.getUserById = async (req, res) => {
 exports.deleteUserById = async (req, res) => {
 	try {
 		console.info("deleteUserById : delete _id -> %s", req.user._id);
-		res.status(200).send(await model.deleteOne({"_id": req.user._id}));
+		await model.deleteOne({"_id": req.user._id})
+		res.status(204).send();
 	} catch (err) {
 		console.error("Error deleteUserById: %s", err);
 		res.status(400).send({message: err.toString()});

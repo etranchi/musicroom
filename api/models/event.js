@@ -1,9 +1,9 @@
 const mongoose 	= require('mongoose');
 const Schema 	= mongoose.Schema;
 const User		= require('../models/user');
+const Playlist 		= require('../models/playlist');
 
 const Event = new Schema({
-	id: {type: Number, required: true},
 	creator: {type: User.schema, required:true},
 	location: {
 		address : {
@@ -21,7 +21,7 @@ const Event = new Schema({
 	visibility: {type:Number},
 	public: {type: Boolean},
 	creation_date: {type: Date, default: Date.now},
-	playlist_id: {type: String, required: true},
+	playlist: {type: Playlist.schema, required: true},
 	members : [User.schema],
 	adminMembers: [User.schema]
 
