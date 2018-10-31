@@ -9,10 +9,14 @@ class Connected extends Component {
 	constructor(props) {
 		super(props);
 	}
+	deleteToken() {
+		localStorage.setItem('token', '');
+		this.props.updateParent({'token': ''})
+	}
 	render() {
 	return (
 		<div>
-		<button onClick={this.props.updateParent.bind(this,{'token':''})}>disconnect</button>
+		<button onClick={this.deleteToken.bind(this)}>disconnect</button>
 		<Sidebar updateParent={this.props.updateParent}/>
 		{this.props.currentComponent === 'event'? <Event/> : null}
 		{this.props.currentComponent === 'playlist'? <Playlist/> : null}
