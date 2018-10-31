@@ -6,5 +6,11 @@ const searchController = require('../controllers/search');
 
 router.get('/', searchController.search);
 
+router.get('/track', searchController.searchTrack);
+
+router.get('/album', searchController.searchAlbum);
+
+router.get('/playlist', searchController.searchPlaylist);
+
 
 module.exports = router;
