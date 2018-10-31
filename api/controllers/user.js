@@ -9,7 +9,10 @@ const config = require('../config/config.json');
 const argon = require('argon2');
 
 exports.connect = (req, res) => {
-		res.status(200).json({'token': Crypto.createToken(req.user)});
+		res.status(200).json({
+			'token': Crypto.createToken(req.user),
+			'user': Utils.filter(model.schema.obj, req.user, 0)
+		});
     }
 
 exports.getUsers = async (req, res) => {
