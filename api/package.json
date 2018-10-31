@@ -28,7 +28,8 @@
 		"passport-http-bearer": "1.0.1",
 		"passport-local": "1.0.0",
 		"passport-strategy": "1.0.0",
-		"request": "^2.88.0"
+		"request": "^2.88.0",
+		"request-promise": "^4.2.2"
 	},
 	"devDependencies": {
 		"nodemon": "^1.18.4"

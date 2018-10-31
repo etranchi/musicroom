@@ -2,7 +2,7 @@
 api/node_modules/
 api/config/config.json
 api/package-lock.json
-react-front/yarn.lock
+react-front/package-lock.lock
 react-front/node_modules
 
 react-front/coverage

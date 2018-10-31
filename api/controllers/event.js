@@ -1,3 +1,5 @@
+'use strict'
+
 const modelEvent = require('../models/event');
 // geolib pour le calcul de radius
 module.exports = {
@@ -9,27 +11,35 @@ module.exports = {
 		}
 	},
 	getEventById: async (req, res) => {
-		modelEvent.findOne({'id':req.params.id}, (err, event) => {
-			if (err) res.status(400).json(err);
-			res.status(200).json(event);
-		})
+		try {
+			res.status(200).json(await modelEvent.findOne({'_id':req.params.id}));
+		} catch (err) {
+			res.status(400).json(err);
+		}
 	},
-	postEvent: (req, res) => {
-		modelEvent.create(req.body, (err, event) => {
-			if(err) return res.status(400).json(err);
-			res.status(200).json(event);
-		});
+	postEvent: async (req, res) => {
+		try {
+			// ADD JOI.VALIDATION
+			res.status(200).json(await modelEvent.create(req.body))
+		} catch (err) {
+			res.status(400).json(err);
+		}
 	},
-	putEventById:async (req, res) => {
-		modelEvent.findByIdAndUpdate(req.params.id, req.body, {new: true},  (err, event) => {
-			if(err) return res.status(400).json(err);
-			res.status(200).json(event);
-		});
+	putEventById: async (req, res) => {
+		try {
+			// ADD JOI.VALIDATION
+			res.status(200).json(await modelEvent.updateOne({_id: req.params.id}, req.body, {new: true}))
+		} catch (err) {
+			res.status(400).json(err);
+		}
 	},
-	deleteEventById:async (req, res) => {
-		modelEvent.findOneAndDelete({'id':req.params.id}, (err, event) => {
-			if(err) return res.status(400).json(err);
-			res.status(200).json(event);
-		});
+	deleteEventById: async (req, res) => {
+		try {
+			await modelEvent.deleteOne({'_id': req.params.id})
+			res.status(204).send();
+		} catch (err) {
+			console.log(err)
+			res.status(400).send(err);
+		}
 	}
 };
