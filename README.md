@@ -7,5 +7,5 @@
 	* docker-compose up --build
 
 * ACCESS THE CONTAINER:
-	* docker exec -it <container-id> /bin/bash
+	* docker exec -it c79bf5491c08 /bin/bash
 

@@ -8,6 +8,27 @@
 
 import Foundation
 
+class MusicCategory: NSObject {
+    var     name: String?
+    var     tracks: [Track]?
+    
+    static func sampleMusicCategories(_ results: ResearchData?) -> [MusicCategory]
+    {
+        let     searchCategory = MusicCategory()
+        let     songsCategory = MusicCategory()
+        let     albumCategory = MusicCategory()
+        
+        searchCategory.name = "Search"
+        songsCategory.name = "Songs"
+        albumCategory.name = "Albums"
+        
+        searchCategory.tracks = []
+        songsCategory.tracks = results?.tracks.data
+        albumCategory.tracks = results?.albums.data
+        
+        return [searchCategory, albumCategory, songsCategory]
+    }
+}
 
 struct Album : Decodable {
     let id : Int

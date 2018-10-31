@@ -13,6 +13,14 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     private let cellId = "cellId"
     let manager = APIManager()
     var resultSearch: ResearchData?
+    var searchText = "Yo"
+    
+    var musicCategories: [MusicCategory]? {
+        didSet {
+            print(musicCategories)
+        }
+    }
+    
     var typeOfSearch = ["Track", "Playlist"]
     var bool = false
     
@@ -22,24 +30,38 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
         collectionView?.backgroundColor = UIColor(white: 0.2, alpha: 1)
         collectionView?.alwaysBounceVertical = true
         collectionView?.register(CategoryCell.self, forCellWithReuseIdentifier: cellId)
+        musicCategories = MusicCategory.sampleMusicCategories(performSearch(searchText))
     }
     
-    func fake_track() -> [Track] {
-        resultSearch = manager.getSearch("Daft Punk")
+    func handleStearch(_ text: String) {
+        musicCategories = MusicCategory.sampleMusicCategories(performSearch(text))
+    }
+    
+    func performSearch(_ text: String) -> ResearchData? {
+        resultSearch = manager.getSearch(text)
         bool = true
-        return resultSearch!.tracks.data
+        return resultSearch
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let     cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! CategoryCell
         
-        cell.tracks = fake_track()
+        cell.musicCategory = musicCategories![indexPath.item]
         cell.backgroundColor = UIColor(white: 0.2, alpha: 1)
         return cell
     }
     
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        collectionViewLayout.invalidateLayout()
+    }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width, height: 240)
+        if indexPath.item == 0 {
+            return CGSize(width: view.frame.width, height: 70)
+        } else if indexPath.item == 1 {
+            return CGSize(width: view.frame.width, height: 240)
+        }
+        return CGSize(width: view.frame.width, height: 440)
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

@@ -157,9 +157,9 @@
 				79CDCF1E218870F70095CC63 /* LoadingController.swift */,
 				79CDCF20218871A20095CC63 /* TabBarController.swift */,
 				79CDCF22218873300095CC63 /* PlaylistController.swift */,
-				79CDCF24218873D20095CC63 /* SearchController.swift */,
 				79CDCF282188746D0095CC63 /* LibraryController.swift */,
 				79CDCF26218874160095CC63 /* SettingsController.swift */,
+				79CDCF24218873D20095CC63 /* SearchController.swift */,
 				79CDCF2A218876ED0095CC63 /* CustomNavigationController.swift */,
 			);
 			path = Controllers;
