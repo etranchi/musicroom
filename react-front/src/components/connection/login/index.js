@@ -3,7 +3,7 @@ import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import axios from 'axios'
 import './styles.css';
 
-class Register extends Component {
+class Login extends Component {
 	constructor(props) {
 		super(props);
 
@@ -25,30 +25,25 @@ class Register extends Component {
 
 	handleSubmit = event => {
 		event.preventDefault();
-		axios.post('https://192.168.99.100:4242/user', {
-				'login':'jules',
+		axios.post('https://192.168.99.100:4242/user/login', {
 				'email': this.state.email,
 				'password': this.state.password
 		})
 		.then((resp) => {
+			console.log('login success');
 			localStorage.setItem('token', resp.data.token);
-			axios.put('https://192.168.99.100:4242/user/confirm', null, {'headers':{'Authorization': 'Bearer '+ resp.data.token}})
-			.then((resp) => {
-				console.log("confirm success");
-				this.props.updateToken(resp.data.token);
-			})
-			.catch((err) => {
-				console.log("confirm error -> " + err)
-			})
-
+			this.props.updateParent({'token':resp.data.token});
 		})
 		.catch((err) => {
+			console.log('login error');
 			console.log(err);
 		})
+		console.log("attemp of login");
 	}
 	render() {
+
 		return (
-			<div className="Register">
+			<div className="Login">
 			<form onSubmit={this.handleSubmit}>
 				<FormGroup controlId="email" bsSize="large">
 				<ControlLabel>Email</ControlLabel>
@@ -73,7 +68,7 @@ class Register extends Component {
 				disabled={!this.validateForm()}
 				type="submit"
 				>
-				Register
+				Login
 				</Button>
 			</form>
 			</div>
@@ -81,4 +76,4 @@ class Register extends Component {
 	}
 }
 
-export default Register;
+export default Login;

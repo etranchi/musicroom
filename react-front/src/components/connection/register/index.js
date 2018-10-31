@@ -3,7 +3,7 @@ import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import axios from 'axios'
 import './styles.css';
 
-class Login extends Component {
+class Register extends Component {
 	constructor(props) {
 		super(props);
 
@@ -25,23 +25,30 @@ class Login extends Component {
 
 	handleSubmit = event => {
 		event.preventDefault();
-		axios.post('https://192.168.99.100:4242/user/login', {
+		axios.post('https://192.168.99.100:4242/user', {
+				'login':'jules',
 				'email': this.state.email,
 				'password': this.state.password
 		})
 		.then((resp) => {
 			localStorage.setItem('token', resp.data.token);
-			this.props.updateToken(resp.data.token);
+			axios.put('https://192.168.99.100:4242/user/confirm', null, {'headers':{'Authorization': 'Bearer '+ resp.data.token}})
+			.then((resp) => {
+				console.log("confirm success");
+				this.props.updateParent({'token':resp.data.token});
+			})
+			.catch((err) => {
+				console.log("confirm error -> " + err)
+			})
+
 		})
 		.catch((err) => {
 			console.log(err);
 		})
-		console.log("attemp of login");
 	}
 	render() {
-
 		return (
-			<div className="Login">
+			<div className="Register">
 			<form onSubmit={this.handleSubmit}>
 				<FormGroup controlId="email" bsSize="large">
 				<ControlLabel>Email</ControlLabel>
@@ -66,7 +73,7 @@ class Login extends Component {
 				disabled={!this.validateForm()}
 				type="submit"
 				>
-				Login
+				Register
 				</Button>
 			</form>
 			</div>
@@ -74,4 +81,4 @@ class Login extends Component {
 	}
 }
 
-export default Login;
+export default Register;
