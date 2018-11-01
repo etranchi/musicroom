@@ -10,16 +10,14 @@ import UIKit
 
 class SearchController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
 
-    private let cellId = "cellId"
+    private let categoryCellId = "categoryCellId"
+    private let searchCellId = "searchCellId"
+    
     let manager = APIManager()
     var resultSearch: ResearchData?
     var searchText = "Yo"
     
-    var musicCategories: [MusicCategory]? {
-        didSet {
-            print(musicCategories)
-        }
-    }
+    var musicCategories: [MusicCategory]?
     
     var typeOfSearch = ["Track", "Playlist"]
     var bool = false
@@ -27,14 +25,18 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        collectionView?.backgroundColor = UIColor(white: 0.2, alpha: 1)
-        collectionView?.alwaysBounceVertical = true
-        collectionView?.register(CategoryCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView.backgroundColor = UIColor(white: 0.2, alpha: 1)
+        collectionView.alwaysBounceVertical = true
+        collectionView.register(CategoryCell.self, forCellWithReuseIdentifier: categoryCellId)
+        collectionView.register(SearchCell.self, forCellWithReuseIdentifier: searchCellId)
         musicCategories = MusicCategory.sampleMusicCategories(performSearch(searchText))
     }
     
     func handleStearch(_ text: String) {
+        musicCategories?.removeAll()
+        collectionView.reloadData()
         musicCategories = MusicCategory.sampleMusicCategories(performSearch(text))
+        collectionView.reloadData()
     }
     
     func performSearch(_ text: String) -> ResearchData? {
@@ -44,11 +46,15 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let     cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! CategoryCell
-        
-        cell.musicCategory = musicCategories![indexPath.item]
-        cell.backgroundColor = UIColor(white: 0.2, alpha: 1)
-        return cell
+        if indexPath.item == 0 {
+            let     cell = collectionView.dequeueReusableCell(withReuseIdentifier: searchCellId, for: indexPath) as! SearchCell
+            return cell
+        } else {
+            let     cell = collectionView.dequeueReusableCell(withReuseIdentifier: categoryCellId, for: indexPath) as! CategoryCell
+            cell.musicCategory = musicCategories![indexPath.item - 1]
+            cell.backgroundColor = UIColor(white: 0.2, alpha: 1)
+            return cell
+        }
     }
     
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -65,6 +71,9 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
+        if let m = musicCategories {
+            return m.count + 1
+        }
+        return 1
     }
 }

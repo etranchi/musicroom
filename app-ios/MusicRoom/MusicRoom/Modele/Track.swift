@@ -14,19 +14,16 @@ class MusicCategory: NSObject {
     
     static func sampleMusicCategories(_ results: ResearchData?) -> [MusicCategory]
     {
-        let     searchCategory = MusicCategory()
         let     songsCategory = MusicCategory()
         let     albumCategory = MusicCategory()
         
-        searchCategory.name = "Search"
         songsCategory.name = "Songs"
         albumCategory.name = "Albums"
         
-        searchCategory.tracks = []
         songsCategory.tracks = results?.tracks.data
         albumCategory.tracks = results?.albums.data
         
-        return [searchCategory, albumCategory, songsCategory]
+        return [albumCategory, songsCategory]
     }
 }
 

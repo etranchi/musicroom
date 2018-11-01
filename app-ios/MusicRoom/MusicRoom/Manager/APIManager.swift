@@ -64,17 +64,14 @@ class APIManager: NSObject, URLSessionDelegate {
         var requestTokenDone : Bool = false
         let task = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: OperationQueue.main).dataTask(with: request) {
             (data, response, error) in
-
             if let err = error {
                 print("task session error: \(err)")
-            } else if let d = data {
+                return
+            }
+            if let d = data {
                 do {
-                    if let dic : T = try JSONDecoder().decode(T.self, from: d){
-                        dictionnary = dic
-                    }
-                    else {
-                        print("Error when fetching")
-                    }
+                    let dic = try JSONDecoder().decode(T.self, from: d)
+                    dictionnary = dic
                 } catch (let err) {
                     print("task dictionnary error: \(err)")
                 }
