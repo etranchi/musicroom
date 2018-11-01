@@ -98,9 +98,9 @@ class SongCell: UICollectionViewCell {
             titleLabel.text = track.title
             let sec = track.duration % 60
             if sec < 10 {
-                timeLabel.text = String(track.duration / 60) + ":0" + String(track.duration % 60)
+                timeLabel.text = String(track.duration / 60) + ":0" + String(sec)
             } else {
-                timeLabel.text = String(track.duration / 60) + ":0" + String(track.duration % 60)
+                timeLabel.text = String(track.duration / 60) + ":" + String(sec)
             }
             imageView.loadImageUsingCacheWithUrlString(urlString: track.album.cover)
         }
@@ -192,15 +192,30 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
     
     var     musicCategory: MusicCategory! {
         didSet {
+            guard musicCategory.tracks?.count != 0 else {
+                
+                musicCollectionView.reloadData()
+                return
+            }
             if musicCategory.name == "Songs"{
                 let layout = UICollectionViewFlowLayout()
                 layout.scrollDirection = .vertical
+                musicCollectionView.collectionViewLayout.invalidateLayout()
                 musicCollectionView.collectionViewLayout = layout
             }
             else {
                 let layout = UICollectionViewFlowLayout()
                 layout.scrollDirection = .horizontal
+                musicCollectionView.collectionViewLayout.invalidateLayout()
                 musicCollectionView.collectionViewLayout = layout
+                addSubview(dividerLineView)
+                
+                NSLayoutConstraint.activate([
+                    dividerLineView.topAnchor.constraint(equalTo: bottomAnchor),
+                    dividerLineView.trailingAnchor.constraint(equalTo: trailingAnchor),
+                    dividerLineView.heightAnchor.constraint(equalToConstant: 1),
+                    dividerLineView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15)
+                ])
             }
             musicCollectionView.reloadData()
         }
@@ -250,7 +265,7 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
         musicCollectionView.backgroundColor = UIColor(white: 0.2, alpha: 1)
         
         addSubview(musicCollectionView)
-        addSubview(dividerLineView)
+        
         addSubview(albumLabel)
         
         NSLayoutConstraint.activate([
@@ -262,12 +277,7 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
             musicCollectionView.topAnchor.constraint(equalTo: albumLabel.bottomAnchor),
             musicCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
             musicCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            musicCollectionView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            
-            dividerLineView.topAnchor.constraint(equalTo: musicCollectionView.bottomAnchor),
-            dividerLineView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            dividerLineView.heightAnchor.constraint(equalToConstant: 1),
-            dividerLineView.leadingAnchor.constraint(equalTo: musicCollectionView.leadingAnchor, constant: 15)
+            musicCollectionView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
     

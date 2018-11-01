@@ -68,14 +68,14 @@ class SearchCell: UICollectionViewCell {
             containerView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 5),
             containerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 14),
             containerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -14),
-            containerView.heightAnchor.constraint(equalToConstant: 30),
+            containerView.heightAnchor.constraint(equalToConstant: 40),
             
             textField.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 15),
             textField.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
             textField.rightAnchor.constraint(equalTo: searchButton.leftAnchor),
             textField.heightAnchor.constraint(equalTo: containerView.heightAnchor),
             
-            searchButton.rightAnchor.constraint(equalTo: containerView.rightAnchor, constant: -5),
+            searchButton.rightAnchor.constraint(equalTo: containerView.rightAnchor, constant: -10),
             searchButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
             searchButton.widthAnchor.constraint(equalToConstant: 22),
             searchButton.heightAnchor.constraint(equalToConstant: 22)

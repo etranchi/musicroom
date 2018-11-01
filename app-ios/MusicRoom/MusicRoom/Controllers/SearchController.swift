@@ -63,7 +63,7 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if indexPath.item == 0 {
-            return CGSize(width: view.frame.width, height: 70)
+            return CGSize(width: view.frame.width, height: 40)
         } else if indexPath.item == 1 {
             return CGSize(width: view.frame.width, height: 240)
         }
