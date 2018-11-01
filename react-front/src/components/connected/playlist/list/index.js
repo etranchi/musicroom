@@ -6,7 +6,7 @@ class List extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			playlist: []
+			playlist: null
 		}
 	}
 
@@ -22,8 +22,20 @@ class List extends Component {
 	}
 
 	render() {
-		if( this.state.playlist[0] === undefined ) {
-			return <div>Loading...</div>
+		if( this.state.playlist === null ) {
+			return (
+				<div className="preloader-wrapper active loader">
+					<div className="spinner-layer spinner-red-only">
+					<div className="circle-clipper left">
+						<div className="circle"></div>
+					</div><div className="gap-patch">
+						<div className="circle"></div>
+					</div><div className="circle-clipper right">
+						<div className="circle"></div>
+					</div>
+					</div>
+				</div>
+			);
 		}
 		return (
 			<div>
