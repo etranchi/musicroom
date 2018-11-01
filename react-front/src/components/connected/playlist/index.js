@@ -13,8 +13,8 @@ class Playlist extends Component {
 	}
 
 	componentDidUpdate(prevProps){
-		if (this.state.current.name == 'tracks')
-		// this.setState({current: {name: 'list'}})
+		if (this.state.current.name === 'tracks')
+			// this.setState({current: {name: 'list'}})
 			this.state.current.name = 'list'
 	}
 

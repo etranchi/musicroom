@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './styles.css';
+import defaultImage from '../../../../assets/playlist.png'
 import axios from 'axios'
 
 class List extends Component {
@@ -43,7 +44,7 @@ class List extends Component {
 					{this.state.playlist.map((val, i) => {
 						return (
 							<li className="collection-item avatar" key={i} onClick={this.props.state.bind(this,{'current': {name: 'tracks', tracks: val.tracks.data}})}>
-								<img src={val.picture_small} alt="" className="circle"/>
+								<img src={val.picture_small || defaultImage} alt="" className="circle"/>
 								<span className="title">{val.title}</span>
 								<p>{val.description}</p>
 							</li>
