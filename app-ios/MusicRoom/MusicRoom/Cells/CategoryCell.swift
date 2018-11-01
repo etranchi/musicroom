@@ -203,6 +203,7 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
                 musicCollectionView.collectionViewLayout = layout
             }
             musicCollectionView.reloadData()
+            
         }
     }
     
