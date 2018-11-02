@@ -21,7 +21,7 @@ extension           UIImageView
     func            loadImageUsingCacheWithUrlString(urlString: String)
     {
         self.image = nil
-        
+        guard urlString != "" else { return }
         if let cachedImage = imageCache.object(forKey: urlString as NSString) {
             self.image = cachedImage
             return
