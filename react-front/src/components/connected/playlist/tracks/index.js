@@ -10,10 +10,16 @@ class Tracks extends Component {
 
 	render() {
 		if( this.props.tracks[0] === undefined ) {
-			return <div>No tracks</div>
+			return (
+				<div>
+					<a href="#!" className="btn waves-effect waves-teal" onClick={this.props.state.bind(this,{'current': {name: 'list'}})}>Back</a>
+					<div>No tracks</div>
+				</div>
+			);
 		}
 		return (
 			<div>
+				<a href="#!" className="btn waves-effect waves-teal" onClick={this.props.state.bind(this,{'current': {name: 'list'}})}>Back</a>
 				<ul className="collection">
 					{this.props.tracks.map((val, i) => {
 						return (

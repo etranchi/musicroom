@@ -26,7 +26,7 @@ class Playlist extends Component {
 	return (
 		<div>
 		{this.state.current.name === 'list'? <List state={this.updateState}/> : null}
-		{this.state.current.name === 'tracks'? <Tracks tracks={this.state.current.tracks}/> : null}
+		{this.state.current.name === 'tracks'? <Tracks tracks={this.state.current.tracks} state={this.updateState}/> : null}
 		{/* {this.state.current.name === 'music'? <Setting/> : null} */}
 		</div>
 	);
