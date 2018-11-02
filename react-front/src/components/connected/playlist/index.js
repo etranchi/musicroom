@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './styles.css';
 import List from './list'
 import Tracks from './tracks'
-// import Music from './music'
+import SearchBar from '../searchbar'
 
 class Playlist extends Component {
 	constructor(props) {
@@ -10,6 +10,7 @@ class Playlist extends Component {
 		this.state = {
 			current: {name: 'list', id: '', tracks: []}
 		}
+		// this.componentDidUpdate = this.componentDidUpdate.bind(this);
 	}
 
 	componentDidUpdate(prevProps){
@@ -25,6 +26,7 @@ class Playlist extends Component {
 	render() {
 	return (
 		<div>
+		<SearchBar/>
 		{this.state.current.name === 'list'? <List state={this.updateState}/> : null}
 		{this.state.current.name === 'tracks'? <Tracks tracks={this.state.current.tracks} state={this.updateState}/> : null}
 		{/* {this.state.current.name === 'music'? <Setting/> : null} */}
