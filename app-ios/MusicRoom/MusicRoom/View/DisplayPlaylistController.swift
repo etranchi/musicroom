@@ -22,7 +22,7 @@ class DisplayPlaylistController: UIViewController, UITableViewDataSource, UITabl
         if let vc = segue.destination as? MusicController {
             if let playlist = sender as? Playlist {
                 vc.title = playlist.title
-                vc.tracks = playlist.tracks.data
+                // vc.tracks = playlist.tracks.data
             }
         }
     }

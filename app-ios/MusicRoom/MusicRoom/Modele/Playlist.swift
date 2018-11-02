@@ -15,16 +15,15 @@ struct Creator : Decodable {
     let type : String
 }
 
-struct ResearchTrack : Decodable {
-    let data: [Track]
+
+struct SPlaylist : Decodable {
+    let data : [Playlist]
 }
 
 struct Playlist : Decodable {
     let id : Int
     let title : String
-    let duration : Int
+    // let collaborative : Bool
     let picture : String
     let tracklist : String
-    let creator : Creator
-    let tracks : ResearchTrack
 }

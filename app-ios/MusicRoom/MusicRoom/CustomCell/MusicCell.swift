@@ -14,22 +14,6 @@ class MusicCell: UITableViewCell {
     @IBOutlet weak var titreLabel: UILabel!
     @IBOutlet weak var imageLayout: UIImageView!
     @IBOutlet weak var timeLabel: UILabel!
-    var search : SearchAlbum? {
-        didSet {
-            if let d = search {
-                titreLabel.text = d.title
-                timeLabel.text = ""
-                do {
-                    let url = URL(string: d.artist.picture)
-                    let image = try Data(contentsOf: url!, options: Data.ReadingOptions.mappedIfSafe)
-                    imageLayout.image = UIImage(data: image)
-                } catch {
-                    print("Error when loading image")
-                }
-                auteurLabel.text = d.artist.name
-            }
-        }
-    }
     var data : Track? {
         didSet {
             if let d = data {

@@ -11,7 +11,7 @@ import UIKit
 class SearchController: UIViewController, UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource {
     var manager : APIManager?
     var resultSearch : ResearchData?
-    var typeOfSearch = ["Track","Album"]
+    var typeOfSearch = ["Track","Album", "Playlist"]
     var bool : Bool = false
     
     @IBOutlet weak var tableView: UITableView!
@@ -32,14 +32,23 @@ class SearchController: UIViewController, UISearchBarDelegate, UITableViewDelega
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "MusicCell") as! MusicCell
+        
         if indexPath.section == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "MusicCell") as! MusicCell
             cell.data = resultSearch?.tracks.data[indexPath.row]
+            return cell
+        }
+        else if indexPath.section == 1 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "AlbumCell") as! AlbumCell
+            cell.data = resultSearch?.albums.data[indexPath.row]
+            return cell
         }
         else {
-            cell.search = resultSearch?.albums.data[indexPath.row]
+            let cell = tableView.dequeueReusableCell(withIdentifier: "PlaylistCell") as! PlaylistCell
+            cell.data = resultSearch?.playlists.data[indexPath.row]
+            return cell
+            
         }
-        return cell
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -87,6 +96,8 @@ class SearchController: UIViewController, UISearchBarDelegate, UITableViewDelega
             return (resultSearch?.tracks.data.count)! > 3 ? 3 : (resultSearch?.tracks.data.count)!
         case 1:
             return (resultSearch?.albums.data.count)! > 3 ? 3 : (resultSearch?.albums.data.count)!
+        case 2:
+            return (resultSearch?.playlists.data.count)! > 3 ? 3 : (resultSearch?.playlists.data.count)!
         default:
             return 0
         }

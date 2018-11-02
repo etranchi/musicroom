@@ -12,7 +12,6 @@ import Foundation
 struct Album : Decodable {
     let id : Int
     let title : String
-    let tracklist : String
     let cover : String
 }
 
@@ -20,6 +19,10 @@ struct Artist : Decodable {
     let id : Int
     let name : String
     let picture : String
+}
+
+struct SAlbum : Decodable {
+    let data : [Album]
 }
 
 struct Track : Decodable {
@@ -30,4 +33,7 @@ struct Track : Decodable {
     let artist : Artist
     let title : String
     let duration : Int
+}
+struct STrack : Decodable {
+    let data: [Track]
 }

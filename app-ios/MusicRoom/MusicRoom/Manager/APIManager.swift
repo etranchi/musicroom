@@ -34,19 +34,21 @@ class APIManager: NSObject, URLSessionDelegate {
     }
     
     func getSearch(_ search: String) -> ResearchData {
-        let researchFilter = ["track", "album"]
+        let researchFilter = ["track", "album", "playlist"]
         var resSearch = ResearchData()
         for res in researchFilter {
             let realSearch = search.addingPercentEncoding(withAllowedCharacters : .urlQueryAllowed)!
-            let url = self.url + "search?q=\(res)?:\(realSearch)"
+            let url = self.url + "search/\(res)?q=\(realSearch)"
             print("URLLLLL \(url)")
             var request = URLRequest(url: URL(string: url)!)
             request.httpMethod = "GET"
             switch res {
                 case "track" :
-                    resSearch.tracks = execute(request: request){ (tracks: Research) in }
+                    resSearch.tracks = execute(request: request){ (tracks: STrack) in }
                 case "album" :
-                    resSearch.albums = execute(request: request){ (tracks: ResearchAlbum) in }
+                    resSearch.albums = execute(request: request){ (tracks: SAlbum) in }
+            case "playlist" :
+                    resSearch.playlists = execute(request: request){ (tracks: SPlaylist) in }
             default :
                 break
             }

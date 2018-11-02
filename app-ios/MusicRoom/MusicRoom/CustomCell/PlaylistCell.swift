@@ -19,7 +19,7 @@ class PlaylistCell: UITableViewCell {
         didSet {
             if let d = data {
                 titleLabel.text = d.title
-                timeLabel.text = String(d.duration / 60) + ":" + String(d.duration % 60)
+                timeLabel.text = ""
                 do {
                     let url = URL(string: d.picture)
                     let image = try Data(contentsOf: url!, options: Data.ReadingOptions.mappedIfSafe)
