@@ -13,7 +13,6 @@
 		778BF9AF2183571100448FE6 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778BF9AE2183571100448FE6 /* User.swift */; };
 		77B444762181CD0200B3F536 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B444752181CD0200B3F536 /* APIManager.swift */; };
 		77D1C3262183895C0050B2B8 /* Playable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D1C3252183895C0050B2B8 /* Playable.swift */; };
-		77E097C22187633000C8CC5C /* Research.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E097C12187633000C8CC5C /* Research.swift */; };
 		7991484221889F8D00120E2D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7991484121889F8D00120E2D /* Extensions.swift */; };
 		79B15ECE218C69AA00B84BCB /* MusicCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79B15ECD218C69AA00B84BCB /* MusicCategory.swift */; };
 		79B15ED0218C700C00B84BCB /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79B15ECF218C700C00B84BCB /* Album.swift */; };
@@ -38,7 +37,6 @@
 		8F18989C217F3B4D00CE1A8D /* DeezerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F18989B217F3B4D00CE1A8D /* DeezerManager.swift */; };
 		8F18989E217F523800CE1A8D /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F18989D217F523800CE1A8D /* SafariServices.framework */; };
 		8F364B83217E5B9100B57FC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F364B82217E5B9100B57FC8 /* AppDelegate.swift */; };
-		8F364B85217E5B9100B57FC8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F364B84217E5B9100B57FC8 /* ViewController.swift */; };
 		8F364B88217E5B9100B57FC8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F364B86217E5B9100B57FC8 /* Main.storyboard */; };
 		8F364B8B217E5B9100B57FC8 /* MusicRoom.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8F364B89217E5B9100B57FC8 /* MusicRoom.xcdatamodeld */; };
 		8F364B8D217E5B9200B57FC8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F364B8C217E5B9200B57FC8 /* Assets.xcassets */; };
@@ -52,7 +50,6 @@
 		778BF9AE2183571100448FE6 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		77B444752181CD0200B3F536 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		77D1C3252183895C0050B2B8 /* Playable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playable.swift; sourceTree = "<group>"; };
-		77E097C12187633000C8CC5C /* Research.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Research.swift; sourceTree = "<group>"; };
 		7991484121889F8D00120E2D /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		79B15ECD218C69AA00B84BCB /* MusicCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicCategory.swift; sourceTree = "<group>"; };
 		79B15ECF218C700C00B84BCB /* Album.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
@@ -109,7 +106,6 @@
 		8F18989D217F523800CE1A8D /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		8F364B7F217E5B9100B57FC8 /* MusicRoom.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicRoom.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F364B82217E5B9100B57FC8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		8F364B84217E5B9100B57FC8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		8F364B87217E5B9100B57FC8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		8F364B8A217E5B9100B57FC8 /* MusicRoom.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MusicRoom.xcdatamodel; sourceTree = "<group>"; };
 		8F364B8C217E5B9200B57FC8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -146,7 +142,6 @@
 				778BF9AC218356DF00448FE6 /* Event.swift */,
 				778BF9AE2183571100448FE6 /* User.swift */,
 				77D1C3252183895C0050B2B8 /* Playable.swift */,
-				77E097C12187633000C8CC5C /* Research.swift */,
 			);
 			path = Modele;
 			sourceTree = "<group>";
@@ -164,11 +159,11 @@
 			children = (
 				79CDCF1E218870F70095CC63 /* LoadingController.swift */,
 				79CDCF20218871A20095CC63 /* TabBarController.swift */,
+				79CDCF2A218876ED0095CC63 /* CustomNavigationController.swift */,
 				79CDCF22218873300095CC63 /* PlaylistController.swift */,
+				79CDCF24218873D20095CC63 /* SearchController.swift */,
 				79CDCF282188746D0095CC63 /* LibraryController.swift */,
 				79CDCF26218874160095CC63 /* SettingsController.swift */,
-				79CDCF24218873D20095CC63 /* SearchController.swift */,
-				79CDCF2A218876ED0095CC63 /* CustomNavigationController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -280,7 +275,6 @@
 				778BF9A721832C8600448FE6 /* Modele */,
 				8F18989A217F3B2000CE1A8D /* Manager */,
 				8F364B82217E5B9100B57FC8 /* AppDelegate.swift */,
-				8F364B84217E5B9100B57FC8 /* ViewController.swift */,
 				8F364B86217E5B9100B57FC8 /* Main.storyboard */,
 				8F364B8C217E5B9200B57FC8 /* Assets.xcassets */,
 				8F364B8E217E5B9200B57FC8 /* LaunchScreen.storyboard */,
@@ -375,13 +369,11 @@
 				778BF9AD218356DF00448FE6 /* Event.swift in Sources */,
 				79B15ECE218C69AA00B84BCB /* MusicCategory.swift in Sources */,
 				8F18989C217F3B4D00CE1A8D /* DeezerManager.swift in Sources */,
-				8F364B85217E5B9100B57FC8 /* ViewController.swift in Sources */,
 				8F364B83217E5B9100B57FC8 /* AppDelegate.swift in Sources */,
 				79B4DE73218B4637001031D2 /* SearchCell.swift in Sources */,
 				79CDCF21218871A20095CC63 /* TabBarController.swift in Sources */,
 				79CDCF25218873D20095CC63 /* SearchController.swift in Sources */,
 				778BF9AB218355BB00448FE6 /* Playlist.swift in Sources */,
-				77E097C22187633000C8CC5C /* Research.swift in Sources */,
 				79CDCF292188746D0095CC63 /* LibraryController.swift in Sources */,
 				7991484221889F8D00120E2D /* Extensions.swift in Sources */,
 				79CDCF2B218876ED0095CC63 /* CustomNavigationController.swift in Sources */,

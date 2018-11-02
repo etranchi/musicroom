@@ -66,7 +66,7 @@ class SearchCell: UICollectionViewCell {
         
         NSLayoutConstraint.activate([
             containerView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 5),
-            containerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 14),
+            containerView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 14),
             containerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -14),
             containerView.heightAnchor.constraint(equalToConstant: 40),
             

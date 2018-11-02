@@ -102,7 +102,7 @@ class SongCell: UICollectionViewCell {
             } else {
                 timeLabel.text = String(track.duration / 60) + ":" + String(sec)
             }
-            imageView.loadImageUsingCacheWithUrlString(urlString: track.album.cover_medium)
+            imageView.loadImageUsingCacheWithUrlString(urlString: track.album.cover_small)
         }
     }
     
@@ -162,12 +162,12 @@ class SongCell: UICollectionViewCell {
         
         NSLayoutConstraint.activate([
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            imageView.heightAnchor.constraint(equalToConstant: 60),
-            imageView.widthAnchor.constraint(equalToConstant: 60),
-            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 14),
+            imageView.heightAnchor.constraint(equalToConstant: 50),
+            imageView.widthAnchor.constraint(equalToConstant: 50),
+            imageView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 14),
             
             titleLabel.topAnchor.constraint(equalTo: imageView.topAnchor),
-            titleLabel.heightAnchor.constraint(equalToConstant: 30),
+            titleLabel.heightAnchor.constraint(lessThanOrEqualToConstant: 30),
             titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             titleLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 5),
             
@@ -214,7 +214,7 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
                     dividerLineView.topAnchor.constraint(equalTo: bottomAnchor),
                     dividerLineView.trailingAnchor.constraint(equalTo: trailingAnchor),
                     dividerLineView.heightAnchor.constraint(equalToConstant: 1),
-                    dividerLineView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15)
+                    dividerLineView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 15)
                 ])
             }
             musicCollectionView.reloadData()
@@ -271,12 +271,13 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
         NSLayoutConstraint.activate([
             albumLabel.topAnchor.constraint(equalTo: topAnchor),
             albumLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor),
-            albumLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 14),
+            albumLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            albumLabel.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 14),
             albumLabel.heightAnchor.constraint(equalToConstant: 30),
             
             musicCollectionView.topAnchor.constraint(equalTo: albumLabel.bottomAnchor),
             musicCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            musicCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            musicCollectionView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             musicCollectionView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }

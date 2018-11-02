@@ -27,9 +27,9 @@ class APIManager: NSObject, URLSessionDelegate {
         var albumsRequest = URLRequest(url: URL(string: albumsUrl)!)
         albumsRequest.httpMethod = "GET"
         
-        searchTracks(request: tracksRequest) { (tracks) in
-            self.searchAlbums(request: albumsRequest, completion: { (albums) in
-                completion(tracks, albums)
+        searchAll(TrackData.self, request: tracksRequest) { (tracksData) in
+            self.searchAll(AlbumData.self, request: albumsRequest, completion: { (albumData) in
+                completion(tracksData.data, albumData.data)
             })
         }
     }
@@ -38,7 +38,7 @@ class APIManager: NSObject, URLSessionDelegate {
         completionHandler(.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
     }
     
-    func searchAlbums(request: URLRequest, completion: @escaping ([Album]) -> ())
+    func searchAll<T: Decodable>(_ myType: T.Type, request: URLRequest, completion: @escaping (T) -> ())
     {
         URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: request) { (data, response, err) in
             if err != nil {
@@ -47,29 +47,9 @@ class APIManager: NSObject, URLSessionDelegate {
             if let d = data {
                 do {
                     print(d)
-                    let dic = try JSONDecoder().decode(AlbumData.self, from: d)
+                    let dic = try JSONDecoder().decode(myType.self, from: d)
                     DispatchQueue.main.async {
-                        completion(dic.data)
-                    }
-                } catch let err {
-                    print("task dictionnary error: \(err)")
-                }
-            }
-            }.resume()
-    }
-    
-    func searchTracks(request: URLRequest, completion: @escaping ([Track]) -> ())
-    {
-        URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: request) { (data, response, err) in
-            if err != nil {
-                print("error while requesting")
-            }
-            if let d = data {
-                do {
-                    print(d)
-                    let dic = try JSONDecoder().decode(TrackData.self, from: d)
-                    DispatchQueue.main.async {
-                        completion(dic.data)
+                        completion(dic)
                     }
                 } catch let err {
                     print("task dictionnary error: \(err)")

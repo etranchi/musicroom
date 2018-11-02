@@ -14,7 +14,7 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     private let searchCellId = "searchCellId"
     
     let manager = APIManager()
-    var searchText = "Yo"
+    let initialSearch = "Daft Punk"
     
     var tracks: [Track] = []
     var albums: [Album] = []
@@ -33,12 +33,10 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
         collectionView?.register(SearchCell.self, forCellWithReuseIdentifier: searchCellId)
         
         
-        performSearch(searchText) { (albums, tracks) in
+        performSearch(initialSearch) { (albums, tracks) in
             self.musicCategories = MusicCategory.sampleMusicCategories(albums, tracks)
             self.collectionView?.reloadData()
         }
-        
-        //musicCategories = MusicCategory.sampleMusicCategories(performSearch(searchText))
     }
     
     func handleStearch(_ text: String) {
@@ -79,7 +77,7 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
         } else if indexPath.item == 1 {
             return CGSize(width: view.frame.width, height: 240)
         }
-        return CGSize(width: view.frame.width, height: 440)
+        return CGSize(width: view.frame.width, height: view.frame.height - 280)
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

@@ -14,6 +14,7 @@ struct TrackAlbum : Decodable {
     let tracklist : String
     let cover : String
     let cover_medium : String
+    let cover_small : String
 }
 
 struct TrackArtist : Decodable {
