@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -139,61 +139,37 @@
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="MusicCell" rowHeight="132" id="4nG-OH-le1" customClass="MusicCell" customModule="MusicRoom" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="132"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="MusicCell" rowHeight="57" id="4nG-OH-le1" customClass="MusicCell" customModule="MusicRoom" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="57"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="4nG-OH-le1" id="cPD-Mg-vuk">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="131.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="56.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Music" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mFe-M7-7kl">
-                                                    <rect key="frame" x="120" y="20" width="235" height="24"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="24" id="Wjn-80-ZYb"/>
-                                                    </constraints>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Music" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mFe-M7-7kl">
+                                                    <rect key="frame" x="20" y="20" width="299" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zEY-py-eeO">
-                                                    <rect key="frame" x="20" y="20" width="92" height="92"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="92" id="6cO-cV-cnl"/>
-                                                        <constraint firstAttribute="height" constant="92" id="CW9-BG-trW"/>
-                                                    </constraints>
-                                                </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6bq-6r-Yn9">
-                                                    <rect key="frame" x="120" y="77.5" width="235" height="15"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Auteur" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xlQ-EN-sGl">
-                                                    <rect key="frame" x="120" y="55" width="235" height="14.5"/>
+                                                    <rect key="frame" x="327" y="20" width="28" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="mFe-M7-7kl" firstAttribute="leading" secondItem="xlQ-EN-sGl" secondAttribute="leading" id="1wQ-4G-K3y"/>
-                                                <constraint firstItem="xlQ-EN-sGl" firstAttribute="leading" secondItem="zEY-py-eeO" secondAttribute="trailing" constant="8" symbolic="YES" id="8D8-ft-sTY"/>
-                                                <constraint firstItem="mFe-M7-7kl" firstAttribute="top" secondItem="zEY-py-eeO" secondAttribute="top" id="EfL-85-RSg"/>
-                                                <constraint firstAttribute="bottom" secondItem="zEY-py-eeO" secondAttribute="bottom" constant="20" symbolic="YES" id="MwR-21-1pS"/>
-                                                <constraint firstAttribute="trailing" secondItem="xlQ-EN-sGl" secondAttribute="trailing" constant="20" symbolic="YES" id="PHM-nu-37Q"/>
-                                                <constraint firstAttribute="bottom" secondItem="6bq-6r-Yn9" secondAttribute="bottom" constant="30" id="Wo2-nW-2Qm"/>
-                                                <constraint firstItem="zEY-py-eeO" firstAttribute="leading" secondItem="cPD-Mg-vuk" secondAttribute="leading" constant="20" symbolic="YES" id="XaP-YR-ScK"/>
-                                                <constraint firstItem="6bq-6r-Yn9" firstAttribute="leading" secondItem="zEY-py-eeO" secondAttribute="trailing" constant="8" symbolic="YES" id="bO6-hW-rPR"/>
-                                                <constraint firstItem="xlQ-EN-sGl" firstAttribute="top" secondItem="mFe-M7-7kl" secondAttribute="bottom" constant="11" id="fLP-dS-9XV"/>
-                                                <constraint firstItem="zEY-py-eeO" firstAttribute="top" secondItem="cPD-Mg-vuk" secondAttribute="top" constant="20" symbolic="YES" id="gpt-d2-v9W"/>
-                                                <constraint firstItem="mFe-M7-7kl" firstAttribute="trailing" secondItem="xlQ-EN-sGl" secondAttribute="trailing" id="hWl-wa-36S"/>
-                                                <constraint firstItem="6bq-6r-Yn9" firstAttribute="top" secondItem="xlQ-EN-sGl" secondAttribute="bottom" constant="8" id="peA-fh-PSS"/>
-                                                <constraint firstAttribute="trailing" secondItem="6bq-6r-Yn9" secondAttribute="trailing" constant="20" symbolic="YES" id="wvA-FE-Gb7"/>
+                                                <constraint firstItem="mFe-M7-7kl" firstAttribute="top" secondItem="cPD-Mg-vuk" secondAttribute="top" constant="20" symbolic="YES" id="7m3-Xy-tpy"/>
+                                                <constraint firstItem="mFe-M7-7kl" firstAttribute="leading" secondItem="cPD-Mg-vuk" secondAttribute="leading" constant="20" symbolic="YES" id="HHs-iq-ous"/>
+                                                <constraint firstAttribute="trailing" secondItem="6bq-6r-Yn9" secondAttribute="trailing" constant="20" symbolic="YES" id="Pxb-Qt-zaZ"/>
+                                                <constraint firstItem="6bq-6r-Yn9" firstAttribute="top" secondItem="cPD-Mg-vuk" secondAttribute="top" constant="20" symbolic="YES" id="TKh-3J-PLS"/>
+                                                <constraint firstAttribute="bottom" secondItem="mFe-M7-7kl" secondAttribute="bottom" constant="20" symbolic="YES" id="ZCC-7j-MIX"/>
+                                                <constraint firstItem="6bq-6r-Yn9" firstAttribute="leading" secondItem="mFe-M7-7kl" secondAttribute="trailing" constant="8" symbolic="YES" id="eVr-Xh-fw2"/>
+                                                <constraint firstAttribute="bottom" secondItem="6bq-6r-Yn9" secondAttribute="bottom" constant="20" symbolic="YES" id="qcQ-pC-HEo"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="auteurLabel" destination="xlQ-EN-sGl" id="MSU-Zz-zJs"/>
-                                            <outlet property="imageLayout" destination="zEY-py-eeO" id="hMs-Z3-1vd"/>
                                             <outlet property="timeLabel" destination="6bq-6r-Yn9" id="pS6-av-1PW"/>
                                             <outlet property="titreLabel" destination="mFe-M7-7kl" id="Yxo-bn-TeM"/>
                                         </connections>
@@ -216,12 +192,11 @@
                     </view>
                     <connections>
                         <outlet property="tableView" destination="iQ3-Wn-yrv" id="FB7-uZ-y6g"/>
-                        <segue destination="GPG-DF-JDk" kind="show" identifier="GoToPlayer" id="1VU-1C-JWL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qBd-Hq-f9D" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1554" y="220"/>
+            <point key="canvasLocation" x="1552.8" y="219.94002998500753"/>
         </scene>
         <!--Player Controller-->
         <scene sceneID="uHS-gR-RvD">
@@ -399,13 +374,13 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l78-KA-UHY">
-                                                    <rect key="frame" x="120" y="77.5" width="235" height="15"/>
+                                                    <rect key="frame" x="120" y="86.5" width="235" height="15"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Auteur" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lMw-So-7KM">
-                                                    <rect key="frame" x="120" y="55" width="235" height="14.5"/>
+                                                    <rect key="frame" x="120" y="55" width="235" height="23.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -523,13 +498,13 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IDX-Gs-GFx">
-                                                    <rect key="frame" x="120" y="77.5" width="235" height="15"/>
+                                                    <rect key="frame" x="120" y="86.5" width="235" height="15"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Auteur" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XUZ-TO-cYI">
-                                                    <rect key="frame" x="120" y="55" width="235" height="14.5"/>
+                                                    <rect key="frame" x="120" y="55" width="235" height="23.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -582,13 +557,13 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JAz-UC-I2j">
-                                                    <rect key="frame" x="120" y="77.5" width="235" height="15"/>
+                                                    <rect key="frame" x="120" y="86.5" width="235" height="15"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Auteur" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oKy-zS-IKt">
-                                                    <rect key="frame" x="120" y="55" width="235" height="14.5"/>
+                                                    <rect key="frame" x="120" y="55" width="235" height="23.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -641,13 +616,13 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dwQ-oP-DG7">
-                                                    <rect key="frame" x="120" y="77.5" width="235" height="15"/>
+                                                    <rect key="frame" x="120" y="86.5" width="235" height="15"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Auteur" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="otm-eT-dM6">
-                                                    <rect key="frame" x="120" y="55" width="235" height="14.5"/>
+                                                    <rect key="frame" x="120" y="55" width="235" height="23.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -713,7 +688,6 @@
         <image name="logo_deezer_light" width="125" height="32"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="ZdR-cs-F9X"/>
         <segue reference="zom-gl-WtB"/>
     </inferredMetricsTieBreakers>
 </document>

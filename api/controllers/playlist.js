@@ -22,7 +22,7 @@ module.exports = {
 			if (!playlist) {
 				let options = {
 					method: 'GET',
-					uri: config.deezer.apiUrl + '/playlist/' + req.params.id,
+					uri: config.deezer.apiUrl + '/playlist/' + req.params.id+ '/tracks',
 					json: true
 				};
 				let rp = await request(options)
@@ -32,7 +32,7 @@ module.exports = {
 					trackModel.insertMany(playlist.tracks.data, (err, event) => {})
 				}
 			}
-			res.status(200).json(playlist.tracks.data || {});
+			res.status(200).json(playlist.tracks || {});
 		} catch (err) {
 			console.log("Bad Request getPlaylistById" + err)
 			res.status(400).json(err);

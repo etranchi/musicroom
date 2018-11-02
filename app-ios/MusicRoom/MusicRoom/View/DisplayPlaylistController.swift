@@ -11,7 +11,7 @@ import UIKit
 class DisplayPlaylistController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var tableView: UITableView!
     var playlists : [Playlist] = []
-    
+    var manager : APIManager?
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PlaylistCell") as! PlaylistCell
         cell.data = playlists[indexPath.row]
@@ -21,8 +21,9 @@ class DisplayPlaylistController: UIViewController, UITableViewDataSource, UITabl
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let vc = segue.destination as? MusicController {
             if let playlist = sender as? Playlist {
+                let tracks = manager?.getPlaylistById(String(playlist.id))
                 vc.title = playlist.title
-                // vc.tracks = playlist.tracks.data
+                vc.tracks = tracks
             }
         }
     }
@@ -36,7 +37,7 @@ class DisplayPlaylistController: UIViewController, UITableViewDataSource, UITabl
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        manager = APIManager()
         // Do any additional setup after loading the view.
     }
 

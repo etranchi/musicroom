@@ -19,14 +19,6 @@ class MusicCell: UITableViewCell {
             if let d = data {
                 titreLabel.text = d.title
                 timeLabel.text = String(d.duration / 60) + ":" + String(d.duration % 60)
-                do {
-                    let url = URL(string: d.album.cover)
-                    let image = try Data(contentsOf: url!, options: Data.ReadingOptions.mappedIfSafe)
-                    imageLayout.image = UIImage(data: image)
-                } catch {
-                    print("Error when loading image")
-                }
-                auteurLabel.text = d.artist.name
             }
         }
     }

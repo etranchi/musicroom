@@ -18,7 +18,7 @@ struct Album : Decodable {
 struct Artist : Decodable {
     let id : Int
     let name : String
-    let picture : String
+    let picture : String?
 }
 
 struct SAlbum : Decodable {
@@ -29,7 +29,7 @@ struct Track : Decodable {
     let id : Int
     let readable : Bool
     let link : String
-    let album : Album
+    let album : Album?
     let artist : Artist
     let title : String
     let duration : Int

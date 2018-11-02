@@ -56,6 +56,27 @@ class APIManager: NSObject, URLSessionDelegate {
         return resSearch
     }
 
+    func getPlaylistById(_ id : String) ->  [Track] {
+        let url = self.url + "playlist/\(id)/tracks"
+        var request = URLRequest(url: URL(string: url)!)
+        request.httpMethod = "GET"
+        print(url)
+        print("PLAYLIST")
+        // request.setValue("Bearer " + token!, forHTTPHeaderField: "Authorization")
+        let ret = execute(request: request) { (tracks : STrack) in}
+        return ret.data
+    }
+    
+    func getAlbumById(_ id : String) ->  [Track] {
+        let url = self.url + "album/\(id)/tracks"
+        var request = URLRequest(url: URL(string: url)!)
+        request.httpMethod = "GET"
+
+        print("ALBUM")
+        // request.setValue("Bearer " + token!, forHTTPHeaderField: "Authorization")
+        let ret = execute(request: request) { (tracks : STrack) in}
+        return ret.data
+    }
     
 
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
@@ -72,7 +93,6 @@ class APIManager: NSObject, URLSessionDelegate {
                 print("task session error: \(err)")
             } else if let d = data {
                 do {
-                    print(d)
                     if let dic : T = try JSONDecoder().decode(T.self, from: d){
                         dictionnary = dic
                     }

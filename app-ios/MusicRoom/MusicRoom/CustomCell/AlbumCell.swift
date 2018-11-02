@@ -19,12 +19,14 @@ class AlbumCell: UITableViewCell {
             if let d = data {
                 titreLabel.text = d.title
                 timeLabel.text = ""
-                do {
-                    let url = URL(string: d.cover)
-                    let image = try Data(contentsOf: url!, options: Data.ReadingOptions.mappedIfSafe)
-                    imageLayout.image = UIImage(data: image)
-                } catch {
-                    print("Error when loading image")
+                if d.cover != nil {
+                    do {
+                        let url = URL(string: d.cover)
+                        let image = try Data(contentsOf: url!, options: Data.ReadingOptions.mappedIfSafe)
+                        imageLayout.image = UIImage(data: image)
+                    } catch {
+                        print("Error when loading image")
+                    }
                 }
                 auteurLabel.text = ""
             }

@@ -28,7 +28,6 @@ class PlaylistController: UIViewController, UITableViewDelegate, UITableViewData
             if let index = sender as? Int {
                 vc.title = typeOfPlaylist[index]
                 vc.playlists = playlists
-                print(vc.playlists)
             }
         }
     }

@@ -35,7 +35,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     
     func getImage(_ track : Track) {
         do {
-            let url = URL(string: track.album.cover)
+            let url = URL(string: track.album!.cover)
             let image = try Data(contentsOf: url!, options: Data.ReadingOptions.mappedIfSafe)
             if (imageLayout != nil) {
                 imageLayout.image = UIImage(data: image)

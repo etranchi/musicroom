@@ -71,19 +71,27 @@ class SearchController: UIViewController, UISearchBarDelegate, UITableViewDelega
         if segue.identifier == "SearchPlaylist" {
             if let vc = segue.destination as? MusicController{
                 if let playlist = sender as? Playlist {
-
+                    let tracks = manager?.getPlaylistById(String(playlist.id))
+                    vc.title = playlist.title
+                    vc.tracks = tracks
+                }
+                if let album = sender as? Album {
+                    let tracks = manager?.getAlbumById(String(album.id))
+                    vc.title = album.title
+                    vc.tracks = tracks
                 }
             }
         }
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
-            print("section 000000 ")
             performSegue(withIdentifier: "SearchMusic", sender: resultSearch?.tracks.data[indexPath.row])
         }
         if indexPath.section == 1 {
-            print("section 11111 ")
             performSegue(withIdentifier: "SearchPlaylist", sender: resultSearch?.albums.data[indexPath.row])
+        }
+        if indexPath.section == 2 {
+            performSegue(withIdentifier: "SearchPlaylist", sender: resultSearch?.playlists.data[indexPath.row])
         }
     }
     
@@ -92,14 +100,14 @@ class SearchController: UIViewController, UISearchBarDelegate, UITableViewDelega
             return 0
         }
         switch section {
-        case 0:
-            return (resultSearch?.tracks.data.count)! > 3 ? 3 : (resultSearch?.tracks.data.count)!
-        case 1:
-            return (resultSearch?.albums.data.count)! > 3 ? 3 : (resultSearch?.albums.data.count)!
-        case 2:
-            return (resultSearch?.playlists.data.count)! > 3 ? 3 : (resultSearch?.playlists.data.count)!
-        default:
-            return 0
+            case 0:
+                return (resultSearch?.tracks.data.count)! > 3 ? 3 : (resultSearch?.tracks.data.count)!
+            case 1:
+                return (resultSearch?.albums.data.count)! > 3 ? 3 : (resultSearch?.albums.data.count)!
+            case 2:
+                return (resultSearch?.playlists.data.count)! > 3 ? 3 : (resultSearch?.playlists.data.count)!
+            default:
+                return 0
         }
     }
     
