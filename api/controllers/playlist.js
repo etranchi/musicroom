@@ -40,7 +40,7 @@ module.exports = {
 	},
 	postPlaylist: async (req, res) => {
 		try {
-			req.body.userId = req.user._id
+			// req.body.userId = req.user._id
 			res.status(201).json(await playlistModel.create(req.body));
 		} catch (err) {
 			res.status(400).json(err);
