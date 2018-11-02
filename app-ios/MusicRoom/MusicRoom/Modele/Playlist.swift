@@ -26,4 +26,5 @@ struct Playlist : Decodable {
     // let collaborative : Bool
     let picture : String
     let tracklist : String
+    let tracks : STrack?
 }

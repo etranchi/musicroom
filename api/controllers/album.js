@@ -6,9 +6,9 @@ const moduleUrl = '/album';
 
 module.exports = {
 	getTracksByAlbum: (req, res) => {
-		console.log(config.deezer.apiUrl + moduleUrl + '/' + req.params.id + '/tracks');
+		console.log(config.deezer.apiUrl + moduleUrl + '/' + req.params.id);
 		request(
-			{uri: config.deezer.apiUrl + moduleUrl + '/' + req.params.id + '/tracks'},
+			{uri: config.deezer.apiUrl + moduleUrl + '/' + req.params.id},
 			(err, head, body) => {
 				if (err)
 					res.json(err)

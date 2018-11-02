@@ -57,25 +57,22 @@ class APIManager: NSObject, URLSessionDelegate {
     }
 
     func getPlaylistById(_ id : String) ->  [Track] {
-        let url = self.url + "playlist/\(id)/tracks"
+        let url = self.url + "playlist/\(id)"
         var request = URLRequest(url: URL(string: url)!)
         request.httpMethod = "GET"
-        print(url)
-        print("PLAYLIST")
         // request.setValue("Bearer " + token!, forHTTPHeaderField: "Authorization")
-        let ret = execute(request: request) { (tracks : STrack) in}
-        return ret.data
+        let ret = execute(request: request) { (tracks : Playlist) in}
+        return ret.tracks!.data
     }
     
     func getAlbumById(_ id : String) ->  [Track] {
-        let url = self.url + "album/\(id)/tracks"
+        let url = self.url + "album/\(id)"
         var request = URLRequest(url: URL(string: url)!)
+        print(url)
         request.httpMethod = "GET"
-
-        print("ALBUM")
         // request.setValue("Bearer " + token!, forHTTPHeaderField: "Authorization")
-        let ret = execute(request: request) { (tracks : STrack) in}
-        return ret.data
+        let ret = execute(request: request) { (tracks : Album) in}
+        return ret.tracks!.data
     }
     
 

@@ -13,6 +13,7 @@ struct Album : Decodable {
     let id : Int
     let title : String
     let cover : String
+    let tracks : STrack?
 }
 
 struct Artist : Decodable {

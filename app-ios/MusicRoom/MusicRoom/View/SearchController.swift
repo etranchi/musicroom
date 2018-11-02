@@ -71,14 +71,14 @@ class SearchController: UIViewController, UISearchBarDelegate, UITableViewDelega
         if segue.identifier == "SearchPlaylist" {
             if let vc = segue.destination as? MusicController{
                 if let playlist = sender as? Playlist {
-                    let tracks = manager?.getPlaylistById(String(playlist.id))
+                    let res = manager?.getPlaylistById(String(playlist.id))
                     vc.title = playlist.title
-                    vc.tracks = tracks
+                    vc.tracks = res
                 }
                 if let album = sender as? Album {
-                    let tracks = manager?.getAlbumById(String(album.id))
+                    let res = manager?.getAlbumById(String(album.id))
                     vc.title = album.title
-                    vc.tracks = tracks
+                    vc.tracks = res
                 }
             }
         }
