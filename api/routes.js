@@ -6,6 +6,7 @@ const events = require('./routes/event');
 const track = require('./routes/track');
 const playlist = require('./routes/playlist');
 const search = require('./routes/search');
+const album = require('./routes/album');
 
 router.use(function(req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -27,5 +28,7 @@ router.use('/track', track);
 router.use('/playlist', playlist);
 
 router.use('/search', search);
+
+router.use('/album', album);
 
 module.exports = router;
