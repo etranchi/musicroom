@@ -14,8 +14,10 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     private let searchCellId = "searchCellId"
     
     let manager = APIManager()
-    var resultSearch: ResearchData?
     var searchText = "Yo"
+    
+    var tracks: [Track] = []
+    var albums: [Album] = []
     
     var musicCategories: [MusicCategory]?
     
@@ -25,24 +27,34 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        collectionView.backgroundColor = UIColor(white: 0.2, alpha: 1)
-        collectionView.alwaysBounceVertical = true
-        collectionView.register(CategoryCell.self, forCellWithReuseIdentifier: categoryCellId)
-        collectionView.register(SearchCell.self, forCellWithReuseIdentifier: searchCellId)
-        musicCategories = MusicCategory.sampleMusicCategories(performSearch(searchText))
+        collectionView?.backgroundColor = UIColor(white: 0.2, alpha: 1)
+        collectionView?.alwaysBounceVertical = true
+        collectionView?.register(CategoryCell.self, forCellWithReuseIdentifier: categoryCellId)
+        collectionView?.register(SearchCell.self, forCellWithReuseIdentifier: searchCellId)
+        
+        
+        performSearch(searchText) { (albums, tracks) in
+            self.musicCategories = MusicCategory.sampleMusicCategories(albums, tracks)
+            self.collectionView?.reloadData()
+        }
+        
+        //musicCategories = MusicCategory.sampleMusicCategories(performSearch(searchText))
     }
     
     func handleStearch(_ text: String) {
         musicCategories?.removeAll()
-        collectionView.reloadData()
-        musicCategories = MusicCategory.sampleMusicCategories(performSearch(text))
-        collectionView.reloadData()
+        collectionView?.reloadData()
+        performSearch(text) { (albums, tracks) in
+            self.musicCategories = MusicCategory.sampleMusicCategories(albums, tracks)
+            self.collectionView?.reloadData()
+        }
     }
     
-    func performSearch(_ text: String) -> ResearchData? {
-        resultSearch = manager.getSearch(text)
-        bool = true
-        return resultSearch
+    func performSearch(_ text: String, completion: @escaping ([Album], [Track]) -> ())
+    {
+        manager.search(text) { (tracks, albums) in
+            completion(albums, tracks)
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

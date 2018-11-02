@@ -11,79 +11,70 @@ import UIKit
 class APIManager: NSObject, URLSessionDelegate {
     let ip : String = "192.168.99.100"
     let token : String? = nil
+    
     var url : String {
         return  "https://\(self.ip):4242/"
     }
-    
-    func getMusic() -> [Track] {
-        let url = self.url + "track"
-        var request = URLRequest(url: URL(string: url)!)
-        request.httpMethod = "GET"
-        // request.setValue("Bearer " + token!, forHTTPHeaderField: "Authorization")
-        let ret = execute(request: request) { (tracks : [Track]) in}
-        return ret
-    }
-    
-    func getSearch(_ search: String) -> ResearchData {
-        let researchFilter = ["album", "track"]
-        var resSearch = ResearchData()
+
+    func search(_ search: String, completion: @escaping ([Track], [Album]) -> ()){
+        let w = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
         
-        for res in researchFilter {
-            let w = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
-            let url = self.url + "search?q=\(res):\(w)"
-            var request = URLRequest(url: URL(string: url)!)
-            request.httpMethod = "GET"
-            switch res {
-                case "album" :
-                    resSearch.albums = execute(request: request){ (tracks: Research) in }
-                case "track" :
-                    resSearch.tracks = execute(request: request){ (tracks: Research) in }
-            default :
-                break
-            }
+        let tracksUrl = self.url + "search/track?q=\(w)"
+        var tracksRequest = URLRequest(url: URL(string: tracksUrl)!)
+        tracksRequest.httpMethod = "GET"
+        
+        let albumsUrl = self.url + "search/album?q=\(w)"
+        var albumsRequest = URLRequest(url: URL(string: albumsUrl)!)
+        albumsRequest.httpMethod = "GET"
+        
+        searchTracks(request: tracksRequest) { (tracks) in
+            self.searchAlbums(request: albumsRequest, completion: { (albums) in
+                completion(tracks, albums)
+            })
         }
-        return resSearch
     }
-    
-    func getPlaylist() -> [Playlist] {
-        let url = self.url + "playlist"
-        var request = URLRequest(url: URL(string: url)!)
-        request.httpMethod = "GET"
-        // request.setValue("Bearer " + token!, forHTTPHeaderField: "Authorization")
-        let ret = execute(request: request) { (tracks : [Playlist]) in}
-        return ret
-    }
-    
 
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         completionHandler(.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
     }
-
-    func   execute<T : Decodable>(request: URLRequest, completion: @escaping (T) -> ()) -> T {
-        var dictionnary : T?
-        var requestTokenDone : Bool = false
-        let task = URLSession(configuration: URLSessionConfiguration.default, delegate: self, delegateQueue: OperationQueue.main).dataTask(with: request) {
-            (data, response, error) in
-            if let err = error {
-                print("task session error: \(err)")
-                return
+    
+    func searchAlbums(request: URLRequest, completion: @escaping ([Album]) -> ())
+    {
+        URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: request) { (data, response, err) in
+            if err != nil {
+                print("error while requesting")
             }
             if let d = data {
                 do {
-                    let dic = try JSONDecoder().decode(T.self, from: d)
-                    dictionnary = dic
-                } catch (let err) {
+                    print(d)
+                    let dic = try JSONDecoder().decode(AlbumData.self, from: d)
+                    DispatchQueue.main.async {
+                        completion(dic.data)
+                    }
+                } catch let err {
                     print("task dictionnary error: \(err)")
                 }
-            } else {
-                print("nodata")
             }
-            requestTokenDone = true;
-        }
-        task.resume()
-        repeat {
-            RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
-        } while !requestTokenDone
-        return dictionnary!
+            }.resume()
+    }
+    
+    func searchTracks(request: URLRequest, completion: @escaping ([Track]) -> ())
+    {
+        URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: request) { (data, response, err) in
+            if err != nil {
+                print("error while requesting")
+            }
+            if let d = data {
+                do {
+                    print(d)
+                    let dic = try JSONDecoder().decode(TrackData.self, from: d)
+                    DispatchQueue.main.async {
+                        completion(dic.data)
+                    }
+                } catch let err {
+                    print("task dictionnary error: \(err)")
+                }
+            }
+        }.resume()
     }
 }

@@ -15,6 +15,8 @@
 		77D1C3262183895C0050B2B8 /* Playable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D1C3252183895C0050B2B8 /* Playable.swift */; };
 		77E097C22187633000C8CC5C /* Research.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E097C12187633000C8CC5C /* Research.swift */; };
 		7991484221889F8D00120E2D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7991484121889F8D00120E2D /* Extensions.swift */; };
+		79B15ECE218C69AA00B84BCB /* MusicCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79B15ECD218C69AA00B84BCB /* MusicCategory.swift */; };
+		79B15ED0218C700C00B84BCB /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79B15ECF218C700C00B84BCB /* Album.swift */; };
 		79B4DE73218B4637001031D2 /* SearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79B4DE72218B4637001031D2 /* SearchCell.swift */; };
 		79CDCF1F218870F70095CC63 /* LoadingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79CDCF1E218870F70095CC63 /* LoadingController.swift */; };
 		79CDCF21218871A20095CC63 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79CDCF20218871A20095CC63 /* TabBarController.swift */; };
@@ -52,6 +54,8 @@
 		77D1C3252183895C0050B2B8 /* Playable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playable.swift; sourceTree = "<group>"; };
 		77E097C12187633000C8CC5C /* Research.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Research.swift; sourceTree = "<group>"; };
 		7991484121889F8D00120E2D /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		79B15ECD218C69AA00B84BCB /* MusicCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicCategory.swift; sourceTree = "<group>"; };
+		79B15ECF218C700C00B84BCB /* Album.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
 		79B4DE72218B4637001031D2 /* SearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCell.swift; sourceTree = "<group>"; };
 		79CDCF1E218870F70095CC63 /* LoadingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingController.swift; sourceTree = "<group>"; };
 		79CDCF20218871A20095CC63 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
@@ -135,7 +139,9 @@
 		778BF9A721832C8600448FE6 /* Modele */ = {
 			isa = PBXGroup;
 			children = (
+				79B15ECD218C69AA00B84BCB /* MusicCategory.swift */,
 				778BF9A821832CB800448FE6 /* Track.swift */,
+				79B15ECF218C700C00B84BCB /* Album.swift */,
 				778BF9AA218355BB00448FE6 /* Playlist.swift */,
 				778BF9AC218356DF00448FE6 /* Event.swift */,
 				778BF9AE2183571100448FE6 /* User.swift */,
@@ -365,7 +371,9 @@
 				77B444762181CD0200B3F536 /* APIManager.swift in Sources */,
 				778BF9A921832CB800448FE6 /* Track.swift in Sources */,
 				79CDCF1F218870F70095CC63 /* LoadingController.swift in Sources */,
+				79B15ED0218C700C00B84BCB /* Album.swift in Sources */,
 				778BF9AD218356DF00448FE6 /* Event.swift in Sources */,
+				79B15ECE218C69AA00B84BCB /* MusicCategory.swift in Sources */,
 				8F18989C217F3B4D00CE1A8D /* DeezerManager.swift in Sources */,
 				8F364B85217E5B9100B57FC8 /* ViewController.swift in Sources */,
 				8F364B83217E5B9100B57FC8 /* AppDelegate.swift in Sources */,

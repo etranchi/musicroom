@@ -10,11 +10,11 @@ import UIKit
 
 class AlbumCell: UICollectionViewCell {
     
-    var track: Track! {
+    var album: Album! {
         didSet {
-            authorLabel.text = track.artist.name
-            titleLabel.text = track.title
-            imageView.loadImageUsingCacheWithUrlString(urlString: track.album.cover)
+            authorLabel.text = album.artist.name
+            titleLabel.text = album.title
+            imageView.loadImageUsingCacheWithUrlString(urlString: album.cover_medium)
         }
     }
     
@@ -102,7 +102,7 @@ class SongCell: UICollectionViewCell {
             } else {
                 timeLabel.text = String(track.duration / 60) + ":" + String(sec)
             }
-            imageView.loadImageUsingCacheWithUrlString(urlString: track.album.cover)
+            imageView.loadImageUsingCacheWithUrlString(urlString: track.album.cover_medium)
         }
     }
     
@@ -286,7 +286,11 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
         if musicCategory.name == "Search" {
             return 1
         }
-        return musicCategory.tracks!.count
+        if musicCategory.name == "Songs" {
+            return musicCategory.tracks!.count
+        } else {
+            return musicCategory.albums!.count
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -296,7 +300,7 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId0, for: indexPath) as! AlbumCell
-            cell.track = musicCategory.tracks![indexPath.item]
+            cell.album = musicCategory.albums![indexPath.item]
             return cell
         }
     }

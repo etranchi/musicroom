@@ -8,33 +8,15 @@
 
 import Foundation
 
-class MusicCategory: NSObject {
-    var     name: String?
-    var     tracks: [Track]?
-    
-    static func sampleMusicCategories(_ results: ResearchData?) -> [MusicCategory]
-    {
-        let     songsCategory = MusicCategory()
-        let     albumCategory = MusicCategory()
-        
-        songsCategory.name = "Songs"
-        albumCategory.name = "Albums"
-        
-        songsCategory.tracks = results?.tracks.data
-        albumCategory.tracks = results?.albums.data
-        
-        return [albumCategory, songsCategory]
-    }
-}
-
-struct Album : Decodable {
+struct TrackAlbum : Decodable {
     let id : Int
     let title : String
     let tracklist : String
     let cover : String
+    let cover_medium : String
 }
 
-struct Artist : Decodable {
+struct TrackArtist : Decodable {
     let id : Int
     let name : String
     let picture : String
@@ -44,8 +26,12 @@ struct Track : Decodable {
     let id : Int
     let readable : Bool
     let link : String
-    let album : Album
-    let artist : Artist
+    let album : TrackAlbum
+    let artist : TrackArtist
     let title : String
     let duration : Int
+}
+
+struct TrackData: Decodable {
+    let data : [Track]
 }
