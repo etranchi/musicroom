@@ -12,17 +12,16 @@ module.exports = {
 	},
 	getTrackById: async (req, res) => {
 		try {
-			track = await trackModel.findOne({'id': req.params.id})
+			let track = await trackModel.findOne({'id': req.params.id})
 			if (!track) {
 				let options = {
 					method: 'GET',
 					uri: config.deezer.apiUrl + '/track/' + req.params.id,
 					json: true
 				};
-				let rp = await request(options)
-				console.log(rp)
-				if (rp.id)
-					await trackModel.create(rp)
+				track = await request(options)
+				if (track.id)
+					await trackModel.create(track)
 			}
 			return res.status(200).json(track || {});
 		} catch (err) {
