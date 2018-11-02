@@ -4,7 +4,7 @@ const config 			= require('../config/config');
 const request 			= require('request-promise');
 const mongoose 			= require('mongoose');
 
-module.exports = {
+module.exports = { 
 	getPlaylists: async (req, res) => {
 		try {
 			res.status(200).json(await playlistModel.find())
@@ -40,7 +40,7 @@ module.exports = {
 	},
 	postPlaylist: async (req, res) => {
 		try {
-			req.body.userId = req.user._id
+			// req.body.userId = req.user._id
 			res.status(201).json(await playlistModel.create(req.body));
 		} catch (err) {
 			res.status(400).json(err);
