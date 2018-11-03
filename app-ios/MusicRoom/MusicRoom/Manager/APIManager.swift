@@ -16,7 +16,7 @@ class APIManager: NSObject, URLSessionDelegate {
         return  "https://\(self.ip):4242/"
     }
 
-    func search(_ search: String, completion: @escaping ([Track], [Album]) -> ()){
+    func search(_ search: String, completion: @escaping ([Track], [Album], [Artist]) -> ()){
         let w = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
         
         let tracksUrl = self.url + "search/track?q=\(w)"
@@ -27,9 +27,15 @@ class APIManager: NSObject, URLSessionDelegate {
         var albumsRequest = URLRequest(url: URL(string: albumsUrl)!)
         albumsRequest.httpMethod = "GET"
         
+        let artistsUrl = self.url + "search/artist?q=\(w)"
+        var artistsRequest = URLRequest(url: URL(string: artistsUrl)!)
+        artistsRequest.httpMethod = "GET"
+        
         searchAll(TrackData.self, request: tracksRequest) { (tracksData) in
             self.searchAll(AlbumData.self, request: albumsRequest, completion: { (albumData) in
-                completion(tracksData.data, albumData.data)
+                self.searchAll(ArtistData.self, request: artistsRequest, completion: { (artistsData) in
+                    completion(tracksData.data, albumData.data, artistsData.data)
+                })
             })
         }
     }
@@ -46,7 +52,6 @@ class APIManager: NSObject, URLSessionDelegate {
             }
             if let d = data {
                 do {
-                    print(d)
                     let dic = try JSONDecoder().decode(myType.self, from: d)
                     DispatchQueue.main.async {
                         completion(dic)

@@ -40,7 +40,7 @@ class AlbumCell: UICollectionViewCell {
     let timeLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.monospacedDigitSystemFont(ofSize: 12, weight: .light)
+        label.font = UIFont.systemFont(ofSize: 14, weight: .light)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -48,7 +48,7 @@ class AlbumCell: UICollectionViewCell {
     let titleLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.monospacedDigitSystemFont(ofSize: 12, weight: .medium)
+        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 2
@@ -59,7 +59,7 @@ class AlbumCell: UICollectionViewCell {
     let authorLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.monospacedDigitSystemFont(ofSize: 12, weight: .heavy)
+        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
         label.textColor = .lightGray
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -73,10 +73,10 @@ class AlbumCell: UICollectionViewCell {
         addSubview(authorLabel)
         
         NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: topAnchor),
-            imageView.heightAnchor.constraint(equalToConstant: 160),
-            imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            imageView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -30),
+            imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            imageView.heightAnchor.constraint(equalToConstant: 150),
+            imageView.widthAnchor.constraint(equalToConstant: 150),
             
             titleLabel.centerXAnchor.constraint(equalTo: imageView.centerXAnchor),
             titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor),
@@ -128,7 +128,7 @@ class SongCell: UICollectionViewCell {
     let timeLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.monospacedDigitSystemFont(ofSize: 10, weight: .light)
+        label.font = UIFont.systemFont(ofSize: 12, weight: .light)
         label.textColor = .lightGray
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -137,7 +137,7 @@ class SongCell: UICollectionViewCell {
     let titleLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.monospacedDigitSystemFont(ofSize: 12, weight: .medium)
+        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
         label.textColor = .white
         label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -147,7 +147,7 @@ class SongCell: UICollectionViewCell {
     let authorLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.monospacedDigitSystemFont(ofSize: 12, weight: .heavy)
+        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
         label.textColor = .lightGray
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -184,11 +184,138 @@ class SongCell: UICollectionViewCell {
     }
 }
 
+class ArtistCell: UICollectionViewCell {
+    var artist: Artist! {
+        didSet {
+            artistLabel.text = artist.name
+            fanLabel.text = "\(artist.nb_fan) fans"
+            imageView.loadImageUsingCacheWithUrlString(urlString: artist.picture_medium)
+        }
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: .zero)
+        
+        setupViews()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    let imageView: UIImageView = {
+        let iv = UIImageView()
+        
+        iv.contentMode = .scaleAspectFit
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        iv.layer.masksToBounds = true
+        iv.layer.cornerRadius = 50
+        return iv
+    }()
+    
+    let artistLabel: UILabel = {
+        let label = UILabel()
+        
+        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        label.textColor = .white
+        label.textAlignment = .center
+        label.numberOfLines = 2
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let fanLabel: UILabel = {
+        let label = UILabel()
+        
+        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        label.textColor = .lightGray
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    func setupViews() {
+        
+        addSubview(imageView)
+        addSubview(artistLabel)
+        addSubview(fanLabel)
+        
+        NSLayoutConstraint.activate([
+            imageView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -30),
+            imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            imageView.heightAnchor.constraint(equalToConstant: 100),
+            imageView.widthAnchor.constraint(equalToConstant: 100),
+            
+            artistLabel.centerXAnchor.constraint(equalTo: imageView.centerXAnchor),
+            artistLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 5),
+            artistLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
+            artistLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
+            
+            fanLabel.centerXAnchor.constraint(equalTo: artistLabel.centerXAnchor),
+            fanLabel.topAnchor.constraint(equalTo: artistLabel.bottomAnchor, constant: 2),
+            fanLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
+            fanLabel.leadingAnchor.constraint(equalTo: leadingAnchor)
+        ])
+    }}
+
+class SeeAllSongsCell: UICollectionViewCell {
+    
+    override init(frame: CGRect) {
+        super.init(frame: .zero)
+        
+        setupViews()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    let messageLabel: UILabel = {
+        let label = UILabel()
+        
+        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        label.textColor = .white
+        label.numberOfLines = 1
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "See all songs"
+        return label
+    }()
+    
+    let imageView: UIImageView = {
+        let iv = UIImageView()
+        
+        iv.contentMode = .scaleAspectFit
+        iv.image = UIImage(named: "allSongs_icon")
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        iv.layer.masksToBounds = true
+        return iv
+    }()
+    
+    func setupViews() {
+        
+        addSubview(messageLabel)
+        addSubview(imageView)
+        
+        NSLayoutConstraint.activate([
+            messageLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            messageLabel.heightAnchor.constraint(equalToConstant: 40),
+            messageLabel.leadingAnchor.constraint(lessThanOrEqualTo: safeAreaLayoutGuide.leadingAnchor, constant: 14),
+            
+            imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            imageView.heightAnchor.constraint(equalToConstant: 15),
+            imageView.widthAnchor.constraint(equalToConstant: 15),
+            imageView.rightAnchor.constraint(lessThanOrEqualTo: safeAreaLayoutGuide.rightAnchor, constant: -24)
+            ])
+        
+    }
+}
+
 class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
-    private let cellId0 = "cellId0"
-    private let cellId1 = "cellId1"
-    private let cellId2 = "cellId2"
+    private let albumCellId = "albumCellId"
+    private let songCellId = "songCellId"
+    private let seeAllSongsCellId = "seeAllSongsCellId"
+    private let artistCellId = "artistCellId"
     
     var     musicCategory: MusicCategory! {
         didSet {
@@ -197,11 +324,20 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
                 musicCollectionView.reloadData()
                 return
             }
-            if musicCategory.name == "Songs"{
+            if musicCategory.name == "Songs" {
                 let layout = UICollectionViewFlowLayout()
                 layout.scrollDirection = .vertical
                 musicCollectionView.collectionViewLayout.invalidateLayout()
                 musicCollectionView.collectionViewLayout = layout
+                
+                addSubview(dividerLineView)
+                
+                NSLayoutConstraint.activate([
+                    dividerLineView.topAnchor.constraint(equalTo: bottomAnchor),
+                    dividerLineView.trailingAnchor.constraint(equalTo: trailingAnchor),
+                    dividerLineView.heightAnchor.constraint(equalToConstant: 1),
+                    dividerLineView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 15)
+                    ])
             }
             else {
                 let layout = UICollectionViewFlowLayout()
@@ -224,7 +360,7 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
     let albumLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.monospacedDigitSystemFont(ofSize: 16, weight: .medium)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .heavy)
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 1
@@ -240,8 +376,6 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
         return view
     }()
     
-   
-    
     let  musicCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -254,9 +388,10 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
         super.init(frame: .zero)
         
         setupViews()
-        musicCollectionView.register(AlbumCell.self, forCellWithReuseIdentifier: cellId0)
-        musicCollectionView.register(SongCell.self, forCellWithReuseIdentifier: cellId1)
-        musicCollectionView.register(SearchCell.self, forCellWithReuseIdentifier: cellId2)
+        musicCollectionView.register(AlbumCell.self, forCellWithReuseIdentifier: albumCellId)
+        musicCollectionView.register(SongCell.self, forCellWithReuseIdentifier: songCellId)
+        musicCollectionView.register(SeeAllSongsCell.self, forCellWithReuseIdentifier: seeAllSongsCellId)
+        musicCollectionView.register(ArtistCell.self, forCellWithReuseIdentifier: artistCellId)
     }
 
     func setupViews() {
@@ -265,7 +400,6 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
         musicCollectionView.backgroundColor = UIColor(white: 0.2, alpha: 1)
         
         addSubview(musicCollectionView)
-        
         addSubview(albumLabel)
         
         NSLayoutConstraint.activate([
@@ -284,33 +418,64 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         albumLabel.text = musicCategory.name!
-        if musicCategory.name == "Search" {
-            return 1
-        }
-        if musicCategory.name == "Songs" {
-            return musicCategory.tracks!.count
-        } else {
+        switch musicCategory.name {
+        case "Albums":
             return musicCategory.albums!.count
+        case "Songs":
+            if musicCategory.tracks!.count == 0 {
+                return 0
+            }
+            return musicCategory.tracks!.count <= 4 ? musicCategory.tracks!.count + 1 : 5
+        case "Artists":
+            return musicCategory.artists!.count
+        
+        default:
+            return 0
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if musicCategory.name == "Songs" {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId1, for: indexPath) as! SongCell
-            cell.track = musicCategory.tracks![indexPath.item]
-            return cell
-        } else {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId0, for: indexPath) as! AlbumCell
+        switch musicCategory.name {
+        case "Albums":
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: albumCellId, for: indexPath) as! AlbumCell
             cell.album = musicCategory.albums![indexPath.item]
+            return cell
+        case "Songs":
+            let max = musicCategory.tracks?.count
+            
+            if max! < 4 && indexPath.item == max || indexPath.item == 4 {
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: seeAllSongsCellId, for: indexPath) as! SeeAllSongsCell
+                return cell
+            } else {
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: songCellId, for: indexPath) as! SongCell
+                cell.track = musicCategory.tracks![indexPath.item]
+                return cell
+            }
+        case "Artists":
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: artistCellId, for: indexPath) as! ArtistCell
+            cell.artist = musicCategory.artists![indexPath.item]
+            return cell
+        default:
+            let cell = UICollectionViewCell()
             return cell
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if musicCategory.name == "Songs" {
-            return CGSize(width: frame.width, height: 60)
+        switch musicCategory.name {
+        case "Albums":
+            return CGSize(width: 150, height: frame.height)
+        case "Songs":
+            if indexPath.item < 4 {
+                return CGSize(width: frame.width, height: 60)
+            } else {
+                return CGSize(width: frame.width, height: 40)
+            }
+        case "Artists":
+            return CGSize(width: 100, height: frame.height)
+        default:
+            return CGSize(width: 150, height: frame.height)
         }
-        return CGSize(width: 150, height: frame.height)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {

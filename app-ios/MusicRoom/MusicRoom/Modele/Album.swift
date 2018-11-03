@@ -8,8 +8,6 @@
 
 import Foundation
 
-import Foundation
-
 struct AlbumArtist : Decodable {
     let id : Int
     let name : String

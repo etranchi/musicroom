@@ -16,13 +16,7 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     let manager = APIManager()
     let initialSearch = "Daft Punk"
     
-    var tracks: [Track] = []
-    var albums: [Album] = []
-    
     var musicCategories: [MusicCategory]?
-    
-    var typeOfSearch = ["Track", "Playlist"]
-    var bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,8 +27,8 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
         collectionView?.register(SearchCell.self, forCellWithReuseIdentifier: searchCellId)
         
         
-        performSearch(initialSearch) { (albums, tracks) in
-            self.musicCategories = MusicCategory.sampleMusicCategories(albums, tracks)
+        performSearch(initialSearch) { (albums, tracks, artists) in
+            self.musicCategories = MusicCategory.sampleMusicCategories(albums, tracks, artists)
             self.collectionView?.reloadData()
         }
     }
@@ -42,16 +36,16 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     func handleStearch(_ text: String) {
         musicCategories?.removeAll()
         collectionView?.reloadData()
-        performSearch(text) { (albums, tracks) in
-            self.musicCategories = MusicCategory.sampleMusicCategories(albums, tracks)
+        performSearch(text) { (albums, tracks, artists) in
+            self.musicCategories = MusicCategory.sampleMusicCategories(albums, tracks, artists)
             self.collectionView?.reloadData()
         }
     }
     
-    func performSearch(_ text: String, completion: @escaping ([Album], [Track]) -> ())
+    func performSearch(_ text: String, completion: @escaping ([Album], [Track], [Artist]) -> ())
     {
-        manager.search(text) { (tracks, albums) in
-            completion(albums, tracks)
+        manager.search(text) { (tracks, albums, artists) in
+            completion(albums, tracks, artists)
         }
     }
     
@@ -72,12 +66,19 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if indexPath.item == 0 {
+        
+        switch indexPath.item {
+        case 0:
             return CGSize(width: view.frame.width, height: 40)
-        } else if indexPath.item == 1 {
+        case 1:
+            return CGSize(width: view.frame.width, height: 240)
+        case 2:
+            return CGSize(width: view.frame.width, height: 360)
+        case 3:
+            return CGSize(width: view.frame.width, height: 200)
+        default:
             return CGSize(width: view.frame.width, height: 240)
         }
-        return CGSize(width: view.frame.width, height: view.frame.height - 280)
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
