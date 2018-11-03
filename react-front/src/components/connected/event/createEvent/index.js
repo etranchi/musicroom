@@ -37,17 +37,20 @@ class CreateEvent extends Component {
 
 	handleSubmit = event => {
         event.preventDefault();
+        let data = new FormData();
+        data.append('file', this.state.picture);
+        data.append('name', this.state.picture.name);
+        data.append('body', JSON.stringify(this.state));
+
         axios.get('https://192.168.99.100:4242/user/me', {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
         .then((resp) => {
-            console.log('Event  get me success,, user : ', resp.data);
             this.setState({creator: resp.data});
-            axios.post('https://192.168.99.100:4242/event/', this.state)
-            .then((resp) => {console.log("Event created.", resp)})
-            .catch((err) => {console.log("Error event creation : %s ", err);})  
+            console.log("Create Event : handleSubmit : /user/me Success")
+            axios.post('https://192.168.99.100:4242/event/',  data)
+            .then((resp) => { console.log("Create Event : handleSubmit :/event Success"); })
+            .catch((err) => { console.log("Create Event : handleSubmit :/event Error ", err); })  
         })
-        .catch((err) => {
-            console.log("Error : %s ", err);
-        })  
+        .catch((err) => { console.log("Create Event : handleSubmit : /user/me Error : ", err); })  
     }
     
     handleChange = event => {
@@ -55,27 +58,19 @@ class CreateEvent extends Component {
         else this.setState({[event.target.name]: event.target.value});
     }
 
-    handlePicture(picture) {
-        console.log('picutre ', picture)
-        this.setState({
-            picture: this.state.picture.concat(picture),
-        });
-    }
+    handlePicture = (event) => {
+        this.setState({picture: event.target.files[0]})
+      }      
+      
 
 	render() {
         return (
             <Row className="formEvent">
-                <ImageUploader
-                    withIcon={true}
-                    buttonText='Choose images'
-                    onChange={this.handlePicture}
-                    imgExtension={['.jpg', '.gif', '.png', '.gif']}
-                    maxFileSize={5242880}
-                />
-                <Input label="Titre de l'évènement : "                      s={12}  name= "title"           value={this.state.title}        onChange={this.handleChange}/>
-                <Input type='textarea' label="Descriptif de l'évènement : " s={12}  name= "description"     value={this.state.description}  onChange={this.handleChange}/> 
-                <Input type='date' label="Quand ? "                                 name= "date"            value={this.state.date}         onChange={this.handleChange} />
-                <Input type='select' label="Visibilité de l'événement : "   s={12}  name= "public"          value={this.state.public}       onChange={this.handleChange}>
+                <Input label="Upload"                       type="file" onChange={this.handlePicture.bind(this)}/>
+                <Input label="Titre de l'évènement : "      type="text"     s={12} name= "title"           value={this.state.title}        onChange={this.handleChange}/>
+                <Input label="Descriptif de l'évènement : " type='textarea' s={12} name= "description"     value={this.state.description}  onChange={this.handleChange}/> 
+                <Input label="Quand ? "                     type='date'            name= "date"            value={this.state.date}         onChange={this.handleChange} />
+                <Input label="Visibilité de l'événement : " type='select'   s={12} name= "public"          value={this.state.public}       onChange={this.handleChange}>
                     <option value='true' >Public</option>
                     <option value='false'>Privé</option>
                 </Input>

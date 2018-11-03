@@ -18,13 +18,10 @@ module.exports = {
 		}
 	},
 	postEvent: async (req, res) => {
+		req.body = JSON.parse(req.body.body);
 		try {
-			// ADD JOI.VALIDATION
-			if (req.body.picture) {
-				// console.log(req.body.picture);
-				// console.log(JSON.parse(req.body.picture));
-				// console.log(JSON.stringify(req.body.picture));	
-			}
+			if (req.file && req.file.filename) req.body.picture = req.file.filename;
+			else req.body.picture =  'default.jpeg';
 			res.status(200).json(await modelEvent.create(req.body))
 		} catch (err) {
 			res.status(400).json(err);
