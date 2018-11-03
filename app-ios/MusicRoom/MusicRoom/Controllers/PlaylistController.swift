@@ -14,6 +14,6 @@ class PlaylistController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = UIColor(white: 0.2, alpha: 1)
+        view.backgroundColor = UIColor(white: 0.15, alpha: 1)
     }
 }

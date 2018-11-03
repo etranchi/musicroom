@@ -34,7 +34,7 @@ class SearchCell: UICollectionViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor(white: 0.95, alpha: 0.8)
         view.layer.masksToBounds = true
-        view.layer.cornerRadius = 15
+        view.layer.cornerRadius = 12
         view.layer.borderColor = UIColor(white: 0.1, alpha: 0.8).cgColor
         view.layer.borderWidth = 2
         return view
@@ -62,7 +62,6 @@ class SearchCell: UICollectionViewCell {
         addSubview(containerView)
         containerView.addSubview(textField)
         containerView.addSubview(searchButton)
-        
         
         NSLayoutConstraint.activate([
             containerView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 10),

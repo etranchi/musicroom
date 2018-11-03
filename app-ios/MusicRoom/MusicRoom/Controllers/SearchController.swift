@@ -21,7 +21,7 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        collectionView?.backgroundColor = UIColor(white: 0.2, alpha: 1)
+        collectionView?.backgroundColor = UIColor(white: 0.15, alpha: 1)
         collectionView?.alwaysBounceVertical = true
         collectionView?.register(CategoryCell.self, forCellWithReuseIdentifier: categoryCellId)
         collectionView?.register(SearchCell.self, forCellWithReuseIdentifier: searchCellId)
@@ -56,7 +56,7 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
         } else {
             let     cell = collectionView.dequeueReusableCell(withReuseIdentifier: categoryCellId, for: indexPath) as! CategoryCell
             cell.musicCategory = musicCategories![indexPath.item - 1]
-            cell.backgroundColor = UIColor(white: 0.2, alpha: 1)
+            cell.backgroundColor = UIColor(white: 0.15, alpha: 1)
             return cell
         }
     }

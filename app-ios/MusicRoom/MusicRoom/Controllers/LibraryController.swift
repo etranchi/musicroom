@@ -13,7 +13,7 @@ class LibraryController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = UIColor(white: 0.2, alpha: 1)
+        view.backgroundColor = UIColor(white: 0.15, alpha: 1)
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
