@@ -121,7 +121,7 @@ class PlayerController: UIViewController {
         
         view.addSubview(backgroundImageView)
         view.addSubview(visualEffectView)
-        view.addSubview(visualEffectView2)
+        //view.addSubview(visualEffectView2)
         NSLayoutConstraint.activate([
             backgroundImageView.topAnchor.constraint(equalTo: view.topAnchor),
             backgroundImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -133,10 +133,10 @@ class PlayerController: UIViewController {
             visualEffectView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             visualEffectView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            visualEffectView2.topAnchor.constraint(equalTo: view.topAnchor),
-            visualEffectView2.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            visualEffectView2.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            visualEffectView2.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+//            visualEffectView2.topAnchor.constraint(equalTo: view.topAnchor),
+//            visualEffectView2.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+//            visualEffectView2.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+//            visualEffectView2.trailingAnchor.constraint(equalTo: view.trailingAnchor)
             
             ])
     }

@@ -21,17 +21,26 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
                 musicCollectionView.reloadData()
                 return
             }
-            if musicCategory.name == "Songs" {
+            switch musicCategory.name {
+            case "Songs":
                 let layout = UICollectionViewFlowLayout()
                 layout.scrollDirection = .vertical
                 musicCollectionView.collectionViewLayout.invalidateLayout()
                 musicCollectionView.collectionViewLayout = layout
-            }
-            else {
+            case "Albums":
+                let layout = UICollectionViewFlowLayout()
+                layout.scrollDirection = .horizontal
+                musicCollectionView.collectionViewLayout.invalidateLayout()
+                guard let alb = musicCategory.albums else { return }
+                guard alb.count != 0 else { return }
+                musicCollectionView.collectionViewLayout = layout
+            case "Atrists":
                 let layout = UICollectionViewFlowLayout()
                 layout.scrollDirection = .horizontal
                 musicCollectionView.collectionViewLayout.invalidateLayout()
                 musicCollectionView.collectionViewLayout = layout
+            default:
+                musicCollectionView.reloadData()
             }
             musicCollectionView.reloadData()
         }
