@@ -24,10 +24,12 @@ class ProgressCircle: UIView, CAAnimationDelegate {
     }
     
     func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
-        let playIcon = UIImage(named: "play_icon")
-        let tintedIcon = playIcon?.withRenderingMode(.alwaysTemplate)
-        playButton.setImage(tintedIcon, for: .normal)
-        playButton.tintColor = UIColor(white: 1, alpha: 1)
+        if flag == true {
+            let playIcon = UIImage(named: "play_icon")
+            let tintedIcon = playIcon?.withRenderingMode(.alwaysTemplate)
+            playButton.setImage(tintedIcon, for: .normal)
+            playButton.tintColor = UIColor(white: 1, alpha: 1)
+        }
     }
     
     func animationDidStart(_ anim: CAAnimation) {
