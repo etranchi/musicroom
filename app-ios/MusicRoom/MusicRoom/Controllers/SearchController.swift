@@ -17,7 +17,12 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     let initialSearch = "Daft Punk"
     
     var musicCategories: [MusicCategory]?
-    
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.navigationController?.navigationBar.topItem?.title = "Search"
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
 

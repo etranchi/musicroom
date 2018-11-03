@@ -31,14 +31,7 @@ class PlayerController: UIViewController {
         iv.clipsToBounds = true
         return iv
     }()
-    
-    let coverImageView: UIImageView = {
-        let iv = UIImageView()
-        
-        iv.translatesAutoresizingMaskIntoConstraints = false
-        iv.contentMode = .scaleAspectFit
-        return iv
-    }()
+   
     
     let visualEffectView: UIVisualEffectView = {
         let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
@@ -48,12 +41,33 @@ class PlayerController: UIViewController {
         return visualEffectView
     }()
     
-    let visualEffectView2: UIVisualEffectView = {
-        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-        visualEffectView.isUserInteractionEnabled = false
-        visualEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        visualEffectView.translatesAutoresizingMaskIntoConstraints = false
-        return visualEffectView
+    let coverImageView: UIImageView = {
+        let iv = UIImageView()
+        
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        iv.contentMode = .scaleAspectFit
+        return iv
+    }()
+    
+    let titleLabel: UILabel = {
+        let label = UILabel()
+        
+        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        label.textColor = .white
+        label.textAlignment = .center
+        label.numberOfLines = 2
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let authorLabel: UILabel = {
+        let label = UILabel()
+        
+        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        label.textColor = .lightGray
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     let playButton: UIButton = {
@@ -92,14 +106,11 @@ class PlayerController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.navigationController?.navigationBar.topItem?.title = ""
         setupBackground()
         setupButtons()
         setupProgressCircle()
     }
-    
-    
-    
-    
     
     @objc func handlePlay() {
         isPlaying = true
@@ -117,11 +128,16 @@ class PlayerController: UIViewController {
     
     fileprivate func setupBackground() {
         backgroundImageView.loadImageUsingCacheWithUrlString(urlString: tracks[index].album.cover_big)
-        
+        coverImageView.loadImageUsingCacheWithUrlString(urlString: tracks[index].album.cover_medium)
+        titleLabel.text = tracks[index].title
+        authorLabel.text = tracks[index].artist.name
         
         view.addSubview(backgroundImageView)
         view.addSubview(visualEffectView)
-        //view.addSubview(visualEffectView2)
+        view.addSubview(coverImageView)
+        view.addSubview(titleLabel)
+        view.addSubview(authorLabel)
+        
         NSLayoutConstraint.activate([
             backgroundImageView.topAnchor.constraint(equalTo: view.topAnchor),
             backgroundImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -133,12 +149,21 @@ class PlayerController: UIViewController {
             visualEffectView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             visualEffectView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-//            visualEffectView2.topAnchor.constraint(equalTo: view.topAnchor),
-//            visualEffectView2.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-//            visualEffectView2.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-//            visualEffectView2.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            coverImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 122),
+            coverImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            coverImageView.widthAnchor.constraint(equalToConstant: view.bounds.width - 60),
+            coverImageView.heightAnchor.constraint(equalToConstant: view.bounds.width - 60),
             
-            ])
+            titleLabel.centerXAnchor.constraint(equalTo: coverImageView.centerXAnchor),
+            titleLabel.topAnchor.constraint(equalTo: coverImageView.bottomAnchor, constant: 30),
+            titleLabel.trailingAnchor.constraint(equalTo: coverImageView.trailingAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: coverImageView.leadingAnchor),
+            
+            authorLabel.centerXAnchor.constraint(equalTo: titleLabel.centerXAnchor),
+            authorLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
+            authorLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
+            authorLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor)
+        ])
     }
     
     fileprivate func setupButtons() {
@@ -157,7 +182,7 @@ class PlayerController: UIViewController {
             previousButton.heightAnchor.constraint(equalToConstant: 30),
             
             playButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            playButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -150),
+            playButton.topAnchor.constraint(equalTo: authorLabel.bottomAnchor, constant: 40),
             playButton.widthAnchor.constraint(equalToConstant: 80),
             playButton.heightAnchor.constraint(equalToConstant: 80),
             
