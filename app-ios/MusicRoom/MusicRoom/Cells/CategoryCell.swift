@@ -13,6 +13,7 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
     private let songCellId = "songCellId"
     private let seeAllSongsCellId = "seeAllSongsCellId"
     private let artistCellId = "artistCellId"
+    var searchController: SearchController?
     
     var     musicCategory: MusicCategory! {
         didSet {
@@ -120,9 +121,11 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
             cell.album = musicCategory.albums![indexPath.item]
             return cell
         case "Songs":
-            let max = musicCategory.tracks?.count
-            
-            if max! < 4 && indexPath.item == max || indexPath.item == 4 {
+            guard let tracks = musicCategory.tracks else {
+                let cell = UICollectionViewCell()
+                return cell }
+            let max = tracks.count
+            if max < 4 && indexPath.item == max || indexPath.item == 4 {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: seeAllSongsCellId, for: indexPath) as! SeeAllSongsCell
                 return cell
             } else {
@@ -161,6 +164,17 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
         return UIEdgeInsets(top: 0, left: 14, bottom: 0, right: 14)
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch musicCategory.name {
+        case "Albums":
+            print("album selected")
+        case "Songs":
+            guard let song = musicCategory.tracks?[indexPath.item] else { return }
+            searchController?.showPlayerForSong(song, 0)
+        default:
+            return
+        }
+    }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

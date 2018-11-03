@@ -57,10 +57,16 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: categoryCellId, for: indexPath) as! CategoryCell
             cell.musicCategory = musicCategories![indexPath.item - 1]
             cell.backgroundColor = UIColor(white: 0.15, alpha: 1)
+            cell.searchController = self
             return cell
         }
     }
     
+    func showPlayerForSong(_ track: Track, _ index: Int) {
+        let playerController = PlayerController([track], index)
+        navigationController?.pushViewController(playerController, animated: true)
+    }
+
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         collectionViewLayout.invalidateLayout()
     }

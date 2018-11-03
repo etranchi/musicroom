@@ -53,6 +53,7 @@ class ArtistCell: UICollectionViewCell {
         
         label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
         label.textColor = .lightGray
+        label.numberOfLines = 2
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
