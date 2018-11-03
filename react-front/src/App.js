@@ -33,6 +33,7 @@ class App extends Component {
       ) : (
         <Connection updateParent={this.updateState} currentComponent={this.state.currentComponent}/>
       )}
+      coucou
       </div>
     );
   }
