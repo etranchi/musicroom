@@ -9,7 +9,6 @@
 import UIKit
 
 class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    
     private let albumCellId = "albumCellId"
     private let songCellId = "songCellId"
     private let seeAllSongsCellId = "seeAllSongsCellId"
@@ -18,7 +17,6 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
     var     musicCategory: MusicCategory! {
         didSet {
             guard musicCategory.tracks?.count != 0 else {
-                
                 musicCollectionView.reloadData()
                 return
             }
@@ -27,29 +25,12 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
                 layout.scrollDirection = .vertical
                 musicCollectionView.collectionViewLayout.invalidateLayout()
                 musicCollectionView.collectionViewLayout = layout
-                
-                addSubview(dividerLineView)
-                
-                NSLayoutConstraint.activate([
-                    dividerLineView.topAnchor.constraint(equalTo: bottomAnchor),
-                    dividerLineView.trailingAnchor.constraint(equalTo: trailingAnchor),
-                    dividerLineView.heightAnchor.constraint(equalToConstant: 1),
-                    dividerLineView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 15)
-                    ])
             }
             else {
                 let layout = UICollectionViewFlowLayout()
                 layout.scrollDirection = .horizontal
                 musicCollectionView.collectionViewLayout.invalidateLayout()
                 musicCollectionView.collectionViewLayout = layout
-                addSubview(dividerLineView)
-                
-                NSLayoutConstraint.activate([
-                    dividerLineView.topAnchor.constraint(equalTo: bottomAnchor),
-                    dividerLineView.trailingAnchor.constraint(equalTo: trailingAnchor),
-                    dividerLineView.heightAnchor.constraint(equalToConstant: 1),
-                    dividerLineView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 15)
-                ])
             }
             musicCollectionView.reloadData()
         }
@@ -179,7 +160,6 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 0, left: 14, bottom: 0, right: 14)
     }
-    
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

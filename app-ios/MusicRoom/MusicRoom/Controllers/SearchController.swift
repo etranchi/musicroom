@@ -54,7 +54,7 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
             let     cell = collectionView.dequeueReusableCell(withReuseIdentifier: searchCellId, for: indexPath) as! SearchCell
             return cell
         } else {
-            let     cell = collectionView.dequeueReusableCell(withReuseIdentifier: categoryCellId, for: indexPath) as! CategoryCell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: categoryCellId, for: indexPath) as! CategoryCell
             cell.musicCategory = musicCategories![indexPath.item - 1]
             cell.backgroundColor = UIColor(white: 0.15, alpha: 1)
             return cell
