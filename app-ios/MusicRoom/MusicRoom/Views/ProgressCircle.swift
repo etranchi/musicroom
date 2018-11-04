@@ -8,13 +8,10 @@
 
 import UIKit
 
-class ProgressCircle: UIView, CAAnimationDelegate {
+class ProgressCircle: UIView {
     let shapeLayer = CAShapeLayer()
-    var playButton: UIButton
     
-    init(_ playButton: UIButton) {
-        self.playButton = playButton
-        
+    init() {
         super.init(frame: CGRect(x: 0, y: 0, width: 79, height: 79))
         setupView()
     }
@@ -23,24 +20,8 @@ class ProgressCircle: UIView, CAAnimationDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
-        if flag == true {
-            let playIcon = UIImage(named: "play_icon")
-            let tintedIcon = playIcon?.withRenderingMode(.alwaysTemplate)
-            playButton.setImage(tintedIcon, for: .normal)
-            playButton.tintColor = UIColor(white: 1, alpha: 1)
-        }
-    }
-    
-    let basicAnimation = CABasicAnimation(keyPath: "strokeEnd")
-    var fromValue: CGFloat = 0.0
-    
     func updateProgress(_ progress: CGFloat) {
-        basicAnimation.fromValue = fromValue
-        basicAnimation.toValue = progress
-        basicAnimation.duration = 1
-        fromValue = progress
-        shapeLayer.add(basicAnimation, forKey: "progress")
+        shapeLayer.strokeEnd = progress
     }
     
     fileprivate func setupView() {
@@ -52,7 +33,6 @@ class ProgressCircle: UIView, CAAnimationDelegate {
         shapeLayer.strokeEnd = 0
         shapeLayer.fillColor = UIColor.clear.cgColor
         shapeLayer.lineCap = CAShapeLayerLineCap.round
-        basicAnimation.delegate = self
         
         layer.addSublayer(shapeLayer)
         
