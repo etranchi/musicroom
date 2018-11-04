@@ -20,6 +20,10 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     var deezer = DeezerManager()
     var track : DZRTrack?
     
+    var progressCircle: ProgressCircle?
+    var coverContainerView: CoverContainerView?
+    var backgroundCoverView: BackgroundCoverView?
+    
     init(_ tracks: [Track], _ index: Int) {
         self.tracks = tracks
         self.index = index
@@ -29,16 +33,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    let backgroundImageView: UIImageView = {
-        let iv = UIImageView()
-        
-        iv.translatesAutoresizingMaskIntoConstraints = false
-        iv.contentMode = .scaleAspectFill
-        iv.clipsToBounds = true
-        return iv
-    }()
-
+    
     let visualEffectView: UIVisualEffectView = {
         let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
         visualEffectView.isUserInteractionEnabled = false
@@ -178,6 +173,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     @objc func handleNext() {
         if index + 1 < tracks.count, isChangingMusic == false {
             isChangingMusic = true
+            backgroundCoverView?.handleNextAnimation()
             coverContainerView?.handleNextAnimation()
         }
     }
@@ -185,6 +181,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     @objc func handlePrevious() {
         if index - 1 >= 0, isChangingMusic == false {
             isChangingMusic = true
+            backgroundCoverView?.handlePreviousAnimation()
             coverContainerView?.handlePreviousAnimation()
         }
     }
@@ -215,9 +212,9 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         index += indexOffset
         loadTrackInplayer()
         
-        backgroundImageView.removeFromSuperview()
+        backgroundCoverView?.removeFromSuperview()
         visualEffectView.removeFromSuperview()
-        coverContainerView!.removeFromSuperview()
+        coverContainerView?.removeFromSuperview()
         titleLabel.removeFromSuperview()
         authorLabel.removeFromSuperview()
         setupBackground()
@@ -225,7 +222,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         playButton.removeFromSuperview()
         nextButton.removeFromSuperview()
         setupButtons()
-        progressCircle!.removeFromSuperview()
+        progressCircle?.removeFromSuperview()
         setupProgressCircle()
         isChangingMusic = false
         hasPaused = false
@@ -246,30 +243,48 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         return coverContainerView
     }
     
-    var coverContainerView: CoverContainerView?
+    fileprivate func setupBackgroudView() -> BackgroundCoverView {
+        var previousTrack: Track? = nil
+        var nextTrack: Track? = nil
+        if index - 1 >= 0 {
+            previousTrack = tracks[index - 1]
+        }
+        let currentTrack = tracks[index]
+        if index + 1 < tracks.count {
+            nextTrack = tracks[index + 1]
+        }
+        let backgroudView = BackgroundCoverView(previousTrack, currentTrack, nextTrack)
+        return backgroudView
+    }
     
     fileprivate func setupBackground() {
+       
         navigationController?.navigationBar.topItem?.title = ""
         navigationController?.navigationBar.tintColor = .white
-        backgroundImageView.loadImageUsingCacheWithUrlString(urlString: tracks[index].album.cover_big)
+        
+        backgroundCoverView = setupBackgroudView()
         coverContainerView = setupCoverContainer()
+        
         coverContainerView?.translatesAutoresizingMaskIntoConstraints = false
+        backgroundCoverView?.translatesAutoresizingMaskIntoConstraints = false
+        
         coverContainerView?.clipsToBounds = true
+        backgroundCoverView?.clipsToBounds = true
         
         titleLabel.text = tracks[index].title
         authorLabel.text = tracks[index].artist.name
         
-        view.addSubview(backgroundImageView)
+        view.addSubview(backgroundCoverView!)
         view.addSubview(visualEffectView)
         view.addSubview(coverContainerView!)
         view.addSubview(titleLabel)
         view.addSubview(authorLabel)
         
         NSLayoutConstraint.activate([
-            backgroundImageView.topAnchor.constraint(equalTo: view.topAnchor),
-            backgroundImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            backgroundImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            backgroundImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            backgroundCoverView!.topAnchor.constraint(equalTo: view.topAnchor),
+            backgroundCoverView!.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            backgroundCoverView!.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            backgroundCoverView!.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
             visualEffectView.topAnchor.constraint(equalTo: view.topAnchor),
             visualEffectView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -321,7 +336,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     }
     
     
-    var progressCircle: ProgressCircle?
+    
     
     fileprivate func setupProgressCircle() {
         progressCircle = ProgressCircle(frame: CGRect(x: 0, y: 0, width: 76, height: 76))
