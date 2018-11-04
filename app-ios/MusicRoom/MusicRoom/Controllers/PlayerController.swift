@@ -8,10 +8,16 @@
 
 import UIKit
 
-class PlayerController: UIViewController {
+class PlayerController: UIViewController, DZRPlayerDelegate {
     let tracks: [Track]
     var index: Int
-    var isPlaying = false
+    var hasPaused = false
+    
+    var networkType : DZRPlayerNetworkType?
+    var request : DZRRequestManager?
+    var cancelable : DZRCancelable?
+    var deezer = DeezerManager()
+    var track : DZRTrack?
     
     init(_ tracks: [Track], _ index: Int) {
         self.tracks = tracks
@@ -23,6 +29,8 @@ class PlayerController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // UIVariables
+    
     let backgroundImageView: UIImageView = {
         let iv = UIImageView()
         
@@ -31,8 +39,7 @@ class PlayerController: UIViewController {
         iv.clipsToBounds = true
         return iv
     }()
-   
-    
+
     let visualEffectView: UIVisualEffectView = {
         let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
         visualEffectView.isUserInteractionEnabled = false
@@ -103,19 +110,88 @@ class PlayerController: UIViewController {
         return button
     }()
     
+    // deezer player
+    
+    private lazy var player: DZRPlayer? = {
+        guard let deezerConnect = DeezerManager.sharedInstance.deezerConnect,
+            var _player = DZRPlayer(connection: deezerConnect) else { return nil }
+        _player.shouldUpdateNowPlayingInfo = true
+        _player.delegate = self
+        return _player
+    }()
+    
+    
+    // methodes
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        self.navigationController?.navigationBar.topItem?.title = ""
+        
         setupBackground()
-        setupButtons()
-        setupProgressCircle()
+        setupPlayer()
+        
+        cancelable?.cancel()
+        player?.stop()
+        self.cancelable = DZRTrack.object(withIdentifier: String(tracks[index].id), requestManager: request, callback: { (response, err) in
+            if let err = err {
+                print("Player error: \(err.localizedDescription)")
+                return
+            }
+            guard let res = response as? DZRTrack else { return }
+            self.track = res
+            self.setupButtons()
+            self.setupProgressCircle()
+        })
+        
+    }
+    
+    func setupPlayer() {
+        player?.networkType = .wifiAnd3G
+        player?.shouldUpdateNowPlayingInfo = true
+        request = DZRRequestManager.default().sub()
+    }
+    
+    func player(_ player: DZRPlayer!, didPlay playedBytes: Int64, outOf totalBytes: Int64) {
+        progressCircle!.updateProgress(CGFloat(playedBytes) / CGFloat(totalBytes))
+        if playedBytes >= totalBytes - 16 {
+            hasPaused = false
+            playButton.removeTarget(self, action: #selector(handlePause), for: .touchUpInside)
+            playButton.addTarget(self, action: #selector(handlePlay), for: .touchUpInside)
+        }
+    }
+    
+    func setPlayIcon() {
+        let playIcon = UIImage(named: "play_icon")
+        let tintedIcon = playIcon?.withRenderingMode(.alwaysTemplate)
+        playButton.setImage(tintedIcon, for: .normal)
+    }
+    
+    func setPauseIcon() {
+        let playIcon = UIImage(named: "pause_icon")
+        let tintedIcon = playIcon?.withRenderingMode(.alwaysTemplate)
+        playButton.setImage(tintedIcon, for: .normal)
     }
     
     @objc func handlePlay() {
-        isPlaying = true
-        progressCircle?.handlePlay()
-        print("playing \(tracks[index].title)")
+        if hasPaused == false {
+            self.player?.play(track)
+            print("playing \(tracks[index].title)")
+        } else {
+            self.player?.play()
+            print("resuming \(tracks[index].title)")
+            
+        }
+        setPauseIcon()
+        playButton.removeTarget(self, action: #selector(handlePlay), for: .touchUpInside)
+        playButton.addTarget(self, action: #selector(handlePause), for: .touchUpInside)
+    }
+    
+    @objc func handlePause () {
+        print("paused \(tracks[index].title)")
+        self.player?.pause()
+        hasPaused = true
+        setPlayIcon()
+        playButton.removeTarget(self, action: #selector(handlePause), for: .touchUpInside)
+        playButton.addTarget(self, action: #selector(handlePlay), for: .touchUpInside)
     }
     
     @objc func handleNext() {
@@ -127,6 +203,8 @@ class PlayerController: UIViewController {
     }
     
     fileprivate func setupBackground() {
+        navigationController?.navigationBar.topItem?.title = ""
+        navigationController?.navigationBar.tintColor = .white
         backgroundImageView.loadImageUsingCacheWithUrlString(urlString: tracks[index].album.cover_big)
         coverImageView.loadImageUsingCacheWithUrlString(urlString: tracks[index].album.cover_medium)
         titleLabel.text = tracks[index].title

@@ -32,33 +32,29 @@ class ProgressCircle: UIView, CAAnimationDelegate {
         }
     }
     
-    func animationDidStart(_ anim: CAAnimation) {
-        let pauseIcon = UIImage(named: "pause_icon")
-        let tintedIcon = pauseIcon?.withRenderingMode(.alwaysTemplate)
-        playButton.setImage(tintedIcon, for: .normal)
-        playButton.tintColor = UIColor(white: 1, alpha: 1)
-    }
+    let basicAnimation = CABasicAnimation(keyPath: "strokeEnd")
+    var fromValue: CGFloat = 0.0
     
-    func handlePlay() {
-        let basicAnimation = CABasicAnimation(keyPath: "strokeEnd")
-        
-        basicAnimation.toValue = 1
-        basicAnimation.duration = 10
-        basicAnimation.delegate = self
-
-        shapeLayer.add(basicAnimation, forKey: "basic")
+    func updateProgress(_ progress: CGFloat) {
+        basicAnimation.fromValue = fromValue
+        basicAnimation.toValue = progress
+        basicAnimation.duration = 1
+        fromValue = progress
+        shapeLayer.add(basicAnimation, forKey: "progress")
     }
     
     fileprivate func setupView() {
         
-        let circularPath = UIBezierPath(arcCenter: center, radius: 39, startAngle: -CGFloat.pi / 2, endAngle: 2 * CGFloat.pi, clockwise: true)
+        let circularPath = UIBezierPath(arcCenter: center, radius: 39, startAngle: -0.5 * .pi, endAngle: 1.5 * .pi, clockwise: true)
         shapeLayer.path = circularPath.cgPath
-        shapeLayer.strokeColor = UIColor(red: 10 / 255, green: 200 / 255, blue: 10 / 255, alpha: 1).cgColor
+        shapeLayer.strokeColor = UIColor(red: 20 / 255, green: 160 / 255, blue: 20 / 255, alpha: 1).cgColor
         shapeLayer.lineWidth = 2
         shapeLayer.strokeEnd = 0
         shapeLayer.fillColor = UIColor.clear.cgColor
         shapeLayer.lineCap = CAShapeLayerLineCap.round
+        basicAnimation.delegate = self
         
         layer.addSublayer(shapeLayer)
+        
     }
 }
