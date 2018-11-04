@@ -12,6 +12,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     let tracks: [Track]
     var index: Int
     var hasPaused = false
+    var isChangingMusic = false
     
     var networkType : DZRPlayerNetworkType?
     var request : DZRRequestManager?
@@ -182,15 +183,25 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     }
     
     @objc func handleNext() {
-        if index + 1 < tracks.count {
+        if index + 1 < tracks.count, isChangingMusic == false {
+            isChangingMusic = true
             coverContainerView?.handleNextAnimation()
         }
     }
     
     @objc func handlePrevious() {
-        if index - 1 >= 0 {
+        if index - 1 >= 0, isChangingMusic == false {
+            isChangingMusic = true
             coverContainerView?.handlePreviousAnimation()
         }
+    }
+    
+    func setupNextTrack() {
+        isChangingMusic = false
+    }
+    
+    func setupPreviousTrack() {
+        isChangingMusic = false
     }
     
     fileprivate func setupCoverContainer() -> CoverContainerView {
@@ -204,7 +215,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         if index + 1 < tracks.count {
             nextTrack = tracks[index + 1]
         }
-        let coverContainerView = CoverContainerView(previousTrack, currentTrack, nextTrack)
+        let coverContainerView = CoverContainerView(target: self, previousTrack, currentTrack, nextTrack)
         return coverContainerView
     }
     

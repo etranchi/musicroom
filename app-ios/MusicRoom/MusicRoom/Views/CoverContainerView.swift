@@ -13,8 +13,10 @@ class CoverContainerView: UIView {
     let previousTrack: Track?
     let currentTrack: Track
     let nextTrack: Track?
+    let playerController: PlayerController
     
-    init(_ previousTrack: Track?, _ currentTrack: Track, _ nextTrack: Track?) {
+    init(target: UIViewController, _ previousTrack: Track?, _ currentTrack: Track, _ nextTrack: Track?) {
+        self.playerController = target as! PlayerController
         self.previousTrack = previousTrack
         self.currentTrack = currentTrack
         self.nextTrack = nextTrack
@@ -71,7 +73,9 @@ class CoverContainerView: UIView {
             self.nextCoverImageView.alpha = 1
             self.currentCoverImageView.alpha = 0.6
             self.layoutIfNeeded()
-        })
+        }) { (finished) in
+            self.playerController.setupNextTrack()
+        }
     }
     
     func handlePreviousAnimation() {
@@ -93,7 +97,9 @@ class CoverContainerView: UIView {
             self.previousCoverImageView.alpha = 1
             self.currentCoverImageView.alpha = 0.6
             self.layoutIfNeeded()
-        })
+        }){ (finished) in
+            self.playerController.setupPreviousTrack()
+        }
     }
     
     var previousTopAnchor: NSLayoutConstraint?
