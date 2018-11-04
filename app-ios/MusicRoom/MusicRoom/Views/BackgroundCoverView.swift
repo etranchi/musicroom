@@ -70,6 +70,9 @@ class BackgroundCoverView: UIView {
     var nextLeadingAnchor: NSLayoutConstraint?
     
     func handleNextAnimation() {
+        if currentTrack.album.cover_big == nextTrack?.album.cover_big {
+            return
+        }
         let moveOffset = -UIApplication.shared.keyWindow!.bounds.width
         
         nextTrailingAnchor?.constant = 0
@@ -86,6 +89,9 @@ class BackgroundCoverView: UIView {
     }
     
     func handlePreviousAnimation() {
+        if currentTrack.album.cover_big == previousTrack?.album.cover_big {
+            return
+        }
         let moveOffset = UIApplication.shared.keyWindow!.bounds.width
         previousTrailingAnchor?.constant = 0
         previousLeadingAnchor?.constant = 0
@@ -111,18 +117,18 @@ class BackgroundCoverView: UIView {
         previousImageView.alpha = 0.5
         nextImageView.alpha = 0.5
         
-        previousTopAnchor = previousImageView.topAnchor.constraint(equalTo: topAnchor)
-        previousBottomAnchor = previousImageView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        previousTopAnchor = previousImageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor)
+        previousBottomAnchor = previousImageView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
         previousTrailingAnchor = previousImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -offset)
         previousLeadingAnchor = previousImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -offset)
         
-        currentTopAnchor = currentImageView.topAnchor.constraint(equalTo: topAnchor)
-        currentBottomAnchor = currentImageView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        currentTopAnchor = currentImageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor)
+        currentBottomAnchor = currentImageView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
         currentTrailingAnchor = currentImageView.trailingAnchor.constraint(equalTo: trailingAnchor)
         currentLeadingAnchor = currentImageView.leadingAnchor.constraint(equalTo: leadingAnchor)
         
-        nextTopAnchor = nextImageView.topAnchor.constraint(equalTo: topAnchor)
-        nextBottomAnchor = nextImageView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        nextTopAnchor = nextImageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor)
+        nextBottomAnchor = nextImageView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
         nextTrailingAnchor = nextImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: offset)
         nextLeadingAnchor = nextImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: offset)
         
