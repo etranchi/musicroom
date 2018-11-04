@@ -28,9 +28,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    // UIVariables
-    
+
     let backgroundImageView: UIImageView = {
         let iv = UIImageView()
         
@@ -47,15 +45,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         visualEffectView.translatesAutoresizingMaskIntoConstraints = false
         return visualEffectView
     }()
-    
-    let coverImageView: UIImageView = {
-        let iv = UIImageView()
-        
-        iv.translatesAutoresizingMaskIntoConstraints = false
-        iv.contentMode = .scaleAspectFit
-        return iv
-    }()
-    
+
     let titleLabel: UILabel = {
         let label = UILabel()
         
@@ -110,8 +100,6 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         return button
     }()
     
-    // deezer player
-    
     private lazy var player: DZRPlayer? = {
         guard let deezerConnect = DeezerManager.sharedInstance.deezerConnect,
             var _player = DZRPlayer(connection: deezerConnect) else { return nil }
@@ -119,9 +107,6 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         _player.delegate = self
         return _player
     }()
-    
-    
-    // methodes
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -152,7 +137,6 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     
     func player(_ player: DZRPlayer!, didPlay playedBytes: Int64, outOf totalBytes: Int64) {
         progressCircle!.updateProgress(CGFloat(playedBytes) / CGFloat(totalBytes))
-        print(player.progress)
         if player.progress > 0.96 {
             hasPaused = false
             playButton.removeTarget(self, action: #selector(handlePause), for: .touchUpInside)
@@ -198,24 +182,48 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     }
     
     @objc func handleNext() {
-        print("Go to the next song")
+        if index + 1 < tracks.count {
+            coverContainerView?.handleNextAnimation()
+        }
     }
     
     @objc func handlePrevious() {
-        print("Go to the previous song")
+        if index - 1 >= 0 {
+            coverContainerView?.handlePreviousAnimation()
+        }
     }
+    
+    fileprivate func setupCoverContainer() -> CoverContainerView {
+        
+        var previousTrack: Track? = nil
+        var nextTrack: Track? = nil
+        if index - 1 >= 0 {
+            previousTrack = tracks[index - 1]
+        }
+        let currentTrack = tracks[index]
+        if index + 1 < tracks.count {
+            nextTrack = tracks[index + 1]
+        }
+        let coverContainerView = CoverContainerView(previousTrack, currentTrack, nextTrack)
+        return coverContainerView
+    }
+    
+    var coverContainerView: CoverContainerView?
     
     fileprivate func setupBackground() {
         navigationController?.navigationBar.topItem?.title = ""
         navigationController?.navigationBar.tintColor = .white
         backgroundImageView.loadImageUsingCacheWithUrlString(urlString: tracks[index].album.cover_big)
-        coverImageView.loadImageUsingCacheWithUrlString(urlString: tracks[index].album.cover_medium)
+        coverContainerView = setupCoverContainer()
+        coverContainerView?.translatesAutoresizingMaskIntoConstraints = false
+        coverContainerView?.clipsToBounds = true
+        
         titleLabel.text = tracks[index].title
         authorLabel.text = tracks[index].artist.name
         
         view.addSubview(backgroundImageView)
         view.addSubview(visualEffectView)
-        view.addSubview(coverImageView)
+        view.addSubview(coverContainerView!)
         view.addSubview(titleLabel)
         view.addSubview(authorLabel)
         
@@ -230,15 +238,16 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             visualEffectView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             visualEffectView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            coverImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 122),
-            coverImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            coverImageView.widthAnchor.constraint(equalToConstant: view.bounds.width - 60),
-            coverImageView.heightAnchor.constraint(equalToConstant: view.bounds.width - 60),
+            coverContainerView!.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
+            coverContainerView!.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            coverContainerView!.heightAnchor.constraint(equalToConstant: view.bounds.width - 80),
+            coverContainerView!.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            coverContainerView!.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            titleLabel.centerXAnchor.constraint(equalTo: coverImageView.centerXAnchor),
-            titleLabel.topAnchor.constraint(equalTo: coverImageView.bottomAnchor, constant: 30),
-            titleLabel.trailingAnchor.constraint(equalTo: coverImageView.trailingAnchor),
-            titleLabel.leadingAnchor.constraint(equalTo: coverImageView.leadingAnchor),
+            titleLabel.centerXAnchor.constraint(equalTo: coverContainerView!.centerXAnchor),
+            titleLabel.topAnchor.constraint(equalTo: coverContainerView!.bottomAnchor, constant: 40),
+            titleLabel.trailingAnchor.constraint(equalTo: coverContainerView!.trailingAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: coverContainerView!.leadingAnchor),
             
             authorLabel.centerXAnchor.constraint(equalTo: titleLabel.centerXAnchor),
             authorLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
@@ -251,7 +260,6 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         previousButton.addTarget(self, action: #selector(handlePrevious), for: .touchUpInside)
         playButton.addTarget(self, action: #selector(handlePlay), for: .touchUpInside)
         nextButton.addTarget(self, action: #selector(handleNext), for: .touchUpInside)
-        coverImageView.loadImageUsingCacheWithUrlString(urlString: tracks[index].album.cover_medium)
         view.addSubview(previousButton)
         view.addSubview(playButton)
         view.addSubview(nextButton)
@@ -278,16 +286,16 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     var progressCircle: ProgressCircle?
     
     fileprivate func setupProgressCircle() {
-        progressCircle = ProgressCircle()
+        progressCircle = ProgressCircle(frame: CGRect(x: 0, y: 0, width: 76, height: 76))
         view.addSubview(progressCircle!)
         progressCircle!.translatesAutoresizingMaskIntoConstraints = false
         progressCircle!.isUserInteractionEnabled = false
         progressCircle!.layer.zPosition = playButton.layer.zPosition
         NSLayoutConstraint.activate([
-            progressCircle!.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -1),
-            progressCircle!.centerYAnchor.constraint(equalTo: playButton.centerYAnchor, constant: -1),
-            progressCircle!.widthAnchor.constraint(equalToConstant: 78),
-            progressCircle!.heightAnchor.constraint(equalToConstant: 78)
+            progressCircle!.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            progressCircle!.centerYAnchor.constraint(equalTo: playButton.centerYAnchor),
+            progressCircle!.widthAnchor.constraint(equalToConstant: 76),
+            progressCircle!.heightAnchor.constraint(equalToConstant: 76)
         ])
     }
 }

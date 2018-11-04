@@ -16,7 +16,7 @@ class AlbumCell: UICollectionViewCell {
             imageView.loadImageUsingCacheWithUrlString(urlString: album.cover_medium)
         }
     }
-    
+
     override init(frame: CGRect) {
         super.init(frame: .zero)
         

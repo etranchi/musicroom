@@ -68,7 +68,7 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     }
     
     func showPlayerForSong(_ track: Track, _ index: Int) {
-        let playerController = PlayerController([track], index)
+        let playerController = PlayerController(musicCategories![1].tracks!, index)
         navigationController?.pushViewController(playerController, animated: true)
     }
 

@@ -179,7 +179,7 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
             print("album selected")
         case "Songs":
             guard let song = musicCategory.tracks?[indexPath.item] else { return }
-            searchController?.showPlayerForSong(song, 0)
+            searchController?.showPlayerForSong(song, indexPath.item)
         default:
             return
         }

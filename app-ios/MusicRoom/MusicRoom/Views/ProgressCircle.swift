@@ -11,8 +11,8 @@ import UIKit
 class ProgressCircle: UIView {
     let shapeLayer = CAShapeLayer()
     
-    init() {
-        super.init(frame: CGRect(x: 0, y: 0, width: 79, height: 79))
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         setupView()
     }
     
@@ -26,10 +26,10 @@ class ProgressCircle: UIView {
     
     fileprivate func setupView() {
         
-        let circularPath = UIBezierPath(arcCenter: center, radius: 39, startAngle: -0.5 * .pi, endAngle: 1.5 * .pi, clockwise: true)
+        let circularPath = UIBezierPath(arcCenter: center, radius: 38, startAngle: -0.5 * .pi, endAngle: 1.5 * .pi, clockwise: true)
         shapeLayer.path = circularPath.cgPath
         shapeLayer.strokeColor = UIColor(red: 20 / 255, green: 160 / 255, blue: 20 / 255, alpha: 1).cgColor
-        shapeLayer.lineWidth = 2
+        shapeLayer.lineWidth = 3
         shapeLayer.strokeEnd = 0
         shapeLayer.fillColor = UIColor.clear.cgColor
         shapeLayer.lineCap = CAShapeLayerLineCap.round
