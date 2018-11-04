@@ -153,12 +153,12 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     func player(_ player: DZRPlayer!, didPlay playedBytes: Int64, outOf totalBytes: Int64) {
         progressCircle!.updateProgress(CGFloat(playedBytes) / CGFloat(totalBytes))
         print(player.progress)
-        if player.progress >= 0.96 {
+        if player.progress > 0.96 {
             hasPaused = false
             playButton.removeTarget(self, action: #selector(handlePause), for: .touchUpInside)
             playButton.addTarget(self, action: #selector(handlePlay), for: .touchUpInside)
             setPlayIcon()
-            progressCircle = ProgressCircle()
+            progressCircle?.updateProgress(0)
         }
     }
     
