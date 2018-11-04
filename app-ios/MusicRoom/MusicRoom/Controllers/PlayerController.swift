@@ -126,6 +126,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             self.track = res
             self.setupButtons()
             self.setupProgressCircle()
+            self.handlePlay()
         })
         
     }
