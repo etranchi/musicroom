@@ -69,12 +69,12 @@ class CoverContainerView: UIView {
         previousRightAnchor?.constant = moveOffset * 2
         previousWidthAnchor?.constant = moveOffset * 2
     
-        UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.nextCoverImageView.alpha = 1
             self.currentCoverImageView.alpha = 0.6
             self.layoutIfNeeded()
         }) { (finished) in
-            self.playerController.setupNextTrack()
+            self.playerController.setupTrack(indexOffset: 1)
         }
     }
     
@@ -93,12 +93,12 @@ class CoverContainerView: UIView {
         nextRightAnchor?.constant = moveOffset * 2
         nextWidthAnchor?.constant = moveOffset * 2
         
-        UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.previousCoverImageView.alpha = 1
             self.currentCoverImageView.alpha = 0.6
             self.layoutIfNeeded()
         }){ (finished) in
-            self.playerController.setupPreviousTrack()
+            self.playerController.setupTrack(indexOffset: -1)
         }
     }
     

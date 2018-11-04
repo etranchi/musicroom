@@ -160,21 +160,13 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     }
     
     @objc func handlePlay() {
-        if hasPaused == false {
-            self.player?.play(track)
-            print("playing \(tracks[index].title)")
-        } else {
-            self.player?.play()
-            print("resuming \(tracks[index].title)")
-            
-        }
+        hasPaused == false ? self.player?.play(track) : self.player?.play()
         setPauseIcon()
         playButton.removeTarget(self, action: #selector(handlePlay), for: .touchUpInside)
         playButton.addTarget(self, action: #selector(handlePause), for: .touchUpInside)
     }
     
     @objc func handlePause () {
-        print("paused \(tracks[index].title)")
         self.player?.pause()
         hasPaused = true
         setPlayIcon()
@@ -196,12 +188,46 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         }
     }
     
-    func setupNextTrack() {
-        isChangingMusic = false
+    fileprivate func loadTrackInplayer() {
+        cancelable?.cancel()
+        player?.stop()
+        self.cancelable = DZRTrack.object(withIdentifier: String(tracks[index].id), requestManager: request, callback: { (response, err) in
+            if let err = err {
+                print("Player error: \(err.localizedDescription)")
+                return
+            }
+            guard let res = response as? DZRTrack else { return }
+            self.track = res
+            self.player?.play(self.track)
+            self.hasPaused = true
+            self.progressCircle?.updateProgress(0)
+        })
     }
     
-    func setupPreviousTrack() {
+    func setupTrack(indexOffset: Int) {
+        
+        handlePause()
+        playButton.removeTarget(self, action: #selector(handlePause), for: .touchUpInside)
+        playButton.addTarget(self, action: #selector(handlePlay), for: .touchUpInside)
+        setPlayIcon()
+        
+        index += indexOffset
+        loadTrackInplayer()
+        
+        backgroundImageView.removeFromSuperview()
+        visualEffectView.removeFromSuperview()
+        coverContainerView!.removeFromSuperview()
+        titleLabel.removeFromSuperview()
+        authorLabel.removeFromSuperview()
+        setupBackground()
+        previousButton.removeFromSuperview()
+        playButton.removeFromSuperview()
+        nextButton.removeFromSuperview()
+        setupButtons()
+        progressCircle!.removeFromSuperview()
+        setupProgressCircle()
         isChangingMusic = false
+        hasPaused = false
     }
     
     fileprivate func setupCoverContainer() -> CoverContainerView {
