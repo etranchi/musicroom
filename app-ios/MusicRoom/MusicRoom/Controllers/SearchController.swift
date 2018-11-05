@@ -66,17 +66,12 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
         }
     }
     
-<<<<<<< Updated upstream
-    func showPlayerForSong(_ track: Track, _ index: Int) {
-        let playerController = PlayerController(musicCategories![1].tracks, index)
-=======
     func showTrackList() {
         print("show it!!")
     }
     
     func showPlayerForSong(_ index: Int) {
-        let playerController = PlayerController(musicCategories![1].tracks!, index)
->>>>>>> Stashed changes
+        let playerController = PlayerController(musicCategories![1].tracks, index)
         navigationController?.pushViewController(playerController, animated: true)
     }
 
