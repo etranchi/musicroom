@@ -36,6 +36,7 @@
 		8F189899217F25DA00CE1A8D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F189898217F25DA00CE1A8D /* AVFoundation.framework */; };
 		8F18989C217F3B4D00CE1A8D /* DeezerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F18989B217F3B4D00CE1A8D /* DeezerManager.swift */; };
 		8F18989E217F523800CE1A8D /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F18989D217F523800CE1A8D /* SafariServices.framework */; };
+		8F2D74F9218E12E20071D009 /* PlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2D74F8218E12E20071D009 /* PlayerManager.swift */; };
 		8F364B83217E5B9100B57FC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F364B82217E5B9100B57FC8 /* AppDelegate.swift */; };
 		8F364B85217E5B9100B57FC8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F364B84217E5B9100B57FC8 /* ViewController.swift */; };
 		8F364B88217E5B9100B57FC8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F364B86217E5B9100B57FC8 /* Main.storyboard */; };
@@ -105,6 +106,7 @@
 		8F189898217F25DA00CE1A8D /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		8F18989B217F3B4D00CE1A8D /* DeezerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeezerManager.swift; sourceTree = "<group>"; };
 		8F18989D217F523800CE1A8D /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
+		8F2D74F8218E12E20071D009 /* PlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerManager.swift; sourceTree = "<group>"; };
 		8F364B7F217E5B9100B57FC8 /* MusicRoom.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicRoom.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F364B82217E5B9100B57FC8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8F364B84217E5B9100B57FC8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -238,6 +240,7 @@
 			children = (
 				8F18989B217F3B4D00CE1A8D /* DeezerManager.swift */,
 				77B444752181CD0200B3F536 /* APIManager.swift */,
+				8F2D74F8218E12E20071D009 /* PlayerManager.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -361,6 +364,7 @@
 				77820B942180833D00CB04A7 /* HomeController.swift in Sources */,
 				77B444782181F4D900B3F536 /* MusicCell.swift in Sources */,
 				778BF9AD218356DF00448FE6 /* Event.swift in Sources */,
+				8F2D74F9218E12E20071D009 /* PlayerManager.swift in Sources */,
 				770F5B1C218870FF00CC0FF7 /* PlaylistCell.swift in Sources */,
 				8F18989C217F3B4D00CE1A8D /* DeezerManager.swift in Sources */,
 				7732E7AC218A017E00F7B7DB /* AlbumCell.swift in Sources */,
@@ -511,8 +515,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

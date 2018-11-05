@@ -13,6 +13,7 @@ class MusicController: UIViewController, UITableViewDelegate, UITableViewDataSou
     var tracks : [Track]?
     var selectedTrack : Int = 0
     var footerView : UIView?
+    var playerManager = PlayerController()
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tracks!.count
     }
@@ -25,6 +26,7 @@ class MusicController: UIViewController, UITableViewDelegate, UITableViewDataSou
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MusicCell") as! MusicCell
         cell.data = tracks?[indexPath.row]
+        cell.showsReorderControl = true
         return cell
     }
     
@@ -38,12 +40,13 @@ class MusicController: UIViewController, UITableViewDelegate, UITableViewDataSou
         footerView?.addSubview(backButton)
         let playButton = UIButton(frame: CGRect(x: (footerView?.frame.width)! / 2 - 10, y: 10, width: 20, height: 10))
         playButton.backgroundColor = .white
+        playButton.addTarget(self, action: #selector(handlePlayer), for: .touchUpOutside)
         footerView?.addSubview(playButton)
         let nextButton = UIButton(frame : CGRect(x: (((footerView?.frame.width)! * 3) / 4) - 10, y: 10, width: 20, height: 10))
         nextButton.backgroundColor = .white
         footerView?.addSubview(nextButton)
+        tableView.isEditing = true
         self.view.addSubview(footerView!)
-        
         // Do any additional setup after loading the view.
     }
 
@@ -52,4 +55,28 @@ class MusicController: UIViewController, UITableViewDelegate, UITableViewDataSou
         // Dispose of any resources that can be recreated.
     }
     
+    @objc func handlePlayer() {
+    
+    }
+}
+
+extension MusicController {
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .none
+    }
+    
+    
+    func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
+        return false
+    }
+    
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let data = tracks![sourceIndexPath.row]
+        tracks!.remove(at: sourceIndexPath.row)
+        tracks!.insert(data, at: destinationIndexPath.row)
+
+    }
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
 }
