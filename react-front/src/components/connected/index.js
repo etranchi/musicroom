@@ -6,9 +6,6 @@ import Playlist from './playlist'
 import Setting from './setting'
 
 class Connected extends Component {
-	constructor(props) {
-		super(props);
-	}
 	deleteToken() {
 		localStorage.setItem('token', '');
 		this.props.updateParent({'token': ''})
