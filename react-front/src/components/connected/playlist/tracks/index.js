@@ -4,10 +4,6 @@ import defaultTrackImg from '../../../../assets/track.png'
 import moment from 'moment'
 
 class Tracks extends Component {
-	constructor(props) {
-        super(props);
-	}
-
 	render() {
 		if( this.props.tracks[0] === undefined ) {
 			return (

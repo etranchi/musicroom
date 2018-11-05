@@ -5,26 +5,7 @@ import Tracks from './tracks'
 import SearchBar from '../searchbar'
 
 class Playlist extends Component {
-	constructor(props) {
-		super(props);
-		// this.state = {
-		// 	current: {name: 'list', id: '', tracks: []}
-		// }
-		// this.componentDidUpdate = this.componentDidUpdate.bind(this);
-	}
-
-	// componentDidUpdate(prevProps){
-	// 	if (this.state.current.name === 'tracks')
-	// 		// this.setState({current: {name: 'list'}})
-	// 		this.state.current.name = 'list'
-	// }
-
-	// updateState = (val) => {
-	// 	this.setState(val);
-	// };
-
 	render() {
-		console.log('event index');
 	return (
 		<div>
 		<SearchBar/>
