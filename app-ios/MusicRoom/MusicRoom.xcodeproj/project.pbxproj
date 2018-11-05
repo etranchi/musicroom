@@ -45,6 +45,8 @@
 		8F364B8B217E5B9100B57FC8 /* MusicRoom.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8F364B89217E5B9100B57FC8 /* MusicRoom.xcdatamodeld */; };
 		8F364B8D217E5B9200B57FC8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F364B8C217E5B9200B57FC8 /* Assets.xcassets */; };
 		8F364B90217E5B9200B57FC8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F364B8E217E5B9200B57FC8 /* LaunchScreen.storyboard */; };
+		FABDFAFB2190A6F40044496E /* PlaylistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FABDFAFA2190A6F40044496E /* PlaylistCell.swift */; };
+		FABDFAFD2190A8B40044496E /* UIViewAnchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FABDFAFC2190A8B40044496E /* UIViewAnchor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -120,6 +122,8 @@
 		8F364B8C217E5B9200B57FC8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8F364B8F217E5B9200B57FC8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8F364B91217E5B9200B57FC8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FABDFAFA2190A6F40044496E /* PlaylistCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistCell.swift; sourceTree = "<group>"; };
+		FABDFAFC2190A8B40044496E /* UIViewAnchor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewAnchor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,6 +171,7 @@
 			isa = PBXGroup;
 			children = (
 				7991484121889F8D00120E2D /* Extensions.swift */,
+				FABDFAFC2190A8B40044496E /* UIViewAnchor.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -202,6 +207,7 @@
 				799DA43C218D3ED300C803E3 /* AlbumCell.swift */,
 				799DA43A218D3E7F00C803E3 /* SongCell.swift */,
 				799DA438218D3D8500C803E3 /* ArtistCell.swift */,
+				FABDFAFA2190A6F40044496E /* PlaylistCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -408,10 +414,12 @@
 				79CDCF292188746D0095CC63 /* LibraryController.swift in Sources */,
 				7920E79A218F0BF9008D1DD1 /* CoverContainerView.swift in Sources */,
 				799DA437218D289400C803E3 /* Artist.swift in Sources */,
+				FABDFAFB2190A6F40044496E /* PlaylistCell.swift in Sources */,
 				7991484221889F8D00120E2D /* Extensions.swift in Sources */,
 				79CDCF2B218876ED0095CC63 /* CustomNavigationController.swift in Sources */,
 				8F364B8B217E5B9100B57FC8 /* MusicRoom.xcdatamodeld in Sources */,
 				799DA433218D19E900C803E3 /* PlayerController.swift in Sources */,
+				FABDFAFD2190A8B40044496E /* UIViewAnchor.swift in Sources */,
 				799DA439218D3D8500C803E3 /* ArtistCell.swift in Sources */,
 				79CDCF23218873300095CC63 /* PlaylistController.swift in Sources */,
 			);

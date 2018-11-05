@@ -15,3 +15,14 @@ struct Playlist : Decodable {
     let tracklist : String
     let tracks : TrackData?
 }
+
+// stucture model tracks PlaylistTableView
+
+struct PlaylistTrack {
+    let name : String
+    let artist : String
+}
+
+struct PlaylistHome {
+    let name : String
+}
