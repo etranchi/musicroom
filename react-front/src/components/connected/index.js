@@ -59,8 +59,7 @@ class Connected extends Component {
           </Menu.Item>
         </Menu>
         </Sider>
-        <Layout>
-        
+        <Layout> 
           <Header style={{ background: '#fff', padding: 0 }}>
 	          <Row type="flex" justify="space-between">
 	          	<Col span={4}>
@@ -89,12 +88,5 @@ class Connected extends Component {
 	);
   }
 }
-// <div>
-// 		<Button type="primary" onClick={this.deleteToken.bind(this)}>Disconnect</Button>
-// 		<Sidebar updateParent={this.props.updateParent}/>
-// 		{this.props.state.currentComponent === 'event'? <Event state={this.props.state} updateParent={this.props.updateParent}/> : null}
-// 		{this.props.state.currentComponent === 'playlist' || this.props.state.currentComponent === 'tracks'? <Playlist state={this.props.state} updateParent={this.props.updateParent}/> : null}
-// 		{this.props.state.currentComponent === 'setting'? <Setting state={this.props.state} updateParent={this.props.updateParent}/> : null}
-// 		</div>
 
 export default Connected;
