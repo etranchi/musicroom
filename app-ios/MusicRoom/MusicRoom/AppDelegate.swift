@@ -18,9 +18,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         //get the token if loggedin -> go home else go loginPage
+        
         window = UIWindow()
         window?.makeKeyAndVisible()
         window?.rootViewController = TabBarController()
+        
         return true
     }
 

@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		7743C23B2190587E002CC508 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7743C23A2190587E002CC508 /* Playlist.swift */; };
+		7743C2472190A03A002CC508 /* User+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7743C2452190A03A002CC508 /* User+CoreDataClass.swift */; };
+		7743C2482190A03A002CC508 /* User+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7743C2462190A03A002CC508 /* User+CoreDataProperties.swift */; };
+		7743C24A2190A23C002CC508 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7743C2492190A23C002CC508 /* UserManager.swift */; };
 		778BF9A921832CB800448FE6 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778BF9A821832CB800448FE6 /* Track.swift */; };
 		77B444762181CD0200B3F536 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B444752181CD0200B3F536 /* APIManager.swift */; };
 		7920E79A218F0BF9008D1DD1 /* CoverContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7920E799218F0BF9008D1DD1 /* CoverContainerView.swift */; };
@@ -49,6 +52,9 @@
 
 /* Begin PBXFileReference section */
 		7743C23A2190587E002CC508 /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
+		7743C2452190A03A002CC508 /* User+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreDataClass.swift"; sourceTree = "<group>"; };
+		7743C2462190A03A002CC508 /* User+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		7743C2492190A23C002CC508 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		778BF9A821832CB800448FE6 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		77B444752181CD0200B3F536 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		7920E799218F0BF9008D1DD1 /* CoverContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverContainerView.swift; sourceTree = "<group>"; };
@@ -141,6 +147,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7743C23C21909F09002CC508 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				7743C2452190A03A002CC508 /* User+CoreDataClass.swift */,
+				7743C2462190A03A002CC508 /* User+CoreDataProperties.swift */,
+				7743C2492190A23C002CC508 /* UserManager.swift */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
 		778BF9A721832C8600448FE6 /* Modele */ = {
 			isa = PBXGroup;
 			children = (
@@ -298,6 +314,7 @@
 		8F364B81217E5B9100B57FC8 /* MusicRoom */ = {
 			isa = PBXGroup;
 			children = (
+				7743C23C21909F09002CC508 /* CoreData */,
 				796ECB38218DC9E200321B3B /* Views */,
 				7991484021889F6800120E2D /* Helpers */,
 				79CDCF2C21888C230095CC63 /* Cells */,
@@ -393,7 +410,9 @@
 				79CDCF2E21888C690095CC63 /* CategoryCell.swift in Sources */,
 				77B444762181CD0200B3F536 /* APIManager.swift in Sources */,
 				778BF9A921832CB800448FE6 /* Track.swift in Sources */,
+				7743C2472190A03A002CC508 /* User+CoreDataClass.swift in Sources */,
 				79CDCF1F218870F70095CC63 /* LoadingController.swift in Sources */,
+				7743C24A2190A23C002CC508 /* UserManager.swift in Sources */,
 				79B15ED0218C700C00B84BCB /* Album.swift in Sources */,
 				79B15ECE218C69AA00B84BCB /* MusicCategory.swift in Sources */,
 				8F18989C217F3B4D00CE1A8D /* DeezerManager.swift in Sources */,
@@ -408,6 +427,7 @@
 				79CDCF292188746D0095CC63 /* LibraryController.swift in Sources */,
 				7920E79A218F0BF9008D1DD1 /* CoverContainerView.swift in Sources */,
 				799DA437218D289400C803E3 /* Artist.swift in Sources */,
+				7743C2482190A03A002CC508 /* User+CoreDataProperties.swift in Sources */,
 				7991484221889F8D00120E2D /* Extensions.swift in Sources */,
 				79CDCF2B218876ED0095CC63 /* CustomNavigationController.swift in Sources */,
 				8F364B8B217E5B9100B57FC8 /* MusicRoom.xcdatamodeld in Sources */,
