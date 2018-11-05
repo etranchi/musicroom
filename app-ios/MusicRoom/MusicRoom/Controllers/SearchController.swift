@@ -74,6 +74,7 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     
     func showPlayerForSong(_ index: Int) {
         let playerController = PlayerController(musicCategories![1].tracks, index)
+        AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
         navigationController?.pushViewController(playerController, animated: true)
     }
 

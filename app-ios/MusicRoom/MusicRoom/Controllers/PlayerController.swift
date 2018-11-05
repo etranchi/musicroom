@@ -109,6 +109,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         super.viewWillDisappear(true)
         
         player?.stop()
+        AppUtility.lockOrientation(.all)
     }
     
     override func viewDidLoad() {
@@ -202,13 +203,15 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
                 print("Player error: \(err.localizedDescription)")
                 return
             }
-            guard let res = response as? DZRTrack else { return }
-            self.track = res
-            self.progressCircle?.updateProgress(0)
-            self.player?.play(res)
-            self.hasPaused = true
-            if self.isPlaying == true {
-                self.handlePlay()
+            DispatchQueue.main.async {
+                guard let res = response as? DZRTrack else { return }
+                self.track = res
+                self.progressCircle?.updateProgress(0)
+                self.player?.play(res)
+                self.hasPaused = true
+                if self.isPlaying == true {
+                    self.handlePlay()
+                }
             }
         })
     }
