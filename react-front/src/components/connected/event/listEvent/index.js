@@ -7,17 +7,20 @@ class ListEvent extends Component {
 	constructor(props) {
         super(props);
         this.state = {
-			events: []
+			events: [],
+			isloading:false
 		}
 		this.onLoad = false;
 	}
 	componentDidMount = () => {
 		console.log('REQUEST')
+		this.setState({loading:true});
 		axios.get('https://192.168.99.100:4242/event')
 		.then((resp) => {
-			this.setState({events: resp.data})
+			this.setState({events: resp.data,loading:false})
 		})
 		.catch((err) => {
+			this.setState({events: [],loading:false})
 			console.log('Events error', err);
 		})
 	}
