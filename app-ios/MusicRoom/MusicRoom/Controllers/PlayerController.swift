@@ -13,6 +13,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     var index: Int
     var hasPaused = false
     var isChangingMusic = false
+    var isPlaying = true
     
     var networkType : DZRPlayerNetworkType?
     var request : DZRRequestManager?
@@ -118,10 +119,13 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
                 return
             }
             guard let res = response as? DZRTrack else { return }
-            self.track = res
-            self.setupButtons()
-            self.setupProgressCircle()
-            self.handlePlay()
+            DispatchQueue.main.async {
+                self.track = res
+                self.setupButtons()
+                self.setupProgressCircle()
+                self.handlePlay()
+            }
+            
         })
         
     }
@@ -145,6 +149,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     
     func setPlayIcon() {
         let playIcon = UIImage(named: "play_icon")
+        
         let tintedIcon = playIcon?.withRenderingMode(.alwaysTemplate)
         playButton.setImage(tintedIcon, for: .normal)
     }
@@ -156,6 +161,8 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     }
     
     @objc func handlePlay() {
+        
+        isPlaying = true
         hasPaused == false ? self.player?.play(track) : self.player?.play()
         setPauseIcon()
         playButton.removeTarget(self, action: #selector(handlePlay), for: .touchUpInside)
@@ -164,6 +171,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     
     @objc func handlePause () {
         self.player?.pause()
+        isPlaying = false
         hasPaused = true
         setPlayIcon()
         playButton.removeTarget(self, action: #selector(handlePause), for: .touchUpInside)
@@ -188,7 +196,6 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     
     fileprivate func loadTrackInplayer() {
         cancelable?.cancel()
-        player?.stop()
         self.cancelable = DZRTrack.object(withIdentifier: String(tracks[index].id), requestManager: request, callback: { (response, err) in
             if let err = err {
                 print("Player error: \(err.localizedDescription)")
@@ -196,15 +203,17 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             }
             guard let res = response as? DZRTrack else { return }
             self.track = res
-            self.player?.play(self.track)
-            self.hasPaused = true
             self.progressCircle?.updateProgress(0)
+            self.player?.play(res)
+            self.hasPaused = true
+            if self.isPlaying == true {
+                self.handlePlay()
+            }
         })
     }
     
     func setupTrack(indexOffset: Int) {
-        
-        handlePause()
+        player?.stop()
         playButton.removeTarget(self, action: #selector(handlePause), for: .touchUpInside)
         playButton.addTarget(self, action: #selector(handlePlay), for: .touchUpInside)
         setPlayIcon()
@@ -217,19 +226,22 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         coverContainerView?.removeFromSuperview()
         titleLabel.removeFromSuperview()
         authorLabel.removeFromSuperview()
-        setupBackground()
         previousButton.removeFromSuperview()
         playButton.removeFromSuperview()
         nextButton.removeFromSuperview()
-        setupButtons()
         progressCircle?.removeFromSuperview()
+        
+        setupBackground()
+        setupButtons()
         setupProgressCircle()
+        
         isChangingMusic = false
         hasPaused = false
     }
     
+    
+    
     fileprivate func setupCoverContainer() -> CoverContainerView {
-        
         var previousTrack: Track? = nil
         var nextTrack: Track? = nil
         if index - 1 >= 0 {
@@ -239,8 +251,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         if index + 1 < tracks.count {
             nextTrack = tracks[index + 1]
         }
-        let coverContainerView = CoverContainerView(target: self, previousTrack, currentTrack, nextTrack)
-        return coverContainerView
+        return CoverContainerView(target: self, previousTrack, currentTrack, nextTrack)
     }
     
     fileprivate func setupBackgroudView() -> BackgroundCoverView {
@@ -253,8 +264,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         if index + 1 < tracks.count {
             nextTrack = tracks[index + 1]
         }
-        let backgroudView = BackgroundCoverView(previousTrack, currentTrack, nextTrack)
-        return backgroudView
+        return BackgroundCoverView(previousTrack, currentTrack, nextTrack)
     }
     
     fileprivate func setupBackground() {
