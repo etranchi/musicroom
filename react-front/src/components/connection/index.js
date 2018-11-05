@@ -4,9 +4,6 @@ import Login from './login'
 import Register from './register'
 
 class Connection extends Component {
-	constructor(props) {
-		super(props);
-	}
   render() {
     return (
       <div>
