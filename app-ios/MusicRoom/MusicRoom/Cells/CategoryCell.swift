@@ -176,18 +176,12 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
         case "Albums":
             print("album selected")
         case "Songs":
-<<<<<<< Updated upstream
-            let song = musicCategory.tracks[indexPath.item]
-            searchController?.showPlayerForSong(song, indexPath.item)
-=======
-            guard let tracks = musicCategory.tracks else { return }
-            let max = tracks.count
+            let max = musicCategory.tracks.count
             if max < 4 && indexPath.item == max || indexPath.item == 4 {
                 searchController?.showTrackList()
                 return
             }
             searchController?.showPlayerForSong(indexPath.item)
->>>>>>> Stashed changes
         default:
             return
         }
