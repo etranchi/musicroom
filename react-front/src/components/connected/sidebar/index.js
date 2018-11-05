@@ -3,9 +3,6 @@ import {SideNav, SideNavItem, Button} from 'react-materialize'
 import './styles.css';
 
 class Connected extends Component {
-	constructor(props) {
-		super(props);
-	}
 	render() {
 	return (
 		<SideNav

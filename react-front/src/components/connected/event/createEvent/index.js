@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {Row, Input, Button} from 'react-materialize'
 import './styles.css';
 import axios from 'axios'
-import ImageUploader from 'react-images-upload';
 
 class CreateEvent extends Component {
 	constructor(props) {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Collapsible, CollapsibleItem, Row} from 'react-materialize'
+import { Card, Avatar, Icon } from 'antd';
 import './styles.css';
 import axios from 'axios'
 
@@ -7,93 +7,121 @@ class ListEvent extends Component {
 	constructor(props) {
         super(props);
         this.state = {
-					events: []
-				}
-		};
-		
-		componentDidMount = () => {
-			axios.get('https://192.168.99.100:4242/event')
-			.then((resp) => {
-				this.setState({events: resp.data})
-			})
-			.catch((err) => {
-				console.log('Events error', err);
-			})
+			events: []
 		}
+		this.card = {
+			minHeight:"300px",
+			margin: "5% 0 0 0"
+		}
+		this.gridStyle = {
+			minHeight:"300px",
+			width: '25%',
+			textAlign: 'center',
+		};
+		this.gridStylePicture = {
+			width: '50%',
+			padding: "0 0 0 0"
+		};
+		this.eventPicture = {
+			height:"300px",
+			width: '100%'
+		};
+		this.iconStyle = {
+			fontSize: '18px',
+			float: "left"
+		
+		}
+		this.iconEditionStyle = {
+			padding: "0 7% 0 7% ",
+			fontSize: '18px',
+		}
+		this.iconEditionBlockStyle = {
+			margin: "50% 0 0 0"
+		}
+		this.iconBlockStyle = {
+			margin: "8% 0 0 0"
+		}
+		this.descritpionBlockStyle = {
+			margin: "50% 0 0 0"
+		}
+	}
+		
+	componentDidMount = () => {
+		console.log('REQUEST')
+		axios.get('https://192.168.99.100:4242/event')
+		.then((resp) => {
+			this.setState({events: resp.data})
+		})
+		.catch((err) => {
+			console.log('Events error', err);
+		})
+	}
 
-		// deleteEvent = () => {
-		// 	axios.delete('https://192.168.99.100:4242/event');
-		// 	console.log("Event Trashed.");
-		// }
+	// deleteEvent = () => {
+	// 	axios.delete('https://192.168.99.100:4242/event');
+	// 	console.log("Event Trashed.");
+	// }
 
     
 	render() {
-		if( this.state.events[0] === undefined ) {
+		console.log(this.state.events, this.state.events.length)
+		if(this.state.events.length === 0 ) {
+			console.log("IVI")
 			return <div>Loading...</div>
 		}
-		return (
-			<Collapsible>
-			{ console.log("Event : ", this.state.events) }
-			{
-				this.state.events.map((event) => {
-						return (
-							<Row>
-								<div className="col-lg-4 col-md-4 col-sm-4" >
-									<div  className="content user">
-										<div>
-											<div className="col-lg-5">
-												<div className="profil">
-													<img src={"https://192.168.99.100:4242/eventPicture/default.jpeg"} alt=""/>	
-												</div>		
-												<div className="col-lg-7">
-														<div className="info">
-															<h3 className=" notranslate">Jisbar,</h3>
-															<p  className=" notranslate">29 years old</p>
-															<ul className="display-review">
-																<li className="active">	<span className="fa fa-star"></span></li>
-																<li className="active"><span className="fa fa-star"></span></li>
-																<li className="active"><span className="fa fa-star"></span></li>
-																<li className="active"><span className="fa fa-star"></span></li>
-																<li className="active"><span className="fa fa-star"></span></li>
-															</ul>														
-														</div>
-												</div>
+		else
+		{
+			console.log("EVENT : ")
+			return (
+				<div>
+				{ console.log(this.state.events)}
+				{
+					this.state.events.map((event) => {
+							return (
+									<Card title={event.title} style={this.card}>
+										<Card.Grid style={this.gridStyle}>
+											<Card.Meta
+											avatar={<Avatar src={"https://192.168.99.100:4242/eventPicture/" +  event.picture} />}
+											title= {event.creator && event.creator.login ? event.creator.login : "Aucun" }
+											/>
+											<div style={this.descritpionBlockStyle}>
+												<b> { event.descritpion ? event.descritpion : "Aucune descritpion ..." }</b>
 											</div>
-										</div>
-											<div className="line"></div>
-											<div className="content">
-												<h2 localizerid="5bb4b966f8edb13c20835206">Vernissage "Jisbar &amp; friends" x J.M. Weston </h2>
-												<div className="line_short"></div>
-												<ul className="info">
-													<li localizerid="5bb49ffc47d6e71dd8774d37" className=" notranslate"><span className="icon-map-marker"></span> Paris-...</li>
-													<li localizerid="5bb49ffc47d6e71dd8774d38" className=" notranslate"><span className="icon-calendar-full"></span> Nov. 08</li>
-													<li localizerid="5b9b7412a0624c04d8742752" className=" notranslate"><span className="icon-cash-euro"></span> Free</li>
-												</ul>
+											<div style={this.iconEditionBlockStyle}>
+											<Icon style={this.iconEditionStyle} type="setting" theme="outlined" />
+											<Icon style={this.iconEditionStyle} type="edit" theme="outlined" />
+											<Icon style={this.iconEditionStyle} type="delete" theme="outlined" />
 											</div>
+										</Card.Grid>
+										<Card.Grid style={this.gridStyle}>
+										<div style={this.iconBlockStyle}>
+											<Icon  style={this.iconStyle} type="pushpin" theme="outlined" />
+											<b style={this.iconNameStyle}>Paris {/* {this.event.address.v} */} </b>
 										</div>
-										<div className="col-lg-8 col-md-8 col-sm-8">
-											<div className="media">
-												<img src={ "https://192.168.99.100:4242/eventPicture/" + event.picture} alt=""/>											
+										<div style={this.iconBlockStyle}>
+											<Icon  style={this.iconStyle} type="clock-circle" theme="outlined" />
+											<b style={this.iconNameStyle}> { event.date_creation ? event.date_creation : " à définir .." }</b>
 										</div>
-									</div>
-								</div>
-							</Row>
-							// <CollapsibleItem header={event.title} icon="library_music">
-							// 	{console.log(event)}
-							// 	<img src={ "https://192.168.99.100:4242/eventPicture/" + event.picture} ></img>
-							// 	<p>Date de création:</p>
-							// 	<p> Playlist name :</p>
-							// 	<p> Nombre de membres :</p>
-							// 	<p> Admins : </p>
-							// 	<p> Descrition : {event.descritpion} </p>
-							// 	{/* <i onClick={this.deleteEvent(event._id)} icon='filter_drama'>Delete</i>  */}
-							// </CollapsibleItem>
-						);
-					})
-			}
-			</Collapsible>
-		);
-  }
+										<div style={this.iconBlockStyle}>
+											<Icon  style={this.iconStyle} type={ event.public ? "unlock" : "lock" } theme="outlined" />
+											<b style={this.iconNameStyle}> { event.public ? " Public" : " Privé" }</b>
+										</div>
+										<div style={this.iconBlockStyle}>
+											<Icon style={this.iconStyle} type="user" theme="outlined" />
+											<b style={this.iconNameStyle}> { event.members.count ? event.members.count + " participants" : "0 participant" }</b>
+										</div>
+										</Card.Grid>
+										<Card.Grid style={this.gridStylePicture}>
+											<img style={ this.eventPicture} alt="example" src={"https://192.168.99.100:4242/eventPicture/" +  event.picture} />
+										</Card.Grid>
+									</Card>
+							)
+						})
+				}
+				</div>
+			);
+		}
+	}
 }
 
 export default ListEvent;

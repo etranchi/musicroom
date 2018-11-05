@@ -17,8 +17,8 @@ class Setting extends Component {
 		{'headers':{'Authorization':'Bearer '+ localStorage.getItem('token')}})
 		.then((resp) => {
 			this.setState({user:resp.data});
-		}).
-		catch((err) => {
+		})
+		.catch((err) => {
 			this.setState({error: err})
 			console.log(err);
 		})
