@@ -16,8 +16,9 @@ class PlaylistController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         createProductArray()
-        let editBtn = UIBarButtonItem(title: "Edit", style: UIBarButtonItemStyle.plain, target: self, action: #selector(showEditingMode))
+        let editBtn = UIBarButtonItem(title: "Edit current playlist", style: UIBarButtonItemStyle.plain, target: self, action: #selector(showEditingMode))
         navigationItem.rightBarButtonItem = editBtn
+        navigationController?.navigationBar.tintColor = .white
         
         tableView.backgroundColor = UIColor(white: 0.2, alpha: 1)
         tableView.estimatedRowHeight = tableView.rowHeight
@@ -29,7 +30,7 @@ class PlaylistController: UITableViewController {
         print(tableView.isEditing)
         edit = !edit
         tableView.setEditing(!tableView.isEditing, animated: true)
-        navigationItem.rightBarButtonItem?.title = tableView.isEditing ? "Done" : "Edit"
+        navigationItem.rightBarButtonItem?.title = tableView.isEditing ? "Done" : "Edit current playlist"
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -84,6 +85,7 @@ class PlaylistController: UITableViewController {
 class PlaylistHomeController: UITableViewController {
     
     let cellId = "cellId"
+    var edit : Bool = false
     var playlists : [PlaylistHome] = [PlaylistHome]()
     
     override func viewDidLoad() {
@@ -91,10 +93,21 @@ class PlaylistHomeController: UITableViewController {
         createPlaylistArray()
         navigationItem.title = "Playlists"
         
+        let editBtn = UIBarButtonItem(title: "Edit your playlists", style: UIBarButtonItemStyle.plain, target: self, action: #selector(showEditingMode))
+        navigationItem.rightBarButtonItem = editBtn
+        navigationController?.navigationBar.tintColor = .white
+        
         tableView.estimatedRowHeight = tableView.rowHeight
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.backgroundColor = UIColor(white: 0.2, alpha: 1)
         tableView.register(PlaylistHomeCell.self, forCellReuseIdentifier: cellId)
+    }
+    
+    @objc func showEditingMode(sender: UIBarButtonItem) {
+        print(tableView.isEditing)
+        edit = !edit
+        tableView.setEditing(!tableView.isEditing, animated: true)
+        navigationItem.rightBarButtonItem?.title = tableView.isEditing ? "Done" : "Edit your playlists"
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -110,6 +123,32 @@ class PlaylistHomeController: UITableViewController {
         
         return cell
     }
+    
+    // MARK: - Edit Tableview
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == UITableViewCellEditingStyle.delete {
+            self.playlists.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
+        }
+    }
+    
+    // MARK: - Moving Cells
+    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath)
+    {
+        let cellToMove = self.playlists[sourceIndexPath.row]
+        
+        // move targeted cell
+        self.playlists.insert(cellToMove, at: destinationIndexPath.row)
+        
+        // remove cell
+        self.playlists.remove(at: sourceIndexPath.row)
+    }
+    
+    //  Move to playlist controller
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         navigationController?.pushViewController(PlaylistController(), animated: true)
