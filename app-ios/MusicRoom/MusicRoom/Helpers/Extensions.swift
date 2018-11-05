@@ -12,8 +12,7 @@ let                 imageCache = NSCache<NSString, UIImage>()
 
 extension           UIImageView
 {
-    private func            loadImageUsingCacheWithUrl(from url: URL,
-                                                       completion: @escaping (Data?, URLResponse?, Error?) -> ())
+    private func            loadImageUsingCacheWithUrl(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ())
     {
         URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
     }
@@ -27,7 +26,8 @@ extension           UIImageView
             return
         }
         let url = URL(string: urlString)
-        self.loadImageUsingCacheWithUrl(from: url!, completion: { (data, response, error) in
+        guard let gurl = url else { return }
+        self.loadImageUsingCacheWithUrl(from: gurl, completion: { (data, response, error) in
             if error != nil {
                 print(error!.localizedDescription)
                 return

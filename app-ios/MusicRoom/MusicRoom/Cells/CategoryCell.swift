@@ -21,7 +21,7 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
                 musicCollectionView.reloadData()
                 return
             }
-            switch musicCategory.name {
+            switch musicCategory.name! {
             case "Songs":
                 let layout = UICollectionViewFlowLayout()
                 layout.scrollDirection = .vertical
@@ -107,7 +107,7 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         albumLabel.text = musicCategory.name!
-        switch musicCategory.name {
+        switch musicCategory.name! {
         case "Albums":
             return musicCategory.albums!.count
         case "Songs":
@@ -124,7 +124,7 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        switch musicCategory.name {
+        switch musicCategory.name! {
         case "Albums":
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: albumCellId, for: indexPath) as! AlbumCell
             cell.album = musicCategory.albums![indexPath.item]
@@ -153,7 +153,7 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        switch musicCategory.name {
+        switch musicCategory.name! {
         case "Albums":
             return CGSize(width: 150, height: frame.height)
         case "Songs":
@@ -174,7 +174,7 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        switch musicCategory.name {
+        switch musicCategory.name! {
         case "Albums":
             print("album selected")
         case "Songs":

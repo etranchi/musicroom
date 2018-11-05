@@ -69,41 +69,38 @@ class BackgroundCoverView: UIView {
     var nextTrailingAnchor: NSLayoutConstraint?
     var nextLeadingAnchor: NSLayoutConstraint?
     
+    
+    fileprivate func handleAnimation(_ top: NSLayoutConstraint?, _ bottom: NSLayoutConstraint?, _ trailing: NSLayoutConstraint?, _ leading: NSLayoutConstraint?, multiplier: CGFloat, iv: UIImageView) {
+        let moveOffset = UIApplication.shared.keyWindow!.bounds.width * multiplier
+        
+        top?.constant = 0
+        bottom?.constant = 0
+        trailing?.constant = 0
+        leading?.constant = 0
+        
+        currentTopAnchor?.constant = 200
+        currentBottomAnchor?.constant = -200
+        currentTrailingAnchor?.constant = moveOffset
+        currentLeadingAnchor?.constant = moveOffset
+        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            iv.alpha = 1
+            self.currentImageView.alpha = 0.5
+            self.layoutIfNeeded()
+        })
+    }
+    
     func handleNextAnimation() {
         if currentTrack.album.cover_big == nextTrack?.album.cover_big {
             return
         }
-        let moveOffset = -UIApplication.shared.keyWindow!.bounds.width
-        
-        nextTrailingAnchor?.constant = 0
-        nextLeadingAnchor?.constant = 0
-        
-        currentTrailingAnchor?.constant = moveOffset
-        currentLeadingAnchor?.constant = moveOffset
-        
-        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-            self.nextImageView.alpha = 1
-            self.currentImageView.alpha = 0.5
-            self.layoutIfNeeded()
-        })
+        handleAnimation(nextTopAnchor, nextBottomAnchor, nextTrailingAnchor, nextLeadingAnchor, multiplier: -1, iv: nextImageView)
     }
     
     func handlePreviousAnimation() {
         if currentTrack.album.cover_big == previousTrack?.album.cover_big {
             return
         }
-        let moveOffset = UIApplication.shared.keyWindow!.bounds.width
-        previousTrailingAnchor?.constant = 0
-        previousLeadingAnchor?.constant = 0
-        
-        currentTrailingAnchor?.constant = moveOffset
-        currentLeadingAnchor?.constant = moveOffset
-        
-        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-            self.previousImageView.alpha = 1
-            self.currentImageView.alpha = 0.5
-            self.layoutIfNeeded()
-        })
+        handleAnimation(previousTopAnchor, previousBottomAnchor, previousTrailingAnchor, previousLeadingAnchor, multiplier: 1, iv: previousImageView)
     }
     
     fileprivate func setupView() {
@@ -117,8 +114,8 @@ class BackgroundCoverView: UIView {
         previousImageView.alpha = 0.5
         nextImageView.alpha = 0.5
         
-        previousTopAnchor = previousImageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor)
-        previousBottomAnchor = previousImageView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+        previousTopAnchor = previousImageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 200)
+        previousBottomAnchor = previousImageView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -200)
         previousTrailingAnchor = previousImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -offset)
         previousLeadingAnchor = previousImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -offset)
         
@@ -127,8 +124,8 @@ class BackgroundCoverView: UIView {
         currentTrailingAnchor = currentImageView.trailingAnchor.constraint(equalTo: trailingAnchor)
         currentLeadingAnchor = currentImageView.leadingAnchor.constraint(equalTo: leadingAnchor)
         
-        nextTopAnchor = nextImageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor)
-        nextBottomAnchor = nextImageView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+        nextTopAnchor = nextImageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 200)
+        nextBottomAnchor = nextImageView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -200)
         nextTrailingAnchor = nextImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: offset)
         nextLeadingAnchor = nextImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: offset)
         

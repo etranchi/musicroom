@@ -168,12 +168,20 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		799C8BFA219029A3003868A2 /* UICustomisation */ = {
+			isa = PBXGroup;
+			children = (
+				79CDCF2A218876ED0095CC63 /* CustomNavigationController.swift */,
+			);
+			path = UICustomisation;
+			sourceTree = "<group>";
+		};
 		79CDCF1A21886EE40095CC63 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				799C8BFA219029A3003868A2 /* UICustomisation */,
 				79CDCF1E218870F70095CC63 /* LoadingController.swift */,
 				79CDCF20218871A20095CC63 /* TabBarController.swift */,
-				79CDCF2A218876ED0095CC63 /* CustomNavigationController.swift */,
 				79CDCF22218873300095CC63 /* PlaylistController.swift */,
 				79CDCF24218873D20095CC63 /* SearchController.swift */,
 				79CDCF282188746D0095CC63 /* LibraryController.swift */,
