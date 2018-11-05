@@ -8,25 +8,39 @@
 
 import UIKit
 
-class SearchCell: UICollectionViewCell {
+class SearchCell: UICollectionViewCell, UITextFieldDelegate {
+    
+    var vc : UICollectionViewController?
+    
     override init(frame: CGRect) {
         super.init(frame: .zero)
-        
+        textField.delegate = self
         setupViews()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+    var placeholder : String? {
+        didSet {
+            if let p = placeholder {
+                textField.placeholder = p
+            }
+        }
+    }
     let textField: UITextField = {
         let tf = UITextField()
-        
-        tf.placeholder = "artists, songs, or albums"
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.font = UIFont.monospacedDigitSystemFont(ofSize: 14, weight: .medium)
+        tf.returnKeyType = .search
+        tf.enablesReturnKeyAutomatically = true
         return tf
     }()
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        handleSearch()
+        return true
+    }
     
     let containerView: UIView = {
         let view = UIView()
@@ -42,12 +56,13 @@ class SearchCell: UICollectionViewCell {
     
     @objc func      handleSearch()
     {
-        let tabBarController = UIApplication.shared.keyWindow?.rootViewController as! TabBarController
-        let navi = tabBarController.selectedViewController as! CustomNavigationController
-        let searchController = navi.viewControllers[0] as! SearchController
-        
         guard let text = textField.text, text != "" else { return }
-        searchController.handleStearch(text)
+        if let vc = vc as? SearchController {
+            vc.handleSearch(text)
+        }
+        if let vc = vc as? PlaylistController {
+            vc.handleSearch(text)
+        }
     }
     
     func setupViews() {

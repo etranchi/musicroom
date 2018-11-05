@@ -38,7 +38,7 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
         }
     }
     
-    func handleStearch(_ text: String) {
+    func handleSearch(_ text: String) {
         musicCategories?.removeAll()
         performSearch(text) { (albums, tracks, artists) in
             self.musicCategories = MusicCategory.sampleMusicCategories(albums, tracks, artists)
@@ -56,6 +56,8 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.item == 0 {
             let     cell = collectionView.dequeueReusableCell(withReuseIdentifier: searchCellId, for: indexPath) as! SearchCell
+            cell.placeholder = "artists, songs, or albums"
+            cell.vc = self
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: categoryCellId, for: indexPath) as! CategoryCell
