@@ -14,18 +14,19 @@ module.exports = function () {
 		clientID: config.deezer.clientID,
 		clientSecret: config.deezer.clientSecret,
 		callbackURL: config.deezer.callbackURL,
+		scope: config.deezer.scope,
 		passReqToCallback: true
 	},
 	function(req, accessToken, refreshToken, profile, done) {
 		if (!req.user) {
 			return done(null, false)
 		}
+		console.log("refreshToken -> ")
+		console.log(refreshToken)
 		modelUser.updateOne({_id: req.user._id}, {
 			deezerId: profile.id,
-			deezerToken: accessToken,
-			deezerRefreshToken: refreshToken
+			deezerToken: accessToken
 		}, function(err, user) {
-				console.log(req)
 				if (err) {
 					console.log(err);
 					return done(null, false);
