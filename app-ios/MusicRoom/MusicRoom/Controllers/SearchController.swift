@@ -40,7 +40,6 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     
     func handleStearch(_ text: String) {
         musicCategories?.removeAll()
-        collectionView?.reloadData()
         performSearch(text) { (albums, tracks, artists) in
             self.musicCategories = MusicCategory.sampleMusicCategories(albums, tracks, artists)
             self.collectionView?.reloadData()
@@ -67,8 +66,17 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
         }
     }
     
+<<<<<<< Updated upstream
     func showPlayerForSong(_ track: Track, _ index: Int) {
+        let playerController = PlayerController(musicCategories![1].tracks, index)
+=======
+    func showTrackList() {
+        print("show it!!")
+    }
+    
+    func showPlayerForSong(_ index: Int) {
         let playerController = PlayerController(musicCategories![1].tracks!, index)
+>>>>>>> Stashed changes
         navigationController?.pushViewController(playerController, animated: true)
     }
 
@@ -77,19 +85,25 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
         switch indexPath.item {
         case 0:
             return CGSize(width: view.frame.width, height: 40)
         case 1:
-            return CGSize(width: view.frame.width, height: 240)
+            if musicCategories![indexPath.item - 1].albums.count > 0 {
+                return CGSize(width: view.frame.width, height: 240)
+            }
         case 2:
-            return CGSize(width: view.frame.width, height: 360)
+            if musicCategories![indexPath.item - 1].tracks.count > 0 {
+                return CGSize(width: view.frame.width, height: 360)
+            }
         case 3:
-            return CGSize(width: view.frame.width, height: 200)
+            if musicCategories![indexPath.item - 1].artists.count > 0 {
+                return CGSize(width: view.frame.width, height: 200)
+            }
         default:
-            return CGSize(width: view.frame.width, height: 240)
+            return CGSize(width: view.frame.width, height: 0)
         }
+        return CGSize(width: view.frame.width, height: 0)
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

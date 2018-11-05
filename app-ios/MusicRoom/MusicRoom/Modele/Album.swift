@@ -8,19 +8,16 @@
 
 import Foundation
 
-struct AlbumArtist : Decodable {
-    let id : Int
-    let name : String
-    let picture : String
-    
-}
 struct Album : Decodable {
     let id : Int
-    let link : String
+    let link : String?
     let cover : String
-    let cover_medium : String
-    let artist : AlbumArtist
+    let cover_medium : String?
+    let cover_big : String?
+    let cover_small : String
+    let artist : Artist?
     let title : String
+    let tracks : TrackData?
 }
 
 struct AlbumData: Decodable {
