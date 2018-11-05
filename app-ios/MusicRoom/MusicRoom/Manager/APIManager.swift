@@ -57,7 +57,6 @@ class APIManager: NSObject, URLSessionDelegate {
             }
             if let d = data {
                 do {
-                    print("je suis sur ce type")
                     print(myType.self)
                     let dic = try JSONDecoder().decode(myType.self, from: d)
                     DispatchQueue.main.async {

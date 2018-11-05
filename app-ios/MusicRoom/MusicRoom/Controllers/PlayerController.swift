@@ -110,7 +110,6 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         
         setupBackground()
         setupPlayer()
-        
         cancelable?.cancel()
         player?.stop()
         self.cancelable = DZRTrack.object(withIdentifier: String(tracks[index].id), requestManager: request, callback: { (response, err) in
@@ -137,13 +136,10 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     }
     
     func player(_ player: DZRPlayer!, didPlay playedBytes: Int64, outOf totalBytes: Int64) {
-        progressCircle!.updateProgress(CGFloat(playedBytes) / CGFloat(totalBytes))
+        let progress = CGFloat(playedBytes) / CGFloat(totalBytes)
+        progressCircle!.updateProgress(progress)
         if player.progress > 0.96 {
-            hasPaused = false
-            playButton.removeTarget(self, action: #selector(handlePause), for: .touchUpInside)
-            playButton.addTarget(self, action: #selector(handlePlay), for: .touchUpInside)
-            setPlayIcon()
-            progressCircle?.updateProgress(0)
+            handleNext()
         }
     }
     
