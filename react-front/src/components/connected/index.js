@@ -13,14 +13,15 @@ class Connected extends Component {
 		localStorage.setItem('token', '');
 		this.props.updateParent({'token': ''})
 	}
+
 	render() {
 	return (
 		<div>
 		<button onClick={this.deleteToken.bind(this)}>disconnect</button>
 		<Sidebar updateParent={this.props.updateParent}/>
-		{this.props.currentComponent === 'event'? <Event/> : null}
-		{this.props.currentComponent === 'playlist'? <Playlist/> : null}
-		{this.props.currentComponent === 'setting'? <Setting/> : null}
+		{this.props.state.currentComponent === 'event'? <Event state={this.props.state} updateParent={this.props.updateParent}/> : null}
+		{this.props.state.currentComponent === 'playlist' || this.props.state.currentComponent === 'tracks'? <Playlist state={this.props.state} updateParent={this.props.updateParent}/> : null}
+		{this.props.state.currentComponent === 'setting'? <Setting state={this.props.state} updateParent={this.props.updateParent}/> : null}
 		</div>
 	);
   }

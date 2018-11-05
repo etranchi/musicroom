@@ -43,7 +43,7 @@ class List extends Component {
 				<ul className="collection">
 					{this.state.playlist.map((val, i) => {
 						return (
-							<li className="collection-item avatar" key={i} onClick={this.props.state.bind(this,{'current': {name: 'tracks', tracks: val.tracks.data}})}>
+							<li className="collection-item avatar" key={i} onClick={this.props.updateParent.bind(this,{'currentComponent': 'tracks', 'data': val.tracks.data})}>
 								<img src={val.picture_small || defaultImage} alt="" className="circle"/>
 								<span className="title">{val.title}</span>
 								<p>{val.description}</p>

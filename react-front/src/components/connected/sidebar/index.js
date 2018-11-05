@@ -20,6 +20,7 @@ class Connected extends Component {
 		      email: 'jdandturk@gmail.com'
 		    }}
 		  />
+		  this.state.current.name
 		  <SideNavItem icon='cloud' onClick={this.props.updateParent.bind(this, {'currentComponent':'event'})}>Event</SideNavItem>
 		  <SideNavItem divider />
 		  <SideNavItem icon='cloud' onClick={this.props.updateParent.bind(this, {'currentComponent':'playlist'})}>Playlist</SideNavItem>
