@@ -20,7 +20,7 @@ class Connection extends Component {
 			login
 		</li>
 		</ul>
-      	{this.props.currentComponent === 'login'? <Login updateParent={this.props.updateParent}/> : <Register updateParent={this.props.updateParent}/>}
+      	{this.props.state.currentComponent === 'login'? <Login updateParent={this.props.updateParent}/> : <Register updateParent={this.props.updateParent}/>}
         
       </div>
     );
