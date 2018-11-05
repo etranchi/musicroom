@@ -9,7 +9,7 @@ class App extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			currentComponent: localStorage.getItem('token').length > 0 ? 'event' : 'login',
+			currentComponent: localStorage.getItem('token') && localStorage.getItem('token').length > 0 ? 'event' : 'login',
       token: localStorage.getItem('token'),
       'data': []
 		}

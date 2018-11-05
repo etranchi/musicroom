@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios'
-import { AutoComplete } from 'antd';
+import { AutoComplete} from 'antd';
 import './styles.css';
 
 class SearchBar extends Component {
@@ -30,14 +30,10 @@ class SearchBar extends Component {
 		}
 	}
 
-	updateParent(e, item)
-	{
-		console.log(item);
-	}
 	render() {
 		const { list } = this.state;
 		const children = list.map((item) => {
-	      return <AutoComplete.Option onClick={(e) => this.updateParent(e, item)} key={item.id}>{item.title}</AutoComplete.Option>;
+	      return <AutoComplete.Option onClick={(e) => this.props.updateTracks(item)} key={item.id}>{item.title}</AutoComplete.Option>;
 	    });
 	return (
 		<AutoComplete

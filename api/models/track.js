@@ -4,9 +4,6 @@ var Schema = mongoose.Schema;
 const Track = new Schema({
 	id: {
 		type: Number,
-		primaryKey: true,
-		unique: true,
-		required: true
 	},
 	readable: {
 		type: Boolean,
