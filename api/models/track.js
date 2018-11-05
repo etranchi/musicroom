@@ -62,6 +62,6 @@ const Track = new Schema({
 	album: {
 		type: Object,
 	},
-},{ _id : false });
+});
 
 module.exports = mongoose.model('track', Track);
