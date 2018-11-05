@@ -4,4 +4,5 @@ RUN npm install -g pm2
 ADD . .
 RUN npm install
 EXPOSE 3000
-CMD ["pm2-runtime", "ecosystem.config.js"]
+ENTRYPOINT ["/bin/bash", "./run.sh"]
+CMD ["start"]

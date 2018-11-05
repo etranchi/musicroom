@@ -3,37 +3,39 @@ import './reset.css';
 import './App.css'
 import Connection from './components/connection'
 import Connected from './components/connected'
+import "antd/dist/antd.css";
 
 class App extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			currentComponent: 'login',
-      token: localStorage.getItem('token')
+			currentComponent: localStorage.getItem('token').length > 0 ? 'event' : 'login',
+      token: localStorage.getItem('token'),
+      'data': []
 		}
 	}
 
   updateState = (val) => {
-    console.log('old state');
+    console.log('val =>');
+    console.log(val);
+    console.log('old state =>');
     console.log(this.state);
     this.setState(val);
-    console.log('new state');
+  }
+  componentDidUpdate= () => {
     console.log(this.state);
-  };
+  }
 
   render() {
-  	// const current = this.state.current;
     const token = localStorage.getItem('token')
-    console.log('token ->');
-    console.log(token);
     return (
       <div className="App">
       {token ? (
-        <Connected updateParent={this.updateState} currentComponent={this.state.currentComponent}/>
+        <Connected updateParent={this.updateState} state={this.state}/>
+
       ) : (
-        <Connection updateParent={this.updateState} currentComponent={this.state.currentComponent}/>
+        <Connection updateParent={this.updateState} state={this.state}/>
       )}
-      coucou
       </div>
     );
   }

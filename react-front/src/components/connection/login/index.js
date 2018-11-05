@@ -32,7 +32,7 @@ class Login extends Component {
 		.then((resp) => {
 			console.log('login success');
 			localStorage.setItem('token', resp.data.token)
-			this.props.updateParent({'token':resp.data.token});
+			this.props.updateParent({'token':resp.data.token, 'currentComponent': 'event'});
 		})
 		.catch((err) => {
 			console.log('login error');
