@@ -69,7 +69,7 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     }
     
     func showTrackList() {
-        print("show it!!")
+        print("show it all")
     }
     
     func showPlayerForSong(_ index: Int) {
