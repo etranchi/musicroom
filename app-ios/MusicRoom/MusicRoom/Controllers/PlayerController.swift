@@ -272,7 +272,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         backgroundCoverView?.clipsToBounds = true
         
         titleLabel.text = tracks[index].title
-        authorLabel.text = tracks[index].artist.name
+        authorLabel.text = tracks[index].artist!.name
         
         view.addSubview(backgroundCoverView!)
         view.addSubview(visualEffectView)

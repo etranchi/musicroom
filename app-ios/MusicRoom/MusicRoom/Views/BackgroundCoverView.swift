@@ -90,14 +90,14 @@ class BackgroundCoverView: UIView {
     }
     
     func handleNextAnimation() {
-        if currentTrack.album.cover_big == nextTrack?.album.cover_big {
+        if currentTrack.album!.cover_big == nextTrack?.album!.cover_big {
             return
         }
         handleAnimation(nextTopAnchor, nextBottomAnchor, nextTrailingAnchor, nextLeadingAnchor, multiplier: -1, iv: nextImageView)
     }
     
     func handlePreviousAnimation() {
-        if currentTrack.album.cover_big == previousTrack?.album.cover_big {
+        if currentTrack.album!.cover_big == previousTrack?.album!.cover_big {
             return
         }
         handleAnimation(previousTopAnchor, previousBottomAnchor, previousTrailingAnchor, previousLeadingAnchor, multiplier: 1, iv: previousImageView)
@@ -138,11 +138,11 @@ class BackgroundCoverView: UIView {
     
     fileprivate func downLoadImagesIfNeeded() {
         if let previous = previousTrack {
-            previousImageView.loadImageUsingCacheWithUrlString(urlString: previous.album.cover_big)
+            previousImageView.loadImageUsingCacheWithUrlString(urlString: previous.album!.cover_big!)
         }
-        currentImageView.loadImageUsingCacheWithUrlString(urlString: currentTrack.album.cover_big)
+        currentImageView.loadImageUsingCacheWithUrlString(urlString: currentTrack.album!.cover_big!)
         if let next = nextTrack {
-            nextImageView.loadImageUsingCacheWithUrlString(urlString: next.album.cover_big)
+            nextImageView.loadImageUsingCacheWithUrlString(urlString: next.album!.cover_big!)
         }
     }
 }

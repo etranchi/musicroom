@@ -11,7 +11,7 @@ import UIKit
 class SongCell: UICollectionViewCell {
     var track: Track! {
         didSet {
-            authorLabel.text = track.artist.name
+            authorLabel.text = track.artist!.name
             titleLabel.text = track.title
             let sec = track.duration % 60
             if sec < 10 {
@@ -19,7 +19,7 @@ class SongCell: UICollectionViewCell {
             } else {
                 timeLabel.text = String(track.duration / 60) + ":" + String(sec)
             }
-            imageView.loadImageUsingCacheWithUrlString(urlString: track.album.cover_small)
+            imageView.loadImageUsingCacheWithUrlString(urlString: (track.album!.cover_small))
         }
     }
     

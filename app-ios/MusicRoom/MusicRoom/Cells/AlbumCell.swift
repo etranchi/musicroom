@@ -11,9 +11,9 @@ import UIKit
 class AlbumCell: UICollectionViewCell {
     var album: Album! {
         didSet {
-            authorLabel.text = album.artist.name
+            authorLabel.text = album.artist!.name
             titleLabel.text = album.title
-            imageView.loadImageUsingCacheWithUrlString(urlString: album.cover_medium)
+            imageView.loadImageUsingCacheWithUrlString(urlString: album.cover_medium!)
         }
     }
 

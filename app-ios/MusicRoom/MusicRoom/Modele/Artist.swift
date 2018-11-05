@@ -11,10 +11,11 @@ import Foundation
 struct Artist : Decodable {
     let id : Int
     let link : String
+    let picture : String
     let picture_medium : String
     let name : String
     let tracklist : String
-    let nb_fan : Int
+    let nb_fan : Int?
 }
 
 struct ArtistData: Decodable {

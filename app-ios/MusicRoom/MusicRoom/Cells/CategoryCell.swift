@@ -17,28 +17,28 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
     
     var     musicCategory: MusicCategory! {
         didSet {
-            guard musicCategory.tracks?.count != 0 else {
-                musicCollectionView.reloadData()
-                return
-            }
             switch musicCategory.name! {
             case "Songs":
-                let layout = UICollectionViewFlowLayout()
-                layout.scrollDirection = .vertical
-                musicCollectionView.collectionViewLayout.invalidateLayout()
-                musicCollectionView.collectionViewLayout = layout
+                if musicCategory.tracks.count > 0 {
+                    let layout = UICollectionViewFlowLayout()
+                    layout.scrollDirection = .vertical
+                    musicCollectionView.collectionViewLayout.invalidateLayout()
+                    musicCollectionView.collectionViewLayout = layout
+                }
             case "Albums":
-                let layout = UICollectionViewFlowLayout()
-                layout.scrollDirection = .horizontal
-                musicCollectionView.collectionViewLayout.invalidateLayout()
-                guard let alb = musicCategory.albums else { return }
-                guard alb.count != 0 else { return }
-                musicCollectionView.collectionViewLayout = layout
-            case "Atrists":
-                let layout = UICollectionViewFlowLayout()
-                layout.scrollDirection = .horizontal
-                musicCollectionView.collectionViewLayout.invalidateLayout()
-                musicCollectionView.collectionViewLayout = layout
+                if musicCategory.albums.count > 0 {
+                    let layout = UICollectionViewFlowLayout()
+                    layout.scrollDirection = .horizontal
+                    musicCollectionView.collectionViewLayout.invalidateLayout()
+                    musicCollectionView.collectionViewLayout = layout
+                }
+            case "Artists":
+                if musicCategory.artists.count > 0 {
+                    let layout = UICollectionViewFlowLayout()
+                    layout.scrollDirection = .horizontal
+                    musicCollectionView.collectionViewLayout.invalidateLayout()
+                    musicCollectionView.collectionViewLayout = layout
+                }
             default:
                 musicCollectionView.reloadData()
             }
@@ -109,14 +109,14 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
         albumLabel.text = musicCategory.name!
         switch musicCategory.name! {
         case "Albums":
-            return musicCategory.albums!.count
+            return musicCategory.albums.count
         case "Songs":
-            if musicCategory.tracks!.count == 0 {
+            if musicCategory.tracks.count == 0 {
                 return 0
             }
-            return musicCategory.tracks!.count <= 4 ? musicCategory.tracks!.count + 1 : 5
+            return musicCategory.tracks.count <= 4 ? musicCategory.tracks.count + 1 : 5
         case "Artists":
-            return musicCategory.artists!.count
+            return musicCategory.artists.count
         
         default:
             return 0
@@ -127,24 +127,22 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
         switch musicCategory.name! {
         case "Albums":
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: albumCellId, for: indexPath) as! AlbumCell
-            cell.album = musicCategory.albums![indexPath.item]
+            cell.album = musicCategory.albums[indexPath.item]
             return cell
         case "Songs":
-            guard let tracks = musicCategory.tracks else {
-                let cell = UICollectionViewCell()
-                return cell }
+            let tracks = musicCategory.tracks
             let max = tracks.count
             if max < 4 && indexPath.item == max || indexPath.item == 4 {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: seeAllSongsCellId, for: indexPath) as! SeeAllSongsCell
                 return cell
             } else {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: songCellId, for: indexPath) as! SongCell
-                cell.track = musicCategory.tracks![indexPath.item]
+                cell.track = musicCategory.tracks[indexPath.item]
                 return cell
             }
         case "Artists":
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: artistCellId, for: indexPath) as! ArtistCell
-            cell.artist = musicCategory.artists![indexPath.item]
+            cell.artist = musicCategory.artists[indexPath.item]
             return cell
         default:
             let cell = UICollectionViewCell()
@@ -178,7 +176,7 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
         case "Albums":
             print("album selected")
         case "Songs":
-            guard let song = musicCategory.tracks?[indexPath.item] else { return }
+            let song = musicCategory.tracks[indexPath.item]
             searchController?.showPlayerForSong(song, indexPath.item)
         default:
             return

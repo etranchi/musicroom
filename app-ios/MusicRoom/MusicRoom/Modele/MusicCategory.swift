@@ -10,20 +10,22 @@ import Foundation
 
 class MusicCategory: NSObject {
     var     name: String?
-    var     tracks: [Track]?
-    var     albums: [Album]?
-    var     artists: [Artist]?
+    var     tracks: [Track]
+    var     albums: [Album]
+    var     artists: [Artist]
+    
+    init(_ named: String) {
+        name = named
+        tracks = []
+        albums = []
+        artists = []
+    }
     
     static func sampleMusicCategories(_ albums: [Album], _ tracks: [Track], _ artists: [Artist]) -> [MusicCategory]
     {
-        let     songsCategory = MusicCategory()
-        let     albumsCategory = MusicCategory()
-        let     artistsCategory = MusicCategory()
-        
-        songsCategory.name = "Songs"
-        albumsCategory.name = "Albums"
-        artistsCategory.name = "Artists"
-        
+        let     songsCategory = MusicCategory("Songs")
+        let     albumsCategory = MusicCategory("Albums")
+        let     artistsCategory = MusicCategory("Artists")
         songsCategory.tracks = tracks
         albumsCategory.albums = albums
         artistsCategory.artists = artists
