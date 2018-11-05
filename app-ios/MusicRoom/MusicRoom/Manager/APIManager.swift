@@ -30,12 +30,7 @@ class APIManager: NSObject, URLSessionDelegate {
         let artistsUrl = self.url + "search/artist?q=\(w)"
         var artistsRequest = URLRequest(url: URL(string: artistsUrl)!)
         artistsRequest.httpMethod = "GET"
-        print("url tracks")
-        print(tracksUrl)
-        print("url albums")
-        print(albumsUrl)
-        print("url artist")
-        print(artistsUrl)
+        
         searchAll(TrackData.self, request: tracksRequest) { (tracksData) in
             self.searchAll(AlbumData.self, request: albumsRequest, completion: { (albumData) in
                 self.searchAll(ArtistData.self, request: artistsRequest, completion: { (artistsData) in

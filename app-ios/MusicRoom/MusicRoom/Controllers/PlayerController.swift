@@ -105,6 +105,12 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         return _player
     }()
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        
+        player?.stop()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -124,9 +130,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
                 self.setupProgressCircle()
                 self.handlePlay()
             }
-            
         })
-        
     }
     
     func setupPlayer() {
@@ -191,6 +195,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     }
     
     fileprivate func loadTrackInplayer() {
+        player?.stop()
         cancelable?.cancel()
         self.cancelable = DZRTrack.object(withIdentifier: String(tracks[index].id), requestManager: request, callback: { (response, err) in
             if let err = err {
@@ -209,11 +214,6 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     }
     
     func setupTrack(indexOffset: Int) {
-        player?.stop()
-        playButton.removeTarget(self, action: #selector(handlePause), for: .touchUpInside)
-        playButton.addTarget(self, action: #selector(handlePlay), for: .touchUpInside)
-        setPlayIcon()
-        
         index += indexOffset
         loadTrackInplayer()
         
@@ -298,13 +298,13 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             visualEffectView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
             coverContainerView!.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
-            coverContainerView!.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             coverContainerView!.heightAnchor.constraint(equalToConstant: view.bounds.width - 80),
             coverContainerView!.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             coverContainerView!.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            titleLabel.centerXAnchor.constraint(equalTo: coverContainerView!.centerXAnchor),
-            titleLabel.topAnchor.constraint(equalTo: coverContainerView!.bottomAnchor, constant: 40),
+            titleLabel.centerXAnchor.constraint(equalTo: view!.centerXAnchor),
+            titleLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 40),
+            titleLabel.heightAnchor.constraint(equalToConstant: 40),
             titleLabel.trailingAnchor.constraint(equalTo: coverContainerView!.trailingAnchor),
             titleLabel.leadingAnchor.constraint(equalTo: coverContainerView!.leadingAnchor),
             
