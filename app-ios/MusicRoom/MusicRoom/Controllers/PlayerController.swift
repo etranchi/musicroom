@@ -49,7 +49,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
         label.textColor = .white
         label.textAlignment = .center
-        label.numberOfLines = 2
+        label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -110,6 +110,17 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         
         player?.stop()
         AppUtility.lockOrientation(.all)
+        guard let navi = navigationController as? CustomNavigationController, let tabBar = tabBarController as? TabBarController else { return }
+        navi.addVisualEffect()
+        tabBar.animatedShowTabBar()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        guard let navi = navigationController as? CustomNavigationController, let tabBar = tabBarController as? TabBarController else { return }
+        navi.removeVisualEffect()
+        tabBar.animatedHideTabBar()
     }
     
     override func viewDidLoad() {
@@ -268,6 +279,12 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     
     fileprivate func setupBackground() {
        
+        let middleLineView: UIView = {
+            let v = UIView()
+            v.translatesAutoresizingMaskIntoConstraints = false
+            return v
+        }()
+        
         navigationController?.navigationBar.topItem?.title = ""
         navigationController?.navigationBar.tintColor = .white
         
@@ -285,6 +302,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         
         view.addSubview(backgroundCoverView!)
         view.addSubview(visualEffectView)
+        view.addSubview(middleLineView)
         view.addSubview(coverContainerView!)
         view.addSubview(titleLabel)
         view.addSubview(authorLabel)
@@ -300,14 +318,19 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             visualEffectView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             visualEffectView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            coverContainerView!.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
-            coverContainerView!.heightAnchor.constraint(equalToConstant: view.bounds.width - 80),
+            coverContainerView!.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: -40),
+            coverContainerView!.bottomAnchor.constraint(equalTo: middleLineView.topAnchor),
             coverContainerView!.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             coverContainerView!.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
+            middleLineView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 100),
+            middleLineView.heightAnchor.constraint(equalToConstant: 1),
+            middleLineView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            middleLineView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
             titleLabel.centerXAnchor.constraint(equalTo: view!.centerXAnchor),
-            titleLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 40),
-            titleLabel.heightAnchor.constraint(equalToConstant: 40),
+            titleLabel.topAnchor.constraint(equalTo: middleLineView.bottomAnchor),
+            titleLabel.heightAnchor.constraint(equalToConstant: 20),
             titleLabel.trailingAnchor.constraint(equalTo: coverContainerView!.trailingAnchor),
             titleLabel.leadingAnchor.constraint(equalTo: coverContainerView!.leadingAnchor),
             
@@ -343,9 +366,6 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             nextButton.heightAnchor.constraint(equalToConstant: 30)
         ])
     }
-    
-    
-    
     
     fileprivate func setupProgressCircle() {
         progressCircle = ProgressCircle(frame: CGRect(x: 0, y: 0, width: 76, height: 76))
