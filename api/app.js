@@ -15,11 +15,14 @@ const db = require('./db/mongo.js');
 const config = require('./config/config.json');
 const bodyParser = require('body-parser');
 
+
 app.use(bodyParser.urlencoded({
   extended: true
 }));
 
+app.use(express.static('public'))
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.use('/', routes);
 
