@@ -111,7 +111,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         player?.stop()
         AppUtility.lockOrientation(.all)
         guard let navi = navigationController as? CustomNavigationController, let tabBar = tabBarController as? TabBarController else { return }
-        navi.addVisualEffect()
+        navi.animatedShowNavigationBar()
         tabBar.animatedShowTabBar()
     }
     
@@ -119,7 +119,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         super.viewWillAppear(animated)
         
         guard let navi = navigationController as? CustomNavigationController, let tabBar = tabBarController as? TabBarController else { return }
-        navi.removeVisualEffect()
+        navi.animatedHideNavigationBar()
         tabBar.animatedHideTabBar()
     }
     
