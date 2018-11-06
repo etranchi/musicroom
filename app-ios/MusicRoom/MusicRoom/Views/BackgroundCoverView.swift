@@ -82,7 +82,7 @@ class BackgroundCoverView: UIView {
         currentBottomAnchor?.constant = -100
         currentTrailingAnchor?.constant = moveOffset
         currentLeadingAnchor?.constant = moveOffset
-        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             iv.alpha = 1
             self.currentImageView.alpha = 0.5
             self.layoutIfNeeded()
