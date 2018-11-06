@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 const eventController = require('../controllers/event');
 const multer  = require('multer')
-const upload = multer({ dest: "./public/eventPicture"})
+const upload = multer({ dest: "./public/eventPicture/"})
   
 router.get('/', eventController.getEvents);
 

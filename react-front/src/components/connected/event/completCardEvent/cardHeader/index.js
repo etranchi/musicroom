@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import './styles.css';
-
 import { Card } from 'antd';
+import './styles.css';
 
 class CardHeader extends Component {
 	constructor(props) {
