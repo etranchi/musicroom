@@ -126,7 +126,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupBackground()
+        setupUI()
         setupPlayer()
         cancelable?.cancel()
         player?.stop()
@@ -241,8 +241,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         nextButton.removeFromSuperview()
         progressCircle?.removeFromSuperview()
         
-        setupBackground()
-        setupButtons()
+        setupUI()
         setupProgressCircle()
         
         isChangingMusic = false
@@ -277,8 +276,11 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         return BackgroundCoverView(previousTrack, currentTrack, nextTrack)
     }
     
-    fileprivate func setupBackground() {
-       
+    fileprivate func setupUI() {
+        previousButton.addTarget(self, action: #selector(handlePrevious), for: .touchUpInside)
+        playButton.addTarget(self, action: #selector(handlePlay), for: .touchUpInside)
+        nextButton.addTarget(self, action: #selector(handleNext), for: .touchUpInside)
+        
         let middleLineView: UIView = {
             let v = UIView()
             v.translatesAutoresizingMaskIntoConstraints = false
@@ -306,6 +308,9 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         view.addSubview(coverContainerView!)
         view.addSubview(titleLabel)
         view.addSubview(authorLabel)
+        view.addSubview(previousButton)
+        view.addSubview(playButton)
+        view.addSubview(nextButton)
         
         NSLayoutConstraint.activate([
             backgroundCoverView!.topAnchor.constraint(equalTo: view.topAnchor),
@@ -319,44 +324,29 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             visualEffectView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
             coverContainerView!.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: -40),
-            coverContainerView!.bottomAnchor.constraint(equalTo: middleLineView.topAnchor),
+            coverContainerView!.bottomAnchor.constraint(equalTo: titleLabel.topAnchor, constant: -5),
             coverContainerView!.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             coverContainerView!.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            middleLineView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 100),
-            middleLineView.heightAnchor.constraint(equalToConstant: 1),
-            middleLineView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            middleLineView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            
             titleLabel.centerXAnchor.constraint(equalTo: view!.centerXAnchor),
-            titleLabel.topAnchor.constraint(equalTo: middleLineView.bottomAnchor),
+            titleLabel.bottomAnchor.constraint(equalTo: authorLabel.topAnchor, constant: -5),
             titleLabel.heightAnchor.constraint(equalToConstant: 20),
             titleLabel.trailingAnchor.constraint(equalTo: coverContainerView!.trailingAnchor),
             titleLabel.leadingAnchor.constraint(equalTo: coverContainerView!.leadingAnchor),
             
             authorLabel.centerXAnchor.constraint(equalTo: titleLabel.centerXAnchor),
-            authorLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
+            authorLabel.bottomAnchor.constraint(equalTo: playButton.topAnchor, constant: -20),
+            authorLabel.heightAnchor.constraint(equalToConstant: 20),
             authorLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
-            authorLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor)
-        ])
-    }
-    
-    fileprivate func setupButtons() {
-        previousButton.addTarget(self, action: #selector(handlePrevious), for: .touchUpInside)
-        playButton.addTarget(self, action: #selector(handlePlay), for: .touchUpInside)
-        nextButton.addTarget(self, action: #selector(handleNext), for: .touchUpInside)
-        view.addSubview(previousButton)
-        view.addSubview(playButton)
-        view.addSubview(nextButton)
-        
-        NSLayoutConstraint.activate([
+            authorLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+            
             previousButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -80),
             previousButton.centerYAnchor.constraint(equalTo: playButton.centerYAnchor),
             previousButton.widthAnchor.constraint(equalToConstant: 30),
             previousButton.heightAnchor.constraint(equalToConstant: 30),
             
             playButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            playButton.topAnchor.constraint(equalTo: authorLabel.bottomAnchor, constant: 40),
+            playButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100),
             playButton.widthAnchor.constraint(equalToConstant: 80),
             playButton.heightAnchor.constraint(equalToConstant: 80),
             
@@ -364,6 +354,15 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             nextButton.centerYAnchor.constraint(equalTo: playButton.centerYAnchor),
             nextButton.widthAnchor.constraint(equalToConstant: 30),
             nextButton.heightAnchor.constraint(equalToConstant: 30)
+        ])
+    }
+    
+    fileprivate func setupButtons() {
+        
+        
+        
+        NSLayoutConstraint.activate([
+            
         ])
     }
     

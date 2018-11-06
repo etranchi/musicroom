@@ -119,11 +119,11 @@ class CoverContainerView: UIView {
     
     func downLoadImagesIfNeeded() {
         if let previous = previousTrack {
-            previousCoverImageView.loadImageUsingCacheWithUrlString(urlString: (previous.album!.cover_medium!))
+            previousCoverImageView.loadImageUsingCacheWithUrlString(urlString: (previous.album!.cover_big!))
         }
-        currentCoverImageView.loadImageUsingCacheWithUrlString(urlString: currentTrack.album!.cover_medium!)
+        currentCoverImageView.loadImageUsingCacheWithUrlString(urlString: currentTrack.album!.cover_big!)
         if let next = nextTrack {
-            nextCoverImageView.loadImageUsingCacheWithUrlString(urlString: next.album!.cover_medium!)
+            nextCoverImageView.loadImageUsingCacheWithUrlString(urlString: next.album!.cover_big!)
         }
     }
 }
