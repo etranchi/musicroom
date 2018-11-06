@@ -15,22 +15,24 @@ module.exports = {
 	getTracksByPlaylistId: async (req, res) => {
 		try {
 			let playlist = null
-			if (!Number(req.params.id)) {
-				playlist = await playlistModel.findOne({'_id': req.params.id})
-				return res.status(200).json(playlist.tracks)
-			}
+			if (!Number(req.params.id))
+				return res.status(200).json(await playlistModel.findOne({'_id': req.params.id}) || {})
 			else
 				playlist = await playlistModel.findOne({'id': req.params.id})
 			if (!playlist) {
 				let options = {
 					method: 'GET',
-					uri: config.deezer.apiUrl + '/playlist/' + req.params.id+ '/tracks',
+					uri: config.deezer.apiUrl + '/playlist/' + req.params.id,
 					json: true
 				};
-				playlist = await request(options)
-				res.status(200).json(playlist || {});
+				let rp = await request(options)
+				if (rp.id)
+				{
+					playlist = await playlistModel.create(rp)
+					trackModel.insertMany(playlist.tracks.data, (err, event) => {})
+				}
 			}
-			res.status(200).json(playlist.tracks || {});
+			res.status(200).json(playlist.tracks.data || {});
 		} catch (err) {
 			console.log("Bad Request getPlaylistById" + err)
 			res.status(400).json(err);
@@ -49,12 +51,12 @@ module.exports = {
 					uri: config.deezer.apiUrl + '/playlist/' + req.params.id,
 					json: true
 				};
-				playlist = await request(options)
-				// if (playlist.id)
-				// {
-				// 	await playlistModel.create(playlist)
-				// 	// trackModel.insertMany(playlist.tracks.data, (err, event) => {})
-				// }
+				let rp = await request(options)
+				if (rp.id)
+				{
+					playlist = await playlistModel.create(rp)
+					trackModel.insertMany(playlist.tracks.data, (err, event) => {})
+				}
 			}
 			res.status(200).json(playlist || {});
 		} catch (err) {

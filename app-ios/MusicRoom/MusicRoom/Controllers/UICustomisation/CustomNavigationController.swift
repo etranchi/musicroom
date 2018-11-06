@@ -14,7 +14,7 @@ class CustomNavigationController: UINavigationController {
         super.viewDidLoad()
         
         navigationBar.setBackgroundImage(UIImage(), for: .default)
-        navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white, .font: UIFont.systemFont(ofSize: 15, weight: .heavy)]
+        navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white, .font: UIFont.systemFont(ofSize: 15, weight: .heavy)]
         var bounds = navigationBar.bounds
         bounds.size.height += 50
         bounds.origin.y -= 50

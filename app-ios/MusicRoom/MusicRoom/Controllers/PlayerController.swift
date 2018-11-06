@@ -105,12 +105,18 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         return _player
     }()
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        
+        player?.stop()
+        AppUtility.lockOrientation(.all)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupBackground()
         setupPlayer()
-        
         cancelable?.cancel()
         player?.stop()
         self.cancelable = DZRTrack.object(withIdentifier: String(tracks[index].id), requestManager: request, callback: { (response, err) in
@@ -125,9 +131,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
                 self.setupProgressCircle()
                 self.handlePlay()
             }
-            
         })
-        
     }
     
     func setupPlayer() {
@@ -137,13 +141,10 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     }
     
     func player(_ player: DZRPlayer!, didPlay playedBytes: Int64, outOf totalBytes: Int64) {
-        progressCircle!.updateProgress(CGFloat(playedBytes) / CGFloat(totalBytes))
+        let progress = CGFloat(playedBytes) / CGFloat(totalBytes)
+        progressCircle!.updateProgress(progress)
         if player.progress > 0.96 {
-            hasPaused = false
-            playButton.removeTarget(self, action: #selector(handlePause), for: .touchUpInside)
-            playButton.addTarget(self, action: #selector(handlePlay), for: .touchUpInside)
-            setPlayIcon()
-            progressCircle?.updateProgress(0)
+            handleNext()
         }
     }
     
@@ -195,29 +196,27 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     }
     
     fileprivate func loadTrackInplayer() {
+        player?.stop()
         cancelable?.cancel()
         self.cancelable = DZRTrack.object(withIdentifier: String(tracks[index].id), requestManager: request, callback: { (response, err) in
             if let err = err {
                 print("Player error: \(err.localizedDescription)")
                 return
             }
-            guard let res = response as? DZRTrack else { return }
-            self.track = res
-            self.progressCircle?.updateProgress(0)
-            self.player?.play(res)
-            self.hasPaused = true
-            if self.isPlaying == true {
-                self.handlePlay()
+            DispatchQueue.main.async {
+                guard let res = response as? DZRTrack else { return }
+                self.track = res
+                self.progressCircle?.updateProgress(0)
+                self.player?.play(res)
+                self.hasPaused = true
+                if self.isPlaying == true {
+                    self.handlePlay()
+                }
             }
         })
     }
     
     func setupTrack(indexOffset: Int) {
-        player?.stop()
-        playButton.removeTarget(self, action: #selector(handlePause), for: .touchUpInside)
-        playButton.addTarget(self, action: #selector(handlePlay), for: .touchUpInside)
-        setPlayIcon()
-        
         index += indexOffset
         loadTrackInplayer()
         
@@ -302,13 +301,13 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             visualEffectView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
             coverContainerView!.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
-            coverContainerView!.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             coverContainerView!.heightAnchor.constraint(equalToConstant: view.bounds.width - 80),
             coverContainerView!.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             coverContainerView!.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            titleLabel.centerXAnchor.constraint(equalTo: coverContainerView!.centerXAnchor),
-            titleLabel.topAnchor.constraint(equalTo: coverContainerView!.bottomAnchor, constant: 40),
+            titleLabel.centerXAnchor.constraint(equalTo: view!.centerXAnchor),
+            titleLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 40),
+            titleLabel.heightAnchor.constraint(equalToConstant: 40),
             titleLabel.trailingAnchor.constraint(equalTo: coverContainerView!.trailingAnchor),
             titleLabel.leadingAnchor.constraint(equalTo: coverContainerView!.leadingAnchor),
             

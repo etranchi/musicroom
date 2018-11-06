@@ -4,7 +4,9 @@ const User		= require('../models/user');
 const Playlist 		= require('../models/playlist');
 
 const Event = new Schema({
-	creator: {type: User.schema, required:true},
+	creator: {type: User.schema},
+	title:{type: String, default: "Aucun"},
+	description:{type: String, default: "à définir"},
 	location: {
 		address : {
 			p: {type: String},
@@ -21,10 +23,12 @@ const Event = new Schema({
 	visibility: {type:Number},
 	public: {type: Boolean},
 	creation_date: {type: Date, default: Date.now},
-	playlist: {type: Playlist.schema, required: true},
+	date: {type: Date, default: Date.now},
+	playlist: {type: Playlist.schema},
 	members : [User.schema],
+	picture: {type: String},
 	adminMembers: [User.schema]
 
-});
+}, { versionKey: false });
 
 module.exports = mongoose.model('event', Event);

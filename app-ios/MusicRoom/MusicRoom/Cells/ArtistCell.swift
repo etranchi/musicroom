@@ -12,7 +12,7 @@ class ArtistCell: UICollectionViewCell {
     var artist: Artist! {
         didSet {
             artistLabel.text = artist.name
-            fanLabel.text = String(describing: artist.nb_fan) + " fans"
+            fanLabel.text = "\(artist.nb_fan!) fans"
             imageView.loadImageUsingCacheWithUrlString(urlString: artist.picture_medium)
         }
     }
