@@ -1,5 +1,6 @@
 **/.DS_Store
 api/node_modules/
+/api/public/
 api/config/config.json
 api/package-lock.json
 react-front/package-lock.json

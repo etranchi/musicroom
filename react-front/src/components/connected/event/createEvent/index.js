@@ -37,6 +37,7 @@ class CreateEvent extends Component {
 	handleSubmit = event => {
         event.preventDefault();
         let data = new FormData();
+        console.log("ICI ", this.state.picture)
         data.append('file', this.state.picture);
         data.append('name', this.state.picture.name);
         data.append('body', JSON.stringify(this.state));
@@ -63,6 +64,7 @@ class CreateEvent extends Component {
       
 
 	render() {
+        {this.props.updateParent.bind(this,{'currentComponent': 'createEvent', 'data': this.state})}
         return (
             <Row className="formEvent">
                 <Input label="Upload"                       type="file" onChange={this.handlePicture.bind(this)}/>
