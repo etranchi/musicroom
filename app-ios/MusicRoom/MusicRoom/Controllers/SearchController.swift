@@ -33,7 +33,7 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
         
         
         performSearch(initialSearch) { (albums, tracks, artists) in
-            self.musicCategories = MusicCategory.sampleMusicCategories(albums, tracks, artists)
+            self.musicCategories = MusicCategory.sampleMusicCategories(albums, tracks, artists, [])
             self.collectionView?.reloadData()
         }
     }
@@ -41,7 +41,7 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     func handleSearch(_ text: String) {
         musicCategories?.removeAll()
         performSearch(text) { (albums, tracks, artists) in
-            self.musicCategories = MusicCategory.sampleMusicCategories(albums, tracks, artists)
+            self.musicCategories = MusicCategory.sampleMusicCategories(albums, tracks, artists, [])
             self.collectionView?.reloadData()
         }
     }

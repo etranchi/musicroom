@@ -40,6 +40,17 @@ class APIManager: NSObject, URLSessionDelegate {
         }
     }
 
+    func searchPlaylist(_ search: String, completion: @escaping ([Playlist]) -> ()){
+        let w = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+        
+        let playlistsUrl = self.url + "search/playlist?q=\(w)"
+        var playlistsRequest = URLRequest(url: URL(string: playlistsUrl)!)
+        playlistsRequest.httpMethod = "GET"
+        self.searchAll(PlaylistData.self, request: playlistsRequest, completion: { (playlistData) in
+            completion(playlistData.data)
+        })
+    }
+    
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         completionHandler(.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
     }
@@ -52,7 +63,6 @@ class APIManager: NSObject, URLSessionDelegate {
             }
             if let d = data {
                 do {
-                    print(myType.self)
                     let dic = try JSONDecoder().decode(myType.self, from: d)
                     DispatchQueue.main.async {
                         completion(dic)

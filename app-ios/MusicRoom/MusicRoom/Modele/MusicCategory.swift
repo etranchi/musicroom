@@ -13,23 +13,26 @@ class MusicCategory: NSObject {
     var     tracks: [Track]
     var     albums: [Album]
     var     artists: [Artist]
-    
+    var     playlists : [Playlist]
     init(_ named: String) {
         name = named
         tracks = []
         albums = []
         artists = []
+        playlists = []
     }
     
-    static func sampleMusicCategories(_ albums: [Album], _ tracks: [Track], _ artists: [Artist]) -> [MusicCategory]
+    static func sampleMusicCategories(_ albums: [Album], _ tracks: [Track], _ artists: [Artist], _ playlists : [Playlist]) -> [MusicCategory]
     {
         let     songsCategory = MusicCategory("Songs")
         let     albumsCategory = MusicCategory("Albums")
         let     artistsCategory = MusicCategory("Artists")
+        let     playlistsCategory = MusicCategory("Playlists")
         songsCategory.tracks = tracks
         albumsCategory.albums = albums
         artistsCategory.artists = artists
+        playlistsCategory.playlists = playlists
         
-        return [albumsCategory, songsCategory, artistsCategory]
+        return [albumsCategory, songsCategory, artistsCategory, playlistsCategory]
     }
 }

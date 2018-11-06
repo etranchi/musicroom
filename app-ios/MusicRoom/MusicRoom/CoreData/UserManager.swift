@@ -13,18 +13,19 @@ import Foundation
 class UserManager {
     public var context : NSManagedObjectContext
     
-    public func newArticle() -> MyUser
+    public func newUser(login : String, mdp : String) -> MyUser
     {
-        var article: MyUser?
+        var user: MyUser?
         context.performAndWait {
             let ent = NSEntityDescription.entity(forEntityName: "MyUser", in: context)!
-            article = MyUser(entity: ent, insertInto: context)
+            user = MyUser(entity: ent, insertInto: context)
+            user?.login = login
         }
-        return article!
+        return user!
     }
     
     private lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator = {
-        let modelUrl: URL = Bundle(for: MyUser.self).url(forResource: "user", withExtension: "momd")!
+        let modelUrl: URL = Bundle(for: MyUser.self).url(forResource: "MusicRoom", withExtension: "momd")!
         let managedObjectModel = NSManagedObjectModel(contentsOf: modelUrl)!
         let persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
         
@@ -62,6 +63,19 @@ class UserManager {
         }
         return result
     }*/
+    
+    public func getAllArticles() -> [MyUser] {
+        var result : [MyUser] = []
+        context.performAndWait {
+            let request = NSFetchRequest<NSFetchRequestResult>(entityName: "MyUser")
+            do {
+                result = try context.fetch(request) as! [MyUser]
+            } catch (let err){
+                print(err.localizedDescription)
+            }
+        }
+        return result
+    }
     
     public func save() -> Void {
         context.performAndWait {
