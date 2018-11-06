@@ -7,7 +7,9 @@ const userController = require('../controllers/user');
 const strategies = require('../controllers/strategies')();
 const passport = require('passport');
 const middlewares = require('../modules/middlewares');
-
+const multer  = require('multer')
+const upload = multer({ dest: "./public/userPicture/"})
+  
 router.post('/login',
     	passport.authenticate('local', {session: false}), userController.connect
     );
@@ -59,6 +61,6 @@ router.get('/:id',
 		userController.getUserById
 	);
 
-router.post('/', userController.postUser);
+router.post('/', upload.single('file'), userController.postUser);
 
 module.exports = router;

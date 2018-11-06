@@ -71,7 +71,7 @@ class CreateEvent extends Component {
                 <Input label="Titre de l'évènement : "      type="text"     s={12} name= "title"           value={this.state.title}        onChange={this.handleChange}/>
                 <Input label="Descriptif de l'évènement : " type='textarea' s={12} name= "description"     value={this.state.description}  onChange={this.handleChange}/> 
                 <Input label="Quand ? "                     type='date'            name= "date"            value={this.state.date}         onChange={this.handleChange} />
-                <Input label="Visibilité de l'événement : " type='select'   s={12} name= "public"          value={this.state.public}       onChange={this.handleChange}>
+                <Input label="Visibilité de l'événement : " type='select'   s={12} name= "public"          value={this.state.public ?  "true" : "false"}       onChange={this.handleChange}>
                     <option value='true' >Public</option>
                     <option value='false'>Privé</option>
                 </Input>
