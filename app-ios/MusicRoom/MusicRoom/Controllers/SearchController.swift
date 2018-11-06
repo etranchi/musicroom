@@ -14,7 +14,7 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     private let searchCellId = "searchCellId"
     
     let manager = APIManager()
-    let initialSearch = "Daft Punk"
+    let initialSearch = "Deadmau5"
     
     var musicCategories: [MusicCategory]?
 

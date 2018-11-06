@@ -7,6 +7,7 @@ module.exports = {
             "watch_options": {
                 usePolling: true
             },
+            "ignore_watch" : ["./node_modules", "./public/"],
             env: {
                 PORT: 3002
             },

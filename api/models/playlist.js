@@ -3,9 +3,7 @@ const Schema 		= mongoose.Schema;
 const Track 		= require('../models/track');
 
 const Playlist = new Schema({
-	idUser: {
-		type: Schema.Types.ObjectId
-	},
+	idUser: {type: Schema.Types.ObjectId},
 	id: {type: Number},
 	title: {type: String},
 	description: {type: String},

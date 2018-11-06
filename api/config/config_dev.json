@@ -1,31 +1,31 @@
 {
-	"port": 4242,
-	"host": "0.0.0.0",
-	"token": {
-		"secret": ""
-	},
-	"deezer": {
-		"apiUrl": "https://api.deezer.com",
-		"clientID": "",
+    "port": 4242,
+    "host": "0.0.0.0",
+    "token": {
+        "secret": ""
+    },
+    "deezer": {
+        "apiUrl": "https://api.deezer.com",
+        "clientID": "",
         "clientSecret": "",
-		"callbackURL": "/oauth/deezer/callback",
-		"scope": [
-			"basic_access",
-			"email"
-		]
-	},
-	"facebook": {
-		"clientID": "",
+        "callbackURL": "/oauth/deezer/callback",
+        "scope": [
+            "basic_access",
+            "email"
+        ]
+    },
+    "facebook": {
+        "clientID": "",
         "clientSecret": "",
-		"callbackURL": "/oauth/facebook/callback",
-		"scope": [
-			"email"
-		],
-		"profileFields": [
-			"id",
-			"displayName",
-			"photos",
-			"email"
-		]
-	}
+        "callbackURL": "/oauth/facebook/callback",
+        "scope": [
+            "email"
+        ],
+        "profileFields": [
+            "id",
+            "displayName",
+            "photos",
+            "email"
+        ]
+    }
 }

@@ -9,7 +9,6 @@
 import UIKit
 
 class CoverContainerView: UIView {
-    
     let previousTrack: Track?
     let currentTrack: Track
     let nextTrack: Track?
@@ -53,57 +52,41 @@ class CoverContainerView: UIView {
         return iv
     }()
     
-    func handleAnimation(_ top: NSLayoutConstraint?, _ bottom: NSLayoutConstraint?, _ trailing: NSLayoutConstraint?, _ leading: NSLayoutConstraint?,
-                         _ dismissLeading: NSLayoutConstraint?, _ dismissTrailing: NSLayoutConstraint? ,multiplier: CGFloat, iv: UIImageView) {
-        let moveOffset = UIApplication.shared.keyWindow!.bounds.width * 0.78 * multiplier
+    func handleAnimation(iv: UIImageView, isNext: Bool) {
+        if isNext {
+            currentLeadingAnchor?.constant -= offset - 30
+            currentTrailingAnchor?.constant -= offset + 10
+            nextTrailingAnchor?.constant += 40
+        } else {
+            currentLeadingAnchor?.constant += offset + 10
+            currentTrailingAnchor?.constant += offset - 30
+            previousLeadingAnchor?.constant -= 40
+        }
         
-        top?.constant = 0
-        bottom?.constant = 0
-        trailing?.constant = 0
-        leading?.constant = 0
-        
-        currentLeadingAnchor?.constant = moveOffset
-        currentTrailingAnchor?.constant = moveOffset
-        currentTopAnchor?.constant = 10
-        currentBottomAnchor?.constant = -10
-        
-        dismissLeading?.constant = moveOffset * 2
-        dismissLeading?.constant = moveOffset * 2
-        
-        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             iv.alpha = 1
             self.currentCoverImageView.alpha = 0.5
             self.layoutIfNeeded()
-        }) { (finished) in
-            self.playerController.setupTrack(indexOffset: Int(-multiplier))
-        }
+        }) { (finished) in self.playerController.setupTrack(indexOffset: isNext ? 1 : -1) }
     }
     
     func handleNextAnimation() {
-        handleAnimation(nextTopAnchor, nextBottomAnchor, nextTrailingAnchor, nextLeadingAnchor, previousLeadingAnchor, previousTrailingAnchor, multiplier: -1, iv: nextCoverImageView)
+        handleAnimation(iv: nextCoverImageView, isNext: true)
     }
     
     func handlePreviousAnimation() {
-        handleAnimation(previousTopAnchor, previousBottomAnchor, previousTrailingAnchor, previousLeadingAnchor, nextLeadingAnchor, nextTrailingAnchor, multiplier: 1, iv: previousCoverImageView)
+        handleAnimation(iv: previousCoverImageView, isNext: false)
     }
     
-    var previousTopAnchor: NSLayoutConstraint?
-    var previousBottomAnchor: NSLayoutConstraint?
     var previousLeadingAnchor: NSLayoutConstraint?
     var previousTrailingAnchor: NSLayoutConstraint?
-    
-    var currentTopAnchor: NSLayoutConstraint?
-    var currentBottomAnchor: NSLayoutConstraint?
     var currentLeadingAnchor: NSLayoutConstraint?
     var currentTrailingAnchor: NSLayoutConstraint?
-    
-    var nextTopAnchor: NSLayoutConstraint?
-    var nextBottomAnchor: NSLayoutConstraint?
     var nextLeadingAnchor: NSLayoutConstraint?
     var nextTrailingAnchor: NSLayoutConstraint?
+    let offset = UIApplication.shared.keyWindow!.bounds.width - 80
     
     func setupView() {
-        let offset = UIApplication.shared.keyWindow!.bounds.width * 0.78
         downLoadImagesIfNeeded()
         addSubview(currentCoverImageView)
         addSubview(previousCoverImageView)
@@ -111,35 +94,36 @@ class CoverContainerView: UIView {
         previousCoverImageView.alpha = 0.5
         nextCoverImageView.alpha = 0.5
         
-        previousTopAnchor = previousCoverImageView.topAnchor.constraint(equalTo: topAnchor, constant: 10)
-        previousBottomAnchor = previousCoverImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10)
-        previousLeadingAnchor = previousCoverImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -offset)
-        previousTrailingAnchor = previousCoverImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -offset)
-        
-        currentTopAnchor = currentCoverImageView.topAnchor.constraint(equalTo: topAnchor)
-        currentBottomAnchor = currentCoverImageView.bottomAnchor.constraint(equalTo: bottomAnchor)
-        currentLeadingAnchor = currentCoverImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0)
-        currentTrailingAnchor = currentCoverImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0)
-        
-        nextTopAnchor = nextCoverImageView.topAnchor.constraint(equalTo: topAnchor, constant: 10)
-        nextBottomAnchor = nextCoverImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10)
-        nextLeadingAnchor = nextCoverImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: offset)
-        nextTrailingAnchor = nextCoverImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: offset)
+        previousLeadingAnchor = previousCoverImageView.leadingAnchor.constraint(equalTo: currentCoverImageView.leadingAnchor, constant: -offset + 30)
+        previousTrailingAnchor = previousCoverImageView.trailingAnchor.constraint(equalTo: currentCoverImageView.leadingAnchor, constant: -10)
+        currentLeadingAnchor = currentCoverImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 40)
+        currentTrailingAnchor = currentCoverImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -40)
+        nextLeadingAnchor = nextCoverImageView.leadingAnchor.constraint(equalTo: currentCoverImageView.trailingAnchor, constant: 10)
+        nextTrailingAnchor = nextCoverImageView.trailingAnchor.constraint(equalTo: currentCoverImageView.trailingAnchor, constant: offset - 30)
         
         NSLayoutConstraint.activate([
-            previousTopAnchor!, previousBottomAnchor!, previousLeadingAnchor!, previousTrailingAnchor!,
-            currentTopAnchor!, currentBottomAnchor!, currentLeadingAnchor!, currentTrailingAnchor!,
-            nextTopAnchor!, nextBottomAnchor!, nextLeadingAnchor!, nextTrailingAnchor!
+            previousCoverImageView.topAnchor.constraint(equalTo: topAnchor),
+            previousCoverImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            currentCoverImageView.topAnchor.constraint(equalTo: topAnchor),
+            currentCoverImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            nextCoverImageView.topAnchor.constraint(equalTo: topAnchor),
+            nextCoverImageView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            previousLeadingAnchor!, previousTrailingAnchor!,
+            currentLeadingAnchor!, currentTrailingAnchor!,
+            nextLeadingAnchor!, nextTrailingAnchor!
         ])
     }
     
     func downLoadImagesIfNeeded() {
         if let previous = previousTrack {
-            previousCoverImageView.loadImageUsingCacheWithUrlString(urlString: (previous.album!.cover_medium!))
+            previousCoverImageView.loadImageUsingCacheWithUrlString(urlString: (previous.album!.cover_big!))
         }
-        currentCoverImageView.loadImageUsingCacheWithUrlString(urlString: currentTrack.album!.cover_medium!)
+        currentCoverImageView.loadImageUsingCacheWithUrlString(urlString: currentTrack.album!.cover_big!)
         if let next = nextTrack {
-            nextCoverImageView.loadImageUsingCacheWithUrlString(urlString: next.album!.cover_medium!)
+            nextCoverImageView.loadImageUsingCacheWithUrlString(urlString: next.album!.cover_big!)
         }
     }
 }
