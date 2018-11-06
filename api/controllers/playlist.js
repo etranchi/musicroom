@@ -48,29 +48,7 @@ module.exports = {
 			}
 			res.status(200).json(playlist || {});
 		} catch (err) {
-			console.log("Bad Request getPlaylistById" + err)
-			res.status(400).json(err);
-		}
-	},
-	// TO DELETE
-	getPlaylistById: async (req, res) => {
-		try {
-			let playlist = null
-			if (!Number(req.params.id))
-				return res.status(200).json(await playlistModel.findOne({'_id': req.params.id}) || {})
-			else
-				playlist = await playlistModel.findOne({'id': req.params.id})
-			if (!playlist) {
-				let options = {
-					method: 'GET',
-					uri: config.deezer.apiUrl + '/playlist/' + req.params.id,
-					json: true
-				};
-				playlist = await request(options)
-			}
-			res.status(200).json(playlist || {});
-		} catch (err) {
-			console.log("Bad Request getPlaylistById" + err)
+			console.log("Bad Request getPlaylistUserById" + err)
 			res.status(400).json(err);
 		}
 	},
@@ -114,10 +92,11 @@ module.exports = {
 			else {
 				let options = {
 					method: 'POST',
-					uri: config.deezer.apiUrl + '/playlist/' + req.params.id + '/tracks?songs=' + req.body.id,
+					uri: config.deezer.apiUrl + '/playlist/' + req.params.id + '/tracks',
 					json: true,
 					qs: {
-						"access_token": req.user.deezerToken
+						"access_token": req.user.deezerToken,
+						"songs": req.body.id
 					}
 				};
 				playlist = await request(options)
@@ -126,16 +105,42 @@ module.exports = {
 			}
 			res.status(200).json({message: 'Track added'});
 		} catch (err) {
-			console.log("Bad Request getPlaylistById" + err)
+			console.log("Bad Request putPlaylistById" + err)
 			res.status(400).send(err);
 		}
 	},
 	deletePlaylistById: async (req, res) => {
 		try {
-			await playlistModel.deleteOne({'_id': req.params.id})
-			res.status(204).send();
+			await playlistModel.deleteOne({_id: req.params.id, idUser: req.user._id})
+			res.status(204).json({message: 'PLaylist deleted'});
 		} catch (err) {
-			console.log(err)
+			console.log("Bad Request deletePlaylistById" + err)
+			res.status(400).send(err);
+		}
+	},
+	deleteTrackPlaylistById: async (req, res) => {
+		try {
+			if (!Number(req.params.id)) {
+				await playlistModel.updateOne({_id: req.params.id, idUser: req.user._id},
+					{$pull: {'tracks.data': {id: req.body.id}}}
+				)
+			} else {
+				let options = {
+					method: 'DELETE',
+					uri: config.deezer.apiUrl + '/playlist/' + req.params.id + '/tracks',
+					json: true,
+					qs: {
+						"access_token": req.user.deezerToken,
+						"songs": req.body.id
+					}
+				};
+				playlist = await request(options)
+				if (playlist !== true)
+					throw playlist.error.message
+			}
+			res.status(204).json({message: 'Track deleted'});
+		} catch (err) {
+			console.log("Bad Request deletePlaylistById" + err)
 			res.status(400).send(err);
 		}
 	}
