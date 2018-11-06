@@ -251,8 +251,13 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     
     
     fileprivate func setupCoverContainer() -> CoverContainerView {
+        var underPreviousTrack: Track? = nil
         var previousTrack: Track? = nil
         var nextTrack: Track? = nil
+        var overNextTrack: Track? = nil
+        if index - 2 >= 0 {
+            underPreviousTrack = tracks[index - 2]
+        }
         if index - 1 >= 0 {
             previousTrack = tracks[index - 1]
         }
@@ -260,7 +265,10 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         if index + 1 < tracks.count {
             nextTrack = tracks[index + 1]
         }
-        return CoverContainerView(target: self, previousTrack, currentTrack, nextTrack)
+        if index + 2 < tracks.count {
+            overNextTrack = tracks[index + 2]
+        }
+        return CoverContainerView(target: self, underPreviousTrack, previousTrack, currentTrack, nextTrack, overNextTrack)
     }
     
     fileprivate func setupBackgroudView() -> BackgroundCoverView {

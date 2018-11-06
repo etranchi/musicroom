@@ -9,16 +9,21 @@
 import UIKit
 
 class CoverContainerView: UIView {
+    
+    let underPreviousTrack: Track?
     let previousTrack: Track?
     let currentTrack: Track
     let nextTrack: Track?
+    let overNextTrack: Track?
     let playerController: PlayerController
     
-    init(target: UIViewController, _ previousTrack: Track?, _ currentTrack: Track, _ nextTrack: Track?) {
+    init(target: UIViewController, _ underPreviousTrack: Track?, _ previousTrack: Track?, _ currentTrack: Track, _ nextTrack: Track?, _ overNextTrack: Track?) {
         self.playerController = target as! PlayerController
+        self.underPreviousTrack = underPreviousTrack
         self.previousTrack = previousTrack
         self.currentTrack = currentTrack
         self.nextTrack = nextTrack
+        self.overNextTrack = overNextTrack
         super.init(frame: .zero)
         
         setupView()
@@ -27,6 +32,14 @@ class CoverContainerView: UIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    let underPreviousCoverImageView: UIImageView = {
+        let iv = UIImageView()
+        
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        iv.contentMode = .scaleAspectFit
+        return iv
+    }()
     
     let previousCoverImageView: UIImageView = {
         let iv = UIImageView()
@@ -45,6 +58,14 @@ class CoverContainerView: UIView {
     }()
     
     let nextCoverImageView: UIImageView = {
+        let iv = UIImageView()
+        
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        iv.contentMode = .scaleAspectFit
+        return iv
+    }()
+    
+    let overNextCoverImageView: UIImageView = {
         let iv = UIImageView()
         
         iv.translatesAutoresizingMaskIntoConstraints = false
@@ -88,11 +109,17 @@ class CoverContainerView: UIView {
     
     func setupView() {
         downLoadImagesIfNeeded()
-        addSubview(currentCoverImageView)
+        
+        addSubview(underPreviousCoverImageView)
         addSubview(previousCoverImageView)
+        addSubview(currentCoverImageView)
         addSubview(nextCoverImageView)
+        addSubview(overNextCoverImageView)
+        
+        underPreviousCoverImageView.alpha = 0.5
         previousCoverImageView.alpha = 0.5
         nextCoverImageView.alpha = 0.5
+        overNextCoverImageView.alpha = 0.5
         
         previousLeadingAnchor = previousCoverImageView.leadingAnchor.constraint(equalTo: currentCoverImageView.leadingAnchor, constant: -offset + 30)
         previousTrailingAnchor = previousCoverImageView.trailingAnchor.constraint(equalTo: currentCoverImageView.leadingAnchor, constant: -10)
@@ -102,12 +129,22 @@ class CoverContainerView: UIView {
         nextTrailingAnchor = nextCoverImageView.trailingAnchor.constraint(equalTo: currentCoverImageView.trailingAnchor, constant: offset - 30)
         
         NSLayoutConstraint.activate([
+            underPreviousCoverImageView.topAnchor.constraint(equalTo: topAnchor),
+            underPreviousCoverImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            underPreviousCoverImageView.leadingAnchor.constraint(equalTo: previousCoverImageView.leadingAnchor, constant: -offset + 30),
+            underPreviousCoverImageView.trailingAnchor.constraint(equalTo: previousCoverImageView.leadingAnchor, constant: -10),
+            
             previousCoverImageView.topAnchor.constraint(equalTo: topAnchor),
             previousCoverImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
             currentCoverImageView.topAnchor.constraint(equalTo: topAnchor),
             currentCoverImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
             nextCoverImageView.topAnchor.constraint(equalTo: topAnchor),
-            nextCoverImageView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            nextCoverImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            
+            overNextCoverImageView.topAnchor.constraint(equalTo: topAnchor),
+            overNextCoverImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            overNextCoverImageView.leadingAnchor.constraint(equalTo: nextCoverImageView.trailingAnchor, constant: 10),
+            overNextCoverImageView.trailingAnchor.constraint(equalTo: nextCoverImageView.trailingAnchor, constant: offset - 30)
         ])
         
         NSLayoutConstraint.activate([
@@ -118,12 +155,18 @@ class CoverContainerView: UIView {
     }
     
     func downLoadImagesIfNeeded() {
+        if let underPrevious = underPreviousTrack {
+            underPreviousCoverImageView.loadImageUsingCacheWithUrlString(urlString: underPrevious.album!.cover_big!)
+        }
         if let previous = previousTrack {
             previousCoverImageView.loadImageUsingCacheWithUrlString(urlString: (previous.album!.cover_big!))
         }
         currentCoverImageView.loadImageUsingCacheWithUrlString(urlString: currentTrack.album!.cover_big!)
         if let next = nextTrack {
             nextCoverImageView.loadImageUsingCacheWithUrlString(urlString: next.album!.cover_big!)
+        }
+        if let overNext = overNextTrack {
+            overNextCoverImageView.loadImageUsingCacheWithUrlString(urlString: overNext.album!.cover_big!)
         }
     }
 }
