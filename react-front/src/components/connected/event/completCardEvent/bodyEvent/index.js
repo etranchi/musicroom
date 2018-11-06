@@ -31,40 +31,52 @@ class CreatorProfil extends Component {
                 </div>
                 <div className="members">
                     <div className="basicMember">
-                    <b>  Membres : </b>
-                    {
-                        this.props.state.data.members.map((member, key) => {
-                            return (
-                                <Card.Meta
-                                        avatar={<Avatar src={"https://192.168.99.100:4242/eventPicture/" + member.picture} />}
-                                        title= {member.login}
-                                    />
-                            )
-                        })
-                    }
+                    <div className="inlineMember">
+                        <b>  { this.props.state.data.adminMembers.length } </b>
+                    </div>
+                    <div className="inlineMember">
+                        <p>Membres: </p> 
+                    </div>
+    
                     <Input.Search
-                        placeholder="Ajouter um mebre"
+                        placeholder="Ajouter un membre"
                         onSearch={value => console.log(value)}
                         style={{ width: 200 }}
-                        />
+                    />
+                    {
+                    this.props.state.data.members.map((member, key) => {
+                        return (
+                            <Card.Meta
+                                    avatar={<Avatar src={"https://192.168.99.100:4242/eventPicture/" + member.picture} />}
+                                    title= {member.login}
+                                />
+                               )
+                        })
+                    }
                     </div> 
                     <div className="adminMember">
-                    <b>  Admin: </b>
-                    {
-                        this.props.state.data.adminMembers.map((member, key) => {
-                            return (
-                                <Card.Meta
+                        <div className="inlineMember">
+                            <b>  { this.props.state.data.adminMembers.length } </b>
+                        </div>
+                        <div className="inlineMember">
+                            <p> Admins: </p> 
+                        </div>
+                        <Input.Search
+                            placeholder="Ajouter un admin"
+                            onSearch={value => console.log(value)}
+                            style={{ width: 200 }}
+                            />
+        
+                        {
+                            this.props.state.data.adminMembers.map((member, key) => {
+                                return (
+                                    <Card.Meta
                                         avatar={<Avatar src={"https://192.168.99.100:4242/eventPicture/" + member.picture} />}
                                         title= {member.login}
                                     />
-                            )
-                        })
-                    }
-                    <Input.Search
-                        placeholder="Ajouter un admin"
-                        onSearch={value => console.log(value)}
-                        style={{ width: 200 }}
-                        />
+                                )
+                            })
+                    }   
                     </div> 
                 </div>
             </div>
