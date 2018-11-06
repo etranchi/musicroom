@@ -15,6 +15,7 @@
 	"dependencies": {
 		"argon2": "^0.19.3",
 		"body-parser": "^1.18.3",
+		"cors": "^2.8.5",
 		"express": "^4.16.4",
 		"express-session": "^1.15.6",
 		"joi": "^14.0.1",

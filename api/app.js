@@ -2,9 +2,9 @@
 
 var fs = require('fs');
 var https = require('https');
+const cors = require('cors');
 var privateKey  = fs.readFileSync('./sslcert/server.key', 'utf8');
 var certificate = fs.readFileSync('./sslcert/server.crt', 'utf8');
-
 var credentials = {key: privateKey, cert: certificate};
 
 
@@ -15,6 +15,13 @@ const db = require('./db/mongo.js');
 const config = require('./config/config.json');
 const bodyParser = require('body-parser');
 
+var corsOption = {
+  origin: '*',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  exposedHeaders: ['x-auth-token']
+};
+app.use(cors(corsOption));
 
 app.use(bodyParser.urlencoded({
   extended: true

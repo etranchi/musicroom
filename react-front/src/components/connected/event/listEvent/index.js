@@ -8,11 +8,12 @@ class ListEvent extends Component {
         super(props);
         this.state = {
 			events: [],
-			isloading:false
+			loading:false
 		}
 		this.onLoad = false;
+		this.getEvents()
 	}
-	componentDidMount = () => {
+	getEvents(){
 		console.log('REQUEST')
 		this.setState({loading:true});
 		axios.get('https://192.168.99.100:4242/event')
@@ -25,6 +26,7 @@ class ListEvent extends Component {
 		})
 	}
 
+
 	// deleteEvent = () => {
 	// 	axios.delete('https://192.168.99.100:4242/event');
 	// 	console.log("Event Trashed.");
@@ -34,9 +36,8 @@ class ListEvent extends Component {
 	render() {
 		if (this.props.state.currentComponent != "listEvent" && this.onLoad === false) {
 			this.onLoad = true;
-			{this.componentDidMount()}
 		}
-		if(this.state.events.length === 0 ) {
+		if(this.state.loading === true ) {
 			this.onLoad = false;
 			return <div>Loading...</div>
 		}

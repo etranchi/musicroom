@@ -13,7 +13,9 @@ router.post('/login',
     );
 
 router.get('/login/facebook',
-		passport.authenticate('facebook', { session: false, scope: config.facebook.scope })
+		passport.authenticate('facebook', { session: false, scope: config.facebook.scope }), (req, res) => {
+			console.log('ici');
+		}
 	);
 
 router.get('/login/deezer',
