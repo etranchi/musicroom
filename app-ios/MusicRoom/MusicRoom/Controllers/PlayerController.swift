@@ -346,7 +346,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             previousButton.heightAnchor.constraint(equalToConstant: 30),
             
             playButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            playButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100),
+            playButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -view.bounds.height * 0.1),
             playButton.widthAnchor.constraint(equalToConstant: 80),
             playButton.heightAnchor.constraint(equalToConstant: 80),
             
