@@ -2,19 +2,46 @@
 
 const express = require('express');
 const router = express.Router();
+// const strategies = require('../controllers/strategies')();
+const passport = require('passport');
+const middlewares = require('../modules/middlewares');
 const playlistController = require('../controllers/playlist');
 
-router.get('/', playlistController.getPlaylists);
 
-router.get('/:id', playlistController.getPlaylistById);
+router.get('/',
+    passport.authenticate('bearer'),
+    middlewares.isConfirmed,
+    playlistController.getPlaylistsByUser);
 
-router.get('/:id/tracks', playlistController.getTracksByPlaylistId);
+router.get('/:id',
+    passport.authenticate('bearer'),
+    middlewares.isConfirmed,
+    playlistController.getPlaylistById);
 
-router.post('/', playlistController.postPlaylist);
+router.get('/me/:id',
+    passport.authenticate('bearer'),
+    middlewares.isConfirmed,
+    playlistController.getPlaylistUserById);
 
-router.put('/:id', playlistController.putPlaylistById);
+router.post('/',
+    passport.authenticate('bearer'),
+    middlewares.isConfirmed,
+    playlistController.postPlaylist);
 
-router.delete('/:id', playlistController.deletePlaylistById);
+router.put('/:id',
+    passport.authenticate('bearer'),
+    middlewares.isConfirmed,
+    playlistController.putPlaylistById);
+
+router.delete('/:id',
+    passport.authenticate('bearer'),
+    middlewares.isConfirmed,
+    playlistController.deletePlaylistById);
+
+router.delete('/:id/track',
+    passport.authenticate('bearer'),
+    middlewares.isConfirmed,
+    playlistController.deleteTrackPlaylistById);
 
 module.exports = router;
 

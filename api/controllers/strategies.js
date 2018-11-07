@@ -14,18 +14,19 @@ module.exports = function () {
 		clientID: config.deezer.clientID,
 		clientSecret: config.deezer.clientSecret,
 		callbackURL: config.deezer.callbackURL,
+		scope: config.deezer.scope,
 		passReqToCallback: true
 	},
 	function(req, accessToken, refreshToken, profile, done) {
 		if (!req.user) {
 			return done(null, false)
 		}
+		console.log("refreshToken -> ")
+		console.log(refreshToken)
 		modelUser.updateOne({_id: req.user._id}, {
 			deezerId: profile.id,
-			deezerToken: accessToken,
-			deezerRefreshToken: refreshToken
+			deezerToken: accessToken
 		}, function(err, user) {
-				console.log(req)
 				if (err) {
 					console.log(err);
 					return done(null, false);
@@ -44,9 +45,6 @@ module.exports = function () {
 		modelUser.findOne({
 			'email': profile.emails[0].value
 		}, function(err, user) {
-			// console.log("STRATEGY FB")
-			// console.log(profile)
-			// return done(null, profile)
 			if (err) {
 				console.log(err);
 				return done(null, false);
@@ -54,6 +52,7 @@ module.exports = function () {
 			if (!user) {
 				user = new modelUser({
 					facebookId: profile.id,
+					facebookToken: accessToken,
 					email: profile.emails[0].value,
 					login: !profile.username ? profile.displayName : profile.username,
 					picture: profile.photos.length > 0 ? profile.photos[0].value : undefined,
@@ -67,11 +66,11 @@ module.exports = function () {
 					return done(null, user);
 				});
 			} else {
-				if (!user.facebookId)
+				if (!user.facebookId || !user.facebookToken)
 				{
-					// ADD FACEBOOK TOKEN AND REFRESH TOKEN
 					modelUser.updateOne({_id: user._id}, {
 						facebookId: profile.id,
+						facebookToken: accessToken,
 						status: 'Active'
 					}, function(err, user) {
 						if (err) {
@@ -83,6 +82,7 @@ module.exports = function () {
 				}
 				return done(null, user);
 			}
+			return done(null, false);
 		});
 	}));
 
