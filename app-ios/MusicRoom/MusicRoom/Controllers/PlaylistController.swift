@@ -11,8 +11,11 @@ import UIKit
 class PlaylistController: UITableViewController {
     
     let cellId = "cellId"
+    let manager = APIManager()
+    
     var edit : Bool = false
     var tracks : [PlaylistTrack] = [PlaylistTrack]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         createProductArray()
@@ -24,6 +27,7 @@ class PlaylistController: UITableViewController {
         tableView.estimatedRowHeight = tableView.rowHeight
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.register(PlaylistCell.self, forCellReuseIdentifier: cellId)
+        
     }
     
     @objc func showEditingMode(sender: UIBarButtonItem) {
@@ -85,8 +89,11 @@ class PlaylistController: UITableViewController {
 class PlaylistHomeController: UITableViewController {
     
     let cellId = "cellId"
+    let manager = APIManager()
+    
     var edit : Bool = false
     var playlists : [PlaylistHome] = [PlaylistHome]()
+    var currentUser : [PlaylistByUserId]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -101,6 +108,17 @@ class PlaylistHomeController: UITableViewController {
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.backgroundColor = UIColor(white: 0.2, alpha: 1)
         tableView.register(PlaylistHomeCell.self, forCellReuseIdentifier: cellId)
+        
+        performPlaylistByUserId(1306931615) {(playlist) in
+            self.currentUser = PlaylistByUserId.samplePlaylistById(playlist)
+            self.tableView?.reloadData()
+        }
+    }
+    
+    func performPlaylistByUserId(_ userId: Int, completion: @escaping ([Playlist]) -> ()) {
+        manager.playlistsByUserId(userId) { (playlists) in
+            completion(playlists)
+        }
     }
     
     @objc func showEditingMode(sender: UIBarButtonItem) {
@@ -118,7 +136,6 @@ class PlaylistHomeController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! PlaylistHomeCell
         
         let currentLastItem = playlists[indexPath.row]
-        print(currentLastItem)
         cell.playlist = currentLastItem
         
         return cell

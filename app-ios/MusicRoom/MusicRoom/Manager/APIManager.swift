@@ -18,6 +18,7 @@ class APIManager: NSObject, URLSessionDelegate {
 
     func search(_ search: String, completion: @escaping ([Track], [Album], [Artist]) -> ()){
         let w = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+        print(w)
         
         let tracksUrl = self.url + "search/track?q=\(w)"
         var tracksRequest = URLRequest(url: URL(string: tracksUrl)!)
@@ -68,5 +69,37 @@ class APIManager: NSObject, URLSessionDelegate {
                 }
             }
         }.resume()
+    }
+    
+    func playlistsByUserId(_ currentUserId: Int, completion: @escaping ([Playlist]) -> ()) {
+        
+        let playlistsUrl = self.url + "search/playlist?q=\(currentUserId)"
+        var playlistsRequest = URLRequest(url: URL(string: playlistsUrl)!)
+        playlistsRequest.httpMethod = "GET"
+        print("url playlist")
+        print(playlistsUrl)
+        getPlaylistsByUserId(PlaylistByUserId.self, request: playlistsRequest)
+    }
+    
+    func getPlaylistsByUserId<T: Decodable>(_ myType: T.Type, request: URLRequest) {
+        URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: request) {(data, response, err) in
+            if err != nil {
+                print("error while requesting")
+            }
+            if let d = data {
+                do {
+                    print ("je suis sur ce type")
+                    print(myType.self)
+                    let dic = try JSONDecoder().decode(myType.self, from: d)
+                    DispatchQueue.main.async {
+                        print(dic)
+//                        completion(dic)
+                    }
+                }
+                catch let err {
+                    print("task dictionnary error: \(err)")
+                }
+            }
+            }.resume()
     }
 }
