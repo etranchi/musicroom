@@ -18,6 +18,10 @@ router.get('/login/facebook',
 		passport.authenticate('facebook-token', { session: false } ), userController.connect
 	);
 
+router.get('/login/google',
+		passport.authenticate('google-token', { session: false } ), userController.connect
+	);
+
 
 router.get('/login/deezer',
 		passport.authenticate('bearer'),
