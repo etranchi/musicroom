@@ -10,12 +10,15 @@ import UIKit
 
 class TabBarController: UITabBarController {
 
+    var offsetY: CGFloat = 0.0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = UIColor(white: 0.2, alpha: 1)
         setupBlurTabBar()
         setupTabBarController(self)
+        offsetY = tabBar.frame.size.height
     }
     
     fileprivate func setupBlurTabBar() {
@@ -23,7 +26,7 @@ class TabBarController: UITabBarController {
         tabBar.backgroundImage = UIImage()
         tabBar.backgroundColor = UIColor(white: 0.1, alpha: 0.6)
         let bounds = tabBar.bounds
-        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
+        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
         visualEffectView.isUserInteractionEnabled = false
         visualEffectView.frame = bounds
         visualEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -62,5 +65,17 @@ class TabBarController: UITabBarController {
         let navi3 = CustomNavigationController(rootViewController: tabViewController3)
         
         tabBarController.viewControllers = [navi0, navi1, navi2, navi3]
+    }
+    
+    func animatedShowTabBar() {
+        UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.tabBar.transform = CGAffineTransform.identity
+        })
+    }
+    
+    func animatedHideTabBar() {
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.tabBar.transform = CGAffineTransform(translationX: 0, y: self.offsetY + 50)
+        })
     }
 }

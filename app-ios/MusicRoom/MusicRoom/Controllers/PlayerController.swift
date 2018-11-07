@@ -49,7 +49,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
         label.textColor = .white
         label.textAlignment = .center
-        label.numberOfLines = 2
+        label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -110,12 +110,23 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         
         player?.stop()
         AppUtility.lockOrientation(.all)
+        guard let navi = navigationController as? CustomNavigationController, let tabBar = tabBarController as? TabBarController else { return }
+        navi.animatedShowNavigationBar()
+        tabBar.animatedShowTabBar()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        guard let navi = navigationController as? CustomNavigationController, let tabBar = tabBarController as? TabBarController else { return }
+        navi.animatedHideNavigationBar()
+        tabBar.animatedHideTabBar()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupBackground()
+        setupUI()
         setupPlayer()
         cancelable?.cancel()
         player?.stop()
@@ -230,8 +241,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         nextButton.removeFromSuperview()
         progressCircle?.removeFromSuperview()
         
-        setupBackground()
-        setupButtons()
+        setupUI()
         setupProgressCircle()
         
         isChangingMusic = false
@@ -241,8 +251,13 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     
     
     fileprivate func setupCoverContainer() -> CoverContainerView {
+        var underPreviousTrack: Track? = nil
         var previousTrack: Track? = nil
         var nextTrack: Track? = nil
+        var overNextTrack: Track? = nil
+        if index - 2 >= 0 {
+            underPreviousTrack = tracks[index - 2]
+        }
         if index - 1 >= 0 {
             previousTrack = tracks[index - 1]
         }
@@ -250,7 +265,10 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         if index + 1 < tracks.count {
             nextTrack = tracks[index + 1]
         }
-        return CoverContainerView(target: self, previousTrack, currentTrack, nextTrack)
+        if index + 2 < tracks.count {
+            overNextTrack = tracks[index + 2]
+        }
+        return CoverContainerView(target: self, underPreviousTrack, previousTrack, currentTrack, nextTrack, overNextTrack)
     }
     
     fileprivate func setupBackgroudView() -> BackgroundCoverView {
@@ -266,17 +284,20 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         return BackgroundCoverView(previousTrack, currentTrack, nextTrack)
     }
     
-    fileprivate func setupBackground() {
-       
-        navigationController?.navigationBar.topItem?.title = ""
-        navigationController?.navigationBar.tintColor = .white
+    fileprivate func setupUI() {
+        previousButton.addTarget(self, action: #selector(handlePrevious), for: .touchUpInside)
+        playButton.addTarget(self, action: #selector(handlePlay), for: .touchUpInside)
+        nextButton.addTarget(self, action: #selector(handleNext), for: .touchUpInside)
         
+        let middleLineView: UIView = {
+            let v = UIView()
+            v.translatesAutoresizingMaskIntoConstraints = false
+            return v
+        }()
         backgroundCoverView = setupBackgroudView()
         coverContainerView = setupCoverContainer()
-        
         coverContainerView?.translatesAutoresizingMaskIntoConstraints = false
         backgroundCoverView?.translatesAutoresizingMaskIntoConstraints = false
-        
         coverContainerView?.clipsToBounds = true
         backgroundCoverView?.clipsToBounds = true
         
@@ -285,9 +306,13 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         
         view.addSubview(backgroundCoverView!)
         view.addSubview(visualEffectView)
+        view.addSubview(middleLineView)
         view.addSubview(coverContainerView!)
         view.addSubview(titleLabel)
         view.addSubview(authorLabel)
+        view.addSubview(previousButton)
+        view.addSubview(playButton)
+        view.addSubview(nextButton)
         
         NSLayoutConstraint.activate([
             backgroundCoverView!.topAnchor.constraint(equalTo: view.topAnchor),
@@ -300,40 +325,30 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             visualEffectView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             visualEffectView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            coverContainerView!.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
-            coverContainerView!.heightAnchor.constraint(equalToConstant: view.bounds.width - 80),
+            coverContainerView!.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: -40),
+            coverContainerView!.bottomAnchor.constraint(equalTo: titleLabel.topAnchor, constant: -5),
             coverContainerView!.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             coverContainerView!.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
             titleLabel.centerXAnchor.constraint(equalTo: view!.centerXAnchor),
-            titleLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 40),
-            titleLabel.heightAnchor.constraint(equalToConstant: 40),
+            titleLabel.bottomAnchor.constraint(equalTo: authorLabel.topAnchor, constant: -5),
+            titleLabel.heightAnchor.constraint(equalToConstant: 20),
             titleLabel.trailingAnchor.constraint(equalTo: coverContainerView!.trailingAnchor),
             titleLabel.leadingAnchor.constraint(equalTo: coverContainerView!.leadingAnchor),
             
             authorLabel.centerXAnchor.constraint(equalTo: titleLabel.centerXAnchor),
-            authorLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
+            authorLabel.bottomAnchor.constraint(equalTo: playButton.topAnchor, constant: -20),
+            authorLabel.heightAnchor.constraint(equalToConstant: 20),
             authorLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
-            authorLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor)
-        ])
-    }
-    
-    fileprivate func setupButtons() {
-        previousButton.addTarget(self, action: #selector(handlePrevious), for: .touchUpInside)
-        playButton.addTarget(self, action: #selector(handlePlay), for: .touchUpInside)
-        nextButton.addTarget(self, action: #selector(handleNext), for: .touchUpInside)
-        view.addSubview(previousButton)
-        view.addSubview(playButton)
-        view.addSubview(nextButton)
-        
-        NSLayoutConstraint.activate([
+            authorLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+            
             previousButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -80),
             previousButton.centerYAnchor.constraint(equalTo: playButton.centerYAnchor),
             previousButton.widthAnchor.constraint(equalToConstant: 30),
             previousButton.heightAnchor.constraint(equalToConstant: 30),
             
             playButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            playButton.topAnchor.constraint(equalTo: authorLabel.bottomAnchor, constant: 40),
+            playButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -view.bounds.height * 0.2),
             playButton.widthAnchor.constraint(equalToConstant: 80),
             playButton.heightAnchor.constraint(equalToConstant: 80),
             
@@ -344,8 +359,14 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         ])
     }
     
-    
-    
+    fileprivate func setupButtons() {
+        
+        
+        
+        NSLayoutConstraint.activate([
+            
+        ])
+    }
     
     fileprivate func setupProgressCircle() {
         progressCircle = ProgressCircle(frame: CGRect(x: 0, y: 0, width: 76, height: 76))
