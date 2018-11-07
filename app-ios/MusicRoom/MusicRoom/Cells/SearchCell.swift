@@ -60,7 +60,7 @@ class SearchCell: UICollectionViewCell, UITextFieldDelegate {
         if let vc = vc as? SearchController {
             vc.handleSearch(text)
         }
-        if let vc = vc as? PlaylistController {
+        if let vc = vc as? PlaylistHomeController {
             vc.handleSearch(text)
         }
     }

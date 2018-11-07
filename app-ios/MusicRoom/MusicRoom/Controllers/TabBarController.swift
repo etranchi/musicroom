@@ -39,7 +39,7 @@ class TabBarController: UITabBarController {
         let imageInsets = UIEdgeInsets(top: 4, left: 0, bottom: -8, right: 0)
         let layout0 = UICollectionViewFlowLayout()
         let layout1 = UICollectionViewFlowLayout()
-        let tabViewController0 = PlaylistController(collectionViewLayout: layout1)
+        let tabViewController0 = PlaylistHomeController(collectionViewLayout: layout1)
         let tabViewController1 = SearchController(collectionViewLayout: layout0)
         let tabViewController2 = LibraryController()
         let tabViewController3 = SettingsController()

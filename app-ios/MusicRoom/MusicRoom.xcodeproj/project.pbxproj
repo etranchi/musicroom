@@ -49,6 +49,8 @@
 		8F364B8B217E5B9100B57FC8 /* MusicRoom.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8F364B89217E5B9100B57FC8 /* MusicRoom.xcdatamodeld */; };
 		8F364B8D217E5B9200B57FC8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F364B8C217E5B9200B57FC8 /* Assets.xcassets */; };
 		8F364B90217E5B9200B57FC8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F364B8E217E5B9200B57FC8 /* LaunchScreen.storyboard */; };
+		F42C5D9621937F7500111835 /* UIViewAnchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42C5D9521937F7500111835 /* UIViewAnchor.swift */; };
+		F42C5D98219382F800111835 /* PlaylistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42C5D97219382F800111835 /* PlaylistCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -128,6 +130,8 @@
 		8F364B8C217E5B9200B57FC8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8F364B8F217E5B9200B57FC8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8F364B91217E5B9200B57FC8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F42C5D9521937F7500111835 /* UIViewAnchor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewAnchor.swift; sourceTree = "<group>"; };
+		F42C5D97219382F800111835 /* PlaylistCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -195,6 +199,7 @@
 			children = (
 				7991484121889F8D00120E2D /* Extensions.swift */,
 				7970B6EE2190C3980007F831 /* AppUtility.swift */,
+				F42C5D9521937F7500111835 /* UIViewAnchor.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -230,6 +235,7 @@
 				799DA43C218D3ED300C803E3 /* AlbumCell.swift */,
 				799DA43A218D3E7F00C803E3 /* SongCell.swift */,
 				799DA438218D3D8500C803E3 /* ArtistCell.swift */,
+				F42C5D97219382F800111835 /* PlaylistCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -416,9 +422,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				79CDCF27218874160095CC63 /* SettingsController.swift in Sources */,
+				F42C5D9621937F7500111835 /* UIViewAnchor.swift in Sources */,
 				7743C23B2190587E002CC508 /* Playlist.swift in Sources */,
 				7970B6EF2190C3980007F831 /* AppUtility.swift in Sources */,
 				79CDCF2E21888C690095CC63 /* CategoryCell.swift in Sources */,
+				F42C5D98219382F800111835 /* PlaylistCell.swift in Sources */,
 				77B444762181CD0200B3F536 /* APIManager.swift in Sources */,
 				778BF9A921832CB800448FE6 /* Track.swift in Sources */,
 				7743C2472190A03A002CC508 /* User+CoreDataClass.swift in Sources */,
