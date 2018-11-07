@@ -1,5 +1,5 @@
 const passport = require('passport');
-const FacebookStrategy = require('passport-facebook').Strategy;
+const FacebookStrategy = require('passport-facebook-token');
 const DeezerStrategy = require('passport-deezer').Strategy;
 const LocalStrategy = require('passport-local').Strategy;
 const BearerStrategy = require('passport-bearer-strategy').Strategy;
@@ -37,9 +37,7 @@ module.exports = function () {
 
 	passport.use(new FacebookStrategy({
 		clientID: config.facebook.clientID,
-		clientSecret: config.facebook.clientSecret,
-		profileFields: config.facebook.profileFields,
-		callbackURL: config.facebook.callbackURL
+		clientSecret: config.facebook.clientSecret
 	},
 	function(accessToken, refreshToken, profile, done) {
 		if (!profile.emails[0] || !profile.emails[0].value)
@@ -47,6 +45,9 @@ module.exports = function () {
 		modelUser.findOne({
 			'email': profile.emails[0].value
 		}, function(err, user) {
+			// console.log("STRATEGY FB")
+			// console.log(profile)
+			// return done(null, profile)
 			if (err) {
 				console.log(err);
 				return done(null, false);

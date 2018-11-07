@@ -6,6 +6,8 @@ const fs = require('fs');
 const https = require('https');
 const privateKey  = fs.readFileSync('./sslcert/server.key', 'utf8');
 const certificate = fs.readFileSync('./sslcert/server.crt', 'utf8');
+const cors = require('cors');
+
 
 const credentials = {key: privateKey, cert: certificate};
 
@@ -18,6 +20,13 @@ const bodyParser = require('body-parser');
 
 app.use(compression());
 app.use(helmet());
+var corsOption = {
+  origin: '*',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  exposedHeaders: ['x-auth-token']
+};
+app.use(cors(corsOption));
 
 app.use(bodyParser.urlencoded({
   extended: true
