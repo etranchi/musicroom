@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 import './styles.css';
 import { Divider, Card, Avatar, Icon, Input } from 'antd';
 
+
+
 class CreatorProfil extends Component {
         constructor(props) {
             super(props);
 
+
     }
-
-
+    
 	render() {
 
         return (
@@ -16,10 +18,13 @@ class CreatorProfil extends Component {
                 <div className="title" >
                     <h1 > {this.props.state.data.title || "Aucun"}</h1>
                 </div>
+                <div className="mapLink" >
+                    <i className="fas fa-map" onClick={this.props.updateMap.bind(this)}></i>
+                </div>
                 <div className="iconBlockBody">
                     <div>
                         <Icon  className="iconImage" type="pushpin" theme="outlined" />
-                        <b className="iconName">Paris {/* {this.this.props.state.data.address.v} */} </b>
+                        <b className="iconName"> {this.props.state.data.location.address.v} </b>
                     </div>
                     <div>
                         <Icon className="iconImage"  type="clock-circle" theme="outlined" />

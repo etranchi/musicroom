@@ -1,9 +1,14 @@
 .title {
-    width: 100%;
     font-weight: bold;
     font-size: 40px;
     display: inline-block;
     margin-right: 10px;
+}
+
+.mapLink {
+    color: #03a9f4;
+    font-size: 40px;
+    display: inline-block;
 }
 
 .bodyContent {

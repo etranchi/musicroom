@@ -9,10 +9,12 @@ import SimpleMap from '../simpleMap'
 class LocationSearchInput extends Component {
 	constructor(props) {
     super(props);
-    this.state = { 
-      address: '',
-      coord: '',
-      key: '0'
+    this.state = {
+      location: {
+        address: '',
+        coord: ''
+      },
+      addressObj: '',
     };
     this.handleSelect = this.handleSelect.bind(this);
   }
@@ -24,11 +26,16 @@ class LocationSearchInput extends Component {
   handleSelect = address => {
     geocodeByAddress(address)
       .then(results =>  {
-        this.setState({'address': results[0].formatted_address})
+        let location = {
+          address : results[0],
+
+        }
+        this.setState({'address': results[0].formatted_address}) 
+        this.setState({'addressObj': results[0]})
         getLatLng(results[0]).then(results => {
-          this.setState({'coord': results})
-          this.setState({'key': '1'})
-          this.props.updateLocation({'data': this.state})
+          location.coord = results;
+          this.setState({location: location})
+          this.props.updateLocation(this.state)
         })
       })
       .then(latLng => console.log('Success', latLng))
