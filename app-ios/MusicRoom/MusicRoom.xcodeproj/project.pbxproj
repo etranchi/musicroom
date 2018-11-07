@@ -13,6 +13,9 @@
 		7743C24A2190A23C002CC508 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7743C2492190A23C002CC508 /* UserManager.swift */; };
 		778BF9A921832CB800448FE6 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778BF9A821832CB800448FE6 /* Track.swift */; };
 		77B444762181CD0200B3F536 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B444752181CD0200B3F536 /* APIManager.swift */; };
+		77F5479621932172001B2901 /* AuthenticationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5479521932172001B2901 /* AuthenticationController.swift */; };
+		77F547982193257B001B2901 /* RegisterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F547972193257B001B2901 /* RegisterController.swift */; };
+		77F5479A21932CB2001B2901 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5479921932CB2001B2901 /* User.swift */; };
 		7920E79A218F0BF9008D1DD1 /* CoverContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7920E799218F0BF9008D1DD1 /* CoverContainerView.swift */; };
 		7920E79C218F65CA008D1DD1 /* BackgroundCoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7920E79B218F65CA008D1DD1 /* BackgroundCoverView.swift */; };
 		794334062192F9E50056D261 /* SeeAllSongsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794334052192F9E50056D261 /* SeeAllSongsController.swift */; };
@@ -60,6 +63,9 @@
 		7743C2492190A23C002CC508 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		778BF9A821832CB800448FE6 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		77B444752181CD0200B3F536 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
+		77F5479521932172001B2901 /* AuthenticationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationController.swift; sourceTree = "<group>"; };
+		77F547972193257B001B2901 /* RegisterController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterController.swift; sourceTree = "<group>"; };
+		77F5479921932CB2001B2901 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		7920E799218F0BF9008D1DD1 /* CoverContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverContainerView.swift; sourceTree = "<group>"; };
 		7920E79B218F65CA008D1DD1 /* BackgroundCoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundCoverView.swift; sourceTree = "<group>"; };
 		794334052192F9E50056D261 /* SeeAllSongsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeeAllSongsController.swift; sourceTree = "<group>"; };
@@ -131,7 +137,7 @@
 		8F364B8F217E5B9200B57FC8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8F364B91217E5B9200B57FC8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8FEFE2942191DC420002E966 /* PlaylistCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistCell.swift; sourceTree = "<group>"; };
-		8FEFE2962191E2CD0002E966 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
+		8FEFE2962191E2CD0002E966 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LoginController.swift; path = ../LoginController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,8 +177,19 @@
 				79B15ECF218C700C00B84BCB /* Album.swift */,
 				799DA436218D289400C803E3 /* Artist.swift */,
 				7743C23A2190587E002CC508 /* Playlist.swift */,
+				77F5479921932CB2001B2901 /* User.swift */,
 			);
 			path = Modele;
+			sourceTree = "<group>";
+		};
+		77F54792219320B1001B2901 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				8FEFE2962191E2CD0002E966 /* LoginController.swift */,
+				77F5479521932172001B2901 /* AuthenticationController.swift */,
+				77F547972193257B001B2901 /* RegisterController.swift */,
+			);
+			path = Authentication;
 			sourceTree = "<group>";
 		};
 		79433407219308580056D261 /* SearchControllers */ = {
@@ -214,16 +231,15 @@
 		79CDCF1A21886EE40095CC63 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				77F54792219320B1001B2901 /* Authentication */,
 				799C8BFA219029A3003868A2 /* UICustomisation */,
 				79CDCF1E218870F70095CC63 /* LoadingController.swift */,
 				79CDCF20218871A20095CC63 /* TabBarController.swift */,
 				79CDCF22218873300095CC63 /* PlaylistController.swift */,
 				79433407219308580056D261 /* SearchControllers */,
 				79CDCF282188746D0095CC63 /* LibraryController.swift */,
-				799DA432218D19E900C803E3 /* PlayerController.swift */,
 				79CDCF26218874160095CC63 /* SettingsController.swift */,
 				799DA432218D19E900C803E3 /* PlayerController.swift */,
-				8FEFE2962191E2CD0002E966 /* LoginController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -427,10 +443,12 @@
 				7970B6EF2190C3980007F831 /* AppUtility.swift in Sources */,
 				79CDCF2E21888C690095CC63 /* CategoryCell.swift in Sources */,
 				77B444762181CD0200B3F536 /* APIManager.swift in Sources */,
+				77F5479621932172001B2901 /* AuthenticationController.swift in Sources */,
 				778BF9A921832CB800448FE6 /* Track.swift in Sources */,
 				7743C2472190A03A002CC508 /* User+CoreDataClass.swift in Sources */,
 				79CDCF1F218870F70095CC63 /* LoadingController.swift in Sources */,
 				7743C24A2190A23C002CC508 /* UserManager.swift in Sources */,
+				77F547982193257B001B2901 /* RegisterController.swift in Sources */,
 				79B15ED0218C700C00B84BCB /* Album.swift in Sources */,
 				79B15ECE218C69AA00B84BCB /* MusicCategory.swift in Sources */,
 				8F18989C217F3B4D00CE1A8D /* DeezerManager.swift in Sources */,
@@ -452,6 +470,7 @@
 				79CDCF2B218876ED0095CC63 /* CustomNavigationController.swift in Sources */,
 				8F364B8B217E5B9100B57FC8 /* MusicRoom.xcdatamodeld in Sources */,
 				799DA433218D19E900C803E3 /* PlayerController.swift in Sources */,
+				77F5479A21932CB2001B2901 /* User.swift in Sources */,
 				799DA439218D3D8500C803E3 /* ArtistCell.swift in Sources */,
 				79CDCF23218873300095CC63 /* PlaylistController.swift in Sources */,
 				8FEFE2952191DC420002E966 /* PlaylistCell.swift in Sources */,

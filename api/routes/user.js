@@ -11,10 +11,16 @@ const middlewares = require('../modules/middlewares');
 router.post('/login',
     	passport.authenticate('local', {session: false}), userController.connect
     );
+// 192.....4242/user/login
+// object user dans body mail,mdp
+
 
 router.get('/login/facebook',
 		passport.authenticate('facebook-token', { session: false } ), userController.connect
 	);
+// 192.....4242/user/login/facebook
+// recuperer token depuis mail mdp
+// authorization bearer token fb
 
 
 router.get('/login/deezer',
@@ -63,5 +69,8 @@ router.get('/:id',
 	);
 
 router.post('/', userController.postUser);
+// 192.....4242/user
+// object user dans body login,mail,mdp
+
 
 module.exports = router;

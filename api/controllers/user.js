@@ -25,10 +25,7 @@ let mailOptions = {
 
 
 exports.connect = (req, res) => {
-		res.status(200).json({
-			'token': Crypto.createToken(req.user),
-			'user': Utils.filter(model.schema.obj, req.user, 0)
-		});
+		res.status(200).json({'token': Crypto.createToken(req.user)});
     }
 
 exports.getUsers = async (req, res) => {
