@@ -4,5 +4,19 @@
 }
 
 .profilContent {
-    margin: 2% 0 0 0;
+    width: 60%;
+    margin: 2% 20% 0 20%;
+}
+
+.iconImage {
+    font-size : 30px
+}
+.iconName {
+    padding: 0 3% 0 0
+}
+
+.iconBlock {
+    width: 30%;
+    float: right;
+    padding: 0 0 1% 0
 }

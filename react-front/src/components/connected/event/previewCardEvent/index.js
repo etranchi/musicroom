@@ -47,8 +47,13 @@ class PreviewCardEvent extends Component {
 			fontSize: '18px',
 		}
 		this.iconEditionBlockStyle = {
-            width: '25%',
-		}
+            position: 'absolute',
+            bottom: '0',
+            width:"225px"
+        }
+        this.iconBlockStyle = {
+            padding : "20% 0 0 0 "
+        }
     }
     
     openCard = (e) => {
@@ -56,9 +61,7 @@ class PreviewCardEvent extends Component {
         this.props.updateParent({'currentComponent': 'cardEvent', 'data': this.props.event})
     }
 	render() {
-        console.log("Je suis ici")
-        console.log(this.props)
-        return (
+            return (
                 <Card title={this.props.event.title} style={this.card}>
                     <Card.Grid style={this.gridStyleProfile}>
                         <Card.Meta
@@ -67,7 +70,7 @@ class PreviewCardEvent extends Component {
                             title= {this.props.event.creator && this.props.event.creator.login ? this.props.event.creator.login : "Aucun" }
                         />
                         <div style={this.descritpionBlockStyle}>
-                            <b> { this.props.event.descritpion ? this.props.event.descritpion : "Aucune descritpion ..." }</b>
+                            <b> { this.props.event.description ? this.props.event.description.substring(0, 190) :  " Aucune descritpion ... " }</b>
                         </div>
                         <div style={this.iconEditionBlockStyle}>
                         <Icon style={this.iconEditionStyle} onClick={this.openCard.bind(this)} type="setting" theme="outlined" />

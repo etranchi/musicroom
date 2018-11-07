@@ -26,7 +26,7 @@ const Event = new Schema({
 	date: {type: Date, default: Date.now},
 	playlist: {type: Playlist.schema},
 	members : [User.schema],
-	picture: {type: String},
+	picture: {type: String, default: "default.jpeg"},
 	adminMembers: [User.schema]
 
 }, { versionKey: false });
