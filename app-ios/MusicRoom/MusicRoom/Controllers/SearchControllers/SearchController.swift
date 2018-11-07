@@ -14,7 +14,7 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     private let searchCellId = "searchCellId"
     
     let manager = APIManager()
-    let initialSearch = "Deadmau5"
+    var initialSearch = "Deadmau5"
     
     var musicCategories: [MusicCategory]?
 
@@ -22,6 +22,12 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
         super.viewWillAppear(animated)
         
         self.navigationController?.navigationBar.topItem?.title = "Search"
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        self.navigationController?.navigationBar.topItem?.title = ""
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,6 +46,7 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     
     func handleSearch(_ text: String) {
         musicCategories?.removeAll()
+        initialSearch = text
         performSearch(text) { (albums, tracks, artists) in
             self.musicCategories = MusicCategory.sampleMusicCategories(albums, tracks, artists)
             self.collectionView?.reloadData()
@@ -69,7 +76,8 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     }
     
     func showTrackList() {
-        print("show full list of songs")
+        let vc = SeeAllSongsController(musicCategories![1].tracks, initialSearch)
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     func showPlayerForSong(_ index: Int) {
