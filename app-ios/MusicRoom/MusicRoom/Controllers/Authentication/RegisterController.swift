@@ -1,31 +1,35 @@
 //
-//  LoginController.swift
+//  RegisterController.swift
 //  MusicRoom
 //
-//  Created by Etienne Tranchier on 06/11/2018.
+//  Created by Etienne TRANCHIER on 11/7/18.
 //  Copyright © 2018 Etienne Tranchier. All rights reserved.
 //
 
 import UIKit
 
-class LoginController: UIViewController, UITextFieldDelegate {
+class RegisterController: UIViewController, UITextFieldDelegate {
     let userManager : UserManager = UserManager()
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         view.backgroundColor = .black
-        setupView()
-        setupButton()
+        
         loginTF.delegate = self
         loginTF.tag = 0
+        emailTF.delegate = self
+        emailTF.tag = 1
         passTF.delegate = self
-        passTF.tag = 1
+        passTF.tag = 2
+        setupView()
+        setupButton()
+        
     }
-    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         switch textField.tag {
-        case 0 : passTF.becomeFirstResponder()
-        case 1 : handleLogin()
+        case 0 : emailTF.becomeFirstResponder()
+        case 1 : passTF.becomeFirstResponder()
+        case 2 : handleRegister()
         default : return true
         }
         return true
@@ -39,7 +43,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         tf.textColor = .white
         tf.returnKeyType = .done
         tf.enablesReturnKeyAutomatically = true
-        tf.attributedPlaceholder = NSAttributedString(string: "Email", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white])
+        tf.attributedPlaceholder = NSAttributedString(string: "Login", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white])
         tf.backgroundColor = UIColor.gray
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
@@ -48,14 +52,13 @@ class LoginController: UIViewController, UITextFieldDelegate {
     func setupButton() {
         let button = UIButton(type: .roundedRect)
         button.titleEdgeInsets = UIEdgeInsets(top: -10,left: -10,bottom: -10,right: -10)
-        button.setTitle("Register", for: .normal)
         button.backgroundColor = UIColor.gray
         button.layer.cornerRadius = 8
-        button.setAttributedTitle(NSAttributedString(string: "Login", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
-        button.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
+        button.setAttributedTitle(NSAttributedString(string: "Register", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
+        button.addTarget(self, action: #selector(handleRegister), for: .touchUpInside)
         view.addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false
-
+        
         NSLayoutConstraint.activate([
             button.topAnchor.constraint(equalTo: passTF.bottomAnchor, constant: 10),
             button.widthAnchor.constraint(equalTo: passTF.widthAnchor, multiplier: 0.3),
@@ -78,7 +81,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         iv.contentMode = .scaleAspectFit
         iv.translatesAutoresizingMaskIntoConstraints = false
         iv.layer.masksToBounds = true
-
+        
         return iv
     }()
     
@@ -97,21 +100,32 @@ class LoginController: UIViewController, UITextFieldDelegate {
         return tf
     }()
     
-    @objc func handleLogin() {
-        print("Login")
-        var user = User(login: loginTF.text!, email: "", password: passTF.text!, token: nil)
+    let emailTF : UITextField = {
+        let tf = UITextField()
+        tf.font = UIFont.systemFont(ofSize: 14, weight: .light)
+        tf.textAlignment = .center
+        tf.backgroundColor = UIColor.gray
+        tf.borderStyle = .roundedRect
+        tf.textColor = .white
+        tf.returnKeyType = .done
+        tf.enablesReturnKeyAutomatically = true
+        tf.attributedPlaceholder = NSAttributedString(string: "Email", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white])
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        return tf
+    }()
+    
+    @objc func handleRegister() {
+        print("Register")
+        // let user = User(login : loginTF.text!, email: emailTF.text!, password: passTF.text!, token: nil)
         let apiManager = APIManager()
         let json = [
+            "login" : "coucou",
             "email" : "toto@yopmail.fr",
-            "password" : "totototo"
+            "password" : "toto"
         ]
         let data = try? JSONSerialization.data(withJSONObject: json, options: [])
-
-        apiManager.loginUser(data) { (json) in
-            user.token = json
-        }
-        print(user.token)
-
+        
+        apiManager.registerUser(data)
     }
     
     func setupView() {
@@ -119,11 +133,12 @@ class LoginController: UIViewController, UITextFieldDelegate {
         self.view.addSubview(passTF)
         self.view.addSubview(welcomeTF)
         self.view.addSubview(imageDeezer)
+        self.view.addSubview(emailTF)
         imageDeezer.image = UIImage(named: "logo_deezer")
         NSLayoutConstraint.activate([
             imageDeezer.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
             imageDeezer.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
-            imageDeezer.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.3),
+            imageDeezer.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.2),
             imageDeezer.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
             welcomeTF.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier : 0.9),
@@ -131,24 +146,27 @@ class LoginController: UIViewController, UITextFieldDelegate {
             welcomeTF.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
             loginTF.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.6),
-            loginTF.topAnchor.constraint(equalTo: welcomeTF.bottomAnchor, constant: 125),
+            loginTF.topAnchor.constraint(equalTo: welcomeTF.bottomAnchor, constant: 75),
             loginTF.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
+            emailTF.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.6),
+            emailTF.topAnchor.constraint(equalTo: loginTF.bottomAnchor, constant: 10),
+            emailTF.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
             passTF.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.6),
-            passTF.topAnchor.constraint(equalTo: loginTF.bottomAnchor, constant: 10),
+            passTF.topAnchor.constraint(equalTo: emailTF.bottomAnchor, constant: 10),
             passTF.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
             
             ])
     }
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destination.
+     // Pass the selected object to the new view controller.
+     }
+     */
 }

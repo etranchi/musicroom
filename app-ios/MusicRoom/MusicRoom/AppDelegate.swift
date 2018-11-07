@@ -27,7 +27,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow()
         window?.makeKeyAndVisible()
         //window?.rootViewController = TabBarController()
-        window?.rootViewController = LoginController()
+        let nav = CustomNavigationController(rootViewController: AuthenticationController())
+        window?.rootViewController = nav
         return true
     }
 

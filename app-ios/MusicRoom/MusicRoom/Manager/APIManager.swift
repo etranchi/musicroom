@@ -51,6 +51,55 @@ class APIManager: NSObject, URLSessionDelegate {
         })
     }
     
+    func registerUser(_ user : Data?) {
+        let registerUrl = self.url + "user/"
+        var registerRequest = URLRequest(url: URL(string: registerUrl)!)
+        print("je fais bien une requete")
+        registerRequest.httpMethod = "POST"
+        registerRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        registerRequest.httpBody = user
+        
+        URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: registerRequest) { (data, response, err) in
+            print("yoooo")
+            if err != nil {
+                print("error while requesting")
+            }
+            do {
+                let responseJSON = try JSONSerialization.jsonObject(with: data!, options: [])
+                if let responseJSON = responseJSON as? [String: Any] {
+                    print(responseJSON)
+                }
+            }
+            catch (let err){
+                print(err.localizedDescription)
+            }
+        }.resume()
+    }
+    
+    func loginUser(_ json : Data?, completion : @escaping (String) -> ()) {
+        let loginUrl = self.url + "user/login"
+        var loginRequest = URLRequest(url: URL(string: loginUrl)!)
+        loginRequest.httpMethod = "POST"
+        loginRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        loginRequest.httpBody = json
+        
+        URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: loginRequest) { (data, response, err) in
+            if err != nil {
+                print("error while requesting")
+            }
+            do {
+                let responseJSON = try JSONSerialization.jsonObject(with: data!, options: [])
+                if let responseJSON = responseJSON as? [String: Any] {
+                    completion(responseJSON["token"] as! String)
+                }
+            }
+            catch (let err){
+                print("ici")
+                print(err.localizedDescription)
+            }
+            }.resume()
+    }
+    
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         completionHandler(.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
     }
