@@ -8,6 +8,22 @@ const Joi 	= require('joi');
 const config = require('../config/config.json');
 const argon = require('argon2');
 
+const nodemailer = require('nodemailer');
+const transporter = nodemailer.createTransport({
+    service: config.mail.service,
+    auth: {
+           user: config.mail.email,
+           pass: config.mail.password
+       }
+   });
+let mailOptions = {
+    from: config.mail.email, // sender address
+    to: config.mail.email, // list of receivers
+    subject: 'Music room token', // Subject line
+    html: '<p>Your html here</p>'// plain text body
+};
+
+
 exports.connect = (req, res) => {
 		res.status(200).json({
 			'token': Crypto.createToken(req.user),
@@ -47,6 +63,13 @@ exports.postUser = async (req, res) => {
 		user.password = await argon.hash(user.password);
 		user = await model.create(user);
 		// MAIL -> FrontUrl/token and send response "User created"
+		// mailOptions.html = "click on <a href='FRONT ROUTE/confirm?token=" + Crypto.createToken(user) + "'>this link</a> to confirm your account"
+		// transporter.sendMail(mailOptions, function (err, info) {
+		// 	if(err)
+		// 	  console.log(err)
+		// 	else
+		// 	  console.log(info);
+		//  });
 		res.status(201).send({'token': Crypto.createToken(user)})
 	} catch (err) {
 		console.error("Error postUser : " + err.toString());

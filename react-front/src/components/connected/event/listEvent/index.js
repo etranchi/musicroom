@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import './styles.css';
 import axios from 'axios'
-import PreviewCard from '../previewCardEvent'
 
 class ListEvent extends Component {
 	constructor(props) {
         super(props);
         this.state = {
 			events: [],
-			isloading:false
+			loading:false
 		}
 		this.onLoad = false;
 		this.getEvents()
@@ -26,6 +25,7 @@ class ListEvent extends Component {
 		})
 	}
 
+
 	// deleteEvent = () => {
 	// 	axios.delete('https://192.168.99.100:4242/event');
 	// 	console.log("Event Trashed.");
@@ -36,7 +36,7 @@ class ListEvent extends Component {
 		if (this.props.state.currentComponent != "listEvent" && this.onLoad === false) {
 			this.onLoad = true;
 		}
-		if(this.state.events.length === 0 ) {
+		if(this.state.loading === true ) {
 			this.onLoad = false;
 			return <div>Loading...</div>
 		}
