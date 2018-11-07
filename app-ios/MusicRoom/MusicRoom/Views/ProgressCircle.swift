@@ -33,7 +33,7 @@ class ProgressCircle: UIView {
         shapeLayer.strokeEnd = 0
         shapeLayer.fillColor = UIColor.clear.cgColor
         //shapeLayer.lineCap = CAShapeLayerLineCap.round
-        shapeLayer.lineCap = kCALineCapRound
+        shapeLayer.lineCap = CAShapeLayerLineCap.round
         
         
         layer.addSublayer(shapeLayer)

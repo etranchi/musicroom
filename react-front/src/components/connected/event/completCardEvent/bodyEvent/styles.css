@@ -1,0 +1,31 @@
+.title {
+    width: 100%;
+    font-weight: bold;
+    font-size: 40px;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.bodyContent {
+    width: 60%;
+    margin: 2% 20% 0 20%;
+}
+
+.iconBlockBody {
+    height:80px;
+    border-left: 1px solid #03a9f4;
+}
+
+.iconBlockBody div {
+    display: inline-block;
+    padding: 2% 0 0 4%;
+}
+
+.descriptionBlockBody {
+    margin: 5% 0 0 0
+}
+
+.inlineMember {
+    padding: 0 0.5% 0 0;
+    display: inline-block;
+}

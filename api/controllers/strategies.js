@@ -1,5 +1,6 @@
 const passport = require('passport');
 const FacebookStrategy = require('passport-facebook-token');
+const GoogleTokenStrategy = require('passport-google-token').Strategy;
 const DeezerStrategy = require('passport-deezer').Strategy;
 const LocalStrategy = require('passport-local').Strategy;
 const BearerStrategy = require('passport-bearer-strategy').Strategy;
@@ -86,6 +87,60 @@ module.exports = function () {
 		});
 	}));
 
+	passport.use(new GoogleTokenStrategy({
+		clientID: config.google.clientID,
+		clientSecret: config.google.clientSecret
+	},
+	function(accessToken, refreshToken, profile, done) {
+		console.log("COUCOU")
+		console.log(profile)
+		if (!profile.emails[0] || !profile.emails[0].value)
+			return done(null, false);
+		modelUser.findOne({
+			'email': profile.emails[0].value
+		}, function(err, user) {
+
+			if (err) {
+				console.log(err);
+				return done(null, false);
+			}
+			if (!user) {
+				user = new modelUser({
+					googleId: profile.id,
+					googleToken: profile.accessToken,
+					email: profile.emails[0].value,
+					login: !profile.username ? profile.displayName : profile.username,
+					picture: profile.picture,
+					status: 'Active'
+				});
+				modelUser.create(user, function(err) {
+					if (err) {
+						console.log(err);
+						return done(null, false);
+					}
+					return done(null, user);
+				});
+			} else {
+				if (!user.googleId || !user.googleToken)
+				{
+					modelUser.updateOne({_id: user._id}, {
+						googleId: profile.id,
+						googleToken: accessToken,
+						status: 'Active'
+					}, function(err, user) {
+						if (err) {
+							console.log(err);
+							return done(null, false);
+						}
+						return done(null, user);
+					});
+				}
+				return done(null, user);
+			}
+			return done(null, false);
+		});
+	}));
+
 	passport.use(new LocalStrategy({
 		usernameField: 'email',
 		passwordField: 'password',
@@ -112,6 +167,7 @@ module.exports = function () {
 			});
 		})
 	}));
+
 
 	passport.use(new BearerStrategy({
 		passReqToCallback: true

@@ -54,13 +54,11 @@ class APIManager: NSObject, URLSessionDelegate {
     func registerUser(_ user : Data?) {
         let registerUrl = self.url + "user/"
         var registerRequest = URLRequest(url: URL(string: registerUrl)!)
-        print("je fais bien une requete")
         registerRequest.httpMethod = "POST"
         registerRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         registerRequest.httpBody = user
         
         URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: registerRequest) { (data, response, err) in
-            print("yoooo")
             if err != nil {
                 print("error while requesting")
             }
@@ -87,9 +85,11 @@ class APIManager: NSObject, URLSessionDelegate {
             if err != nil {
                 print("error while requesting")
             }
+            print(response)
             do {
-                let responseJSON = try JSONSerialization.jsonObject(with: data!, options: [])
+                let responseJSON = try JSONSerialization.jsonObject(with: data!, options: .mutableLeaves)
                 if let responseJSON = responseJSON as? [String: Any] {
+                    print(responseJSON)
                     completion(responseJSON["token"] as! String)
                 }
             }

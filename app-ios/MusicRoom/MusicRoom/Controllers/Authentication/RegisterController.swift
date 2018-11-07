@@ -43,7 +43,7 @@ class RegisterController: UIViewController, UITextFieldDelegate {
         tf.textColor = .white
         tf.returnKeyType = .done
         tf.enablesReturnKeyAutomatically = true
-        tf.attributedPlaceholder = NSAttributedString(string: "Login", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white])
+        tf.attributedPlaceholder = NSAttributedString(string: "Login", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
         tf.backgroundColor = UIColor.gray
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
@@ -54,7 +54,7 @@ class RegisterController: UIViewController, UITextFieldDelegate {
         button.titleEdgeInsets = UIEdgeInsets(top: -10,left: -10,bottom: -10,right: -10)
         button.backgroundColor = UIColor.gray
         button.layer.cornerRadius = 8
-        button.setAttributedTitle(NSAttributedString(string: "Register", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
+        button.setAttributedTitle(NSAttributedString(string: "Register", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white]), for: .normal)
         button.addTarget(self, action: #selector(handleRegister), for: .touchUpInside)
         view.addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -94,7 +94,7 @@ class RegisterController: UIViewController, UITextFieldDelegate {
         tf.textColor = .white
         tf.returnKeyType = .done
         tf.enablesReturnKeyAutomatically = true
-        tf.attributedPlaceholder = NSAttributedString(string: "Password", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white])
+        tf.attributedPlaceholder = NSAttributedString(string: "Password", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.isSecureTextEntry = true
         return tf
@@ -109,7 +109,7 @@ class RegisterController: UIViewController, UITextFieldDelegate {
         tf.textColor = .white
         tf.returnKeyType = .done
         tf.enablesReturnKeyAutomatically = true
-        tf.attributedPlaceholder = NSAttributedString(string: "Email", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white])
+        tf.attributedPlaceholder = NSAttributedString(string: "Email", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
     }()
@@ -124,7 +124,6 @@ class RegisterController: UIViewController, UITextFieldDelegate {
             "password" : "toto"
         ]
         let data = try? JSONSerialization.data(withJSONObject: json, options: [])
-        
         apiManager.registerUser(data)
     }
     

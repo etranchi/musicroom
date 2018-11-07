@@ -8,6 +8,12 @@ const User = new Schema({
 	facebookToken: {
 		type: String
 	},
+	googleId: {
+		type: String
+	},
+	googleToken: {
+		type: String
+	},
 	deezerToken: {
 		type: String
 	},
@@ -37,7 +43,8 @@ const User = new Schema({
 	creationDate: {
 		type: Date,
 		default: Date()
-	}
+	},
+	picture: {type: String, default: "default.jpeg"}
 }, { versionKey: false });
 
 module.exports = mongoose.model('user', User);

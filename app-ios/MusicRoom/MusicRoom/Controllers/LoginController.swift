@@ -39,7 +39,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         tf.textColor = .white
         tf.returnKeyType = .done
         tf.enablesReturnKeyAutomatically = true
-        tf.attributedPlaceholder = NSAttributedString(string: "Email", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white])
+        tf.attributedPlaceholder = NSAttributedString(string: "Email", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
         tf.backgroundColor = UIColor.gray
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
@@ -51,7 +51,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         button.setTitle("Register", for: .normal)
         button.backgroundColor = UIColor.gray
         button.layer.cornerRadius = 8
-        button.setAttributedTitle(NSAttributedString(string: "Login", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
+        button.setAttributedTitle(NSAttributedString(string: "Login", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white]), for: .normal)
         button.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
         view.addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -91,7 +91,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         tf.textColor = .white
         tf.returnKeyType = .done
         tf.enablesReturnKeyAutomatically = true
-        tf.attributedPlaceholder = NSAttributedString(string: "Password", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white])
+        tf.attributedPlaceholder = NSAttributedString(string: "Password", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.isSecureTextEntry = true
         return tf
@@ -106,7 +106,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
             "password" : "totototo"
         ]
         let data = try? JSONSerialization.data(withJSONObject: json, options: [])
-
+        print(JSONSerialization.isValidJSONObject(json))
         apiManager.loginUser(data) { (json) in
             user.token = json
         }
