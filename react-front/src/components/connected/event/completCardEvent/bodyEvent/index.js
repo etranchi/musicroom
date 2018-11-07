@@ -50,7 +50,7 @@ class CreatorProfil extends Component {
                                     avatar={<Avatar src={"https://192.168.99.100:4242/eventPicture/" + member.picture} />}
                                     title= {member.login}
                                 />
-                               )
+                            )
                         })
                     }
                     </div> 

@@ -10,9 +10,7 @@ class Event extends Component {
 		super(props);
 	}
 	render() {
-		{console.log("Base event : ", this.props.state.currentComponent)}
 		if (this.props.state.currentComponent === "cardEvent") {
-			console.log("Get card")
 			return (<CardEvent state={this.props.state} updateParent={this.props.updateParent} />)
 		}
 		else {

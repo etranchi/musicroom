@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './styles.css';
 import axios from 'axios'
+import PreviewCard from '../previewCardEvent'
 
 class ListEvent extends Component {
 	constructor(props) {
