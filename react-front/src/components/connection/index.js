@@ -19,6 +19,17 @@ class Connection extends Component {
   }
   responseFacebook(response) {
   if (response.accessToken)
+  {
+    axios.get('https://192.168.99.100:4242/user/login/facebook', {'headers':{'Authorization':'Bearer '+ response.accessToken}})
+    .then((resp) => {
+      localStorage.setItem('token', resp.data.token)
+      this.props.updateParent({'token':resp.data.token, 'currentComponent': 'event'});
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+    
     console.log(response.accessToken);
 }
   render() {
@@ -27,9 +38,9 @@ class Connection extends Component {
       	<div style={{'textAlign':'center', 'margin': '1em'}}>	
         <FacebookLogin
           appId="711181125906087"
-          autoLoad={true}
+          autoLoad={false}
           fields="name,email,picture" 
-          callback={this.responseFacebook} />
+          callback={this.responseFacebook.bind(this)} />
         {this.props.state.currentComponent === 'register'? <Button type="primary" onClick={this.loginFacebook}>facebook</Button> : null}
       	{this.props.state.currentComponent === 'register'? <Button type="primary" onClick={this.props.updateParent.bind(this, {'currentComponent':'login'})}>Login</Button> : null}
       	{this.props.state.currentComponent === 'login'? <Button type="primary" onClick={this.props.updateParent.bind(this, {'currentComponent':'register'})}>Register</Button> : null}
