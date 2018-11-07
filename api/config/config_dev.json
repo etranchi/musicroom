@@ -8,6 +8,7 @@
 		"apiUrl": "https://api.deezer.com",
 		"clientID": "",
         "clientSecret": "",
+
 		"callbackURL": "/oauth/deezer/callback",
 		"scope": [
 			"basic_access",
