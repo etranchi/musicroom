@@ -3,33 +3,34 @@ import './styles.css';
 import List from './list'
 import Tracks from './tracks'
 import SearchBar from '../searchbar'
+import axios from 'axios'
 
 class Playlist extends Component {
-	constructor(props) {
+	constructor(props){
 		super(props);
-		this.state = {
-			current: {name: 'list', id: '', tracks: []}
-		}
-		// this.componentDidUpdate = this.componentDidUpdate.bind(this);
+		console.log('before');
+		console.log(this.props);
 	}
-
-	componentDidUpdate(prevProps){
-		if (this.state.current.name === 'tracks')
-			// this.setState({current: {name: 'list'}})
-			this.state.current.name = 'list'
+	updateTracks(item){
+		axios.get('https://192.168.99.100:4242/playlist/'+ item.id)
+		.then((resp) => {
+			console.log('resp =>');
+			console.log(resp.data.tracks.data)
+			this.props.updateParent({'currentComponent': 'tracks', 'data': resp.data.tracks.data});
+		})
+		.catch((err) => {
+			console.log('Playlist error');
+			console.log(err);
+		})
+		
+		
 	}
-
-	updateState = (val) => {
-		this.setState(val);
-	};
-
 	render() {
 	return (
 		<div>
-		<SearchBar/>
-		{this.state.current.name === 'list'? <List state={this.updateState}/> : null}
-		{this.state.current.name === 'tracks'? <Tracks tracks={this.state.current.tracks} state={this.updateState}/> : null}
-		{/* {this.state.current.name === 'music'? <Setting/> : null} */}
+		<SearchBar updateTracks={this.updateTracks.bind(this)}/>
+		{this.props.state.currentComponent === 'playlist'? <List updateParent={this.props.updateParent}/> : null}
+		{this.props.state.currentComponent === 'tracks'? <Tracks tracks={this.props.state.data} updateParent={this.props.updateParent}/> : null}
 		</div>
 	);
   }
