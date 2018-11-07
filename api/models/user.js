@@ -5,6 +5,9 @@ const User = new Schema({
 	facebookId: {
 		type: String
 	},
+	facebookToken: {
+		type: String
+	},
 	deezerToken: {
 		type: String
 	},

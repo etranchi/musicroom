@@ -2,10 +2,32 @@ import React, { Component } from 'react';
 import './styles.css';
 import defaultTrackImg from '../../../../assets/track.png'
 import moment from 'moment'
+import axios from 'axios'
+
+
 
 class Tracks extends Component {
+	constructor(props){
+		super(props);
+		this.state = {
+			tracks: [],
+			isloading: false
+		}
+	}
+	componentDidMount() {
+		this.setState({isloading: true});
+		axios.get('https://192.168.99.100:4242/playlist/' + this.props.state.id, {'headers':{'Authorization': 'Bearer ' + localStorage.getItem('token')}})
+		.then((resp) => {
+			this.setState({tracks: resp.data.tracks.data, isloading:false})
+		})
+		.catch((err) => {
+			this.setState({tracks: [], isloading:false})
+			console.log('Playlist error');
+			console.log(err);
+		})
+	}
 	render() {
-		if( this.props.tracks[0] === undefined ) {
+		if( this.state.isloading === true ) {
 			return (
 				<div>
 					<a href="#!" className="btn waves-effect waves-teal" onClick={this.props.updateParent.bind(this,{'currentComponent': 'playlist', 'data': []})}>Back</a>
@@ -17,7 +39,7 @@ class Tracks extends Component {
 			<div>
 				<a href="#!" className="btn waves-effect waves-teal" onClick={this.props.updateParent.bind(this,{'currentComponent': 'playlist', 'data': []})}>Back</a>
 				<ul className="collection">
-					{this.props.tracks.map((val, i) => {
+					{this.state.tracks.map((val, i) => {
 						return (
 							<li className="collection-item avatar" key={i}>
 								<img src={val.album ? val.album.cover_small || defaultTrackImg : defaultTrackImg} alt="" className="circle"/>
