@@ -24,7 +24,7 @@ class TabBarController: UITabBarController {
     fileprivate func setupBlurTabBar() {
         tabBar.tintColor = .white
         tabBar.backgroundImage = UIImage()
-        tabBar.backgroundColor = UIColor(white: 0.1, alpha: 0.6)
+        tabBar.backgroundColor = UIColor(white: 0.4, alpha: 0.6)
         let bounds = tabBar.bounds
         let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
         visualEffectView.isUserInteractionEnabled = false

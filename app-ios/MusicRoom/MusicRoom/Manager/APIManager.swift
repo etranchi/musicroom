@@ -52,7 +52,6 @@ class APIManager: NSObject, URLSessionDelegate {
             }
             if let d = data {
                 do {
-                    print(myType.self)
                     let dic = try JSONDecoder().decode(myType.self, from: d)
                     DispatchQueue.main.async {
                         completion(dic)

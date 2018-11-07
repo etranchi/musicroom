@@ -75,6 +75,7 @@ class SongCell: UICollectionViewCell {
         
         label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
         label.textColor = .lightGray
+        label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "..."
         return label
@@ -95,7 +96,7 @@ class SongCell: UICollectionViewCell {
             
             titleLabel.topAnchor.constraint(equalTo: imageView.topAnchor),
             titleLabel.heightAnchor.constraint(lessThanOrEqualToConstant: 30),
-            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
+            titleLabel.trailingAnchor.constraint(equalTo: dotsLabel.leadingAnchor, constant: -5),
             titleLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 14),
             
             authorLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
@@ -108,9 +109,9 @@ class SongCell: UICollectionViewCell {
             timeLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             timeLabel.leadingAnchor.constraint(equalTo: authorLabel.leadingAnchor),
             
-            dotsLabel.rightAnchor.constraint(lessThanOrEqualTo: safeAreaLayoutGuide.rightAnchor),
+            dotsLabel.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor),
             dotsLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            dotsLabel.widthAnchor.constraint(equalToConstant: 40),
+            dotsLabel.widthAnchor.constraint(equalToConstant: 20),
             dotsLabel.heightAnchor.constraint(equalToConstant: 30)
         ])
     }
