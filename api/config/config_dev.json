@@ -32,6 +32,19 @@
 			"email"
 		]
 	},
+    "google": {
+        "clientID": "",
+        "clientSecret": "",
+        "scope": [
+            "email"
+        ],
+        "profileFields": [
+            "id",
+            "displayName",
+            "photos",
+            "email"
+        ]
+    },
 	"mail": {
 		"email": "",
 		"password": "",
