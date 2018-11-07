@@ -11,6 +11,9 @@
         "callbackURL": "/oauth/deezer/callback",
         "scope": [
             "basic_access",
+            "offline_access",
+            "manage_library",
+            "delete_library",
             "email"
         ]
     },
@@ -27,5 +30,10 @@
             "photos",
             "email"
         ]
+    },
+    "mail": {
+        "email": "",
+        "password": "",
+        "service": "gmail"
     }
 }
