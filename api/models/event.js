@@ -6,7 +6,7 @@ const Playlist 		= require('../models/playlist');
 const Event = new Schema({
 	creator: {type: User.schema},
 	title:{type: String, default: "Aucun"},
-	description:{type: String, default: "Aucun"},
+	description:{type: String, default: "à définir"},
 	location: {
 		address : {
 			p: {type: String},

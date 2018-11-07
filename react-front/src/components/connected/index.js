@@ -78,7 +78,7 @@ class Connected extends Component {
 		        </Row>
           </Header>
           <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: this.state.height }}>
-            {this.props.state.currentComponent === 'event'? <Event state={this.props.state} updateParent={this.props.updateParent}/> : null}
+            {this.props.state.currentComponent === 'event' || this.props.state.currentComponent === 'cardEvent'? <Event state={this.props.state} updateParent={this.props.updateParent}/> : null}
 	 		{this.props.state.currentComponent === 'playlist' || this.props.state.currentComponent === 'tracks'? <Playlist state={this.props.state} updateParent={this.props.updateParent}/> : null}
 	 		{this.props.state.currentComponent === 'setting'? <Setting state={this.props.state} updateParent={this.props.updateParent}/> : null}
           </Content>
