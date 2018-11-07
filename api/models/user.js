@@ -8,6 +8,12 @@ const User = new Schema({
 	facebookToken: {
 		type: String
 	},
+	googleId: {
+		type: String
+	},
+	googleToken: {
+		type: String
+	},
 	deezerToken: {
 		type: String
 	},
