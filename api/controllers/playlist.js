@@ -29,6 +29,29 @@ module.exports = {
 			res.status(400).json(err)
 		}
 	},
+	getPlaylistById: async (req, res) => {
+		try {
+			let playlist = {}
+			if (!Number(req.params.id))
+				playlist = await playlistModel.findOne({'_id': req.params.id})
+			else {
+				let options = {
+					method: 'GET',
+					uri: config.deezer.apiUrl + '/playlist/' + req.params.id,
+					json: true
+				};
+				playlist = await request(options)
+				if (playlist.id) {
+					return res.status(200).json(playlist);
+				}
+				playlist = {}
+			}
+			res.status(200).json(playlist || {});
+		} catch (err) {
+			console.log("Bad Request getPlaylistUserById" + err)
+			res.status(400).json(err);
+		}
+	},
 	getPlaylistUserById: async (req, res) => {
 		try {
 			let playlist = {}

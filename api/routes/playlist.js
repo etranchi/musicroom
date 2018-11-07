@@ -16,6 +16,11 @@ router.get('/',
 router.get('/:id',
     passport.authenticate('bearer'),
     middlewares.isConfirmed,
+    playlistController.getPlaylistById);
+
+router.get('/me/:id',
+    passport.authenticate('bearer'),
+    middlewares.isConfirmed,
     playlistController.getPlaylistUserById);
 
 router.post('/',

@@ -21,7 +21,8 @@ class SearchBar extends Component {
 			this.setState({'value': value});
 			axios.get('https://192.168.99.100:4242/search/playlist?q='+ value)
 			.then((resp) => {
-				this.setState({list: resp.data.data})
+				console.log(resp);
+				this.setState({'list': resp.data.data || []});
 			})
 			.catch((err) => {
 				console.log('Playlist error');
@@ -33,7 +34,7 @@ class SearchBar extends Component {
 	render() {
 		const { list } = this.state;
 		const children = list.map((item) => {
-	      return <AutoComplete.Option onClick={(e) => this.props.updateTracks(item)} key={item.id}>{item.title}</AutoComplete.Option>;
+	      return <AutoComplete.Option onClick={(e) => this.props.updateParent({'currentComponent': 'tracks', 'id': item._id || item.id})} key={item.id}>{item.title}</AutoComplete.Option>;
 	    });
 	return (
 		<AutoComplete
