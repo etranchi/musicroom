@@ -78,6 +78,8 @@ class PlaylistHomeController: UICollectionViewController, UICollectionViewDelega
     private let searchCellId = "searchCellId"
     private let playlistsCellId = "playlistCellId"
     
+    fileprivate var longPressGesture: UILongPressGestureRecognizer!
+    
     let manager = APIManager()
     let initialSearch = "Daft Punk"
     
@@ -93,6 +95,7 @@ class PlaylistHomeController: UICollectionViewController, UICollectionViewDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         createPlaylistArray()
+        longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(self.handleLongGesture(gesture:)))
         collectionView?.backgroundColor = UIColor(white: 0.15, alpha: 1)
         collectionView?.alwaysBounceVertical = true
         collectionView?.register(CategoryCell.self, forCellWithReuseIdentifier: categoryCellId)
@@ -103,21 +106,32 @@ class PlaylistHomeController: UICollectionViewController, UICollectionViewDelega
             self.currentUser = PlaylistByUserId.samplePlaylistById(playlist)
             self.collectionView?.reloadData()
         }
+    }
+    
+    func handleSearch(_ text: String) {
         
-        /*performSearch(initialSearch) { (albums, tracks, artists) in
-         self.musicCategories = MusicCategory.sampleMusicCategories(albums, tracks, artists)
-         self.collectionView?.reloadData()
-         }*/
+    }
+    
+    @objc func handleLongGesture(gesture: UILongPressGestureRecognizer) {
+        switch(gesture.state) {
+        case .began:
+            guard let selectedIndexPath = collectionView?.indexPathForItem(at: gesture.location(in: collectionView)) else {
+                break
+            }
+            collectionView?.beginInteractiveMovementForItem(at: selectedIndexPath)
+        case .changed:
+            collectionView?.updateInteractiveMovementTargetPosition(gesture.location(in: gesture.view!))
+        case .ended:
+            collectionView?.endInteractiveMovement()
+        default:
+            collectionView?.cancelInteractiveMovement()
+        }
     }
     
     func performPlaylistByUserId(_ userId: Int, completion: @escaping ([Playlist]) -> ()) {
         manager.playlistsByUserId(userId) { (playlists) in
             completion(playlists)
         }
-    }
-    
-    func handleSearch(_ text: String) {
-        
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -130,14 +144,10 @@ class PlaylistHomeController: UICollectionViewController, UICollectionViewDelega
             let playlistsCell = collectionView.dequeueReusableCell(withReuseIdentifier: playlistsCellId, for: indexPath) as! PlaylistCell
             print(indexPath.item)
             print(playlists[indexPath.item - 1])
+            print(playlists[indexPath.row - 1])
             let currentLastItem = playlists[indexPath.item - 1]
             playlistsCell.playlist = currentLastItem
             return playlistsCell
-        /*let cell = collectionView.dequeueReusableCell(withReuseIdentifier: categoryCellId, for: indexPath) as! CategoryCell
-         cell.musicCategory = musicCategories![indexPath.item - 1]
-         cell.backgroundColor = UIColor(white: 0.15, alpha: 1)
-         cell.searchController = self
-         return cell*/
          }
     }
     
@@ -156,6 +166,18 @@ class PlaylistHomeController: UICollectionViewController, UICollectionViewDelega
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return playlists.count + 1
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let item = playlists[sourceIndexPath.item]
+        print(playlists)
+        playlists.insert(item, at: destinationIndexPath.item)
+        playlists.remove(at: sourceIndexPath.item)
+        print(playlists)
     }
     
     func createPlaylistArray() {
