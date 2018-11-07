@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './styles.css';
-import PreviewCard from '../previewCardEvent';
 import axios from 'axios'
+import PreviewCard from '../previewCardEvent'
 
 class ListEvent extends Component {
 	constructor(props) {
@@ -13,12 +13,12 @@ class ListEvent extends Component {
 		this.onLoad = false;
 		this.getEvents()
 	}
-	getEvents(){
+	getEvents() {
 		console.log('REQUEST')
 		this.setState({loading:true});
 		axios.get('https://192.168.99.100:4242/event')
 		.then((resp) => {
-			this.setState({events: resp.data,loading:false})
+			this.setState({events: resp.data.reverse(),loading:false})
 		})
 		.catch((err) => {
 			this.setState({events: [],loading:false})
@@ -47,9 +47,9 @@ class ListEvent extends Component {
 			return (
 				<div>
 				{
-					this.state.events.map((event) => {
+					this.state.events.map((event, key) => {
 							return (
-								<PreviewCard event={event} updateParent={this.props.updateParent}/>
+								<PreviewCard key={key} event={event} updateParent={this.props.updateParent}/>
 							)
 						})
 				}

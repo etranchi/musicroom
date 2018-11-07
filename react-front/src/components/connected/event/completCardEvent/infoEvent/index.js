@@ -13,7 +13,6 @@ class InfoEvent extends Component {
 
         return (
            <div>
-               <p>COUOCU</p>
                 {/* <Card title="Card Title">
                     <Card.Grid style={gridStyle}>Content</Card.Grid>
                     <Card.Grid style={gridStyle}>Content</Card.Grid>
