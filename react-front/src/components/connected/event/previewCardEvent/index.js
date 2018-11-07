@@ -56,6 +56,8 @@ class PreviewCardEvent extends Component {
         this.props.updateParent({'currentComponent': 'cardEvent', 'data': this.props.event})
     }
 	render() {
+        console.log("Je suis ici")
+        console.log(this.props)
         return (
                 <Card title={this.props.event.title} style={this.card}>
                     <Card.Grid style={this.gridStyleProfile}>
