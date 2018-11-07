@@ -13,10 +13,13 @@ router.post('/login',
     );
 
 router.get('/login/facebook',
-		passport.authenticate('facebook', { session: false, scope: config.facebook.scope })
+		passport.authenticate('facebook-token', { session: false } ), userController.connect
 	);
 
+
 router.get('/login/deezer',
+		passport.authenticate('bearer'),
+		middlewares.isConfirmed,
 		passport.authenticate('deezer', { session: false, scope: config.deezer.scope })
 	);
 
