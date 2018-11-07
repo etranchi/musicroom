@@ -25,8 +25,8 @@ struct PlaylistByUserId : Decodable {
     var nbrPlaylists : Int?
     var playlists : [Playlist]?
     
-    init(_ userId: Int) {
-        self.userId = userId
+    init(_ id: Int) {
+        userId = id
         playlists = []
     }
     
@@ -35,6 +35,7 @@ struct PlaylistByUserId : Decodable {
         var sample = PlaylistByUserId(1306931615)
         sample.playlists = playlist
         
+        print(sample)
         return [sample]
     }
 }

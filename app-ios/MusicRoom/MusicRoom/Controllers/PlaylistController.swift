@@ -109,7 +109,7 @@ class PlaylistHomeController: UITableViewController {
         tableView.backgroundColor = UIColor(white: 0.2, alpha: 1)
         tableView.register(PlaylistHomeCell.self, forCellReuseIdentifier: cellId)
         
-        performPlaylistByUserId(1306931615) {(playlist) in
+        performPlaylistByUserId(1306931615) { (playlist) in
             self.currentUser = PlaylistByUserId.samplePlaylistById(playlist)
             self.tableView?.reloadData()
         }

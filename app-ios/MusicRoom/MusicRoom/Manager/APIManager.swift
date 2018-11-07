@@ -78,10 +78,12 @@ class APIManager: NSObject, URLSessionDelegate {
         playlistsRequest.httpMethod = "GET"
         print("url playlist")
         print(playlistsUrl)
-        getPlaylistsByUserId(PlaylistByUserId.self, request: playlistsRequest)
+        getPlaylistsByUserId(PlaylistByUserId.self, request: playlistsRequest) { (playlistData) in
+            completion(playlistData.playlists!)
+        }
     }
     
-    func getPlaylistsByUserId<T: Decodable>(_ myType: T.Type, request: URLRequest) {
+    func getPlaylistsByUserId<T: Decodable>(_ myType: T.Type, request: URLRequest, completion: @escaping (T) -> ()) {
         URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: request) {(data, response, err) in
             if err != nil {
                 print("error while requesting")
@@ -93,7 +95,7 @@ class APIManager: NSObject, URLSessionDelegate {
                     let dic = try JSONDecoder().decode(myType.self, from: d)
                     DispatchQueue.main.async {
                         print(dic)
-//                        completion(dic)
+                        completion(dic)
                     }
                 }
                 catch let err {
