@@ -294,16 +294,10 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             v.translatesAutoresizingMaskIntoConstraints = false
             return v
         }()
-        
-        navigationController?.navigationBar.topItem?.title = ""
-        navigationController?.navigationBar.tintColor = .white
-        
         backgroundCoverView = setupBackgroudView()
         coverContainerView = setupCoverContainer()
-        
         coverContainerView?.translatesAutoresizingMaskIntoConstraints = false
         backgroundCoverView?.translatesAutoresizingMaskIntoConstraints = false
-        
         coverContainerView?.clipsToBounds = true
         backgroundCoverView?.clipsToBounds = true
         
@@ -354,7 +348,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             previousButton.heightAnchor.constraint(equalToConstant: 30),
             
             playButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            playButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -view.bounds.height * 0.1),
+            playButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -view.bounds.height * 0.2),
             playButton.widthAnchor.constraint(equalToConstant: 80),
             playButton.heightAnchor.constraint(equalToConstant: 80),
             

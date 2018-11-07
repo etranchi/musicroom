@@ -23,6 +23,7 @@ class CustomNavigationController: UINavigationController {
         let view = UIView()
         
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.isUserInteractionEnabled = false
         return view
     }()
     
@@ -37,8 +38,9 @@ class CustomNavigationController: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationBar.tintColor = .white
         navigationBar.setBackgroundImage(UIImage(), for: .default)
-        navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white, .font: UIFont.systemFont(ofSize: 15, weight: .heavy)]
+        navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white, .font: UIFont.systemFont(ofSize: 15, weight: .heavy)]
         navigationBar.shadowImage = UIImage()
         offsetY = navigationBar.frame.size.height
         addVisualEffect()
@@ -65,8 +67,6 @@ class CustomNavigationController: UINavigationController {
             lightView.trailingAnchor.constraint(equalTo: blurView.trailingAnchor)
         ])
         visualContainerView.layer.zPosition = -1
-        lightView.layer.zPosition = -1
-        blurView.layer.zPosition = -1
     }
     
     func animatedShowNavigationBar() {
@@ -76,7 +76,7 @@ class CustomNavigationController: UINavigationController {
     }
     
     func animatedHideNavigationBar() {
-        UIView.animate(withDuration: 0.8, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.visualContainerView.transform = CGAffineTransform(translationX: 0, y: -self.offsetY - 50)
         })
     }
