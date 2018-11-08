@@ -14,18 +14,30 @@ class SeeAllSongsController: UICollectionViewController, UICollectionViewDelegat
 
     let tracks: [Track]
     let searchText: String
+    let searchController: SearchController
     
-    init(_ tracks: [Track], _ searchText: String) {
+    
+    init(_ tracks: [Track], _ searchText: String, _ traget: SearchController, layout: UICollectionViewFlowLayout) {
         self.tracks = tracks
         self.searchText = searchText
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
+        self.searchController = traget
         super.init(collectionViewLayout: layout)
-        
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        title = ""
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        title = "\"\(searchText)\" in Songs"
     }
     
     override func viewDidLoad() {
@@ -34,29 +46,40 @@ class SeeAllSongsController: UICollectionViewController, UICollectionViewDelegat
         
         self.collectionView!.register(SongCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         collectionView?.alwaysBounceVertical = true
-
-        title = "\"\(searchText)\" in Songs"
+        collectionView?.backgroundColor = UIColor(white: 0.1, alpha: 1)
+        
     }
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        searchController.showPlayerForSong(indexPath.item)
+    }
 
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print(tracks.count)
         return tracks.count
     }
-
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! SongCell
-
+        
+        cell.backgroundColor = UIColor(white: 0.1, alpha: 1)
         cell.track = tracks[indexPath.item]
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.bounds.width, height: 50)
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 14, bottom: 0, right: 14)
     }
+    
+    
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: view.bounds.width - 28, height: 60)
+    }
+    
     
 }

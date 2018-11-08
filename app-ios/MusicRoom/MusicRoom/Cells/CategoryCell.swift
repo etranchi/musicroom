@@ -15,29 +15,32 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
     private let artistCellId = "artistCellId"
     var searchController: SearchController?
     
+    let verticalLayout: UICollectionViewFlowLayout = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        return layout
+    }()
+    
+    let horizontalLayout: UICollectionViewFlowLayout = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        return layout
+    }()
+    
     var     musicCategory: MusicCategory! {
         didSet {
             switch musicCategory.name! {
             case "Songs":
                 if musicCategory.tracks.count > 0 {
-                    let layout = UICollectionViewFlowLayout()
-                    layout.scrollDirection = .vertical
-                    musicCollectionView.collectionViewLayout.invalidateLayout()
-                    musicCollectionView.collectionViewLayout = layout
+                    musicCollectionView.collectionViewLayout = verticalLayout
                 }
             case "Albums":
                 if musicCategory.albums.count > 0 {
-                    let layout = UICollectionViewFlowLayout()
-                    layout.scrollDirection = .horizontal
-                    musicCollectionView.collectionViewLayout.invalidateLayout()
-                    musicCollectionView.collectionViewLayout = layout
+                    musicCollectionView.collectionViewLayout = horizontalLayout
                 }
             case "Artists":
                 if musicCategory.artists.count > 0 {
-                    let layout = UICollectionViewFlowLayout()
-                    layout.scrollDirection = .horizontal
-                    musicCollectionView.collectionViewLayout.invalidateLayout()
-                    musicCollectionView.collectionViewLayout = layout
+                    musicCollectionView.collectionViewLayout = horizontalLayout
                 }
             default:
                 musicCollectionView.reloadData()
@@ -56,15 +59,7 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
-    let dividerLineView: UIView = {
-        let view = UIView()
-        
-        view.backgroundColor = UIColor(white: 0.4, alpha: 0.4)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
+
     let  musicCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -86,7 +81,7 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
     func setupViews() {
         musicCollectionView.dataSource = self
         musicCollectionView.delegate = self
-        musicCollectionView.backgroundColor = UIColor(white: 0.15, alpha: 1)
+        musicCollectionView.backgroundColor = .clear
         
         addSubview(musicCollectionView)
         addSubview(albumLabel)
@@ -153,7 +148,7 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         switch musicCategory.name! {
         case "Albums":
-            return CGSize(width: 150, height: frame.height)
+            return CGSize(width: 150, height: frame.width)
         case "Songs":
             if indexPath.item < 4 {
                 return CGSize(width: frame.width, height: 60)
@@ -163,7 +158,7 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
         case "Artists":
             return CGSize(width: 100, height: frame.height)
         default:
-            return CGSize(width: 150, height: frame.height)
+            return CGSize(width: 0, height: 0)
         }
     }
     

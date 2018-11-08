@@ -14,7 +14,7 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     private let searchCellId = "searchCellId"
     
     let manager = APIManager()
-    var initialSearch = "Deadmau5"
+    var initialSearch = "Yo"
     
     var musicCategories: [MusicCategory]?
 
@@ -32,7 +32,7 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        collectionView?.backgroundColor = UIColor(white: 0.15, alpha: 1)
+        collectionView?.backgroundColor = UIColor(white: 0.1, alpha: 1)
         collectionView?.alwaysBounceVertical = true
         collectionView?.register(CategoryCell.self, forCellWithReuseIdentifier: categoryCellId)
         collectionView?.register(SearchCell.self, forCellWithReuseIdentifier: searchCellId)
@@ -69,14 +69,15 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: categoryCellId, for: indexPath) as! CategoryCell
             cell.musicCategory = musicCategories![indexPath.item - 1]
-            cell.backgroundColor = UIColor(white: 0.15, alpha: 1)
             cell.searchController = self
             return cell
         }
     }
     
     func showTrackList() {
-        let vc = SeeAllSongsController(musicCategories![1].tracks, initialSearch)
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        let vc = SeeAllSongsController(musicCategories![1].tracks, initialSearch, self, layout: layout)
         navigationController?.pushViewController(vc, animated: true)
     }
     
