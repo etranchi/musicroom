@@ -79,7 +79,7 @@ class PlaylistHomeController: UICollectionViewController, UICollectionViewDelega
     private let playlistsCellId = "playlistCellId"
     
     fileprivate var longPressGesture: UILongPressGestureRecognizer!
-    
+    let searchCollectionView = SearchController()
     let manager = APIManager()
     let initialSearch = "Daft Punk"
     
@@ -95,13 +95,14 @@ class PlaylistHomeController: UICollectionViewController, UICollectionViewDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         createPlaylistArray()
+        
         longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(self.handleLongGesture(gesture:)))
         collectionView?.backgroundColor = UIColor(white: 0.15, alpha: 1)
         collectionView?.alwaysBounceVertical = true
+        collectionView?.reorderingCadence = .fast
         collectionView?.register(CategoryCell.self, forCellWithReuseIdentifier: categoryCellId)
         collectionView?.register(SearchCell.self, forCellWithReuseIdentifier: searchCellId)
-        collectionView?.register(PlaylistCell.self, forCellWithReuseIdentifier: playlistsCellId)
-        
+        collectionView?.register(PlaylistHomeCell.self, forCellWithReuseIdentifier: playlistsCellId)
         performPlaylistByUserId(1306931615) { (playlist) in
             self.currentUser = PlaylistByUserId.samplePlaylistById(playlist)
             self.collectionView?.reloadData()
@@ -136,16 +137,16 @@ class PlaylistHomeController: UICollectionViewController, UICollectionViewDelega
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.item == 0 {
+            print("item 0 : ", indexPath.item)
             let     searchCell = collectionView.dequeueReusableCell(withReuseIdentifier: searchCellId, for: indexPath) as! SearchCell
             searchCell.placeholder = "playlists, events..."
             searchCell.vc = self
             return searchCell
          } else {
-            let playlistsCell = collectionView.dequeueReusableCell(withReuseIdentifier: playlistsCellId, for: indexPath) as! PlaylistCell
-            print(indexPath.item)
-            print(playlists[indexPath.item - 1])
-            print(playlists[indexPath.row - 1])
+            print("item > 0 : ", indexPath.item)
+            let playlistsCell = collectionView.dequeueReusableCell(withReuseIdentifier: playlistsCellId, for: indexPath) as! PlaylistHomeCell
             let currentLastItem = playlists[indexPath.item - 1]
+            print("currentlastitem : ", currentLastItem, "at indexPath: ", indexPath.item)
             playlistsCell.playlist = currentLastItem
             return playlistsCell
          }
@@ -167,16 +168,17 @@ class PlaylistHomeController: UICollectionViewController, UICollectionViewDelega
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return playlists.count + 1
     }
-    
+
     override func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
         return true
     }
-    
+
     override func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         let item = playlists[sourceIndexPath.item]
         print(playlists)
         playlists.insert(item, at: destinationIndexPath.item)
         playlists.remove(at: sourceIndexPath.item)
+        print("after")
         print(playlists)
     }
     
@@ -187,3 +189,119 @@ class PlaylistHomeController: UICollectionViewController, UICollectionViewDelega
         playlists.append(PlaylistHome(name: "playlist 4"))
     }
 }
+
+//extension PlaylistHomeController: UICollectionViewDragDelegate, UICollectionViewDropDelegate {
+//    // Drag n drop v2
+//
+//    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
+//    {
+//        return self.playlists.count + 1
+//    }
+//
+//    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
+//    {
+//        if indexPath.item == 0
+//        {
+//            let searchCell = collectionView.dequeueReusableCell(withReuseIdentifier: self.searchCellId, for: indexPath) as! SearchCell
+//            searchCell.placeholder = "playlists, events..."
+//            searchCell.vc = self
+//            return searchCell
+//        }
+//        else
+//        {
+//            let playlistsCell = collectionView.dequeueReusableCell(withReuseIdentifier: self.playlistsCellId, for: indexPath) as! PlaylistHomeCell
+//            let currentLastItem = playlists[indexPath.item - 1]
+//            playlistsCell.playlist = currentLastItem
+//            return playlistsCell
+//
+//
+//        }
+//    }
+//
+//    private func reorderItems(coordinator: UICollectionViewDropCoordinator, destinationIndexPath: IndexPath, collectionView: UICollectionView) {
+//        let items = coordinator.items
+//        print(items)
+//        if items.count == 1, let item = items.first, let sourceIndexPath = item.sourceIndexPath {
+//            var dIndexPath = destinationIndexPath
+//            if dIndexPath.row >= collectionView.numberOfItems(inSection: 0)
+//            {
+//                dIndexPath.row = collectionView.numberOfItems(inSection: 0) - 1
+//            }
+//            collectionView.performBatchUpdates({
+//                if collectionView === self.collectionView
+//                {
+//                    self.playlists.remove(at: sourceIndexPath.row)
+//                    self.playlists.insert(item.dragItem.localObject as! PlaylistHome, at: dIndexPath.row - 1)
+//                }
+//                collectionView.deleteItems(at: [sourceIndexPath])
+//                collectionView.insertItems(at: [dIndexPath])
+//            })
+//            coordinator.drop(items.first!.dragItem, toItemAt: dIndexPath)
+//        }
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem]
+//    {
+//        print(self.playlists[indexPath.row - 1])
+//        let item = self.playlists[indexPath.row - 1]
+//        let itemProvider = NSItemProvider(object: item.name as NSString)
+//        let dragItem = UIDragItem(itemProvider: itemProvider)
+//        dragItem.localObject = item
+//        return [dragItem]
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal
+//    {
+//        if collectionView === self.collectionView
+//        {
+//            if collectionView.hasActiveDrag
+//            {
+//                return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+//            }
+//            else
+//            {
+//                return UICollectionViewDropProposal(operation: .forbidden)
+//            }
+//        }
+//        else
+//        {
+//            if collectionView.hasActiveDrag
+//            {
+//                return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+//            }
+//            else
+//            {
+//                return UICollectionViewDropProposal(operation: .copy, intent: .insertAtDestinationIndexPath)
+//            }
+//        }
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator)
+//    {
+//        let destinationIndexPath: IndexPath
+//        if let indexPath = coordinator.destinationIndexPath
+//        {
+//            destinationIndexPath = indexPath
+//        }
+//        else
+//        {
+//            // Get last index path of table view.
+//            let section = collectionView.numberOfSections - 1
+//            let row = collectionView.numberOfItems(inSection: section)
+//            destinationIndexPath = IndexPath(row: row, section: section)
+//        }
+//
+//        switch coordinator.proposal.operation
+//        {
+//        case .move:
+//            self.reorderItems(coordinator: coordinator, destinationIndexPath:destinationIndexPath, collectionView: collectionView)
+//            break
+//
+////        case .copy:
+////            self.copyItems(coordinator: coordinator, destinationIndexPath: destinationIndexPath, collectionView: collectionView)
+//
+//        default:
+//            return
+//        }
+//    }
+//}

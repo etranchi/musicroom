@@ -37,7 +37,6 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
         collectionView?.register(CategoryCell.self, forCellWithReuseIdentifier: categoryCellId)
         collectionView?.register(SearchCell.self, forCellWithReuseIdentifier: searchCellId)
         
-        
         performSearch(initialSearch) { (albums, tracks, artists) in
             self.musicCategories = MusicCategory.sampleMusicCategories(albums, tracks, artists)
             self.collectionView?.reloadData()

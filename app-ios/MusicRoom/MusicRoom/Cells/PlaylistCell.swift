@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PlaylistCell: UICollectionViewCell {
+class PlaylistHomeCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: .zero)
         setupViews()
