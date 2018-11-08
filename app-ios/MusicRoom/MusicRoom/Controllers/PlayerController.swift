@@ -9,7 +9,7 @@
 import UIKit
 
 class PlayerController: UIViewController, DZRPlayerDelegate {
-    let tracks: [Track]
+    var tracks: [Track]
     var index: Int
     
     init(_ tracks: [Track], _ index: Int) {
@@ -70,7 +70,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
         
-        player?.stop()
+        guard index >= 0 else { return }
         AppUtility.lockOrientation(.all)
         guard let navi = navigationController as? CustomNavigationController, let tabBar = tabBarController as? TabBarController else { return }
         navi.animatedShowNavigationBar()
@@ -80,14 +80,18 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        guard index >= 0 else { return }
         guard let navi = navigationController as? CustomNavigationController, let tabBar = tabBarController as? TabBarController else { return }
         navi.animatedHideNavigationBar()
         tabBar.animatedHideTabBar()
+        setupTrack(indexOffset: index)
+        handlePlay()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        guard index >= 0 else { return }
         setupUI()
         loadTrackInplayer()
         playerButtonView?.handlePlay()
@@ -143,7 +147,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         firstPlay = false
     }
     
-    fileprivate func loadTrackInplayer() {
+    func loadTrackInplayer() {
         cancelable?.cancel()
         cancelable = DZRTrack.object(withIdentifier: String(tracks[index].id), requestManager: request, callback: { (response, err) in
             if let err = err {
