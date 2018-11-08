@@ -10,7 +10,7 @@ const cors = require('cors');
 const express = require('express');
 const app = express();
 const routes = require('./routes')
-const db = require('./db/mongo.js');
+require('./db/mongo.js');
 const config = require('./config/config.json');
 const bodyParser = require('body-parser');
 const expressSwagger = require('express-swagger-generator')(app);

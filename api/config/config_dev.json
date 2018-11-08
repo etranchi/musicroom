@@ -50,12 +50,12 @@
             ],
             "schemes": ["https"],
             "securityDefinitions": {
-                "JWT": {
-                    "type": "token",
-                    "in": "header",
-                    "name": "Authorization",
-                    "description": "API return a token on login"
-                }
+                "Bearer": {
+					"type": "apiKey",
+					"name": "Authorization",
+					"in": "header",
+					"template": "Bearer {apiKey}"
+				}
             }
         }
     }
