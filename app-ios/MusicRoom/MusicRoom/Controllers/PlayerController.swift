@@ -34,14 +34,6 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    let visualEffectView: UIVisualEffectView = {
-        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-        visualEffectView.isUserInteractionEnabled = false
-        visualEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        visualEffectView.translatesAutoresizingMaskIntoConstraints = false
-        return visualEffectView
-    }()
 
     let titleLabel: UILabel = {
         let label = UILabel()
@@ -138,7 +130,6 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             guard let res = response as? DZRTrack else { return }
             DispatchQueue.main.async {
                 self.track = res
-                self.setupButtons()
                 self.setupProgressCircle()
                 self.handlePlay()
             }
@@ -232,7 +223,6 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         loadTrackInplayer()
         
         backgroundCoverView?.removeFromSuperview()
-        visualEffectView.removeFromSuperview()
         coverContainerView?.removeFromSuperview()
         titleLabel.removeFromSuperview()
         authorLabel.removeFromSuperview()
@@ -247,9 +237,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         isChangingMusic = false
         hasPaused = false
     }
-    
-    
-    
+
     fileprivate func setupCoverContainer() -> CoverContainerView {
         var underPreviousTrack: Track? = nil
         var previousTrack: Track? = nil
@@ -268,7 +256,10 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         if index + 2 < tracks.count {
             overNextTrack = tracks[index + 2]
         }
-        return CoverContainerView(target: self, underPreviousTrack, previousTrack, currentTrack, nextTrack, overNextTrack)
+        let ccv = CoverContainerView(target: self, underPreviousTrack, previousTrack, currentTrack, nextTrack, overNextTrack)
+        ccv.translatesAutoresizingMaskIntoConstraints = false
+        ccv.clipsToBounds = true
+        return ccv
     }
     
     fileprivate func setupBackgroudView() -> BackgroundCoverView {
@@ -281,32 +272,24 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         if index + 1 < tracks.count {
             nextTrack = tracks[index + 1]
         }
-        return BackgroundCoverView(previousTrack, currentTrack, nextTrack)
+        let bcv = BackgroundCoverView(previousTrack, currentTrack, nextTrack)
+        bcv.translatesAutoresizingMaskIntoConstraints = false
+        bcv.clipsToBounds = true
+        return bcv
     }
     
     fileprivate func setupUI() {
         previousButton.addTarget(self, action: #selector(handlePrevious), for: .touchUpInside)
         playButton.addTarget(self, action: #selector(handlePlay), for: .touchUpInside)
         nextButton.addTarget(self, action: #selector(handleNext), for: .touchUpInside)
-        
-        let middleLineView: UIView = {
-            let v = UIView()
-            v.translatesAutoresizingMaskIntoConstraints = false
-            return v
-        }()
+
         backgroundCoverView = setupBackgroudView()
         coverContainerView = setupCoverContainer()
-        coverContainerView?.translatesAutoresizingMaskIntoConstraints = false
-        backgroundCoverView?.translatesAutoresizingMaskIntoConstraints = false
-        coverContainerView?.clipsToBounds = true
-        backgroundCoverView?.clipsToBounds = true
         
         titleLabel.text = tracks[index].title
         authorLabel.text = tracks[index].artist!.name
         
         view.addSubview(backgroundCoverView!)
-        view.addSubview(visualEffectView)
-        view.addSubview(middleLineView)
         view.addSubview(coverContainerView!)
         view.addSubview(titleLabel)
         view.addSubview(authorLabel)
@@ -319,11 +302,6 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             backgroundCoverView!.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             backgroundCoverView!.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             backgroundCoverView!.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            
-            visualEffectView.topAnchor.constraint(equalTo: view.topAnchor),
-            visualEffectView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            visualEffectView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            visualEffectView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
             coverContainerView!.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: -40),
             coverContainerView!.bottomAnchor.constraint(equalTo: titleLabel.topAnchor, constant: -5),
@@ -358,16 +336,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             nextButton.heightAnchor.constraint(equalToConstant: 30)
         ])
     }
-    
-    fileprivate func setupButtons() {
-        
-        
-        
-        NSLayoutConstraint.activate([
-            
-        ])
-    }
-    
+
     fileprivate func setupProgressCircle() {
         progressCircle = ProgressCircle(frame: CGRect(x: 0, y: 0, width: 76, height: 76))
         view.addSubview(progressCircle!)

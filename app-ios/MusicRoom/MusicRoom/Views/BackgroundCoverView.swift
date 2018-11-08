@@ -14,6 +14,8 @@ class BackgroundCoverView: UIView {
     let currentTrack: Track
     let nextTrack: Track?
     
+    let offset = UIApplication.shared.keyWindow!.bounds.width
+    
     let previousImageView: UIImageView = {
         let iv = UIImageView()
         
@@ -41,6 +43,14 @@ class BackgroundCoverView: UIView {
         return iv
     }()
     
+    let blurEffectView: UIVisualEffectView = {
+        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+        visualEffectView.isUserInteractionEnabled = false
+        visualEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        visualEffectView.translatesAutoresizingMaskIntoConstraints = false
+        return visualEffectView
+    }()
+
     init(_ previousTrack: Track?, _ currentTrack: Track, _ nextTrack: Track?) {
         self.previousTrack = previousTrack
         self.currentTrack = currentTrack
@@ -54,32 +64,14 @@ class BackgroundCoverView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    var previousTopAnchor: NSLayoutConstraint?
-    var previousBottomAnchor: NSLayoutConstraint?
-    var previousTrailingAnchor: NSLayoutConstraint?
-    var previousLeadingAnchor: NSLayoutConstraint?
-    
-    var currentTopAnchor: NSLayoutConstraint?
-    var currentBottomAnchor: NSLayoutConstraint?
-    var currentTrailingAnchor: NSLayoutConstraint?
-    var currentLeadingAnchor: NSLayoutConstraint?
-    
-    var nextTopAnchor: NSLayoutConstraint?
-    var nextBottomAnchor: NSLayoutConstraint?
-    var nextTrailingAnchor: NSLayoutConstraint?
-    var nextLeadingAnchor: NSLayoutConstraint?
-    
-    
-    fileprivate func handleAnimation(_ top: NSLayoutConstraint?, _ bottom: NSLayoutConstraint?, _ trailing: NSLayoutConstraint?, _ leading: NSLayoutConstraint?, multiplier: CGFloat, iv: UIImageView) {
+    fileprivate func handleAnimation(_ top: NSLayoutConstraint?, _ bottom: NSLayoutConstraint?, multiplier: CGFloat, iv: UIImageView) {
         let moveOffset = UIApplication.shared.keyWindow!.bounds.width * multiplier
         
         top?.constant = 0
         bottom?.constant = 0
-        trailing?.constant = 0
-        leading?.constant = 0
         
-        currentTopAnchor?.constant = 100
-        currentBottomAnchor?.constant = -100
+        currentTopAnchor?.constant = 200
+        currentBottomAnchor?.constant = -200
         currentTrailingAnchor?.constant = moveOffset
         currentLeadingAnchor?.constant = moveOffset
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
@@ -93,46 +85,68 @@ class BackgroundCoverView: UIView {
         if currentTrack.album!.cover_big == nextTrack?.album!.cover_big {
             return
         }
-        handleAnimation(nextTopAnchor, nextBottomAnchor, nextTrailingAnchor, nextLeadingAnchor, multiplier: -1, iv: nextImageView)
+        handleAnimation(nextTopAnchor, nextBottomAnchor, multiplier: -1, iv: nextImageView)
     }
     
     func handlePreviousAnimation() {
         if currentTrack.album!.cover_big == previousTrack?.album!.cover_big {
             return
         }
-        handleAnimation(previousTopAnchor, previousBottomAnchor, previousTrailingAnchor, previousLeadingAnchor, multiplier: 1, iv: previousImageView)
+        handleAnimation(previousTopAnchor, previousBottomAnchor, multiplier: 1, iv: previousImageView)
     }
+    
+    var previousTopAnchor: NSLayoutConstraint?
+    var previousBottomAnchor: NSLayoutConstraint?
+    
+    var currentTopAnchor: NSLayoutConstraint?
+    var currentBottomAnchor: NSLayoutConstraint?
+    var currentLeadingAnchor: NSLayoutConstraint?
+    var currentTrailingAnchor: NSLayoutConstraint?
+    
+    var nextTopAnchor: NSLayoutConstraint?
+    var nextBottomAnchor: NSLayoutConstraint?
     
     fileprivate func setupView() {
         downLoadImagesIfNeeded()
-        let offset = UIApplication.shared.keyWindow!.bounds.width
         
-        addSubview(previousImageView)
         addSubview(currentImageView)
+        addSubview(previousImageView)
         addSubview(nextImageView)
+        addSubview(blurEffectView)
         
         previousImageView.alpha = 0.5
         nextImageView.alpha = 0.5
         
-        previousTopAnchor = previousImageView.topAnchor.constraint(equalTo: topAnchor, constant: 100)
-        previousBottomAnchor = previousImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -100)
-        previousTrailingAnchor = previousImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -offset)
-        previousLeadingAnchor = previousImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: -offset)
+        previousTopAnchor = previousImageView.topAnchor.constraint(equalTo: topAnchor, constant: 200)
+        previousBottomAnchor = previousImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -200)
         
         currentTopAnchor = currentImageView.topAnchor.constraint(equalTo: topAnchor)
         currentBottomAnchor = currentImageView.bottomAnchor.constraint(equalTo: bottomAnchor)
-        currentTrailingAnchor = currentImageView.trailingAnchor.constraint(equalTo: trailingAnchor)
         currentLeadingAnchor = currentImageView.leadingAnchor.constraint(equalTo: leadingAnchor)
+        currentTrailingAnchor = currentImageView.trailingAnchor.constraint(equalTo: trailingAnchor)
         
-        nextTopAnchor = nextImageView.topAnchor.constraint(equalTo: topAnchor, constant: 100)
-        nextBottomAnchor = nextImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -100)
-        nextTrailingAnchor = nextImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: offset)
-        nextLeadingAnchor = nextImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: offset)
+        nextTopAnchor = nextImageView.topAnchor.constraint(equalTo: topAnchor, constant: 200)
+        nextBottomAnchor = nextImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -200)
+        
         
         NSLayoutConstraint.activate([
-            previousTopAnchor!, previousBottomAnchor!, previousLeadingAnchor!, previousTrailingAnchor!,
+            
+            nextImageView.leadingAnchor.constraint(equalTo: currentImageView.trailingAnchor),
+            nextImageView.trailingAnchor.constraint(equalTo: currentImageView.trailingAnchor, constant: offset),
+            previousImageView.leadingAnchor.constraint(equalTo: currentImageView.leadingAnchor, constant: -offset),
+            previousImageView.trailingAnchor.constraint(equalTo: currentImageView.leadingAnchor),
+            
+            blurEffectView.topAnchor.constraint(equalTo: topAnchor),
+            blurEffectView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            blurEffectView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            blurEffectView.trailingAnchor.constraint(equalTo: trailingAnchor)
+        ])
+        
+        
+        NSLayoutConstraint.activate([
+            previousTopAnchor!, previousBottomAnchor!,
             currentTopAnchor!, currentBottomAnchor!, currentLeadingAnchor!, currentTrailingAnchor!,
-            nextTopAnchor!, nextBottomAnchor!, nextTrailingAnchor!, nextLeadingAnchor!
+            nextTopAnchor!, nextBottomAnchor!
         ])
     }
     

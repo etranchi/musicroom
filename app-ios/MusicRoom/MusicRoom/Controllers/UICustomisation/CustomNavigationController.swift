@@ -40,7 +40,7 @@ class CustomNavigationController: UINavigationController {
         
         navigationBar.tintColor = .white
         navigationBar.setBackgroundImage(UIImage(), for: .default)
-        navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white, .font: UIFont.systemFont(ofSize: 15, weight: .heavy)]
+        navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white, .font: UIFont.systemFont(ofSize: 15, weight: .heavy)]
         navigationBar.shadowImage = UIImage()
         offsetY = navigationBar.frame.size.height
         addVisualEffect()
