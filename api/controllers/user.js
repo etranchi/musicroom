@@ -31,6 +31,18 @@ exports.connect = (req, res) => {
 		});
     }
 
+exports.bindDeezerToken = async (req, res) => {
+	try {
+		await model.updateOne({_id: req.user._id}, {
+				deezerToken: req.query.access_token
+			})
+		res.status(200).send({message: "linked with deezer"});
+	} catch (err) {
+		console.log("bindDeezerToken " + err)
+		res.status(400).send({error: "not linked"});
+	}
+}
+
 exports.getUsers = async (req, res) => {
 	try {
 		console.info("getUser: getting all users ...");

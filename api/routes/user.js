@@ -26,7 +26,7 @@ router.get('/login/google',
 router.get('/login/deezer',
 		passport.authenticate('bearer'),
 		middlewares.isConfirmed,
-		passport.authenticate('deezer', { session: false, scope: config.deezer.scope })
+		userController.bindDeezerToken
 	);
 
 router.get('/',
