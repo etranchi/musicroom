@@ -7,6 +7,8 @@ const userController = require('../controllers/user');
 const strategies = require('../controllers/strategies')();
 const passport = require('passport');
 const middlewares = require('../modules/middlewares');
+const multer  = require('multer')
+const upload = multer({ dest: "./public/userPicture/"})
 
 /**
  * @route POST /user/login
@@ -23,6 +25,10 @@ router.post('/login',
 
 router.get('/login/facebook',
 		passport.authenticate('facebook-token', { session: false } ), userController.connect
+	);
+
+router.get('/login/google',
+		passport.authenticate('google-token', { session: false } ), userController.connect
 	);
 
 
@@ -130,7 +136,6 @@ router.get('/:id',
 		userController.getUserById
 	);
 
-
 /**
  * @route POST /user
  * @group user - Operations about user
@@ -142,6 +147,6 @@ router.get('/:id',
  * @returns {Error} 401 - Unauthorized
  * @returns {Error}  default - Unexpected error
  */
-router.post('/', userController.postUser);
+router.post('/', upload.single('file'), userController.postUser);
 
 module.exports = router;

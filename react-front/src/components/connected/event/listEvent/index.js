@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './styles.css';
-import PreviewCard from '../previewCardEvent';
 import axios from 'axios'
+import PreviewCard from '../previewCardEvent'
 
 class ListEvent extends Component {
 	constructor(props) {
@@ -13,28 +13,21 @@ class ListEvent extends Component {
 		this.onLoad = false;
 		this.getEvents()
 	}
-	getEvents(){
+	getEvents() {
 		console.log('REQUEST')
 		this.setState({loading:true});
 		axios.get('https://192.168.99.100:4242/event')
 		.then((resp) => {
-			this.setState({events: resp.data,loading:false})
+			this.setState({events: resp.data.reverse(),loading:false})
 		})
 		.catch((err) => {
 			this.setState({events: [],loading:false})
 			console.log('Events error', err);
 		})
 	}
-
-
-	// deleteEvent = () => {
-	// 	axios.delete('https://192.168.99.100:4242/event');
-	// 	console.log("Event Trashed.");
-	// }
-
     
 	render() {
-		if (this.props.state.currentComponent != "listEvent" && this.onLoad === false) {
+		if (this.props.state.currentComponent !== "listEvent" && this.onLoad === false) {
 			this.onLoad = true;
 		}
 		if(this.state.loading === true ) {
@@ -43,13 +36,12 @@ class ListEvent extends Component {
 		}
 		else
 		{
-			{this.props.updateParent.bind(this,{'currentComponent': 'listEvent', 'data': this.state.events})}
 			return (
 				<div>
 				{
-					this.state.events.map((event) => {
+					this.state.events.map((event, key) => {
 							return (
-								<PreviewCard event={event} updateParent={this.props.updateParent}/>
+								<PreviewCard key={key} event={event} updateParent={this.props.updateParent}/>
 							)
 						})
 				}

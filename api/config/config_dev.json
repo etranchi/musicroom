@@ -8,6 +8,7 @@
 		"apiUrl": "https://api.deezer.com",
 		"clientID": "",
         "clientSecret": "",
+
 		"callbackURL": "/oauth/deezer/callback",
 		"scope": [
 			"basic_access",
@@ -31,6 +32,19 @@
 			"email"
 		]
 	},
+    "google": {
+        "clientID": "",
+        "clientSecret": "",
+        "scope": [
+            "email"
+        ],
+        "profileFields": [
+            "id",
+            "displayName",
+            "photos",
+            "email"
+        ]
+    },
 	"mail": {
 		"email": "",
 		"password": "",

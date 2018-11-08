@@ -6,13 +6,8 @@ import CardEvent from './completCardEvent';
 import './styles.css';
 
 class Event extends Component {
-	constructor(props){
-		super(props);
-	}
 	render() {
-		{console.log("Base event : ", this.props.state.currentComponent)}
 		if (this.props.state.currentComponent === "cardEvent") {
-			console.log("Get card")
 			return (<CardEvent state={this.props.state} updateParent={this.props.updateParent} />)
 		}
 		else {

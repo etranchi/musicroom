@@ -24,7 +24,7 @@ const argon = require('argon2');
 
 
 exports.connect = (req, res) => {
-		res.status(200).json({
+		return res.status(200).json({
 			'token': Crypto.createToken(req.user),
 			'user': Utils.filter(model.schema.obj, req.user, 0)
 		});
@@ -47,6 +47,10 @@ exports.getUsers = async (req, res) => {
 exports.postUser = async (req, res) => {
 	try {
 		const { error } = validateUser(req.body);
+		req.body = JSON.parse(req.body.body);
+		if (req.file && req.file.filename) {
+			req.body.picture = req.file.filename
+		}
 		if (error) {
 			console.error('Error postUser : ', error.details[0].message);
 			throw new Error('Bad request ' + error.details[0].message)

@@ -19,12 +19,10 @@ module.exports = {
 	},
 	postEvent: async (req, res) => {
 		req.body = JSON.parse(req.body.body);
-		let name = "default.jpeg"
 		try {
 			if (req.file && req.file.filename) {
-				name = req.file.filename
+				req.bdy.picture = req.file.filename
 			}
-			req.body.picture = name;
 			res.status(200).json(await modelEvent.create(req.body))
 		} catch (err) {
 			res.status(400).json(err);
