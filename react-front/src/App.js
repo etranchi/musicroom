@@ -31,6 +31,7 @@ class App extends Component {
     const token = localStorage.getItem('token')
     return (
       <div className="App">
+      <div id="dz-root"></div>
       {token ? (
         <Connected updateParent={this.updateState} state={this.state}/>
 
@@ -38,6 +39,7 @@ class App extends Component {
         <Connection updateParent={this.updateState} state={this.state}/>
       )}
       </div>
+      
     );
   }
 }

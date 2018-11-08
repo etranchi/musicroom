@@ -30,6 +30,18 @@ exports.connect = (req, res) => {
 		});
     }
 
+exports.bindDeezerToken = async (req, res) => {
+	try {
+		await model.updateOne({_id: req.user._id}, {
+				deezerToken: req.query.access_token
+			})
+		res.status(200).send({message: "linked with deezer"});
+	} catch (err) {
+		console.log("bindDeezerToken " + err)
+		res.status(400).send({error: "not linked"});
+	}
+}
+
 exports.getUsers = async (req, res) => {
 	try {
 		console.info("getUser: getting all users ...");
@@ -47,7 +59,9 @@ exports.getUsers = async (req, res) => {
 exports.postUser = async (req, res) => {
 	try {
 		const { error } = validateUser(req.body);
-		req.body = JSON.parse(req.body.body);
+		// TODO ? A VOIR ? ADD PICTURE IN PUT?
+		if (req.body.body)
+			req.body = JSON.parse(req.body.body)
 		if (req.file && req.file.filename) {
 			req.body.picture = req.file.filename
 		}
