@@ -11,19 +11,6 @@ import UIKit
 class PlayerController: UIViewController, DZRPlayerDelegate {
     let tracks: [Track]
     var index: Int
-    var hasPaused = false
-    var isChangingMusic = false
-    var isPlaying = true
-    var firstPlay = true
-    
-    let request = DZRRequestManager.default().sub()
-    var cancelable : DZRCancelable?
-    var deezer = DeezerManager()
-    var track : DZRTrack?
-    
-    var progressCircle: ProgressCircle?
-    var coverContainerView: CoverContainerView?
-    var backgroundCoverView: BackgroundCoverView?
     
     init(_ tracks: [Track], _ index: Int) {
         self.tracks = tracks
@@ -34,6 +21,20 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    var hasPaused = false
+    var isChangingMusic = false
+    var isPlaying = true
+    var firstPlay = true
+    
+    let request = DZRRequestManager.default().sub()
+    var cancelable : DZRCancelable?
+    var deezer = DeezerManager()
+    var track : DZRTrack?
+    
+    var coverContainerView: CoverContainerView?
+    var backgroundCoverView: BackgroundCoverView?
+    var playerButtonView: PlayerButtonsView?
 
     let titleLabel: UILabel = {
         let label = UILabel()
@@ -54,39 +55,6 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
-    }()
-    
-    let playButton: UIButton = {
-        let button = UIButton(type: .system)
-        let playIcon = UIImage(named: "play_icon")
-        let tintedIcon = playIcon?.withRenderingMode(.alwaysTemplate)
-        button.setImage(tintedIcon, for: .normal)
-        button.tintColor = UIColor(white: 1, alpha: 1)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        
-        return button
-    }()
-    
-    let nextButton: UIButton = {
-        let button = UIButton(type: .system)
-        let playIcon = UIImage(named: "nextTrack_icon")
-        let tintedIcon = playIcon?.withRenderingMode(.alwaysTemplate)
-        button.setImage(tintedIcon, for: .normal)
-        button.tintColor = UIColor(white: 1, alpha: 1)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        
-        return button
-    }()
-    
-    let previousButton: UIButton = {
-        let button = UIButton(type: .system)
-        let playIcon = UIImage(named: "previousTrack_icon")
-        let tintedIcon = playIcon?.withRenderingMode(.alwaysTemplate)
-        button.setImage(tintedIcon, for: .normal)
-        button.tintColor = UIColor(white: 1, alpha: 1)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        
-        return button
     }()
     
     private lazy var player: DZRPlayer? = {
@@ -121,43 +89,24 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         super.viewDidLoad()
         
         setupUI()
-        setupPlayer()
-        setupProgressCircle()
         loadTrackInplayer()
-        handlePlay()
+        playerButtonView?.handlePlay()
     }
-    
-    func setupPlayer() {
-        
-    }
-    
+
     func player(_ player: DZRPlayer!, didPlay playedBytes: Int64, outOf totalBytes: Int64) {
         
         let progress = CGFloat(playedBytes) / CGFloat(totalBytes)
         if isChangingMusic == false {
-            progressCircle!.updateProgress(progress)
+            playerButtonView?.progressCircle?.updateProgress(progress)
         } else {
-            progressCircle!.updateProgress(0)
+            playerButtonView?.progressCircle?.updateProgress(0)
         }
         if player.progress > 0.99 {
-            handleNext()
+            playerButtonView?.handleNext()
         }
     }
     
-    func setPlayIcon() {
-        let playIcon = UIImage(named: "play_icon")
-        
-        let tintedIcon = playIcon?.withRenderingMode(.alwaysTemplate)
-        playButton.setImage(tintedIcon, for: .normal)
-    }
-    
-    func setPauseIcon() {
-        let playIcon = UIImage(named: "pause_icon")
-        let tintedIcon = playIcon?.withRenderingMode(.alwaysTemplate)
-        playButton.setImage(tintedIcon, for: .normal)
-    }
-
-    @objc func handleNext() {
+    func handleNext() {
         if index + 1 < tracks.count, isChangingMusic == false {
             isChangingMusic = true
             index += 1
@@ -167,7 +116,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         }
     }
     
-    @objc func handlePrevious() {
+    func handlePrevious() {
         if index - 1 >= 0, isChangingMusic == false {
             index -= 1
             loadTrackInplayer()
@@ -177,8 +126,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         }
     }
     
-    @objc func handlePlay() {
-        
+    func handlePlay() {
         isPlaying = true
         if firstPlay == true {
             self.player?.play(track)
@@ -186,19 +134,13 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         } else {
             self.player?.play()
         }
-        setPauseIcon()
-        playButton.removeTarget(self, action: #selector(handlePlay), for: .touchUpInside)
-        playButton.addTarget(self, action: #selector(handlePause), for: .touchUpInside)
     }
     
-    @objc func handlePause () {
+   func handlePause() {
         self.player?.pause()
         isPlaying = false
         hasPaused = true
         firstPlay = false
-        setPlayIcon()
-        playButton.removeTarget(self, action: #selector(handlePause), for: .touchUpInside)
-        playButton.addTarget(self, action: #selector(handlePlay), for: .touchUpInside)
     }
     
     fileprivate func loadTrackInplayer() {
@@ -215,7 +157,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
                 self.hasPaused = true
                 self.player?.play(res)
                 if self.isPlaying == true {
-                    self.handlePlay()
+                    self.playerButtonView?.handlePlay()
                 }
             }
         })
@@ -226,23 +168,17 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         coverContainerView?.removeFromSuperview()
         titleLabel.removeFromSuperview()
         authorLabel.removeFromSuperview()
-        previousButton.removeFromSuperview()
-        playButton.removeFromSuperview()
-        nextButton.removeFromSuperview()
-        progressCircle?.removeFromSuperview()
+        playerButtonView?.removeFromSuperview()
         setupUI()
-        setupProgressCircle()
         hasPaused = false
         self.isChangingMusic = false
     }
 
     fileprivate func setupUI() {
-        previousButton.addTarget(self, action: #selector(handlePrevious), for: .touchUpInside)
-        playButton.addTarget(self, action: #selector(handlePlay), for: .touchUpInside)
-        nextButton.addTarget(self, action: #selector(handleNext), for: .touchUpInside)
-
         backgroundCoverView = setupBackgroudView()
         coverContainerView = setupCoverContainer()
+        playerButtonView = PlayerButtonsView(target: self, isPlaying)
+        playerButtonView?.translatesAutoresizingMaskIntoConstraints = false
         
         titleLabel.text = tracks[index].title
         authorLabel.text = tracks[index].artist!.name
@@ -251,9 +187,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         view.addSubview(coverContainerView!)
         view.addSubview(titleLabel)
         view.addSubview(authorLabel)
-        view.addSubview(previousButton)
-        view.addSubview(playButton)
-        view.addSubview(nextButton)
+        view.addSubview(playerButtonView!)
         
         NSLayoutConstraint.activate([
             backgroundCoverView!.topAnchor.constraint(equalTo: view.topAnchor),
@@ -273,39 +207,15 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             titleLabel.leadingAnchor.constraint(equalTo: coverContainerView!.leadingAnchor),
             
             authorLabel.centerXAnchor.constraint(equalTo: titleLabel.centerXAnchor),
-            authorLabel.bottomAnchor.constraint(equalTo: playButton.topAnchor, constant: -20),
+            authorLabel.bottomAnchor.constraint(equalTo: playerButtonView!.topAnchor, constant: -20),
             authorLabel.heightAnchor.constraint(equalToConstant: 20),
             authorLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
             authorLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             
-            previousButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -80),
-            previousButton.centerYAnchor.constraint(equalTo: playButton.centerYAnchor),
-            previousButton.widthAnchor.constraint(equalToConstant: 30),
-            previousButton.heightAnchor.constraint(equalToConstant: 30),
-            
-            playButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            playButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -view.bounds.height * 0.2),
-            playButton.widthAnchor.constraint(equalToConstant: 80),
-            playButton.heightAnchor.constraint(equalToConstant: 80),
-            
-            nextButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 80),
-            nextButton.centerYAnchor.constraint(equalTo: playButton.centerYAnchor),
-            nextButton.widthAnchor.constraint(equalToConstant: 30),
-            nextButton.heightAnchor.constraint(equalToConstant: 30)
-        ])
-    }
-
-    fileprivate func setupProgressCircle() {
-        progressCircle = ProgressCircle(frame: CGRect(x: 0, y: 0, width: 76, height: 76))
-        view.addSubview(progressCircle!)
-        progressCircle!.translatesAutoresizingMaskIntoConstraints = false
-        progressCircle!.isUserInteractionEnabled = false
-        progressCircle!.layer.zPosition = playButton.layer.zPosition
-        NSLayoutConstraint.activate([
-            progressCircle!.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            progressCircle!.centerYAnchor.constraint(equalTo: playButton.centerYAnchor),
-            progressCircle!.widthAnchor.constraint(equalToConstant: 76),
-            progressCircle!.heightAnchor.constraint(equalToConstant: 76)
+            playerButtonView!.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            playerButtonView!.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            playerButtonView!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -view.bounds.height * 0.2),
+            playerButtonView!.heightAnchor.constraint(equalToConstant: 80)
         ])
     }
 }
