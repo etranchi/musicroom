@@ -16,8 +16,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     var isPlaying = true
     var firstPlay = true
     
-    var networkType : DZRPlayerNetworkType?
-    var request : DZRRequestManager?
+    let request = DZRRequestManager.default().sub()
     var cancelable : DZRCancelable?
     var deezer = DeezerManager()
     var track : DZRTrack?
@@ -95,6 +94,8 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             var _player = DZRPlayer(connection: deezerConnect) else { return nil }
         _player.shouldUpdateNowPlayingInfo = true
         _player.delegate = self
+        _player.networkType = .wifiAnd3G
+        _player.shouldUpdateNowPlayingInfo = true
         return _player
     }()
     
@@ -121,27 +122,13 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         
         setupUI()
         setupPlayer()
-        cancelable?.cancel()
-        
-        self.cancelable = DZRTrack.object(withIdentifier: String(tracks[index].id), requestManager: request, callback: { (response, err) in
-            if let err = err {
-                print("Player error: \(err.localizedDescription)")
-                return
-            }
-            guard let res = response as? DZRTrack else { return }
-            DispatchQueue.main.async {
-                self.player?.stop()
-                self.track = res
-                self.setupProgressCircle()
-                self.handlePlay()
-            }
-        })
+        setupProgressCircle()
+        loadTrackInplayer()
+        handlePlay()
     }
     
     func setupPlayer() {
-        player?.networkType = .wifiAnd3G
-        player?.shouldUpdateNowPlayingInfo = true
-        request = DZRRequestManager.default().sub()
+        
     }
     
     func player(_ player: DZRPlayer!, didPlay playedBytes: Int64, outOf totalBytes: Int64) {
@@ -216,7 +203,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     
     fileprivate func loadTrackInplayer() {
         cancelable?.cancel()
-        self.cancelable = DZRTrack.object(withIdentifier: String(tracks[index].id), requestManager: request, callback: { (response, err) in
+        cancelable = DZRTrack.object(withIdentifier: String(tracks[index].id), requestManager: request, callback: { (response, err) in
             if let err = err {
                 print("Player error: \(err.localizedDescription)")
                 return
