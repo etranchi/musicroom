@@ -200,13 +200,11 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             coverContainerView!.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             coverContainerView!.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            titleLabel.centerXAnchor.constraint(equalTo: view!.centerXAnchor),
-            titleLabel.bottomAnchor.constraint(equalTo: authorLabel.topAnchor, constant: -5),
             titleLabel.heightAnchor.constraint(equalToConstant: 20),
-            titleLabel.trailingAnchor.constraint(equalTo: coverContainerView!.trailingAnchor),
-            titleLabel.leadingAnchor.constraint(equalTo: coverContainerView!.leadingAnchor),
+            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            titleLabel.bottomAnchor.constraint(equalTo: authorLabel.topAnchor, constant: -5),
             
-            authorLabel.centerXAnchor.constraint(equalTo: titleLabel.centerXAnchor),
             authorLabel.bottomAnchor.constraint(equalTo: playerButtonView!.topAnchor, constant: -20),
             authorLabel.heightAnchor.constraint(equalToConstant: 20),
             authorLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
