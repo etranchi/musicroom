@@ -10,30 +10,6 @@ const argon = require('argon2');
 const jwt = require('jsonwebtoken');
 
 module.exports = function () {
-	// passport.use(new DeezerStrategy({
-	// 	clientID: config.deezer.clientID,
-	// 	clientSecret: config.deezer.clientSecret,
-	// 	callbackURL: config.deezer.callbackURL,
-	// 	scope: config.deezer.scope,
-	// 	passReqToCallback: true
-	// },
-	// function(req, accessToken, refreshToken, profile, done) {
-	// 	if (!req.user) {
-	// 		return done(null, false)
-	// 	}
-	// 	console.log("refreshToken -> ")
-	// 	console.log(refreshToken)
-	// 	modelUser.updateOne({_id: req.user._id}, {
-	// 		deezerId: profile.id,
-	// 		deezerToken: accessToken
-	// 	}, function(err, user) {
-	// 			if (err) {
-	// 				console.log(err);
-	// 				return done(null, false);
-	// 			}
-	// 			return done(null, true);
-	// 		});
-	// }));
 
 	passport.use(new FacebookStrategy({
 		clientID: config.facebook.clientID,

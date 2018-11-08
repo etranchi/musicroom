@@ -59,7 +59,9 @@ exports.getUsers = async (req, res) => {
 exports.postUser = async (req, res) => {
 	try {
 		const { error } = validateUser(req.body);
-		req.body = JSON.parse(req.body.body);
+		// TODO ? A VOIR ? ADD PICTURE IN PUT?
+		if (req.body.body)
+			req.body = JSON.parse(req.body.body)
 		if (req.file && req.file.filename) {
 			req.body.picture = req.file.filename
 		}
