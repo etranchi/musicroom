@@ -101,7 +101,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         } else {
             playerButtonView?.progressCircle?.updateProgress(0)
         }
-        if player.progress > 0.99 {
+        if progress > 0.99 {
             playerButtonView?.handleNext()
         }
     }
