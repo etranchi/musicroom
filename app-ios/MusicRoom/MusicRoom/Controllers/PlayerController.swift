@@ -11,6 +11,8 @@ import UIKit
 class PlayerController: UIViewController, DZRPlayerDelegate {
     var tracks: [Track]
     var index: Int
+    var rootViewController: TabBarController?
+    var minimizedPlayer: MinimizedPlayerView?
     
     init(_ tracks: [Track], _ index: Int) {
         self.tracks = tracks
@@ -71,6 +73,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         super.viewWillDisappear(true)
         
         guard index >= 0 else { return }
+        minimizedPlayer?.update(isPlaying: isPlaying, title: tracks[index].title, artist: tracks[index].artist!.name)
         AppUtility.lockOrientation(.all)
         guard let navi = navigationController as? CustomNavigationController, let tabBar = tabBarController as? TabBarController else { return }
         navi.animatedShowNavigationBar()
@@ -91,6 +94,8 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        minimizedPlayer = rootViewController?.minimizedPlayer
         guard index >= 0 else { return }
         setupUI()
         loadTrackInplayer()
@@ -106,7 +111,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             playerButtonView?.progressCircle?.updateProgress(0)
         }
         if progress > 0.99 {
-            playerButtonView?.handleNext()
+            handleNext()
         }
     }
     
@@ -138,6 +143,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         } else {
             self.player?.play()
         }
+        minimizedPlayer?.update(isPlaying: true, title: tracks[index].title, artist: tracks[index].artist!.name)
     }
     
    func handlePause() {
@@ -145,6 +151,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         isPlaying = false
         hasPaused = true
         firstPlay = false
+        minimizedPlayer?.update(isPlaying: false, title: tracks[index].title, artist: tracks[index].artist!.name)
     }
     
     func loadTrackInplayer() {
@@ -163,6 +170,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
                 if self.isPlaying == true {
                     self.playerButtonView?.handlePlay()
                 }
+                self.minimizedPlayer?.update(isPlaying: self.isPlaying, title: self.tracks[self.index].title, artist: self.tracks[self.index].artist!.name)
             }
         })
     }
