@@ -7,16 +7,15 @@ const https = require('https');
 const privateKey  = fs.readFileSync('./sslcert/server.key', 'utf8');
 const certificate = fs.readFileSync('./sslcert/server.crt', 'utf8');
 const cors = require('cors');
-
-
-const credentials = {key: privateKey, cert: certificate};
-
 const express = require('express');
 const app = express();
 const routes = require('./routes')
 const db = require('./db/mongo.js');
 const config = require('./config/config.json');
 const bodyParser = require('body-parser');
+const expressSwagger = require('express-swagger-generator')(app);
+
+const credentials = {key: privateKey, cert: certificate};
 
 app.use(compression());
 app.use(helmet());
@@ -44,6 +43,10 @@ app.get('/', ( req, res) =>  {
 
 let httpsServer = https.createServer(credentials, app);
 
+let options = config.swagger
+options.basedir = __dirname
+options.files = ["./routes/**/*.js"]
+expressSwagger(options)
 httpsServer.listen(config.port, config.host);
 
 module.exports = httpsServer;

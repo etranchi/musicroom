@@ -8,6 +8,16 @@ const strategies = require('../controllers/strategies')();
 const passport = require('passport');
 const middlewares = require('../modules/middlewares');
 
+/**
+ * This function comment is parsed by doctrine
+ * @route POST /user/login
+ * @group user - Operations about user
+ * @param {string} email.query.required - user's email
+ * @param {string} password.query.required - user's password.
+ * @returns {object} 200 - user info and jwt token
+ * @returns {Error} 401 - Unauthorized
+ * @returns {Error}  default - Unexpected error
+ */
 router.post('/login',
     	passport.authenticate('local', {session: false}), userController.connect
     );

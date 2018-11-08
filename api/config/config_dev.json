@@ -35,5 +35,28 @@
 		"email": "",
 		"password": "",
 		"service": "gmail"
-	}
+	},
+    "swagger": {
+        "swaggerDefinition": {
+            "info": {
+                "description": "Music Room API",
+                "title": "Music Room",
+                "version": "1.0.0"
+            },
+            "host": "192.168.99.100:4242",
+            "basePath": "",
+            "produces": [
+                "application/json"
+            ],
+            "schemes": ["https"],
+            "securityDefinitions": {
+                "JWT": {
+                    "type": "token",
+                    "in": "header",
+                    "name": "Authorization",
+                    "description": "API return a token on login"
+                }
+            }
+        }
+    }
 }
