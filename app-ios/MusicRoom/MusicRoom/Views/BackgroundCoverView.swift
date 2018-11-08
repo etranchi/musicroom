@@ -15,6 +15,9 @@ class BackgroundCoverView: UIView {
     let nextTrack: Track?
     
     let offset = UIApplication.shared.keyWindow!.bounds.width
+    let zoomingEffect: CGFloat = 200.0
+    let transparencyEffect: CGFloat = 0.5
+    let animationTime = 0.5
     
     let previousImageView: UIImageView = {
         let iv = UIImageView()
@@ -44,11 +47,19 @@ class BackgroundCoverView: UIView {
     }()
     
     let blurEffectView: UIVisualEffectView = {
-        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
         visualEffectView.isUserInteractionEnabled = false
         visualEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         visualEffectView.translatesAutoresizingMaskIntoConstraints = false
         return visualEffectView
+    }()
+    
+    let darkView: UIView = {
+        let view = UIView()
+        
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor(white: 0, alpha: 0.7)
+        return view
     }()
 
     init(_ previousTrack: Track?, _ currentTrack: Track, _ nextTrack: Track?) {
@@ -70,13 +81,13 @@ class BackgroundCoverView: UIView {
         top?.constant = 0
         bottom?.constant = 0
         
-        currentTopAnchor?.constant = 200
-        currentBottomAnchor?.constant = -200
+        currentTopAnchor?.constant = zoomingEffect
+        currentBottomAnchor?.constant = -zoomingEffect
         currentTrailingAnchor?.constant = moveOffset
         currentLeadingAnchor?.constant = moveOffset
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: animationTime, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             iv.alpha = 1
-            self.currentImageView.alpha = 0.5
+            self.currentImageView.alpha = self.transparencyEffect
             self.layoutIfNeeded()
         })
     }
@@ -113,24 +124,24 @@ class BackgroundCoverView: UIView {
         addSubview(previousImageView)
         addSubview(nextImageView)
         addSubview(blurEffectView)
+        addSubview(darkView)
         
-        previousImageView.alpha = 0.5
-        nextImageView.alpha = 0.5
+        previousImageView.alpha = transparencyEffect
+        nextImageView.alpha = transparencyEffect
         
-        previousTopAnchor = previousImageView.topAnchor.constraint(equalTo: topAnchor, constant: 200)
-        previousBottomAnchor = previousImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -200)
+        previousTopAnchor = previousImageView.topAnchor.constraint(equalTo: topAnchor, constant: zoomingEffect)
+        previousBottomAnchor = previousImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -zoomingEffect)
         
         currentTopAnchor = currentImageView.topAnchor.constraint(equalTo: topAnchor)
         currentBottomAnchor = currentImageView.bottomAnchor.constraint(equalTo: bottomAnchor)
         currentLeadingAnchor = currentImageView.leadingAnchor.constraint(equalTo: leadingAnchor)
         currentTrailingAnchor = currentImageView.trailingAnchor.constraint(equalTo: trailingAnchor)
         
-        nextTopAnchor = nextImageView.topAnchor.constraint(equalTo: topAnchor, constant: 200)
-        nextBottomAnchor = nextImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -200)
+        nextTopAnchor = nextImageView.topAnchor.constraint(equalTo: topAnchor, constant: zoomingEffect)
+        nextBottomAnchor = nextImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -zoomingEffect)
         
         
         NSLayoutConstraint.activate([
-            
             nextImageView.leadingAnchor.constraint(equalTo: currentImageView.trailingAnchor),
             nextImageView.trailingAnchor.constraint(equalTo: currentImageView.trailingAnchor, constant: offset),
             previousImageView.leadingAnchor.constraint(equalTo: currentImageView.leadingAnchor, constant: -offset),
@@ -139,7 +150,11 @@ class BackgroundCoverView: UIView {
             blurEffectView.topAnchor.constraint(equalTo: topAnchor),
             blurEffectView.bottomAnchor.constraint(equalTo: bottomAnchor),
             blurEffectView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            blurEffectView.trailingAnchor.constraint(equalTo: trailingAnchor)
+            blurEffectView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            darkView.topAnchor.constraint(equalTo: topAnchor),
+            darkView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            darkView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            darkView.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
         
         
