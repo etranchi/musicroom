@@ -103,6 +103,7 @@ class PlaylistHomeController: UICollectionViewController, UICollectionViewDelega
         collectionView?.register(CategoryCell.self, forCellWithReuseIdentifier: categoryCellId)
         collectionView?.register(SearchCell.self, forCellWithReuseIdentifier: searchCellId)
         collectionView?.register(PlaylistHomeCell.self, forCellWithReuseIdentifier: playlistsCellId)
+        
         performPlaylistByUserId(1306931615) { (playlist) in
             self.currentUser = PlaylistByUserId.samplePlaylistById(playlist)
             self.collectionView?.reloadData()
@@ -143,7 +144,7 @@ class PlaylistHomeController: UICollectionViewController, UICollectionViewDelega
             searchCell.vc = self
             return searchCell
          } else {
-            print("item > 0 : ", indexPath.item)
+            print("item > 0 : ", indexPath.item, "and indexPath - 1 : ", (indexPath.item - 1))
             let playlistsCell = collectionView.dequeueReusableCell(withReuseIdentifier: playlistsCellId, for: indexPath) as! PlaylistHomeCell
             let currentLastItem = playlists[indexPath.item - 1]
             print("currentlastitem : ", currentLastItem, "at indexPath: ", indexPath.item)
@@ -174,12 +175,15 @@ class PlaylistHomeController: UICollectionViewController, UICollectionViewDelega
     }
 
     override func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let item = playlists[sourceIndexPath.item]
-        print(playlists)
-        playlists.insert(item, at: destinationIndexPath.item)
-        playlists.remove(at: sourceIndexPath.item)
+        print(sourceIndexPath)
+        print(destinationIndexPath)
+        let item = self.playlists[sourceIndexPath.item - 1]
+        print("item : ", item)
+        print(self.playlists)
+        self.playlists.insert(item, at: destinationIndexPath.item)
+        self.playlists.remove(at: sourceIndexPath.item)
         print("after")
-        print(playlists)
+        print(self.playlists)
     }
     
     func createPlaylistArray() {

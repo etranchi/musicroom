@@ -36,7 +36,7 @@ class PlaylistHomeCell: UICollectionViewCell {
         let image = UIImageView()
         
         image.backgroundColor = .lightGray
-        image.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
+//        image.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
         
         return image
     }()
