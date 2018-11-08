@@ -13,6 +13,7 @@
     <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css" rel="stylesheet">
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxXsr0i2h44hpi3E7RTUDvb4_CFm52Oqw&libraries=places"></script>
+    <script src="https://e-cdns-files.dzcdn.net/js/min/dz.js"></script>
 
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
@@ -29,7 +30,9 @@
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
+    <div id="dz-root"></div>
     <div id="root"></div>
+    
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
@@ -42,5 +45,12 @@
     -->
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
+
+    <script>
+      DZ.init({
+        appId  : '8',
+        channelUrl : 'http://developers.deezer.com/examples/channel.php'
+      });
+    </script>
   </body>
 </html>

@@ -5,9 +5,6 @@ import './styles.css'
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
  
 class SimpleMap extends Component {
-    constructor(props) {
-      super(props);
-  }
  
   render() {
 

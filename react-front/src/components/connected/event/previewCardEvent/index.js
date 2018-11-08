@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Avatar, Icon, Input } from 'antd';
+import { Card, Avatar, Icon } from 'antd';
 import './styles.css';
 
 class PreviewCardEvent extends Component {

@@ -1,14 +1,8 @@
 import React, { Component } from 'react';
 import './styles.css';
-import { Divider, Card, Avatar, Icon, Input } from 'antd';
+import { Card, Avatar, Icon, Input } from 'antd';
 
 class CreatorProfil extends Component {
-        constructor(props) {
-            super(props);
-
-    }
-
-
 	render() {
 
         return (
