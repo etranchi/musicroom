@@ -1,4 +1,4 @@
-import React, { Component, Redirect } from 'react';
+import React, { Component } from 'react';
 import './styles.css';
 import Login from './login'
 import Register from './register'
@@ -9,7 +9,6 @@ import GoogleLogin from 'react-google-login';
 
 class Connection extends Component {
   loginFacebook(){
-    // return <Redirect to='https://192.168.99.100:4242/user/login/facebook'/>;
     axios.get('https://192.168.99.100:4242/user/login/facebook', {'headers':{}})
     .then((resp) => {
       console.log(resp);

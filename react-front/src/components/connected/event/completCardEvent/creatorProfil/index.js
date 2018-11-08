@@ -3,12 +3,6 @@ import './styles.css';
 import { Divider, Card, Avatar, Icon } from 'antd';
 
 class CreatorProfil extends Component {
-        constructor(props) {
-            super(props);
-
-    }
-
-
 	render() {
 
         return (

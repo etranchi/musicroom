@@ -25,16 +25,9 @@ class ListEvent extends Component {
 			console.log('Events error', err);
 		})
 	}
-
-
-	// deleteEvent = () => {
-	// 	axios.delete('https://192.168.99.100:4242/event');
-	// 	console.log("Event Trashed.");
-	// }
-
     
 	render() {
-		if (this.props.state.currentComponent != "listEvent" && this.onLoad === false) {
+		if (this.props.state.currentComponent !== "listEvent" && this.onLoad === false) {
 			this.onLoad = true;
 		}
 		if(this.state.loading === true ) {
@@ -43,7 +36,6 @@ class ListEvent extends Component {
 		}
 		else
 		{
-			{this.props.updateParent.bind(this,{'currentComponent': 'listEvent', 'data': this.state.events})}
 			return (
 				<div>
 				{

@@ -6,11 +6,6 @@ import InfoEvent from './infoEvent'
 import BodyEvent from './bodyEvent'
 
 class CompletCardEvent extends Component {
-	constructor(props) {
-        super(props);
-    }
-
-
 	render() {
         return (
             <div>

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {Row, Input, Button} from 'react-materialize'
 import LocationSearchInput from '../locationSearchInput'
 import './styles.css';
-import axios from 'axios'
 
 class CreateEvent extends Component {
 	constructor(props) {
