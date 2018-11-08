@@ -54,13 +54,20 @@
 		8F364B90217E5B9200B57FC8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F364B8E217E5B9200B57FC8 /* LaunchScreen.storyboard */; };
 		8FEFE2952191DC420002E966 /* PlaylistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FEFE2942191DC420002E966 /* PlaylistCell.swift */; };
 		8FEFE2972191E2CD0002E966 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FEFE2962191E2CD0002E966 /* LoginController.swift */; };
+		FFAE20521B1507F5599133FF /* Pods_MusicRoom.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5030930F7B32D7D6F31BF7F /* Pods_MusicRoom.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0771EEBABD5B1711FB9CC965 /* Pods-MusicRoom.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicRoom.release.xcconfig"; path = "Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom.release.xcconfig"; sourceTree = "<group>"; };
 		7743C23A2190587E002CC508 /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
 		7743C2452190A03A002CC508 /* User+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreDataClass.swift"; sourceTree = "<group>"; };
 		7743C2462190A03A002CC508 /* User+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		7743C2492190A23C002CC508 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
+		776D7D40219480980020FCCE /* Bolts.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Bolts.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		776D7D41219480980020FCCE /* FacebookCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FacebookCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		776D7D42219480980020FCCE /* FacebookLogin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FacebookLogin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		776D7D43219480980020FCCE /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		776D7D44219480980020FCCE /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		778BF9A821832CB800448FE6 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		77B444752181CD0200B3F536 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		77F5479521932172001B2901 /* AuthenticationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationController.swift; sourceTree = "<group>"; };
@@ -138,6 +145,8 @@
 		8F364B91217E5B9200B57FC8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8FEFE2942191DC420002E966 /* PlaylistCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistCell.swift; sourceTree = "<group>"; };
 		8FEFE2962191E2CD0002E966 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LoginController.swift; path = ../LoginController.swift; sourceTree = "<group>"; };
+		A9A47612D3A4088C3024024E /* Pods-MusicRoom.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicRoom.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom.debug.xcconfig"; sourceTree = "<group>"; };
+		C5030930F7B32D7D6F31BF7F /* Pods_MusicRoom.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MusicRoom.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,6 +162,7 @@
 				8F18988E217F231800CE1A8D /* AudioToolbox.framework in Frameworks */,
 				8F18988C217F230D00CE1A8D /* CoreAudio.framework in Frameworks */,
 				8F189888217F22EE00CE1A8D /* libDeezer.a in Frameworks */,
+				FFAE20521B1507F5599133FF /* Pods_MusicRoom.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -307,6 +317,11 @@
 		8F18988A217F230D00CE1A8D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				776D7D40219480980020FCCE /* Bolts.framework */,
+				776D7D41219480980020FCCE /* FacebookCore.framework */,
+				776D7D42219480980020FCCE /* FacebookLogin.framework */,
+				776D7D43219480980020FCCE /* FBSDKCoreKit.framework */,
+				776D7D44219480980020FCCE /* FBSDKLoginKit.framework */,
 				8F18989D217F523800CE1A8D /* SafariServices.framework */,
 				8F189898217F25DA00CE1A8D /* AVFoundation.framework */,
 				8F189893217F233500CE1A8D /* MediaPlayer.framework */,
@@ -314,6 +329,7 @@
 				8F18988F217F232100CE1A8D /* SystemConfiguration.framework */,
 				8F18988D217F231800CE1A8D /* AudioToolbox.framework */,
 				8F18988B217F230D00CE1A8D /* CoreAudio.framework */,
+				C5030930F7B32D7D6F31BF7F /* Pods_MusicRoom.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -335,6 +351,7 @@
 				8F364B81217E5B9100B57FC8 /* MusicRoom */,
 				8F364B80217E5B9100B57FC8 /* Products */,
 				8F18988A217F230D00CE1A8D /* Frameworks */,
+				EDA8CD5A8DBD8712E14745C0 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -366,6 +383,15 @@
 			path = MusicRoom;
 			sourceTree = "<group>";
 		};
+		EDA8CD5A8DBD8712E14745C0 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				A9A47612D3A4088C3024024E /* Pods-MusicRoom.debug.xcconfig */,
+				0771EEBABD5B1711FB9CC965 /* Pods-MusicRoom.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -373,9 +399,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8F364B94217E5B9200B57FC8 /* Build configuration list for PBXNativeTarget "MusicRoom" */;
 			buildPhases = (
+				6FDB7E9F9237FD8672C7B46E /* [CP] Check Pods Manifest.lock */,
 				8F364B7B217E5B9100B57FC8 /* Sources */,
 				8F364B7C217E5B9100B57FC8 /* Frameworks */,
 				8F364B7D217E5B9100B57FC8 /* Resources */,
+				83813EFF5978D09DE05DC183 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -432,6 +460,61 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6FDB7E9F9237FD8672C7B46E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MusicRoom-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		83813EFF5978D09DE05DC183 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Bolts/Bolts.framework",
+				"${BUILT_PRODUCTS_DIR}/FBSDKCoreKit/FBSDKCoreKit.framework",
+				"${BUILT_PRODUCTS_DIR}/FBSDKLoginKit/FBSDKLoginKit.framework",
+				"${BUILT_PRODUCTS_DIR}/FacebookCore/FacebookCore.framework",
+				"${BUILT_PRODUCTS_DIR}/FacebookLogin/FacebookLogin.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Bolts.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKCoreKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKLoginKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FacebookCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FacebookLogin.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8F364B7B217E5B9100B57FC8 /* Sources */ = {
@@ -608,6 +691,7 @@
 		};
 		8F364B95217E5B9200B57FC8 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A9A47612D3A4088C3024024E /* Pods-MusicRoom.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -630,6 +714,7 @@
 		};
 		8F364B96217E5B9200B57FC8 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0771EEBABD5B1711FB9CC965 /* Pods-MusicRoom.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;

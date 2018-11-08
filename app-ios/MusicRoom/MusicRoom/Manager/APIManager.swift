@@ -74,28 +74,24 @@ class APIManager: NSObject, URLSessionDelegate {
         }.resume()
     }
     
-    func loginUser(_ json : Data?, completion : @escaping (String) -> ()) {
+    func loginUser(_ json : Data?, completion : @escaping (DataUser?) -> ()) {
         let loginUrl = self.url + "user/login"
         var loginRequest = URLRequest(url: URL(string: loginUrl)!)
         loginRequest.httpMethod = "POST"
         loginRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         loginRequest.httpBody = json
-        
         URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: loginRequest) { (data, response, err) in
             if err != nil {
-                print("error while requesting")
+                completion(nil)
             }
-            print(response)
-            do {
-                let responseJSON = try JSONSerialization.jsonObject(with: data!, options: .mutableLeaves)
-                if let responseJSON = responseJSON as? [String: Any] {
-                    print(responseJSON)
-                    completion(responseJSON["token"] as! String)
+            if let d = data {
+                do {
+                    let dic = try JSONDecoder().decode(DataUser.self, from: d)
+                    completion(dic)
                 }
-            }
-            catch (let err){
-                print("ici")
-                print(err.localizedDescription)
+                catch (let err){
+                    print(err.localizedDescription)
+                }
             }
             }.resume()
     }

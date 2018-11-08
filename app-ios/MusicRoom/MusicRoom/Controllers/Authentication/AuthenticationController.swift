@@ -24,8 +24,8 @@ class AuthenticationController: UIViewController {
         button.titleEdgeInsets = UIEdgeInsets(top: -10,left: -10,bottom: -10,right: -10)
         button.backgroundColor = UIColor.gray
         button.layer.cornerRadius = 8
-        button.setAttributedTitle(NSAttributedString(string: "Login", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white]), for: .normal)
-        button.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
+        button.setAttributedTitle(NSAttributedString(string: "Login", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
+        button.addTarget(self, action: #selector(handleLoginView), for: .touchUpInside)
         view.addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false
         
@@ -40,8 +40,8 @@ class AuthenticationController: UIViewController {
         button1.setTitle("Register", for: .normal)
         button1.backgroundColor = UIColor.gray
         button1.layer.cornerRadius = 8
-        button1.setAttributedTitle(NSAttributedString(string: "Register", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white]), for: .normal)
-        button1.addTarget(self, action: #selector(handleRegister), for: .touchUpInside)
+        button1.setAttributedTitle(NSAttributedString(string: "Register", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
+        button1.addTarget(self, action: #selector(handleRegisterView), for: .touchUpInside)
         view.addSubview(button1)
         button1.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -70,11 +70,11 @@ class AuthenticationController: UIViewController {
         return iv
     }()
     
-    @objc func handleLogin() {
+    @objc func handleLoginView() {
         self.navigationController?.pushViewController(LoginController(), animated: true)
     }
     
-    @objc func handleRegister() {
+    @objc func handleRegisterView() {
         self.navigationController?.pushViewController(RegisterController(), animated: true)
     }
     

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FacebookLogin
 
 class LoginController: UIViewController, UITextFieldDelegate {
     let userManager : UserManager = UserManager()
@@ -20,12 +21,15 @@ class LoginController: UIViewController, UITextFieldDelegate {
         loginTF.tag = 0
         passTF.delegate = self
         passTF.tag = 1
+        //let loginButton = LoginButton(readPermissions: [ .publicProfile ])
+        // loginButton.center = view.center
+        // view.addSubview(loginButton)
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         switch textField.tag {
         case 0 : passTF.becomeFirstResponder()
-        case 1 : handleLogin()
+        case 1 : handleLogin(nil, txt: "yo")
         default : return true
         }
         return true
@@ -39,7 +43,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         tf.textColor = .white
         tf.returnKeyType = .done
         tf.enablesReturnKeyAutomatically = true
-        tf.attributedPlaceholder = NSAttributedString(string: "Email", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
+        tf.attributedPlaceholder = NSAttributedString(string: "Email", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white])
         tf.backgroundColor = UIColor.gray
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
@@ -51,8 +55,8 @@ class LoginController: UIViewController, UITextFieldDelegate {
         button.setTitle("Register", for: .normal)
         button.backgroundColor = UIColor.gray
         button.layer.cornerRadius = 8
-        button.setAttributedTitle(NSAttributedString(string: "Login", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white]), for: .normal)
-        button.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
+        button.setAttributedTitle(NSAttributedString(string: "Login", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
+        button.addTarget(self, action: #selector(handleLogin(nil, txt : "yoo")), for: .touchUpInside)
         view.addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false
 
@@ -91,15 +95,18 @@ class LoginController: UIViewController, UITextFieldDelegate {
         tf.textColor = .white
         tf.returnKeyType = .done
         tf.enablesReturnKeyAutomatically = true
-        tf.attributedPlaceholder = NSAttributedString(string: "Password", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
+        tf.attributedPlaceholder = NSAttributedString(string: "Password", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white])
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.isSecureTextEntry = true
         return tf
     }()
     
-    @objc func handleLogin() {
+    @objc func handleLogin(_ sender: Any?, txt : String) {
+        print(txt)
+        if let txt = sender as? String {
+            print("txt")
+        }
         print("Login")
-        var user = User(login: loginTF.text!, email: "", password: passTF.text!, token: nil)
         let apiManager = APIManager()
         let json = [
             "email" : "toto@yopmail.fr",
@@ -107,11 +114,9 @@ class LoginController: UIViewController, UITextFieldDelegate {
         ]
         let data = try? JSONSerialization.data(withJSONObject: json, options: [])
         print(JSONSerialization.isValidJSONObject(json))
-        apiManager.loginUser(data) { (json) in
-            user.token = json
+        apiManager.loginUser(data) { (user) in
+            print(user)
         }
-        print(user.token)
-
     }
     
     func setupView() {
