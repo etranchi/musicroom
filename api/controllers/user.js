@@ -3,25 +3,24 @@
 const model = require('../models/user');
 const Crypto = require('../modules/crypto');
 const Utils = require('../modules/utils');
-const jwt = require('jsonwebtoken');
 const Joi 	= require('joi');
 const config = require('../config/config.json');
 const argon = require('argon2');
 
-const nodemailer = require('nodemailer');
-const transporter = nodemailer.createTransport({
-    service: config.mail.service,
-    auth: {
-           user: config.mail.email,
-           pass: config.mail.password
-       }
-   });
-let mailOptions = {
-    from: config.mail.email, // sender address
-    to: config.mail.email, // list of receivers
-    subject: 'Music room token', // Subject line
-    html: '<p>Your html here</p>'// plain text body
-};
+// const nodemailer = require('nodemailer');
+// const transporter = nodemailer.createTransport({
+//     service: config.mail.service,
+//     auth: {
+//            user: config.mail.email,
+//            pass: config.mail.password
+//        }
+//    });
+// let mailOptions = {
+//     from: config.mail.email, // sender address
+//     to: config.mail.email, // list of receivers
+//     subject: 'Music room token', // Subject line
+//     html: '<p>Your html here</p>'// plain text body
+// };
 
 
 exports.connect = (req, res) => {

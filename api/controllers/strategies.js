@@ -178,7 +178,7 @@ module.exports = function () {
 				'status': token.status
 			}, function (err, user) {
 				if (err)
-					return done(err);
+					return done(null, false);
 				if (!user) {
 					return done(null, false);
 				}
