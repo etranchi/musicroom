@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios'
 import './styles.css';
 import {Button} from 'antd'
+const DZ = window.DZ;
 
 class Setting extends Component {
 	constructor(props) {
@@ -11,6 +12,8 @@ class Setting extends Component {
 			error: {}
 		}
 		this.getUser();
+		this.loginDeezer = this.loginDeezer.bind(this);
+		this.logoutDeezer = this.logoutDeezer.bind(this);
 	}
 
 	getUser() {
@@ -18,6 +21,7 @@ class Setting extends Component {
 		{'headers':{'Authorization':'Bearer '+ localStorage.getItem('token')}})
 		.then((resp) => {
 			this.setState({user:resp.data});
+			console.log(resp);
 		})
 		.catch((err) => {
 			this.setState({error: err})
@@ -25,41 +29,43 @@ class Setting extends Component {
 		})
 	}
 	loginDeezer () {
-        const script = document.createElement("script");
-
-        script.async = true;
-        script.type = 'text/javascript'
-        script.text = "DZ.init({app_id  : '310224', channelUrl : 'https://localhost:3000'});\
-        DZ.ready(function(sdk_options){\
-          console.log('DZ SDK is ready', sdk_options);\
-        });\
-        DZ.login(function(response) {\
-          if (response.authResponse) {\
-            console.log(response.authResponse);\
-            console.log('Welcome!  Fetching your information.... ');\
-			var xhttp = new XMLHttpRequest();\
-			xhttp.open('GET', 'https://192.168.99.100:4242/user/login/deezer?access_token=" + localStorage.getItem('token') + "', true);\
-			xhttp.setRequestHeader('Content-Type', 'application/json');\
-			xhttp.setRequestHeader('Authorization', 'Bearer " + localStorage.getItem('token') + "');\
-			xhttp.send();\
-            DZ.api('/user/me', function(response) {\
-              console.log(response);\
-              console.log('Good to see you, ' + response.name + '.');\
-            });\
-          } else {\
-            console.log('User cancelled login or did not fully authorize.');\
-          }\
-        }, {perms: 'basic_access,email,offline_access,manage_library,delete_library'});"
-
-        document.body.appendChild(script);
+		const that = this;
+		DZ.init({
+		    appId  : '310224',
+		    channelUrl : 'https://localhost:3000'
+		  });
+        DZ.login(function(response) {
+          if (response.authResponse) {
+			axios.get('https://192.168.99.100:4242/user/login/deezer?access_token=' + localStorage.getItem("token"))
+			.then(resp => {
+				this.setState({ user: { ...that.state.user, deezerToken: resp.data.deezerToken} } )	
+				console.log(resp);
+			})
+			.catch(err => {
+				console.log(err);
+			})
+          } else {
+            console.log('User cancelled login or did not fully authorize.');
+          }
+        }, {perms: 'basic_access,email,offline_access,manage_library,delete_library'});
     }
-	// loginDeezer() {
-	// 	
-	// }
+
+    logoutDeezer() {
+    	axios.delete('https://192.168.99.100:4242/user/login/deezer', {'headers':{'Authorization' : 'Bearer ' + localStorage.getItem('token')}})
+    	.then(resp => {
+    		this.setState({ user: { ...this.state.user, deezerToken: null} } )
+    		console.log('deleted token');
+    		console.log(this.state);
+    		console.log(resp);
+    	})
+    	.catch(err => {
+    		console.log(err);
+    	})
+    }
 	render() {
 	return (
 		<div>
-		<Button onClick={this.loginDeezer}>Login Deezer</Button>
+		{!this.state.user.deezerToken ? (<Button onClick={this.loginDeezer.bind(this)}>Login Deezer</Button>): (<Button onClick={this.logoutDeezer.bind(this)}>Logout Deezer</Button>)}
 			<p> Login: {this.state.user.login}</p>
 			<p> email: {this.state.user.email}</p>
 			<p> Status: {this.state.user.status}</p>
