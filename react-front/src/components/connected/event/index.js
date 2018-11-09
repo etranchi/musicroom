@@ -3,9 +3,15 @@ import {Tabs, Tab} from 'react-materialize'
 import Create from './createEvent';
 import List from './listEvent';
 import CardEvent from './completCardEvent';
+import axios from 'axios'
 import './styles.css';
 
 class Event extends Component {
+
+	constructor(props) {
+		super(props);
+	}
+
 	render() {
 		if (this.props.state.currentComponent === "cardEvent") {
 			return (<CardEvent state={this.props.state} updateParent={this.props.updateParent} />)

@@ -15,6 +15,7 @@ class LocationSearchInput extends Component {
         coord: ''
       },
       addressObj: '',
+      key: 0
     };
     this.handleSelect = this.handleSelect.bind(this);
   }
@@ -32,6 +33,7 @@ class LocationSearchInput extends Component {
         }
         this.setState({'address': results[0].formatted_address}) 
         this.setState({'addressObj': results[0]})
+        this.setState({'key': 1})
         getLatLng(results[0]).then(results => {
           location.coord = results;
           this.setState({location: location})

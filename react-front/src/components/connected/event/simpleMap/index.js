@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import GoogleMapReact from 'google-map-react';
 import './styles.css'
  
-const AnyReactComponent = ({ text }) => <div>{text}</div>;
+const AnyReactComponent = ({ text }) => <i style={{color:'#03a9f4'}}className="fas fa-map-marker-alt fa-3x"></i>;
  
 class SimpleMap extends Component {
     constructor(props) {
@@ -17,7 +17,7 @@ class SimpleMap extends Component {
   }
  
   render() {
-
+    {console.log("Je suis ici ???", this.props.state)}
     return (
       // Important! Always set the container height explicitly
       <div className="mapContent" style={this.mapStyle}>
@@ -29,7 +29,6 @@ class SimpleMap extends Component {
           <AnyReactComponent
             lat={this.props.state.location.coord.lat}
             lng={this.props.state.location.coord.lng}
-            text={'Kreyser Avrora'}
           />
         </GoogleMapReact>
       </div>

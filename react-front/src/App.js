@@ -12,7 +12,8 @@ class App extends Component {
 			currentComponent: localStorage.getItem('token') && localStorage.getItem('token').length > 0 ? 'event' : 'login',
       token: localStorage.getItem('token'),
       'data': [],
-      'id': null
+      'id': null,
+      'currentUser': null
 		}
 	}
 

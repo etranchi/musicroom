@@ -21,7 +21,6 @@ class CompletCardEvent extends Component {
         this.setState({'isHidden': !this.state.isHidden})
     }
 
-
 	render() {
         return (
             <div>

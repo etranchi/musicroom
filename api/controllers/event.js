@@ -1,6 +1,7 @@
 'use strict'
 
 const modelEvent = require('../models/event');
+const ObjectId = require('mongodb').ObjectID;
 // geolib pour le calcul de radius
 module.exports = {
 	getEvents: async (req, res) => {
@@ -19,18 +20,20 @@ module.exports = {
 	},
 	postEvent: async (req, res) => {
 		req.body = JSON.parse(req.body.body);
+
 		try {
 			if (req.file && req.file.filename) req.body.picture = req.file.filename
 			res.status(200).json(await modelEvent.create(req.body))
 		} catch (err) {
-			console.log("ERR %s", err)
 			res.status(400).json(err);
 		}
 	},
 	putEventById: async (req, res) => {
+		console.log("Je suis ici", req.params)
 		try {
 			// ADD JOI.VALIDATION
-			res.status(200).json(await modelEvent.updateOne({_id: req.params.id}, req.body, {new: true}))
+			let test = await modelEvent.updateOne({_id: req.params.id}, req.body, {new: true})
+			res.status(200).json(test)
 		} catch (err) {
 			res.status(400).json(err);
 		}

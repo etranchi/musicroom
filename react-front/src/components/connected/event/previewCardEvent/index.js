@@ -6,6 +6,7 @@ class PreviewCardEvent extends Component {
 	constructor(props) {
         super(props);
 		this.card = {
+            textAlign: 'center',
 			minHeight:"300px",
 			margin: "5% 0 0 0"
 		}
@@ -16,7 +17,7 @@ class PreviewCardEvent extends Component {
             padding: "0 0 0 0"
         };
         this.profileStyle = {
-           minHeight: "50px",
+            minHeight: "50px",
             margin: "8% 0 0 8%",
         }
         this.iconEditionBlockStyle = {
@@ -49,7 +50,7 @@ class PreviewCardEvent extends Component {
 		this.iconEditionBlockStyle = {
             position: 'absolute',
             bottom: '0',
-            width:"225px"
+            width:"220px"
         }
         this.iconBlockStyle = {
             padding : "20% 0 0 0 "
@@ -61,45 +62,46 @@ class PreviewCardEvent extends Component {
         this.props.updateParent({'currentComponent': 'cardEvent', 'data': this.props.event})
     }
 	render() {
-            return (
-                <Card title={this.props.event.title} style={this.card}>
-                    <Card.Grid style={this.gridStyleProfile}>
-                        <Card.Meta
+        let userPicture = this.props.event.creator.facebookId ? this.props.event.creator.picture : "https://192.168.99.100:4242/eventPicture/" + this.props.event.creator.picture
+        return (
+            <Card title={this.props.event.title} style={this.card}>
+                <Card.Grid style={this.gridStyleProfile}>
+                    <Card.Meta
                         style= {this.profileStyle}
-                            avatar={<Avatar src={"https://192.168.99.100:4242/eventPicture/" +  this.props.event.picture} />}
-                            title= {this.props.event.creator && this.props.event.creator.login ? this.props.event.creator.login : "Aucun" }
-                        />
-                        <div style={this.descritpionBlockStyle}>
-                            <b> { this.props.event.description ? this.props.event.description.substring(0, 190) :  " Aucune descritpion ... " }</b>
-                        </div>
-                        <div style={this.iconEditionBlockStyle}>
-                        <Icon style={this.iconEditionStyle} onClick={this.openCard.bind(this)} type="setting" theme="outlined" />
-                        <Icon style={this.iconEditionStyle} type="edit" theme="outlined" />
-                        <Icon style={this.iconEditionStyle} type="delete" theme="outlined" />
-                        </div>
-                    </Card.Grid>
-                    <Card.Grid style={this.gridStyleInfo}>
-                    <div style={this.iconBlockStyle}>
-                        <Icon  style={this.iconStyle} type="pushpin" theme="outlined" />
-                        <b style={this.iconNameStyle}>Paris {/* {this.this.props.event.address.v} */} </b>
+                        avatar={<Avatar src={userPicture} />}
+                        title= {this.props.event.creator && this.props.event.creator.login ? this.props.event.creator.login : "Aucun" }
+                    />
+                    <div style={this.descritpionBlockStyle}>
+                        <b> { this.props.event.description ? this.props.event.description.substring(0, 190) :  " Aucune descritpion ... " }</b>
                     </div>
-                    <div style={this.iconBlockStyle}>
-                        <Icon  style={this.iconStyle} type="clock-circle" theme="outlined" />
-                        <b style={this.iconNameStyle}> { this.props.event.date_creation ? this.props.event.date_creation : " à définir .." }</b>
+                    <div style={this.iconEditionBlockStyle}>
+                    <Icon style={this.iconEditionStyle} onClick={this.openCard.bind(this)} type="setting" theme="outlined" />
+                    <Icon style={this.iconEditionStyle} type="edit" theme="outlined" />
+                    <Icon style={this.iconEditionStyle} type="delete" theme="outlined" />
                     </div>
-                    <div style={this.iconBlockStyle}>
-                        <Icon  style={this.iconStyle} type={ this.props.event.public ? "unlock" : "lock" } theme="outlined" />
-                        <b style={this.iconNameStyle}> { this.props.event.public ? " Public" : " Privé" }</b>
-                    </div>
-                    <div style={this.iconBlockStyle}>
-                        <Icon style={this.iconStyle} type="user" theme="outlined" />
-                        <b style={this.iconNameStyle}> { this.props.event.members.count ? this.props.event.members.count + " participants" : "0 participant" }</b>
-                    </div>
-                    </Card.Grid>
-                    <Card.Grid style={this.gridStylePicture}>
-                        <img style={ this.eventPicture} alt="example" src={"https://192.168.99.100:4242/eventPicture/" +  this.props.event.picture} />
-                    </Card.Grid>
-                </Card>
+                </Card.Grid>
+                <Card.Grid style={this.gridStyleInfo}>
+                <div style={this.iconBlockStyle}>
+                    <Icon  style={this.iconStyle} type="pushpin" theme="outlined" />
+                    <b style={this.iconNameStyle}>Paris {/* {this.this.props.event.address.v} */} </b>
+                </div>
+                <div style={this.iconBlockStyle}>
+                    <Icon  style={this.iconStyle} type="clock-circle" theme="outlined" />
+                    <b style={this.iconNameStyle}> { this.props.event.date_creation ? this.props.event.date_creation : " à définir .." }</b>
+                </div>
+                <div style={this.iconBlockStyle}>
+                    <Icon  style={this.iconStyle} type={ this.props.event.public ? "unlock" : "lock" } theme="outlined" />
+                    <b style={this.iconNameStyle}> { this.props.event.public ? " Public" : " Privé" }</b>
+                </div>
+                <div style={this.iconBlockStyle}>
+                    <Icon style={this.iconStyle} type="user" theme="outlined" />
+                    <b style={this.iconNameStyle}> { this.props.event.members.length || this.props.event.adminMembers.length  ? this.props.event.members.length +  this.props.event.adminMembers.length + " participants" : "0 participant" }</b>
+                </div>
+                </Card.Grid>
+                <Card.Grid style={this.gridStylePicture}>
+                    <img style={ this.eventPicture} alt="example" src={"https://192.168.99.100:4242/eventPicture/" +  this.props.event.picture} />
+                </Card.Grid>
+            </Card>
         )
 	}
 }

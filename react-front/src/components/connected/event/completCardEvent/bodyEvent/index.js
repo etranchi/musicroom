@@ -37,7 +37,7 @@ class CreatorProfil extends Component {
                 <div className="members">
                     <div className="basicMember">
                     <div className="inlineMember">
-                        <b>  { this.props.state.data.adminMembers.length } </b>
+                        <b>  { this.props.state.data.members.length } </b>
                     </div>
                     <div className="inlineMember">
                         <p>Membres: </p> 
@@ -50,9 +50,10 @@ class CreatorProfil extends Component {
                     />
                     {
                     this.props.state.data.members.map((member, key) => {
+                        let userPicture = member.facebookId ? member.picture : "https://192.168.99.100:4242/eventPicture/" + member.picture
                         return (
                             <Card.Meta
-                                    avatar={<Avatar src={"https://192.168.99.100:4242/eventPicture/" + member.picture} />}
+                                    avatar={<Avatar src={userPicture} />}
                                     title= {member.login}
                                 />
                             )
@@ -74,15 +75,34 @@ class CreatorProfil extends Component {
         
                         {
                             this.props.state.data.adminMembers.map((member, key) => {
+                                let userPicture = member.facebookId ? member.picture : "https://192.168.99.100:4242/eventPicture/" + member.picture
+                                console.log("ICI" , member)
                                 return (
-                                    <Card.Meta
-                                        avatar={<Avatar src={"https://192.168.99.100:4242/eventPicture/" + member.picture} />}
-                                        title= {member.login}
-                                    />
+                                    <div className="previewMember">
+                                        <Card.Meta avatar={<Avatar src={userPicture} />} />
+                                        <div className="previewMemberLogin">
+                                            <p> {member.login}</p>
+                                        </div>
+                                    </div>
                                 )
                             })
-                    }   
+                        }   
                     </div> 
+                    <div className="playlistContent">
+                        <Input.Search
+                            placeholder="Ajouter une playlist"
+                            onSearch={value => console.log(value)}
+                            style={{ width: 230 }}
+                        />
+                        {
+                             this.props.state.data.playlist
+                            // this.props.state.data.playlist.map((playlist, key) => {
+                            //     return (
+                            //        <p> {playlist}</p>
+                            //     )
+                            // })
+                        }   
+                    </div>
                 </div>
             </div>
         );
