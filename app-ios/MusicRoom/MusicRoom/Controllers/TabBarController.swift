@@ -71,10 +71,10 @@ class TabBarController: UITabBarController {
         view.addSubview(minimizedPlayer)
         additionalSafeAreaInsets.bottom = -80
         NSLayoutConstraint.activate([
-            minimizedPlayer.topAnchor.constraint(equalTo: tabBar.topAnchor, constant: -50),
+            minimizedPlayer.topAnchor.constraint(equalTo: tabBar.topAnchor, constant: -44),
             minimizedPlayer.trailingAnchor.constraint(equalTo: tabBar.trailingAnchor),
             minimizedPlayer.leadingAnchor.constraint(equalTo: tabBar.leadingAnchor),
-            minimizedPlayer.bottomAnchor.constraint(equalTo: tabBar.bottomAnchor, constant: -49)
+            minimizedPlayer.bottomAnchor.constraint(equalTo: tabBar.bottomAnchor, constant: -43)
         ])
         
         tabViewController0.title = "Playlists"

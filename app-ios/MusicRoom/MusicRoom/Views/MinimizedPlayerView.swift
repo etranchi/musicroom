@@ -43,29 +43,33 @@ class MinimizedPlayerView: UIView {
     let titleLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
-        label.text = "ready tou play"
+        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        label.text = "Ready to play"
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.isUserInteractionEnabled = true
         return label
     }()
+    
+    
     
     let authorLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
-        label.text = "your favorite song"
+        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        label.text = "Your favorite songs"
         label.textColor = .lightGray
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.isUserInteractionEnabled = true
         return label
     }()
     
     let downButton: UIButton = {
         let button = UIButton(type: .system)
-        let playIcon = UIImage(named: "down_icon")
+        let playIcon = UIImage(named: "like_icon")
         let tintedIcon = playIcon?.withRenderingMode(.alwaysTemplate)
         button.setImage(tintedIcon, for: .normal)
         button.tintColor = UIColor(white: 1, alpha: 1)
@@ -79,7 +83,7 @@ class MinimizedPlayerView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         
         view.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        view.backgroundColor = UIColor(white: 0.5, alpha: 0.6)
+        view.backgroundColor = UIColor(white: 0.3, alpha: 0.6)
         return view
     }()
     
@@ -88,7 +92,7 @@ class MinimizedPlayerView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         
         view.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        view.backgroundColor = UIColor(white: 0.5, alpha: 0.6)
+        view.backgroundColor = UIColor(white: 0.3, alpha: 0.6)
         return view
     }()
     
@@ -140,14 +144,24 @@ class MinimizedPlayerView: UIView {
         }
     }
     
+    @objc func handleLike() {
+        
+    }
+    
     fileprivate func setupPlayerContainerBackground() {
         playerContainerView.backgroundColor = UIColor(white: 0.4, alpha: 0.6)
-        let bounds = playerContainerView.bounds
         let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+        visualEffectView.translatesAutoresizingMaskIntoConstraints = false
         visualEffectView.isUserInteractionEnabled = false
-        visualEffectView.frame = bounds
-        visualEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         playerContainerView.addSubview(visualEffectView)
+        NSLayoutConstraint.activate([
+            visualEffectView.topAnchor.constraint(equalTo: playerContainerView.topAnchor),
+            visualEffectView.trailingAnchor.constraint(equalTo: playerContainerView.trailingAnchor),
+            visualEffectView.leadingAnchor.constraint(equalTo: playerContainerView.leadingAnchor),
+            visualEffectView.bottomAnchor.constraint(equalTo: playerContainerView.bottomAnchor),
+        ])
+        visualEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
         visualEffectView.layer.zPosition = -1
         playerContainerView.addSubview(separator0)
         playerContainerView.addSubview(separator1)
@@ -164,7 +178,10 @@ class MinimizedPlayerView: UIView {
     }
     
     fileprivate func setupView() {
-        downButton.addTarget(self, action: #selector(pushPlayer), for: .touchUpInside)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pushPlayer))
+        titleLabel.addGestureRecognizer(tapGesture)
+        authorLabel.addGestureRecognizer(tapGesture)
+        downButton.addTarget(self, action: #selector(handleLike), for: .touchUpInside)
         translatesAutoresizingMaskIntoConstraints = false
         playerContainerView.layer.zPosition = 10
         playerContainerView.backgroundColor = .red
@@ -178,28 +195,28 @@ class MinimizedPlayerView: UIView {
         NSLayoutConstraint.activate([
             playerContainerView.topAnchor.constraint(equalTo: topAnchor),
             playerContainerView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            playerContainerView.heightAnchor.constraint(equalToConstant: 50),
+            playerContainerView.heightAnchor.constraint(equalToConstant: 44),
             playerContainerView.leadingAnchor.constraint(equalTo: leadingAnchor),
             
             playButton.centerYAnchor.constraint(equalTo: playerContainerView.centerYAnchor),
             playButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -14),
-            playButton.widthAnchor.constraint(equalToConstant: 38),
-            playButton.heightAnchor.constraint(equalToConstant: 38),
+            playButton.widthAnchor.constraint(equalToConstant: 30),
+            playButton.heightAnchor.constraint(equalToConstant: 30),
             
             downButton.centerYAnchor.constraint(equalTo: playerContainerView.centerYAnchor),
             downButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 14),
-            downButton.widthAnchor.constraint(equalToConstant: 22),
+            downButton.widthAnchor.constraint(equalToConstant: 28),
             downButton.heightAnchor.constraint(equalToConstant: 28),
             
-            titleLabel.leadingAnchor.constraint(equalTo: downButton.trailingAnchor, constant: 5),
-            titleLabel.trailingAnchor.constraint(equalTo: playButton.leadingAnchor, constant: -5),
-            titleLabel.topAnchor.constraint(equalTo: playerContainerView.topAnchor, constant: 5),
-            titleLabel.heightAnchor.constraint(equalToConstant: 20),
+            titleLabel.leadingAnchor.constraint(equalTo: downButton.trailingAnchor, constant: 10),
+            titleLabel.trailingAnchor.constraint(equalTo: playButton.leadingAnchor, constant: -10),
+            titleLabel.topAnchor.constraint(equalTo: playerContainerView.topAnchor, constant: 4),
+            titleLabel.heightAnchor.constraint(equalToConstant: 18),
             
-            authorLabel.leadingAnchor.constraint(equalTo: downButton.trailingAnchor, constant: 5),
-            authorLabel.trailingAnchor.constraint(equalTo: playButton.leadingAnchor, constant: -5),
-            authorLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
-            authorLabel.heightAnchor.constraint(equalToConstant: 20)
+            authorLabel.leadingAnchor.constraint(equalTo: downButton.trailingAnchor, constant: 10),
+            authorLabel.trailingAnchor.constraint(equalTo: playButton.leadingAnchor, constant: -10),
+            authorLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: -2),
+            authorLabel.heightAnchor.constraint(equalToConstant: 22)
         ])
     }
 }
