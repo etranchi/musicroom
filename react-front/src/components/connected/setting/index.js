@@ -21,7 +21,6 @@ class Setting extends Component {
 		{'headers':{'Authorization':'Bearer '+ localStorage.getItem('token')}})
 		.then((resp) => {
 			this.setState({user:resp.data});
-			console.log(resp);
 		})
 		.catch((err) => {
 			this.setState({error: err})
@@ -32,14 +31,13 @@ class Setting extends Component {
 		const that = this;
 		DZ.init({
 		    appId  : '310224',
-		    channelUrl : 'https://localhost:3000'
+		    channelUrl : 'https://localhost:3000',
 		  });
         DZ.login(function(response) {
           if (response.authResponse) {
 			axios.get('https://192.168.99.100:4242/user/login/deezer?access_token=' + localStorage.getItem("token"))
 			.then(resp => {
-				this.setState({ user: { ...that.state.user, deezerToken: resp.data.deezerToken} } )	
-				console.log(resp);
+				that.props.updateParent({ user: { ...that.state.user, deezerToken: resp.data.deezerToken} } )	
 			})
 			.catch(err => {
 				console.log(err);
@@ -53,19 +51,17 @@ class Setting extends Component {
     logoutDeezer() {
     	axios.delete('https://192.168.99.100:4242/user/login/deezer', {'headers':{'Authorization' : 'Bearer ' + localStorage.getItem('token')}})
     	.then(resp => {
-    		this.setState({ user: { ...this.state.user, deezerToken: null} } )
-    		console.log('deleted token');
-    		console.log(this.state);
-    		console.log(resp);
+    		this.props.updateParent({ user: { ...this.state.user, deezerToken: null} } )
     	})
     	.catch(err => {
     		console.log(err);
     	})
     }
 	render() {
+		const token = this.props.state.user.deezerToken
 	return (
 		<div>
-		{!this.state.user.deezerToken ? (<Button onClick={this.loginDeezer.bind(this)}>Login Deezer</Button>): (<Button onClick={this.logoutDeezer.bind(this)}>Logout Deezer</Button>)}
+		{!token ? (<Button onClick={this.loginDeezer.bind(this)}>Login Deezer</Button>): (<Button onClick={this.logoutDeezer.bind(this)}>Logout Deezer</Button>)}
 			<p> Login: {this.state.user.login}</p>
 			<p> email: {this.state.user.email}</p>
 			<p> Status: {this.state.user.status}</p>

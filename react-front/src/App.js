@@ -27,12 +27,7 @@ class App extends Component {
   componentDidUpdate= () => {
     console.log(this.state);
   }
-
-  componentDidMount() {
-    var script = document.createElement('script');
-    script.src = "https://e-cdns-files.dzcdn.net/js/min/dz.js";
-    document.getElementsByTagName('head')[0].appendChild(script);
-  }
+  
   componentWillMount() {
     const token = localStorage.getItem('token');
     if (token)
@@ -51,7 +46,6 @@ class App extends Component {
 
   render() {
     const token = localStorage.getItem('token')
-    console.log(this.state);
     return (
       <div className="App">
       <div id="dz-root"></div>
