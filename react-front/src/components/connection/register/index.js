@@ -35,7 +35,7 @@ class Register extends Component {
 			.then((resp) => {
 				localStorage.setItem('token', resp.data.token);
 				console.log("confirm success");
-				this.props.updateParent({'token':resp.data.token,'currentComponent': 'event'});
+				this.props.updateParent({'token':resp.data.token, 'currentComponent': 'event', 'user': resp.data.user});
 			})
 			.catch((err) => {
 				console.log("confirm error -> " + err)

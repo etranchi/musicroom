@@ -32,10 +32,22 @@ exports.connect = (req, res) => {
 
 exports.bindDeezerToken = async (req, res) => {
 	try {
-		await model.updateOne({_id: req.user._id}, {
+		let user = await model.findByIdAndUpdate({_id: req.user._id}, {
 				deezerToken: req.query.access_token
 			})
-		res.status(200).send({message: "linked with deezer"});
+		res.status(200).send(user);
+	} catch (err) {
+		console.log("bindDeezerToken " + err)
+		res.status(400).send({error: "not linked"});
+	}
+}
+
+exports.deleteDeezerToken = async (req, res) => {
+	try {
+		let user = await model.findByIdAndUpdate({_id: req.user._id}, {
+				deezerToken: null
+			})
+		res.status(200).send(user);
 	} catch (err) {
 		console.log("bindDeezerToken " + err)
 		res.status(400).send({error: "not linked"});
