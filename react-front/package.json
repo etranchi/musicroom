@@ -12,6 +12,7 @@
     "react-bootstrap": "^0.32.4",
     "react-dom": "^16.6.0",
     "react-facebook-login": "^4.1.1",
+    "react-google-login": "^3.2.1",
     "react-images-upload": "^1.2.3",
     "react-materialize": "^2.4.8",
     "react-places-autocomplete": "^7.2.0",

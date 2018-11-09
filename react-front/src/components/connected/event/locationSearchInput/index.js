@@ -83,7 +83,7 @@ class LocationSearchInput extends Component {
             </div>
           )}
         </PlacesAutocomplete>
-          {this.state.key == 1 ? <SimpleMap state={this.state} /> : null}
+          {this.state.key === 1 ? <SimpleMap state={this.state} /> : null}
         </div>
 			);
 		}

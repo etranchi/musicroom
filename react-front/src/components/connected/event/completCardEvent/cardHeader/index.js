@@ -54,7 +54,7 @@ class CardHeader extends Component {
                 <Card>
                     <Card.Grid style={this.gridStyleBlack}>Content1</Card.Grid>
                     <Card.Grid style={this.gridStylePicture}>
-                        <img style={this.pictureStyle} src={"https://192.168.99.100:4242/eventPicture/" +  this.props.state.data.picture} />
+                        <img style={this.pictureStyle} alt="eventPicture" src={"https://192.168.99.100:4242/eventPicture/" +  this.props.state.data.picture} />
                         <div style={this.centered}> <h1 style={this.title}>  {this.props.state.data.title[0].toUpperCase() + this.props.state.data.title.slice(1)} </h1> </div>
                     </Card.Grid>
                     <Card.Grid style={this.gridStyleBlack}>Content3</Card.Grid>

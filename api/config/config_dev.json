@@ -8,6 +8,7 @@
 		"apiUrl": "https://api.deezer.com",
 		"clientID": "",
         "clientSecret": "",
+
 		"callbackURL": "/oauth/deezer/callback",
 		"scope": [
 			"basic_access",
@@ -31,9 +32,45 @@
 			"email"
 		]
 	},
+    "google": {
+        "clientID": "",
+        "clientSecret": "",
+        "scope": [
+            "email"
+        ],
+        "profileFields": [
+            "id",
+            "displayName",
+            "photos",
+            "email"
+        ]
+    },
 	"mail": {
 		"email": "",
 		"password": "",
 		"service": "gmail"
-	}
+	},
+    "swagger": {
+        "swaggerDefinition": {
+            "info": {
+                "description": "Music Room API",
+                "title": "Music Room",
+                "version": "1.0.0"
+            },
+            "host": "192.168.99.100:4242",
+            "basePath": "",
+            "produces": [
+                "application/json"
+            ],
+            "schemes": ["https"],
+            "securityDefinitions": {
+                "Bearer": {
+					"type": "apiKey",
+					"name": "Authorization",
+					"in": "header",
+					"template": "Bearer {apiKey}"
+				}
+            }
+        }
+    }
 }

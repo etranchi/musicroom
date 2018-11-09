@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './styles.css';
-import { Divider, Card, Avatar, Icon, Input } from 'antd';
+import { Card, Avatar, Icon, Input } from 'antd';
 
 
 
