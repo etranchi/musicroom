@@ -6,16 +6,9 @@ target 'MusicRoom' do
   use_frameworks!
 
   # Pods for MusicRoom
-  pod 'FacebookLogin', '0.3.0'
   pod 'FacebookCore', '0.3.0'
+  pod 'FacebookLogin', '0.3.0'
+  pod 'FacebookShare', '0.3.0'
+  pod 'Google/SignIn'
 end
 
-post_install do |installer|
-    installer.pods_project.targets.each do |target|
-        if ['FacebookLogin'].include? target.name
-            target.build_configurations.each do |config|
-                config.build_settings['SWIFT_VERSION'] = '4.0'
-            end
-        end
-    end
-end

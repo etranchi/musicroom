@@ -8,28 +8,61 @@
 
 import UIKit
 import FacebookLogin
+import FacebookCore
+import GoogleSignIn
+import GoogleToolboxForMac
 
-class LoginController: UIViewController, UITextFieldDelegate {
+class LoginController: UIViewController, UITextFieldDelegate, GIDSignInUIDelegate {
+    /*func loginButtonDidCompleteLogin(_ loginButton: LoginButton, result: LoginResult) {
+        print("Login")
+    }
+    
+    func loginButtonDidLogOut(_ loginButton: LoginButton) {
+        print("logout")
+    }*/
+    
     let userManager : UserManager = UserManager()
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         view.backgroundColor = .black
+        GIDSignIn.sharedInstance().uiDelegate = self
         setupView()
         setupButton()
         loginTF.delegate = self
         loginTF.tag = 0
         passTF.delegate = self
         passTF.tag = 1
-        //let loginButton = LoginButton(readPermissions: [ .publicProfile ])
-        // loginButton.center = view.center
-        // view.addSubview(loginButton)
+        let myLoginButton = UIButton(type: .roundedRect)
+        myLoginButton.backgroundColor = UIColor.darkGray
+        myLoginButton.frame = CGRect(x: 0,y : 0,width: 180,height:  40);
+        myLoginButton.center = view.center;
+        myLoginButton.setTitle("My Login Button", for: .normal)
+        // Handle clicks on the button
+        myLoginButton.addTarget(self, action: #selector(self.loginButtonClicked), for: .touchUpInside)
+        
+        // Add the button to the view
+        view.addSubview(myLoginButton)
     }
     
+    @objc func loginButtonClicked() {
+        let loginManager = LoginManager()
+        loginManager.logIn(readPermissions: [ReadPermission.publicProfile], viewController: self) { (loginResult) in
+            switch loginResult {
+            case .failed(let error):
+                print(error)
+            case .cancelled:
+                print("User cancelled login.")
+            case .success(let grantedPermissions, let declinedPermissions, let accessToken):
+                print("Logged in!")
+                print("Facebook token : \(accessToken)")
+            }
+        }
+    }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         switch textField.tag {
         case 0 : passTF.becomeFirstResponder()
-        case 1 : handleLogin(nil, txt: "yo")
+        case 1 : handleLogin()
         default : return true
         }
         return true
@@ -56,7 +89,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         button.backgroundColor = UIColor.gray
         button.layer.cornerRadius = 8
         button.setAttributedTitle(NSAttributedString(string: "Login", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
-        button.addTarget(self, action: #selector(handleLogin(nil, txt : "yoo")), for: .touchUpInside)
+        button.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
         view.addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false
 
@@ -101,11 +134,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
         return tf
     }()
     
-    @objc func handleLogin(_ sender: Any?, txt : String) {
-        print(txt)
-        if let txt = sender as? String {
-            print("txt")
-        }
+    @objc func handleLogin() {
         print("Login")
         let apiManager = APIManager()
         let json = [
