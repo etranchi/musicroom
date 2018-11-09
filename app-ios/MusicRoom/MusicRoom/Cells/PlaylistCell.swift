@@ -8,6 +8,45 @@
 
 import UIKit
 
+class PlaylistCell: UITableViewCell {
+    
+    var track : PlaylistTrack? {
+        didSet {
+            nameLabel.text = track?.name
+            artistLabel.text = track?.artist
+        }
+    }
+    
+    private let nameLabel : UILabel = {
+        let label = UILabel()
+        label.textColor = .white
+        
+        return label
+    }()
+    
+    private let artistLabel : UILabel = {
+        let label = UILabel()
+        label.textColor = .white
+        
+        return label
+    }()
+    
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        backgroundColor = UIColor(white: 0.2, alpha: 1)
+        addSubview(artistLabel)
+        addSubview(nameLabel)
+        
+        nameLabel.anchor(top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: nil, padding: .init(top: 12, left: 12, bottom: 12, right: 0))
+        artistLabel.anchor(top: topAnchor, leading: nameLabel.trailingAnchor, bottom: bottomAnchor, trailing: nil, padding: .init(top: 12, left: 12, bottom: 12, right: 0))
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+}
+
 class PlaylistHomeCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -34,16 +73,8 @@ class PlaylistHomeCell: UICollectionViewCell {
     
     let imagePlst : UIImageView = {
         let image = UIImageView()
-//        var frame = image.frame
         
         image.backgroundColor = .lightGray
-//        image.contentMode = .scaleAspectFill
-//        image.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
-//        image.frame.size.height = frame.size.height
-//        image.frame.size.width = frame.size.width
-//        image.frame.origin.x = 0
-//        image.frame.origin.y = 0
-//        image.frame = frame
         return image
     }()
     
