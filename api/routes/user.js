@@ -38,6 +38,12 @@ router.get('/login/deezer',
 		userController.bindDeezerToken
 	);
 
+router.delete('/login/deezer',
+		passport.authenticate('bearer'),
+		middlewares.isConfirmed,
+		userController.deleteDeezerToken
+	);
+
 /**
  * @route GET /user
  * @group user - Operations about user
