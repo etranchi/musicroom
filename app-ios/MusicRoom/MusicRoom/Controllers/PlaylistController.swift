@@ -28,6 +28,7 @@ class PlaylistHomeController: UICollectionViewController, UICollectionViewDelega
     }
     
     override func viewDidLoad() {
+        createPlaylistArray()
         let layoutA = UICollectionViewFlowLayout()
         let layoutB = UICollectionViewFlowLayout()
         
@@ -52,13 +53,25 @@ class PlaylistHomeController: UICollectionViewController, UICollectionViewDelega
             let searchBarCell = collectionViewA.dequeueReusableCell(withReuseIdentifier: collectionViewAIdentifier, for: indexPath) as! SearchCell
             searchBarCell.placeholder = "playlists, events..."
             searchBarCell.vc = self
+            print("indexpath in search", indexPath.item)
+            print("end searchCell")
             return searchBarCell
         }
-        else {
+        else if indexPath.item <= playlists.count {
+            print("count : ", playlists.count)
             let playlistHomeCell = collectionViewB.dequeueReusableCell(withReuseIdentifier: collectionViewBIdentifier, for: indexPath) as! PlaylistHomeCell
             print("indexpath playlists : ", indexPath.item - 1)
+            print(playlists[indexPath.item - 1])
             playlistHomeCell.playlist = playlists[indexPath.item - 1]
             return playlistHomeCell
+        }
+        else {
+            let searchBarCell = collectionViewA.dequeueReusableCell(withReuseIdentifier: collectionViewAIdentifier, for: indexPath) as! SearchCell
+            searchBarCell.placeholder = "playlists, events..."
+            searchBarCell.vc = self
+            print("indexpath in search", indexPath.item)
+            print("end searchCell")
+            return searchBarCell
         }
     }
     
