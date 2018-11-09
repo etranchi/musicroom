@@ -13,13 +13,14 @@ let playerController = PlayerController([], -2)
 class TabBarController: UITabBarController {
 
     var offsetY: CGFloat = 0.0
-    let imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    let imageInsets = UIEdgeInsets(top: 10, left: 0, bottom: -10, right: 0)
     let tabViewController0 = PlaylistController(collectionViewLayout: UICollectionViewFlowLayout())
     let tabViewController1 = SearchController(collectionViewLayout: UICollectionViewFlowLayout())
     let tabViewController2 = LibraryController()
     let minimizedPlayer = MinimizedPlayerView()
-    
+    let playerView = playerController.view!
     var navi1: CustomNavigationController?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,56 +28,64 @@ class TabBarController: UITabBarController {
         view.backgroundColor = UIColor(white: 0.2, alpha: 1)
         setupBlurTabBar()
         setupTabBarController()
-        offsetY = tabBar.frame.size.height
+        offsetY = tabBar.frame.size.height + 35
     }
     
     fileprivate func setupBlurTabBar() {
         tabBar.tintColor = .white
         tabBar.backgroundImage = UIImage()
-        tabBar.backgroundColor = UIColor(white: 0.4, alpha: 0.6)
+        tabBar.backgroundColor = UIColor(white: 0.4, alpha: 0.8)
         let bounds = tabBar.bounds
         let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
         visualEffectView.isUserInteractionEnabled = false
         visualEffectView.frame = bounds
         visualEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         tabBar.addSubview(visualEffectView)
-        visualEffectView.layer.zPosition = -1
+        visualEffectView.layer.zPosition = -4
     }
     
     func showPlayerFromMinimized() {
-        selectedViewController = navi1
-        navi1!.pushViewController(playerController, animated: true)
-        if playerController.hasPaused == true {
-            playerController.handlePause()
-        }
+        animatedShowPlayer()
+        
     }
     
     func showPlayerForSong(_ index: Int) {
         playerController.tracks = tabViewController1.musicCategories![1].tracks
         if index == playerController.index, tabViewController1.trackListChanged == false {
             AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
-            tabViewController1.navigationController?.pushViewController(playerController, animated: true)
-            playerController.handlePlay()
+            playerController.viewDidPop()
             return
         }
         tabViewController1.trackListChanged = false
         playerController.index = index
         playerController.loadTrackInplayer()
         AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
-        navi1!.pushViewController(playerController, animated: true)
+        playerController.viewDidPop()
     }
     
     fileprivate func setupTabBarController() {
         playerController.rootViewController = self
+        playerController.minimizedPlayer = minimizedPlayer
+        addChildViewController(playerController)
+        tabBar.removeFromSuperview()
+        view.addSubview(playerView)
         view.addSubview(minimizedPlayer)
-        additionalSafeAreaInsets.bottom = -80
+        view.addSubview(tabBar)
+        playerView.translatesAutoresizingMaskIntoConstraints = false
+        minimizedPlayer.backgroundColor = UIColor(white: 0.3, alpha: 0.5)
         NSLayoutConstraint.activate([
             minimizedPlayer.topAnchor.constraint(equalTo: tabBar.topAnchor, constant: -44),
             minimizedPlayer.trailingAnchor.constraint(equalTo: tabBar.trailingAnchor),
             minimizedPlayer.leadingAnchor.constraint(equalTo: tabBar.leadingAnchor),
-            minimizedPlayer.bottomAnchor.constraint(equalTo: tabBar.bottomAnchor, constant: -43)
+            minimizedPlayer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -43),
+            
+            playerView.topAnchor.constraint(equalTo: view.topAnchor),
+            playerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            playerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            playerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
+        playerView.transform = CGAffineTransform(translationX: 0, y: view.bounds.height - offsetY - 44)
         tabViewController0.title = "Playlists"
         tabViewController1.title = "Search"
         tabViewController2.title = "Library"
@@ -95,17 +104,33 @@ class TabBarController: UITabBarController {
         viewControllers = [navi0, navi1!, navi2]
     }
     
+    func animatedShowPlayer() {
+        animatedHideTabBar()
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.playerView.transform = .identity
+            self.minimizedPlayer.transform = CGAffineTransform(translationX: 0, y: -self.view.bounds.height + self.offsetY + 44)
+            self.minimizedPlayer.alpha = 0
+        })
+    }
+    
+    func animatedHidePlayer() {
+        animatedShowTabBar()
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.playerView.transform = CGAffineTransform(translationX: 0, y: self.view.bounds.height - self.offsetY - 44)
+            self.minimizedPlayer.transform = .identity
+            self.minimizedPlayer.alpha = 1
+        })
+    }
+    
     func animatedShowTabBar() {
-        UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-            self.tabBar.transform = CGAffineTransform.identity
-            self.minimizedPlayer.transform = CGAffineTransform.identity
+        UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.tabBar.transform = .identity
         })
     }
     
     func animatedHideTabBar() {
-        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-            self.tabBar.transform = CGAffineTransform(translationX: 0, y: self.offsetY + 90)
-            self.minimizedPlayer.transform = CGAffineTransform(translationX: 0, y: self.offsetY + 90)
+        UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.tabBar.transform = CGAffineTransform(translationX: 0, y: self.offsetY)
         })
     }
 }

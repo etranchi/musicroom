@@ -31,8 +31,8 @@ class MinimizedPlayerView: UIView {
     
     let playButton: UIButton = {
         let button = UIButton(type: .system)
-        let playIcon = UIImage(named: "play_icon")
-        let tintedIcon = playIcon?.withRenderingMode(.alwaysTemplate)
+        let playIcon = #imageLiteral(resourceName: "play_icon")
+        let tintedIcon = playIcon.withRenderingMode(.alwaysTemplate)
         button.setImage(tintedIcon, for: .normal)
         button.tintColor = UIColor(white: 1, alpha: 1)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -53,8 +53,6 @@ class MinimizedPlayerView: UIView {
         return label
     }()
     
-    
-    
     let authorLabel: UILabel = {
         let label = UILabel()
         
@@ -67,10 +65,10 @@ class MinimizedPlayerView: UIView {
         return label
     }()
     
-    let downButton: UIButton = {
+    let likeButton: UIButton = {
         let button = UIButton(type: .system)
-        let playIcon = UIImage(named: "like_icon")
-        let tintedIcon = playIcon?.withRenderingMode(.alwaysTemplate)
+        let icon = #imageLiteral(resourceName: "like_icon")
+        let tintedIcon = icon.withRenderingMode(.alwaysTemplate)
         button.setImage(tintedIcon, for: .normal)
         button.tintColor = UIColor(white: 1, alpha: 1)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -97,15 +95,15 @@ class MinimizedPlayerView: UIView {
     }()
     
     func setPlayIcon() {
-        let playIcon = UIImage(named: "play_icon")
+        let playIcon = #imageLiteral(resourceName: "play_icon")
         
-        let tintedIcon = playIcon?.withRenderingMode(.alwaysTemplate)
+        let tintedIcon = playIcon.withRenderingMode(.alwaysTemplate)
         playButton.setImage(tintedIcon, for: .normal)
     }
     
     func setPauseIcon() {
-        let playIcon = UIImage(named: "pause_icon")
-        let tintedIcon = playIcon?.withRenderingMode(.alwaysTemplate)
+        let playIcon = #imageLiteral(resourceName: "pause_icon")
+        let tintedIcon = playIcon.withRenderingMode(.alwaysTemplate)
         playButton.setImage(tintedIcon, for: .normal)
     }
     
@@ -181,21 +179,20 @@ class MinimizedPlayerView: UIView {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pushPlayer))
         titleLabel.addGestureRecognizer(tapGesture)
         authorLabel.addGestureRecognizer(tapGesture)
-        downButton.addTarget(self, action: #selector(handleLike), for: .touchUpInside)
+        likeButton.addTarget(self, action: #selector(handleLike), for: .touchUpInside)
         translatesAutoresizingMaskIntoConstraints = false
-        playerContainerView.layer.zPosition = 10
         playerContainerView.backgroundColor = .red
         addSubview(playerContainerView)
         setupPlayerContainerBackground()
         playerContainerView.addSubview(playButton)
-        playerContainerView.addSubview(downButton)
+        playerContainerView.addSubview(likeButton)
         playerContainerView.addSubview(titleLabel)
         playerContainerView.addSubview(authorLabel)
         
         NSLayoutConstraint.activate([
             playerContainerView.topAnchor.constraint(equalTo: topAnchor),
             playerContainerView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            playerContainerView.heightAnchor.constraint(equalToConstant: 44),
+            playerContainerView.heightAnchor.constraint(equalToConstant: 45),
             playerContainerView.leadingAnchor.constraint(equalTo: leadingAnchor),
             
             playButton.centerYAnchor.constraint(equalTo: playerContainerView.centerYAnchor),
@@ -203,17 +200,17 @@ class MinimizedPlayerView: UIView {
             playButton.widthAnchor.constraint(equalToConstant: 30),
             playButton.heightAnchor.constraint(equalToConstant: 30),
             
-            downButton.centerYAnchor.constraint(equalTo: playerContainerView.centerYAnchor),
-            downButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 14),
-            downButton.widthAnchor.constraint(equalToConstant: 28),
-            downButton.heightAnchor.constraint(equalToConstant: 28),
+            likeButton.centerYAnchor.constraint(equalTo: playerContainerView.centerYAnchor),
+            likeButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 14),
+            likeButton.widthAnchor.constraint(equalToConstant: 28),
+            likeButton.heightAnchor.constraint(equalToConstant: 28),
             
-            titleLabel.leadingAnchor.constraint(equalTo: downButton.trailingAnchor, constant: 10),
+            titleLabel.leadingAnchor.constraint(equalTo: likeButton.trailingAnchor, constant: 10),
             titleLabel.trailingAnchor.constraint(equalTo: playButton.leadingAnchor, constant: -10),
             titleLabel.topAnchor.constraint(equalTo: playerContainerView.topAnchor, constant: 4),
             titleLabel.heightAnchor.constraint(equalToConstant: 18),
             
-            authorLabel.leadingAnchor.constraint(equalTo: downButton.trailingAnchor, constant: 10),
+            authorLabel.leadingAnchor.constraint(equalTo: likeButton.trailingAnchor, constant: 10),
             authorLabel.trailingAnchor.constraint(equalTo: playButton.leadingAnchor, constant: -10),
             authorLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: -2),
             authorLabel.heightAnchor.constraint(equalToConstant: 22)

@@ -84,7 +84,7 @@ class CoverContainerView: UIView {
             previousLeadingAnchor?.constant -= 40
         }
         
-        UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             iv.alpha = 1
             self.currentCoverImageView.alpha = 0.5
             self.layoutIfNeeded()

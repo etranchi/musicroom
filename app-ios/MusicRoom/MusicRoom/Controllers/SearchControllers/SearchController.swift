@@ -42,7 +42,6 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
         collectionView?.register(CategoryCell.self, forCellWithReuseIdentifier: categoryCellId)
         collectionView?.register(SearchCell.self, forCellWithReuseIdentifier: searchCellId)
         
-        
         performSearch(initialSearch) { (albums, tracks, artists) in
             self.musicCategories = MusicCategory.sampleMusicCategories(albums, tracks, artists)
             self.collectionView?.reloadData()
@@ -92,6 +91,10 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
 
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         collectionViewLayout.invalidateLayout()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
