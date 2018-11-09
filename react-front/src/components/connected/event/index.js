@@ -16,6 +16,7 @@ class Event extends Component {
 		if (this.props.state.currentComponent === "cardEvent") {
 			return (<CardEvent state={this.props.state} updateParent={this.props.updateParent} />)
 		}
+
 		else {
 			return (
 				<Tabs className='tab-demo z-depth-1'>

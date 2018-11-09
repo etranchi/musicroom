@@ -13,7 +13,9 @@ class CreatorProfil extends Component {
             this.setState({iconPrivacy: "lock"})
     
     }
-    handleChangePrivacy = event => {   
+    handleChangePrivacy = event => {
+        console.log("User : ", this.props.state.user.login, this.props.state.data.creator.login)
+        if (this.props.state.user.login != this.props.state.data.creator.login) return 
         this.props.state.data.public = !this.props.state.data.public
         if ( this.props.state.data.public) this.setState({iconPrivacy: "lock"})
         else this.setState({iconPrivacy: "unlock"})
@@ -58,7 +60,7 @@ class CreatorProfil extends Component {
                         </div>
             </div>
             <Modal
-                title="Basic Modal"
+                title="Liste des participants : "
                 visible={this.state.visible}
                 onOk={this.handleOk}
                 onCancel={this.handleCancel}

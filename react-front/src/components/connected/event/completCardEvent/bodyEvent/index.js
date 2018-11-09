@@ -8,11 +8,10 @@ class CreatorProfil extends Component {
         constructor(props) {
             super(props);
 
-
     }
     
 	render() {
-
+        this.playlistId = this.props.state.data.playlist  && this.props.state.data.playlist.id ? this.props.state.data.playlist.id : null
         return (
             <div className="bodyContent">
                 <div className="title" >
@@ -87,7 +86,7 @@ class CreatorProfil extends Component {
                                 )
                             })
                         }   
-                    </div> 
+                    </div>
                     <div className="playlistContent">
                         <Input.Search
                             placeholder="Ajouter une playlist"
@@ -95,7 +94,6 @@ class CreatorProfil extends Component {
                             style={{ width: 230 }}
                         />
                         {
-                             this.props.state.data.playlist
                             // this.props.state.data.playlist.map((playlist, key) => {
                             //     return (
                             //        <p> {playlist}</p>
@@ -103,6 +101,8 @@ class CreatorProfil extends Component {
                             // })
                         }   
                     </div>
+                    <iframe scrolling="no" frameborder="0" allowTransparency="true" src={"https://www.deezer.com/plugins/player?format=classic&autoplay=false&playlist=true&width=700&height=350&color=007FEB&layout=dark&size=medium&type=playlist&id="+this.playlistId+"&app_id=1"} width="700" height="350"></iframe>
+                   
                 </div>
             </div>
         );

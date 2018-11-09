@@ -59,7 +59,10 @@ class CreateEvent extends Component {
             this.setState({creator: resp.data});
             data.append('body', JSON.stringify(this.state));
             axios.post('https://192.168.99.100:4242/event/',  data)
-            .then((resp) => { console.log("Create Event : handleSubmit :/event Success"); })
+            .then((resp) => { 
+                console.log("Create Event : handleSubmit :/event Success");
+                this.props.updateParent({'currentComponent' : "event"})
+            })
             .catch((err) => { console.log("Create Event : handleSubmit :/event Error ", err); })  
         })
         .catch((err) => { console.log("Create Event : handleSubmit : /user/me Error : ", err); })  
@@ -98,6 +101,7 @@ class CreateEvent extends Component {
       }
 
 	render() {
+        console.log(localStorage.getItem('token'))
         this.uploadButton = (
             <div>
               <Icon type={this.state.loading ? 'loading' : 'plus'} />
