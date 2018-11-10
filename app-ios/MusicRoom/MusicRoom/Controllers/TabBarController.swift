@@ -50,12 +50,11 @@ class TabBarController: UITabBarController {
     }
     
     func showPlayerForSong(_ index: Int) {
-        playerController.tracks = tabViewController1.musicCategories![1].tracks
         if index == playerController.index, tabViewController1.trackListChanged == false {
-            AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
-            playerController.viewDidPop()
+            playerController.handlePlay()
             return
         }
+        playerController.tracks = tabViewController1.musicCategories![1].tracks
         tabViewController1.trackListChanged = false
         playerController.index = index
         playerController.loadTrackInplayer()
@@ -66,7 +65,7 @@ class TabBarController: UITabBarController {
     fileprivate func setupTabBarController() {
         playerController.rootViewController = self
         playerController.minimizedPlayer = minimizedPlayer
-        addChildViewController(playerController)
+        addChild(playerController)
         tabBar.removeFromSuperview()
         view.addSubview(playerView)
         view.addSubview(minimizedPlayer)
@@ -105,6 +104,7 @@ class TabBarController: UITabBarController {
     }
     
     func animatedShowPlayer() {
+        playerController.downButton.isHidden = false
         animatedHideTabBar()
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.playerView.transform = .identity
@@ -114,6 +114,7 @@ class TabBarController: UITabBarController {
     }
     
     func animatedHidePlayer() {
+        playerController.downButton.isHidden = true
         animatedShowTabBar()
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.playerView.transform = CGAffineTransform(translationX: 0, y: self.view.bounds.height - self.offsetY - 44)

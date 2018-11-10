@@ -100,7 +100,6 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     
     func viewDidPop() {
         guard index >= 0 else { return }
-        setupUI()
         loadTrackInplayer()
         setupTrack(indexOffset: index)
         playerButtonView?.handlePlay()
