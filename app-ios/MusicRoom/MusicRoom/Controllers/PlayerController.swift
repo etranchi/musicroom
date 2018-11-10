@@ -126,6 +126,9 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     }
     
     func handlePlay() {
+        playerButtonView?.playButton.removeTarget(playerButtonView, action: #selector(playerButtonView?.handlePlay), for: .touchUpInside)
+        playerButtonView?.playButton.addTarget(playerButtonView, action: #selector(playerButtonView?.handlePause), for: .touchUpInside)
+        playerButtonView?.setPauseIcon()
         isPlaying = true
         if firstPlay == true {
             self.player?.play(track)
@@ -137,6 +140,9 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     }
     
    func handlePause() {
+        playerButtonView?.playButton.removeTarget(playerButtonView, action: #selector(playerButtonView?.handlePause), for: .touchUpInside)
+        playerButtonView?.playButton.addTarget(playerButtonView, action: #selector(playerButtonView?.handlePlay), for: .touchUpInside)
+        playerButtonView?.setPlayIcon()
         self.player?.pause()
         isPlaying = false
         hasPaused = true
