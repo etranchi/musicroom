@@ -104,9 +104,9 @@ class TabBarController: UITabBarController {
     }
     
     func animatedShowPlayer() {
-        playerController.downButton.isHidden = false
-        animatedHideTabBar()
+        
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            playerController.downButton.alpha = 1
             self.playerView.transform = .identity
             self.minimizedPlayer.transform = CGAffineTransform(translationX: 0, y: -self.view.bounds.height + self.offsetY + 44)
             self.minimizedPlayer.alpha = 0
@@ -114,7 +114,7 @@ class TabBarController: UITabBarController {
     }
     
     func animatedHidePlayer() {
-        playerController.downButton.isHidden = true
+        playerController.downButton.alpha = 0
         animatedShowTabBar()
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.playerView.transform = CGAffineTransform(translationX: 0, y: self.view.bounds.height - self.offsetY - 44)
