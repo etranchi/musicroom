@@ -104,7 +104,7 @@ class TabBarController: UITabBarController {
     }
     
     func animatedShowPlayer() {
-        
+        animatedHideTabBar()
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             playerController.downButton.alpha = 1
             self.playerView.transform = .identity
