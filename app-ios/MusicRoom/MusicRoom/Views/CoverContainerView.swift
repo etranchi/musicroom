@@ -17,6 +17,10 @@ class CoverContainerView: UIView {
     let overNextTrack: Track?
     let playerController: PlayerController
     
+    let zoomingEffect: CGFloat = 40.0
+    let transparencyEffect: CGFloat = 0.4
+    let animationTime = 0.5
+    
     init(target: UIViewController, _ underPreviousTrack: Track?, _ previousTrack: Track?, _ currentTrack: Track, _ nextTrack: Track?, _ overNextTrack: Track?) {
         self.playerController = target as! PlayerController
         self.underPreviousTrack = underPreviousTrack
@@ -84,9 +88,9 @@ class CoverContainerView: UIView {
             previousLeadingAnchor?.constant -= 40
         }
         
-        UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: animationTime, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             iv.alpha = 1
-            self.currentCoverImageView.alpha = 0.5
+            self.currentCoverImageView.alpha = self.transparencyEffect
             self.layoutIfNeeded()
         }) { (finished) in self.playerController.setupTrack(indexOffset: isNext ? 1 : -1) }
     }
@@ -116,10 +120,10 @@ class CoverContainerView: UIView {
         addSubview(nextCoverImageView)
         addSubview(overNextCoverImageView)
         
-        underPreviousCoverImageView.alpha = 0.5
-        previousCoverImageView.alpha = 0.5
-        nextCoverImageView.alpha = 0.5
-        overNextCoverImageView.alpha = 0.5
+        underPreviousCoverImageView.alpha = transparencyEffect
+        previousCoverImageView.alpha = transparencyEffect
+        nextCoverImageView.alpha = transparencyEffect
+        overNextCoverImageView.alpha = transparencyEffect
         
         previousLeadingAnchor = previousCoverImageView.leadingAnchor.constraint(equalTo: currentCoverImageView.leadingAnchor, constant: -offset + 30)
         previousTrailingAnchor = previousCoverImageView.trailingAnchor.constraint(equalTo: currentCoverImageView.leadingAnchor, constant: -10)

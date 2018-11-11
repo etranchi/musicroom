@@ -82,14 +82,11 @@ class PlayerButtonsView: UIView {
     
     @objc func handlePlay() {
         playerController.handlePlay()
-        setPauseIcon()
-        playButton.removeTarget(self, action: #selector(handlePlay), for: .touchUpInside)
-        playButton.addTarget(self, action: #selector(handlePause), for: .touchUpInside)
+        
     }
     
     @objc func handlePause() {
         playerController.handlePause()
-        setPlayIcon()
         playButton.removeTarget(self, action: #selector(handlePause), for: .touchUpInside)
         playButton.addTarget(self, action: #selector(handlePlay), for: .touchUpInside)
     }
