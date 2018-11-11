@@ -66,8 +66,8 @@ class TabBarController: UITabBarController {
     fileprivate func setupTabBarController() {
         playerController.rootViewController = self
         playerController.minimizedPlayer = minimizedPlayer
-        //addChild(playerController)
-        addChildViewController(playerController)
+        addChild(playerController)
+        //addChildViewController(playerController)
         tabBar.removeFromSuperview()
         view.addSubview(playerView)
         view.addSubview(minimizedPlayer)
@@ -107,7 +107,7 @@ class TabBarController: UITabBarController {
     
     func animatedShowPlayer() {
         animatedHideTabBar()
-        UIView.animate(withDuration: 0.2, delay: 0.3, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 0.25, delay: 0.1, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             playerController.downButton.alpha = 1
             self.minimizedPlayer.alpha = 0
         })
@@ -120,7 +120,7 @@ class TabBarController: UITabBarController {
     }
     
     func animatedHidePlayer() {
-        UIView.animate(withDuration: 0.2, delay: 0.2, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 0.3, delay: 0.1, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             playerController.downButton.alpha = 0
             self.minimizedPlayer.alpha = 1
         })

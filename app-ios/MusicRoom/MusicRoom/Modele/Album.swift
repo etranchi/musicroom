@@ -17,7 +17,7 @@ struct Album : Decodable {
     let cover_small : String
     let artist : Artist?
     let title : String
-    let tracks : TrackData?
+    var tracks : TrackData?
 }
 
 struct AlbumData: Decodable {

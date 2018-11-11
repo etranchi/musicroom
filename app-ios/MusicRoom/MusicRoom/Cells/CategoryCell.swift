@@ -169,7 +169,7 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch musicCategory.name! {
         case "Albums":
-            print("album selected")
+            searchController?.showAlbumContent(musicCategory.albums[indexPath.item])
         case "Songs":
             let max = musicCategory.tracks.count
             if max < 4 && indexPath.item == max || indexPath.item == 4 {
