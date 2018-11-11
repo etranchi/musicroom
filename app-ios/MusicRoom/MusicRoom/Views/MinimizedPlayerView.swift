@@ -176,9 +176,8 @@ class MinimizedPlayerView: UIView {
     }
     
     fileprivate func setupView() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(pushPlayer))
-        titleLabel.addGestureRecognizer(tapGesture)
-        authorLabel.addGestureRecognizer(tapGesture)
+        titleLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(pushPlayer)))
+        authorLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(pushPlayer)))
         likeButton.addTarget(self, action: #selector(handleLike), for: .touchUpInside)
         translatesAutoresizingMaskIntoConstraints = false
         playerContainerView.backgroundColor = .red
