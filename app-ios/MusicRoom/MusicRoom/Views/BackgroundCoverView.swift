@@ -15,7 +15,6 @@ class BackgroundCoverView: UIView {
     let nextTrack: Track?
     
     let offset = UIApplication.shared.keyWindow!.bounds.width
-    let zoomingEffect: CGFloat = 200.0
     let transparencyEffect: CGFloat = 0.5
     let animationTime = 0.5
     
