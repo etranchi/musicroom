@@ -151,7 +151,7 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
             return CGSize(width: 150, height: frame.width)
         case "Songs":
             if indexPath.item < 4 {
-                return CGSize(width: frame.width, height: 60)
+                return CGSize(width: frame.width - 28, height: 60)
             } else {
                 return CGSize(width: frame.width, height: 40)
             }

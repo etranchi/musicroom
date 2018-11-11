@@ -36,18 +36,10 @@ class AlbumCell: UICollectionViewCell {
         return iv
     }()
     
-    let timeLabel: UILabel = {
-        let label = UILabel()
-        
-        label.font = UIFont.systemFont(ofSize: 14, weight: .light)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
     let titleLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        label.font = UIFont.systemFont(ofSize: 13, weight: .heavy)
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 2
@@ -58,7 +50,7 @@ class AlbumCell: UICollectionViewCell {
     let authorLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        label.font = UIFont.systemFont(ofSize: 11, weight: .heavy)
         label.textColor = .lightGray
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -77,7 +69,7 @@ class AlbumCell: UICollectionViewCell {
             imageView.widthAnchor.constraint(equalToConstant: 150),
             
             titleLabel.centerXAnchor.constraint(equalTo: imageView.centerXAnchor),
-            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor),
+            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4),
             titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
             
