@@ -86,7 +86,7 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     }
     
     func showPlayerForSong(_ index: Int) {
-        (tabBarController as! TabBarController).showPlayerForSong(index)
+        (tabBarController as! TabBarController).showPlayerForSong(index, tracks: musicCategories![1].tracks)
     }
 
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {

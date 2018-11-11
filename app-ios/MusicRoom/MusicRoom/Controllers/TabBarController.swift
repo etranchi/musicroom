@@ -49,23 +49,25 @@ class TabBarController: UITabBarController {
         
     }
     
-    func showPlayerForSong(_ index: Int) {
+    func showPlayerForSong(_ index: Int, tracks: [Track]) {
         if index == playerController.index, tabViewController1.trackListChanged == false {
             playerController.handlePlay()
             return
         }
-        playerController.tracks = tabViewController1.musicCategories![1].tracks
+        playerController.tracks = tracks
         tabViewController1.trackListChanged = false
         playerController.index = index
-        playerController.loadTrackInplayer()
-        AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
         playerController.viewDidPop()
+        playerController.loadTrackInplayer()
+        playerController.handlePlay()
+        AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
     }
     
     fileprivate func setupTabBarController() {
         playerController.rootViewController = self
         playerController.minimizedPlayer = minimizedPlayer
-        addChild(playerController)
+        //addChild(playerController)
+        addChildViewController(playerController)
         tabBar.removeFromSuperview()
         view.addSubview(playerView)
         view.addSubview(minimizedPlayer)
@@ -105,21 +107,27 @@ class TabBarController: UITabBarController {
     
     func animatedShowPlayer() {
         animatedHideTabBar()
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 0.2, delay: 0.3, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             playerController.downButton.alpha = 1
+            self.minimizedPlayer.alpha = 0
+        })
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            
             self.playerView.transform = .identity
             self.minimizedPlayer.transform = CGAffineTransform(translationX: 0, y: -self.view.bounds.height + self.offsetY + 44)
-            self.minimizedPlayer.alpha = 0
+            
         })
     }
     
     func animatedHidePlayer() {
-        playerController.downButton.alpha = 0
+        UIView.animate(withDuration: 0.2, delay: 0.2, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            playerController.downButton.alpha = 0
+            self.minimizedPlayer.alpha = 1
+        })
         animatedShowTabBar()
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.playerView.transform = CGAffineTransform(translationX: 0, y: self.view.bounds.height - self.offsetY - 44)
             self.minimizedPlayer.transform = .identity
-            self.minimizedPlayer.alpha = 1
         })
     }
     

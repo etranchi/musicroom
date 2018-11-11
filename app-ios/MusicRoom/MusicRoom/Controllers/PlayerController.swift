@@ -86,15 +86,22 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     }
 
     func player(_ player: DZRPlayer!, didPlay playedBytes: Int64, outOf totalBytes: Int64) {
-        
+        guard totalBytes > 0 else { return }
         let progress = CGFloat(playedBytes) / CGFloat(totalBytes)
         if isChangingMusic == false {
             playerButtonView?.progressCircle?.updateProgress(progress)
         } else {
             playerButtonView?.progressCircle?.updateProgress(0)
         }
-        if progress > 0.99 {
+        if progress > 0.999 {
             handleNext()
+            if index + 1 == tracks.count {
+                DispatchQueue.main.async {
+                    self.handlePause()
+                    self.loadTrackInplayer()
+                    self.setupTrack(indexOffset: self.index)
+                }
+            }
         }
     }
     
@@ -184,6 +191,9 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         setupUI()
         hasPaused = false
         self.isChangingMusic = false
+        if isPlaying {
+            playerButtonView?.handlePlay()
+        }
     }
 
     fileprivate func setupUI() {
