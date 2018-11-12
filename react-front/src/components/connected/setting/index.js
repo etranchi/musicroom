@@ -35,7 +35,7 @@ class Setting extends Component {
 		  });
         DZ.login(function(response) {
           if (response.authResponse) {
-			axios.get('https://192.168.99.100:4242/user/login/deezer?access_token=' + localStorage.getItem("token"))
+			axios.get('https://192.168.99.100:4242/user/login/deezer?access_token=' + localStorage.getItem("token") + '&deezerToken=' + response.authResponse.accessToken)
 			.then(resp => {
 				console.log('ici');
 				console.log(resp);
