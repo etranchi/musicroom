@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7701FE6B21998D8400B721EB /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7701FE6A21998D8300B721EB /* GLKit.framework */; };
 		7743C23B2190587E002CC508 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7743C23A2190587E002CC508 /* Playlist.swift */; };
 		7743C2472190A03A002CC508 /* User+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7743C2452190A03A002CC508 /* User+CoreDataClass.swift */; };
 		7743C2482190A03A002CC508 /* User+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7743C2462190A03A002CC508 /* User+CoreDataProperties.swift */; };
@@ -15,6 +16,7 @@
 		7744A6572195E40D0034F40E /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7744A6562195E40D0034F40E /* libc++.tbd */; };
 		7744A6592195E4220034F40E /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7744A6582195E4220034F40E /* libz.tbd */; };
 		778BF9A921832CB800448FE6 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778BF9A821832CB800448FE6 /* Track.swift */; };
+		77AF56C22199ACF300E5FBB9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 77AF56C12199ACF200E5FBB9 /* GoogleService-Info.plist */; };
 		77B444762181CD0200B3F536 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B444752181CD0200B3F536 /* APIManager.swift */; };
 		77F5479621932172001B2901 /* AuthenticationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5479521932172001B2901 /* AuthenticationController.swift */; };
 		77F547982193257B001B2901 /* RegisterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F547972193257B001B2901 /* RegisterController.swift */; };
@@ -57,11 +59,11 @@
 		8F364B90217E5B9200B57FC8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F364B8E217E5B9200B57FC8 /* LaunchScreen.storyboard */; };
 		8FEFE2952191DC420002E966 /* PlaylistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FEFE2942191DC420002E966 /* PlaylistCell.swift */; };
 		8FEFE2972191E2CD0002E966 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FEFE2962191E2CD0002E966 /* LoginController.swift */; };
-		9C5C0687CC8A6EB0990750AB /* Pods_MusicRoom.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAFFF159AAFCF03482082A7F /* Pods_MusicRoom.framework */; };
+		E997985E32780E8DC3179DD4 /* Pods_MusicRoom.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC674AABD535B082079B3A49 /* Pods_MusicRoom.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		50585A20E50C0A6ACAEBCD05 /* Pods-MusicRoom.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicRoom.release.xcconfig"; path = "Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom.release.xcconfig"; sourceTree = "<group>"; };
+		7701FE6A21998D8300B721EB /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		7743C23A2190587E002CC508 /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
 		7743C2452190A03A002CC508 /* User+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreDataClass.swift"; sourceTree = "<group>"; };
 		7743C2462190A03A002CC508 /* User+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -74,8 +76,8 @@
 		7744A6542195DE8C0034F40E /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		7744A6562195E40D0034F40E /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		7744A6582195E4220034F40E /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
-		7782BA6240D0B7AEF236CDCC /* Pods-MusicRoom.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicRoom.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom.debug.xcconfig"; sourceTree = "<group>"; };
 		778BF9A821832CB800448FE6 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
+		77AF56C12199ACF200E5FBB9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		77B444752181CD0200B3F536 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		77F5479521932172001B2901 /* AuthenticationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationController.swift; sourceTree = "<group>"; };
 		77F547972193257B001B2901 /* RegisterController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterController.swift; sourceTree = "<group>"; };
@@ -152,7 +154,9 @@
 		8F364B91217E5B9200B57FC8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8FEFE2942191DC420002E966 /* PlaylistCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistCell.swift; sourceTree = "<group>"; };
 		8FEFE2962191E2CD0002E966 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LoginController.swift; path = ../LoginController.swift; sourceTree = "<group>"; };
-		FAFFF159AAFCF03482082A7F /* Pods_MusicRoom.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MusicRoom.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AC674AABD535B082079B3A49 /* Pods_MusicRoom.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MusicRoom.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B6FE34DBAE1555D838A7EBD9 /* Pods-MusicRoom.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicRoom.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom.debug.xcconfig"; sourceTree = "<group>"; };
+		C1F4CA7BD395A780F23DCE88 /* Pods-MusicRoom.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicRoom.release.xcconfig"; path = "Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,6 +164,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7701FE6B21998D8400B721EB /* GLKit.framework in Frameworks */,
 				7744A6592195E4220034F40E /* libz.tbd in Frameworks */,
 				7744A6572195E40D0034F40E /* libc++.tbd in Frameworks */,
 				7744A6552195DE8C0034F40E /* AddressBook.framework in Frameworks */,
@@ -171,22 +176,13 @@
 				8F18988E217F231800CE1A8D /* AudioToolbox.framework in Frameworks */,
 				8F18988C217F230D00CE1A8D /* CoreAudio.framework in Frameworks */,
 				8F189888217F22EE00CE1A8D /* libDeezer.a in Frameworks */,
-				9C5C0687CC8A6EB0990750AB /* Pods_MusicRoom.framework in Frameworks */,
+				E997985E32780E8DC3179DD4 /* Pods_MusicRoom.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2C48A5A085EC8976AD1B32BD /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				7782BA6240D0B7AEF236CDCC /* Pods-MusicRoom.debug.xcconfig */,
-				50585A20E50C0A6ACAEBCD05 /* Pods-MusicRoom.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 		7743C23C21909F09002CC508 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
@@ -335,6 +331,7 @@
 		8F18988A217F230D00CE1A8D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7701FE6A21998D8300B721EB /* GLKit.framework */,
 				7744A6582195E4220034F40E /* libz.tbd */,
 				7744A6562195E40D0034F40E /* libc++.tbd */,
 				7744A6542195DE8C0034F40E /* AddressBook.framework */,
@@ -350,7 +347,7 @@
 				8F18988F217F232100CE1A8D /* SystemConfiguration.framework */,
 				8F18988D217F231800CE1A8D /* AudioToolbox.framework */,
 				8F18988B217F230D00CE1A8D /* CoreAudio.framework */,
-				FAFFF159AAFCF03482082A7F /* Pods_MusicRoom.framework */,
+				AC674AABD535B082079B3A49 /* Pods_MusicRoom.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -372,7 +369,7 @@
 				8F364B81217E5B9100B57FC8 /* MusicRoom */,
 				8F364B80217E5B9100B57FC8 /* Products */,
 				8F18988A217F230D00CE1A8D /* Frameworks */,
-				2C48A5A085EC8976AD1B32BD /* Pods */,
+				ADBFE756833B4B20F11FB7AC /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -398,10 +395,20 @@
 				8F364B8C217E5B9200B57FC8 /* Assets.xcassets */,
 				8F364B8E217E5B9200B57FC8 /* LaunchScreen.storyboard */,
 				8F364B91217E5B9200B57FC8 /* Info.plist */,
+				77AF56C12199ACF200E5FBB9 /* GoogleService-Info.plist */,
 				8F364B89217E5B9100B57FC8 /* MusicRoom.xcdatamodeld */,
 				8F189895217F23DD00CE1A8D /* bridge.h */,
 			);
 			path = MusicRoom;
+			sourceTree = "<group>";
+		};
+		ADBFE756833B4B20F11FB7AC /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				B6FE34DBAE1555D838A7EBD9 /* Pods-MusicRoom.debug.xcconfig */,
+				C1F4CA7BD395A780F23DCE88 /* Pods-MusicRoom.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -411,12 +418,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8F364B94217E5B9200B57FC8 /* Build configuration list for PBXNativeTarget "MusicRoom" */;
 			buildPhases = (
-				06C17FA5C58F0D354D64BE2D /* [CP] Check Pods Manifest.lock */,
+				92FC604B71B7C7A83D33E63C /* [CP] Check Pods Manifest.lock */,
 				8F364B7B217E5B9100B57FC8 /* Sources */,
 				8F364B7C217E5B9100B57FC8 /* Frameworks */,
 				8F364B7D217E5B9100B57FC8 /* Resources */,
-				D0F7293153F470331635ED31 /* [CP] Embed Pods Frameworks */,
-				84FB1EB0143FD2D53CFE53AB /* [CP] Copy Pods Resources */,
+				049E39241575533CD7B6141F /* [CP] Embed Pods Frameworks */,
+				49B292DD4F23CBBF7B07A046 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -467,6 +474,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8F364B90217E5B9200B57FC8 /* LaunchScreen.storyboard in Resources */,
+				77AF56C22199ACF300E5FBB9 /* GoogleService-Info.plist in Resources */,
 				8F364B8D217E5B9200B57FC8 /* Assets.xcassets in Resources */,
 				8F189889217F22EE00CE1A8D /* DZRResources.bundle in Resources */,
 			);
@@ -475,25 +483,39 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		06C17FA5C58F0D354D64BE2D /* [CP] Check Pods Manifest.lock */ = {
+		049E39241575533CD7B6141F /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
+				"${SRCROOT}/Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Bolts/Bolts.framework",
+				"${BUILT_PRODUCTS_DIR}/FBSDKCoreKit/FBSDKCoreKit.framework",
+				"${BUILT_PRODUCTS_DIR}/FBSDKLoginKit/FBSDKLoginKit.framework",
+				"${BUILT_PRODUCTS_DIR}/FacebookCore/FacebookCore.framework",
+				"${BUILT_PRODUCTS_DIR}/FacebookLogin/FacebookLogin.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMOAuth2/GTMOAuth2.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
 			);
-			name = "[CP] Check Pods Manifest.lock";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-MusicRoom-checkManifestLockResult.txt",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Bolts.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKCoreKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKLoginKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FacebookCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FacebookLogin.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMOAuth2.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		84FB1EB0143FD2D53CFE53AB /* [CP] Copy Pods Resources */ = {
+		49B292DD4F23CBBF7B07A046 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -511,40 +533,22 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D0F7293153F470331635ED31 /* [CP] Embed Pods Frameworks */ = {
+		92FC604B71B7C7A83D33E63C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Bolts/Bolts.framework",
-				"${BUILT_PRODUCTS_DIR}/FBSDKCoreKit/FBSDKCoreKit.framework",
-				"${BUILT_PRODUCTS_DIR}/FBSDKLoginKit/FBSDKLoginKit.framework",
-				"${BUILT_PRODUCTS_DIR}/FBSDKShareKit/FBSDKShareKit.framework",
-				"${BUILT_PRODUCTS_DIR}/FacebookCore/FacebookCore.framework",
-				"${BUILT_PRODUCTS_DIR}/FacebookLogin/FacebookLogin.framework",
-				"${BUILT_PRODUCTS_DIR}/FacebookShare/FacebookShare.framework",
-				"${BUILT_PRODUCTS_DIR}/GTMOAuth2/GTMOAuth2.framework",
-				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
-			name = "[CP] Embed Pods Frameworks";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Bolts.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKCoreKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKLoginKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKShareKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FacebookCore.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FacebookLogin.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FacebookShare.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMOAuth2.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"$(DERIVED_FILE_DIR)/Pods-MusicRoom-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom-frameworks.sh\"\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -730,7 +734,7 @@
 		};
 		8F364B95217E5B9200B57FC8 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7782BA6240D0B7AEF236CDCC /* Pods-MusicRoom.debug.xcconfig */;
+			baseConfigurationReference = B6FE34DBAE1555D838A7EBD9 /* Pods-MusicRoom.debug.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -754,10 +758,6 @@
 					"\"${PODS_ROOT}/FirebaseInstanceID/Frameworks\"",
 					"\"${PODS_ROOT}/Google/Frameworks\"",
 					"\"${PODS_ROOT}/GoogleSignIn/Frameworks\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleSignIn\"\n",
-					"\"_OBJC_CLASS_$_GIDSignIn\",",
-					referenced,
-					"from:\n\"4(PODS_CONFIGURATION_BUILD_DIR)/GoogleSignIn\"",
 				);
 				INFOPLIST_FILE = MusicRoom/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
@@ -766,7 +766,10 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/DeezerSDK",
 				);
-				OTHER_LDFLAGS = "-all_load";
+				OTHER_LDFLAGS = (
+					"-all_load",
+					"$(inherited)",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = jdavin.MusicRoom;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -779,7 +782,7 @@
 		};
 		8F364B96217E5B9200B57FC8 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 50585A20E50C0A6ACAEBCD05 /* Pods-MusicRoom.release.xcconfig */;
+			baseConfigurationReference = C1F4CA7BD395A780F23DCE88 /* Pods-MusicRoom.release.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -793,7 +796,10 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/DeezerSDK",
 				);
-				OTHER_LDFLAGS = "-all_load";
+				OTHER_LDFLAGS = (
+					"-all_load",
+					"$(inherited)",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = jdavin.MusicRoom;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

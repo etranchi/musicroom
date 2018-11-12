@@ -12,7 +12,7 @@
 DZR_SDK=$(SRCROOT)/DeezerSDK
 LIBRARY_SEARCH_PATHS=$(DZR_SDK)
 USER_HEADER_SEARCH_PATHS=$(DZR_SDK)/include/**
-OTHER_LDFLAGS=$(inherited) -lDeezer -all_load
+OTHER_LDFLAGS=$(inherited) -lDeezer -all_load -FGoogle
 
 PRODUCT_NAME = MusicRoom
 PRODUCT_BUNDLE_IDENTIFIER = com.jdavin.MusicRoom

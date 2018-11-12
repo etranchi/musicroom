@@ -16,22 +16,7 @@ import Google
 import GoogleToolboxForMac
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
-    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
-        if let error = error {
-            print("\(error.localizedDescription)")
-        } else {
-            // Perform any operations on signed in user here.
-            let userId = user.userID                  // For client-side use only!
-            let idToken = user.authentication.idToken // Safe to send to the server
-            let fullName = user.profile.name
-            let givenName = user.profile.givenName
-            let familyName = user.profile.familyName
-            let email = user.profile.email
-            print("SignIn, user : \(user)")
-        }
-    }
-    
+class AppDelegate: UIResponder, UIApplicationDelegate {
     func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!,
               withError error: Error!) {
         // Perform any operations when the user disconnects from app here.
@@ -55,8 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         //get the token if loggedin -> go home else go loginPage
-        GIDSignIn.sharedInstance().clientID = "YOUR_CLIENT_ID"
-        GIDSignIn.sharedInstance().delegate = self
+
         window = UIWindow()
         window?.makeKeyAndVisible()
         //window?.rootViewController = TabBarController()

@@ -13,16 +13,9 @@ PODS:
     - FacebookCore (~> 0.3)
     - FBSDKCoreKit (~> 4.27)
     - FBSDKLoginKit (~> 4.27)
-  - FacebookShare (0.3.0):
-    - Bolts (~> 1.8)
-    - FacebookCore (~> 0.3)
-    - FBSDKCoreKit (~> 4.27)
-    - FBSDKShareKit (~> 4.27)
   - FBSDKCoreKit (4.38.1):
     - Bolts (~> 1.9)
   - FBSDKLoginKit (4.38.1):
-    - FBSDKCoreKit
-  - FBSDKShareKit (4.38.1):
     - FBSDKCoreKit
   - FirebaseAnalytics (3.9.0):
     - FirebaseCore (~> 3.6)
@@ -32,6 +25,8 @@ PODS:
     - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
   - FirebaseInstanceID (1.0.10):
     - FirebaseCore (~> 3.6)
+  - Google (3.1.0):
+    - Google/Core (= 3.1.0)
   - Google/Core (3.1.0):
     - FirebaseAnalytics (~> 3.2)
   - Google/SignIn (3.1.0):
@@ -63,7 +58,7 @@ PODS:
 DEPENDENCIES:
   - FacebookCore (= 0.3.0)
   - FacebookLogin (= 0.3.0)
-  - FacebookShare (= 0.3.0)
+  - Google
   - Google/SignIn
 
 SPEC REPOS:
@@ -71,10 +66,8 @@ SPEC REPOS:
     - Bolts
     - FacebookCore
     - FacebookLogin
-    - FacebookShare
     - FBSDKCoreKit
     - FBSDKLoginKit
-    - FBSDKShareKit
     - FirebaseAnalytics
     - FirebaseCore
     - FirebaseInstanceID
@@ -88,10 +81,8 @@ SPEC CHECKSUMS:
   Bolts: ac6567323eac61e203f6a9763667d0f711be34c8
   FacebookCore: 3ffa190a3f1f96cec0e44d3fc221bc322c595ffa
   FacebookLogin: 0af839ea858faef99550d16596b87b4a8e8906e6
-  FacebookShare: 0469964297ebd75f052be2c5083389a4208e82b7
   FBSDKCoreKit: 8d47857400e2f5bdea697a80daff882e91c84ef6
   FBSDKLoginKit: 4621c690d9dd8628031a4791497062183ea34b0d
-  FBSDKShareKit: 6ffe22f0a0618eb7424d4104ab0ef3ce9643d42a
   FirebaseAnalytics: e5fe8486efc01bec33f6bf82e2fa9fce4b124052
   FirebaseCore: 9691ee2ade70c098d7cf92440f4303f16d83ca75
   FirebaseInstanceID: b9eedd6846fb5e1f0f7279e1deaa7a7e4cf8392e
@@ -101,6 +92,6 @@ SPEC CHECKSUMS:
   GTMOAuth2: c77fe325e4acd453837e72d91e3b5f13116857b2
   GTMSessionFetcher: 0c4baf0a73acd0041bf9f71ea018deedab5ea84e
 
-PODFILE CHECKSUM: b42a911a1174e0e8d08cbd73ce76b251c7e1eeb9
+PODFILE CHECKSUM: cf4b80686c5c367ad0c811c5daa03991fc429cef
 
 COCOAPODS: 1.5.3

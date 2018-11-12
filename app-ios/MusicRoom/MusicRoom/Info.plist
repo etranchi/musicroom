@@ -23,12 +23,6 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>MusicRoom</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
 				<string>fb711181125906087</string>
 			</array>
 		</dict>
@@ -37,7 +31,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>479103948820-tb38ba04oig61ogfdjgs6s07u9ph626o.apps.googleusercontent.com</string>
+				<string>com.googleusercontent.apps.479103948820-79bl5vfu07j3u6r28ur77pj76i8apu1l</string>
 			</array>
 		</dict>
 	</array>

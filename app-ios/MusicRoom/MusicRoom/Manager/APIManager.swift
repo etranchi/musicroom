@@ -11,11 +11,20 @@ import UIKit
 class APIManager: NSObject, URLSessionDelegate {
     let ip : String = "192.168.99.100"
     let token : String? = nil
-    
+    // Route google url +  user/login/google?access_token=\(token)
     var url : String {
         return  "https://\(self.ip):4242/"
     }
-
+    
+    func login(_ forg: String, _ token : String, completion: @escaping ( (DataUser) -> ())) {
+        let loginUrl = self.url + "user/login/" + forg + "?access_token=" + token
+        var loginRequest = URLRequest(url : URL(string : loginUrl)!)
+        loginRequest.httpMethod = "GET"
+        searchAll(DataUser.self, request: loginRequest, completion: { (res) in
+            completion(res)
+        })
+    }
+    
     func search(_ search: String, completion: @escaping ([Track], [Album], [Artist]) -> ()){
         let w = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
         

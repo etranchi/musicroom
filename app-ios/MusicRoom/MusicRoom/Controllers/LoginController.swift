@@ -12,20 +12,34 @@ import FacebookCore
 import GoogleSignIn
 import GoogleToolboxForMac
 
-class LoginController: UIViewController, UITextFieldDelegate, GIDSignInUIDelegate {
-    /*func loginButtonDidCompleteLogin(_ loginButton: LoginButton, result: LoginResult) {
-        print("Login")
+class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate ,GIDSignInUIDelegate {
+    var apiManager = APIManager()
+    
+    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
+        if let error = error {
+            print("\(error.localizedDescription)")
+        } else {
+            // Perform any operations on signed in user here.
+            let userId = user.userID                  // For client-side use only!
+            let idToken = user.authentication.idToken // Safe to send to the server
+            let fullName = user.profile.name
+            let givenName = user.profile.givenName
+            let familyName = user.profile.familyName
+            let email = user.profile.email
+            apiManager.login("google", user.authentication.accessToken, completion:  { (data) in
+                print(data)
+            })
+        }
     }
     
-    func loginButtonDidLogOut(_ loginButton: LoginButton) {
-        print("logout")
-    }*/
     
     let userManager : UserManager = UserManager()
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         view.backgroundColor = .black
+        GIDSignIn.sharedInstance().clientID = "479103948820-79bl5vfu07j3u6r28ur77pj76i8apu1l.apps.googleusercontent.com"
+        GIDSignIn.sharedInstance().delegate = self
         GIDSignIn.sharedInstance().uiDelegate = self
         setupView()
         setupButton()
@@ -33,9 +47,14 @@ class LoginController: UIViewController, UITextFieldDelegate, GIDSignInUIDelegat
         loginTF.tag = 0
         passTF.delegate = self
         passTF.tag = 1
+        let googleButton = GIDSignInButton()
+        googleButton.backgroundColor = UIColor.red
+        googleButton.frame = CGRect(x: 0,y : 0,width: 90,height:  40);
+        googleButton.center = view.center
+        view.addSubview(googleButton)
         let myLoginButton = UIButton(type: .roundedRect)
         myLoginButton.backgroundColor = UIColor.darkGray
-        myLoginButton.frame = CGRect(x: 0,y : 0,width: 180,height:  40);
+        myLoginButton.frame = CGRect(x: 0,y : 0,width: 90,height:  40);
         myLoginButton.center = view.center;
         myLoginButton.setTitle("My Login Button", for: .normal)
         // Handle clicks on the button
