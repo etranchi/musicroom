@@ -221,7 +221,8 @@ function validateUpdateUser(user) {
 
 	const schema = {
 		login: Joi.string().min(3),
-		password: Joi.string().min(8)
+		password: Joi.string().min(8),
+		picture: Joi.string()
 	};
 	return Joi.validate(user, schema);
 }

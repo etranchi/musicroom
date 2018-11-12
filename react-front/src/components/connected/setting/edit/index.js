@@ -9,11 +9,13 @@ class EditSetting extends Component {
 		console.log(props);
 		this.state = {
 			login: props.state.user.login,
-			password: null
+			password: null,
+			picture:props.state.user.picture
 		}
 		this.save = {...this.state};
 		this.updateLogin = this.updateLogin.bind(this);
 		this.updatePassword = this.updatePassword.bind(this);
+		this.updatePicture = this.updatePicture.bind(this);
 		this.updateSave = this.updateSave.bind(this);
 	}
 
@@ -23,16 +25,19 @@ class EditSetting extends Component {
 
 	updatePassword(e) {
 		this.setState({password: e.target.value})
-		
+	}
+
+	updatePicture(e) {
+		this.setState({picture: e.target.value})
 	}
 
 	updateSave(){
-		if (this.save.login !== this.state.login || this.save.password !== this.state.password)
+		if (this.save.login !== this.state.login || this.save.password !== this.state.password || this.save.picture !== this.state.picture)
 		{
 			if (this.state.password)
 			{
 				axios.put('https://192.168.99.100:4242/user/me', 
-					{login:this.state.login, password:this.state.password},
+					{login:this.state.login, password:this.state.password, picture:this.state.picture},
 					{'headers' : {'Authorization': 'Bearer '+ localStorage.getItem('token')}}
 					)
 				.then(resp => {
@@ -47,7 +52,7 @@ class EditSetting extends Component {
 			{
 
 				axios.put('https://192.168.99.100:4242/user/me', 
-					{login:this.state.login},
+					{login:this.state.login, picture:this.state.picture},
 					{'headers' : {'Authorization': 'Bearer '+ localStorage.getItem('token')}}
 					)
 				.then(resp => {
@@ -67,6 +72,9 @@ class EditSetting extends Component {
 	return (
 		<div>
 		<Button onClick={this.props.updateParent.bind(this,{'currentComponent': 'setting'})}>Back</Button>
+		<div>
+		<Input style={{ width: 200 }} value={this.state.picture} onChange={this.updatePicture}/>
+		</div>
 		<div>
 		<Input placeholder="Enter your login" style={{ width: 200 }} value={this.state.login} onChange={this.updateLogin}/>
 		</div>

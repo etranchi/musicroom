@@ -62,6 +62,7 @@ class Setting extends Component {
 
 	render() {
 		let token = null
+		console.log(this.props.state.user);
 		if (this.props.state && this.props.state.user && this.props.state.user.deezerToken)
 			token = this.props.state.user.deezerToken
 		if (this.props.state.currentComponent == 'editSetting')
@@ -70,14 +71,16 @@ class Setting extends Component {
 		{
 			return (
 			<div>
-			<Row type="flex" justify="space-between">
-			<Col>
-				{!token ? (<Button onClick={this.loginDeezer.bind(this)}>Link Deezer</Button>): (<Button onClick={this.logoutDeezer.bind(this)}>Unlink Deezer</Button>)}
+				<Row type="flex" justify="space-between">
+					<Col>
+						<Button onClick={this.props.updateParent.bind(this,{'currentComponent': 'editSetting'})}>Edit</Button>
 					</Col>
 					<Col>
-				<Button onClick={this.props.updateParent.bind(this,{'currentComponent': 'editSetting'})}>Edit</Button>
-				</Col>
+						{!token ? (<Button onClick={this.loginDeezer.bind(this)}>Link Deezer</Button>): (<Button onClick={this.logoutDeezer.bind(this)}>Unlink Deezer</Button>)}
+					</Col>
+						
 				</Row>
+				<img src={this.props.state.user.picture}/>
 				<p> Login: {this.props.state.user.login}</p>
 				<p> email: {this.props.state.user.email}</p>
 				<p> Status: {this.props.state.user.status}</p>
