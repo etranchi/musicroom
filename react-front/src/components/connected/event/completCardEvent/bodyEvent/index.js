@@ -50,7 +50,7 @@ class CreatorProfil extends Component {
         }
     }
 	render() {
-        this.getLocation
+        this.getLocation();
         return (
             <div className="bodyContent">
                 <div className="title" >
