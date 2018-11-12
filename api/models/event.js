@@ -6,18 +6,18 @@ const Playlist 		= require('../models/playlist');
 const Event = new Schema({
 	creator: {type: User.schema},
 	title:{type: String, default: "Aucun"},
-	description:{type: String, default: "Aucun"},
+	description:{type: String, default: "à définir"},
 	location: {
 		address : {
 			p: {type: String},
 			v: {type: String},
 			cp: {type: String},
 			r: {type: String},
-			n: {type: Number}
+			n: {type: String}
 		},
 		coord: {
 			lat: {type: Number},
-			long: {type: Number}
+			lng: {type: Number}
 		}
 	},
 	visibility: {type:Number},
@@ -26,7 +26,7 @@ const Event = new Schema({
 	date: {type: Date, default: Date.now},
 	playlist: {type: Playlist.schema},
 	members : [User.schema],
-	picture: {type: String},
+	picture: {type: String, default: "default.jpeg"},
 	adminMembers: [User.schema]
 
 }, { versionKey: false });
