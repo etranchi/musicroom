@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
-import axios from 'axios'
+import axios from 'axios';
 import './styles.css';
-import {Button} from 'antd'
+import {Button, Col, Row} from 'antd';
+import EditSetting from './edit';
 const DZ = window.DZ;
 
 class Setting extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			user: {},
+			user: props.state.user,
 			error: {}
 		}
 		this.getUser();
@@ -24,7 +25,6 @@ class Setting extends Component {
 		})
 		.catch((err) => {
 			this.setState({error: err})
-			console.log(err);
 		})
 	}
 	loginDeezer () {
@@ -37,9 +37,8 @@ class Setting extends Component {
           if (response.authResponse) {
 			axios.get('https://192.168.99.100:4242/user/login/deezer?access_token=' + localStorage.getItem("token") + '&deezerToken=' + response.authResponse.accessToken)
 			.then(resp => {
-				console.log('ici');
-				console.log(resp);
-				that.props.updateParent({ user: resp.data })	
+				that.props.updateParent({ user: resp.data })
+				that.setState({ user: resp.data })
 			})
 			.catch(err => {
 				console.log(err);
@@ -54,21 +53,35 @@ class Setting extends Component {
     	axios.delete('https://192.168.99.100:4242/user/login/deezer', {'headers':{'Authorization' : 'Bearer ' + localStorage.getItem('token')}})
     	.then(resp => {
     		this.props.updateParent({ user: resp.data })
+    		this.setState({ user: resp.data })
     	})
     	.catch(err => {
     		console.log(err);
     	})
     }
 	render() {
-		const token = this.props.state.user.deezerToken
-	return (
-		<div>
-		{!token ? (<Button onClick={this.loginDeezer.bind(this)}>Link Deezer</Button>): (<Button onClick={this.logoutDeezer.bind(this)}>Unlink Deezer</Button>)}
-			<p> Login: {this.state.user.login}</p>
-			<p> email: {this.state.user.email}</p>
-			<p> Status: {this.state.user.status}</p>
-		</div>
-	);
+		const token = this.state.user.deezerToken
+		console.log(this.props.state);
+		if (this.props.state.currentComponent == 'editSetting')
+			return (<EditSetting state={this.props.state} updateParent={this.props.updateParent}/>)
+		else
+		{
+			return (
+			<div>
+			<Row type="flex" justify="space-between">
+			<Col>
+				{!token ? (<Button onClick={this.loginDeezer.bind(this)}>Link Deezer</Button>): (<Button onClick={this.logoutDeezer.bind(this)}>Unlink Deezer</Button>)}
+					</Col>
+					<Col>
+				<Button onClick={this.props.updateParent.bind(this,{'currentComponent': 'editSetting'})}>Edit</Button>
+				</Col>
+				</Row>
+				<p> Login: {this.state.user.login}</p>
+				<p> email: {this.state.user.email}</p>
+				<p> Status: {this.state.user.status}</p>
+			</div>
+		);
+		}
   }
 }
 
