@@ -2,12 +2,12 @@
     "port": 4242,
     "host": "0.0.0.0",
     "token": {
-        "secret": "aD[-kW,&!<8@_hyU#QSVu(t{NPsC[6+{`rUqMn75h5b+t7vC"
+        "secret": ""
     },
     "deezer": {
         "apiUrl": "https://api.deezer.com",
-        "clientID": "306704",
-        "clientSecret": "3c34bd9fa50ab2f38ebc3f59855df5a3",
+        "clientID": "",
+        "clientSecret": "",
         "callbackURL": "/oauth/deezer/callback",
         "scope": [
             "basic_access",
@@ -18,8 +18,8 @@
         ]
     },
     "facebook": {
-        "clientID": "711181125906087",
-        "clientSecret": "aeeaeaf7b1ba587efc31064db7ccd265",
+        "clientID": "",
+        "clientSecret": "",
         "callbackURL": "/oauth/facebook/callback",
         "scope": [
             "email"
@@ -32,8 +32,8 @@
         ]
     },
     "google": {
-        "clientID": "479103948820-tb38ba04oig61ogfdjgs6s07u9ph626o.apps.googleusercontent.com",
-        "clientSecret": "TA-O3Z6YyoNiwzUQoweZtfGK",
+        "clientID": "",
+        "clientSecret": "",
         "scope": [
             "email"
         ],

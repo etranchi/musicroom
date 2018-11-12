@@ -149,6 +149,7 @@ exports.deleteUserById = async (req, res) => {
 
 exports.modifyUserById = async (req, res) => {
 	try {
+		console.log(req.body)
 		if (!req.body)
 			return res.status(204);
 		let { error } = validateUpdateUser(req.body);
@@ -160,8 +161,8 @@ exports.modifyUserById = async (req, res) => {
 		user = Utils.filter(model.schema.obj, user, 1)
 		if (user.password)
 			user.password = await argon.hash(user.password);
-		await model.updateOne({"_id": req.user._id}, user);
-		return res.status(200).send("User modified");
+		user = await model.findByIdAndUpdate({"_id": req.user._id}, user,{new: true});
+		return res.status(200).send(Utils.filter(model.schema.obj, user, 0));
 	} catch (err) {
 		console.error("Error modifyUserById: %s", err);
 		res.status(400).send({message: err.toString()});
@@ -219,8 +220,9 @@ function validateUser(user) {
 function validateUpdateUser(user) {
 
 	const schema = {
-		login: Joi.string().min(3).max(9),
-		password: Joi.string().min(8).max(30)
+		login: Joi.string().min(3),
+		password: Joi.string().min(8),
+		picture: Joi.string()
 	};
 	return Joi.validate(user, schema);
 }
