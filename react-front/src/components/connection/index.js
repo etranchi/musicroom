@@ -1,4 +1,4 @@
-import React, { Component, Redirect } from 'react';
+import React, { Component } from 'react';
 import './styles.css';
 import Login from './login'
 import Register from './register'
@@ -9,7 +9,6 @@ import GoogleLogin from 'react-google-login';
 
 class Connection extends Component {
   loginFacebook(){
-    // return <Redirect to='https://192.168.99.100:4242/user/login/facebook'/>;
     axios.get('https://192.168.99.100:4242/user/login/facebook', {'headers':{}})
     .then((resp) => {
       console.log(resp);
@@ -24,7 +23,7 @@ class Connection extends Component {
       axios.get('https://192.168.99.100:4242/user/login/facebook', {'headers':{'Authorization':'Bearer '+ response.accessToken}})
       .then((resp) => {
         localStorage.setItem('token', resp.data.token)
-        this.props.updateParent({'token':resp.data.token, 'currentComponent': 'event'});
+        this.props.updateParent({'token':resp.data.token, 'currentComponent': 'event', 'user': resp.data.user});
       })
       .catch((err) => {
         console.log(err);
@@ -40,7 +39,7 @@ class Connection extends Component {
       axios.get('https://192.168.99.100:4242/user/login/google', {'headers':{'access_token':response.accessToken}})
       .then((resp) => {
         localStorage.setItem('token', resp.data.token)
-        this.props.updateParent({'token':resp.data.token, 'currentComponent': 'event'});
+        this.props.updateParent({'token':resp.data.token, 'currentComponent': 'event', 'user': resp.data.user});
       })
       .catch((err) => {
         console.log(err);

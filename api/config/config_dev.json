@@ -33,8 +33,8 @@
 		]
 	},
     "google": {
-        "clientID": "",
-        "clientSecret": "",
+        "clientID": "479103948820-tb38ba04oig61ogfdjgs6s07u9ph626o.apps.googleusercontent.com",
+        "clientSecret": "TA-O3Z6YyoNiwzUQoweZtfGK",
         "scope": [
             "email"
         ],
@@ -45,9 +45,32 @@
             "email"
         ]
     },
-	"mail": {
-		"email": "",
-		"password": "",
-		"service": "gmail"
-	}
+    "mail": {
+        "email": "kvignau@gmail.com",
+        "password": "",
+        "service": "gmail"
+    },
+    "swagger": {
+        "swaggerDefinition": {
+            "info": {
+                "description": "Music Room API",
+                "title": "Music Room",
+                "version": "1.0.0"
+            },
+            "host": "192.168.99.100:4242",
+            "basePath": "",
+            "produces": [
+                "application/json"
+            ],
+            "schemes": ["https"],
+            "securityDefinitions": {
+                "Bearer": {
+					"type": "apiKey",
+					"name": "Authorization",
+					"in": "header",
+					"template": "Bearer {apiKey}"
+				}
+            }
+        }
+    }
 }

@@ -3,12 +3,8 @@ import './styles.css';
 import List from './list'
 import Tracks from './tracks'
 import SearchBar from '../searchbar'
-import axios from 'axios'
 
 class Playlist extends Component {
-	constructor(props){
-		super(props);
-	}
 	render() {
 	return (
 		<div>
