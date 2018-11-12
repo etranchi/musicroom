@@ -9,7 +9,7 @@ class Setting extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			user: {},
+			user: props.state.user,
 			error: {}
 		}
 		this.getUser();
@@ -37,7 +37,8 @@ class Setting extends Component {
           if (response.authResponse) {
 			axios.get('https://192.168.99.100:4242/user/login/deezer?access_token=' + localStorage.getItem("token") + '&deezerToken=' + response.authResponse.accessToken)
 			.then(resp => {
-				that.props.updateParent({ user: resp.data })	
+				that.props.updateParent({ user: resp.data })
+				that.setState({ user: resp.data })
 			})
 			.catch(err => {
 				console.log(err);
@@ -52,6 +53,7 @@ class Setting extends Component {
     	axios.delete('https://192.168.99.100:4242/user/login/deezer', {'headers':{'Authorization' : 'Bearer ' + localStorage.getItem('token')}})
     	.then(resp => {
     		this.props.updateParent({ user: resp.data })
+    		this.setState({ user: resp.data })
     	})
     	.catch(err => {
     		console.log(err);
