@@ -21,9 +21,9 @@ class APIManager: NSObject, URLSessionDelegate {
         var request = URLRequest(url: URL(string: tracksUrl)!)
         request.httpMethod = "GET"
         
-        searchAll(TrackData.self, request: request) { (tracksData) in
+        searchAll(AlbumTrackData.self, request: request) { (tracksData) in
             var album = album
-            album.tracks = tracksData
+            album.tracks = tracksData.data
             completion(album)
         }
     }

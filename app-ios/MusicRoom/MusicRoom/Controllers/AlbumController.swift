@@ -11,10 +11,12 @@ import UIKit
 class AlbumController: UITableViewController {
 
     let album: Album
+    var tracks: [Track]?
     
     init(_ album: Album) {
         self.album = album
         super.init(nibName: nil, bundle: nil)
+        self.tracks = AlbumTracksToTracksConverter()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -24,8 +26,10 @@ class AlbumController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         guard album.tracks != nil else { return }
-        print("good to go")
+        
     }
+    
+    
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
@@ -35,5 +39,18 @@ class AlbumController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return 0
+    }
+}
+
+
+extension AlbumController {
+    func AlbumTracksToTracksConverter() -> [Track] {
+        var tracks: [Track] = []
+        
+        album.tracks?.forEach({ (track) in
+            let tr = Track.init(id: track.id, readable: track.readable, link: nil, album: nil, artist: nil, title: track.title, duration: track.duration)
+            tracks.append(tr)
+        })
+        return tracks
     }
 }

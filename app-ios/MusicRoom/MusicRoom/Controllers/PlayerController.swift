@@ -95,13 +95,6 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         }
         if progress > 0.999 {
             handleNext()
-            if index + 1 == tracks.count {
-                DispatchQueue.main.async {
-                    self.handlePause()
-                    self.loadTrackInplayer()
-                    self.setupTrack(indexOffset: self.index)
-                }
-            }
         }
     }
     
