@@ -8,15 +8,6 @@ import FacebookLogin from 'react-facebook-login';
 import GoogleLogin from 'react-google-login';
 
 class Connection extends Component {
-  loginFacebook(){
-    axios.get('https://192.168.99.100:4242/user/login/facebook', {'headers':{}})
-    .then((resp) => {
-      console.log(resp);
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-  }
   responseFacebook(response) {
     if (response.accessToken)
     {

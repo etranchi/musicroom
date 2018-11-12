@@ -59,9 +59,11 @@ class Setting extends Component {
     		console.log(err);
     	})
     }
+
 	render() {
-		const token = this.state.user.deezerToken
-		console.log(this.props.state);
+		let token = null
+		if (this.props.state && this.props.state.user && this.props.state.user.deezerToken)
+			token = this.props.state.user.deezerToken
 		if (this.props.state.currentComponent == 'editSetting')
 			return (<EditSetting state={this.props.state} updateParent={this.props.updateParent}/>)
 		else
@@ -76,9 +78,9 @@ class Setting extends Component {
 				<Button onClick={this.props.updateParent.bind(this,{'currentComponent': 'editSetting'})}>Edit</Button>
 				</Col>
 				</Row>
-				<p> Login: {this.state.user.login}</p>
-				<p> email: {this.state.user.email}</p>
-				<p> Status: {this.state.user.status}</p>
+				<p> Login: {this.props.state.user.login}</p>
+				<p> email: {this.props.state.user.email}</p>
+				<p> Status: {this.props.state.user.status}</p>
 			</div>
 		);
 		}
