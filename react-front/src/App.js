@@ -19,9 +19,11 @@ class App extends Component {
 	}
 
   updateState = (val) => {
-    console.log(val);
+    
     console.log("old state ->");
     console.log(this.state);
+    console.log("new state ->");
+    console.log(val);
     this.setState(val);
   }
   componentDidUpdate= () => {

@@ -37,7 +37,9 @@ class Setting extends Component {
           if (response.authResponse) {
 			axios.get('https://192.168.99.100:4242/user/login/deezer?access_token=' + localStorage.getItem("token"))
 			.then(resp => {
-				that.props.updateParent({ user: { ...that.state.user, deezerToken: resp.data.deezerToken} } )	
+				console.log('ici');
+				console.log(resp);
+				that.props.updateParent({ user: resp.data })	
 			})
 			.catch(err => {
 				console.log(err);
@@ -51,7 +53,7 @@ class Setting extends Component {
     logoutDeezer() {
     	axios.delete('https://192.168.99.100:4242/user/login/deezer', {'headers':{'Authorization' : 'Bearer ' + localStorage.getItem('token')}})
     	.then(resp => {
-    		this.props.updateParent({ user: { ...this.state.user, deezerToken: null} } )
+    		this.props.updateParent({ user: resp.data })
     	})
     	.catch(err => {
     		console.log(err);
@@ -61,7 +63,7 @@ class Setting extends Component {
 		const token = this.props.state.user.deezerToken
 	return (
 		<div>
-		{!token ? (<Button onClick={this.loginDeezer.bind(this)}>Login Deezer</Button>): (<Button onClick={this.logoutDeezer.bind(this)}>Logout Deezer</Button>)}
+		{!token ? (<Button onClick={this.loginDeezer.bind(this)}>Link Deezer</Button>): (<Button onClick={this.logoutDeezer.bind(this)}>Unlink Deezer</Button>)}
 			<p> Login: {this.state.user.login}</p>
 			<p> email: {this.state.user.email}</p>
 			<p> Status: {this.state.user.status}</p>

@@ -11,23 +11,34 @@ class ListEvent extends Component {
 			loading:false
 		}
 		this.onLoad = false;
-		this.getEvents()
+		// this.getEvents()
 	}
-	getEvents() {
+	
+	componentWillMount() {
 		console.log('REQUEST')
 		this.setState({loading:true});
 		axios.get('https://192.168.99.100:4242/event')
 		.then((resp) => {
+			console.log("ICI")
 			this.setState({events: resp.data.reverse(),loading:false})
 		})
 		.catch((err) => {
+			console.log("ICIsadadadadsa")
 			this.setState({events: [],loading:false})
 			console.log('Events error', err);
 		})
 	}
+
+
+	// deleteEvent = () => {
+	// 	axios.delete('https://192.168.99.100:4242/event');
+	// 	console.log("Event Trashed.");
+	// }
+
     
 	render() {
-		if (this.props.state.currentComponent !== "listEvent" && this.onLoad === false) {
+		console.log("list event")
+		if (this.props.state.currentComponent != "listEvent" && this.onLoad === false) {
 			this.onLoad = true;
 		}
 		if(this.state.loading === true ) {
@@ -36,6 +47,7 @@ class ListEvent extends Component {
 		}
 		else
 		{
+			{this.props.updateParent.bind(this,{'currentComponent': 'listEvent', 'data': this.state.events})}
 			return (
 				<div>
 				{
