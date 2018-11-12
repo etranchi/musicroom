@@ -54,7 +54,7 @@ class SongCell: UICollectionViewCell {
     let titleLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.systemFont(ofSize: 13, weight: .heavy)
+        label.font = UIFont.systemFont(ofSize: 13, weight: .medium)
         label.textColor = .white
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -64,7 +64,7 @@ class SongCell: UICollectionViewCell {
     let authorLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.systemFont(ofSize: 11, weight: .heavy)
+        label.font = UIFont.systemFont(ofSize: 11, weight: .medium)
         label.textColor = .lightGray
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -73,7 +73,7 @@ class SongCell: UICollectionViewCell {
     let dotsLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
+        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         label.textColor = .lightGray
         label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -134,7 +134,7 @@ class SeeAllSongsCell: UICollectionViewCell {
     let messageLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.systemFont(ofSize: 13, weight: .heavy)
+        label.font = UIFont.systemFont(ofSize: 13, weight: .medium)
         label.textColor = .white
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false

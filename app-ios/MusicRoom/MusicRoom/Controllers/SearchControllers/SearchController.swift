@@ -85,9 +85,9 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    func showAlbumContent(_ album: Album) {
+    func showAlbumContent(_ album: Album, _ albumCover: UIImage) {
         manager.getAlbumTracks(album) { (album) in
-            let vc = AlbumController(album)
+            let vc = AlbumController(album, albumCover)
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }

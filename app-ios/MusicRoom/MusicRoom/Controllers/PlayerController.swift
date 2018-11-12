@@ -154,7 +154,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         cancelable?.cancel()
         cancelable = DZRTrack.object(withIdentifier: String(tracks[index].id), requestManager: request, callback: { (response, err) in
             if let err = err {
-                print("Player error: \(err.localizedDescription)")
+                print("Player error: \(err)")
                 return
             }
             DispatchQueue.main.async {
