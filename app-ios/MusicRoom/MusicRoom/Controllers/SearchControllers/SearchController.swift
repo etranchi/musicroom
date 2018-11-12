@@ -85,6 +85,13 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
         navigationController?.pushViewController(vc, animated: true)
     }
     
+    func showAlbumContent(_ album: Album, _ albumCover: UIImage) {
+        manager.getAlbumTracks(album) { (album) in
+            let vc = AlbumController(album, albumCover)
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+    
     func showPlayerForSong(_ index: Int) {
         (tabBarController as! TabBarController).showPlayerForSong(index, tracks: musicCategories![1].tracks)
     }

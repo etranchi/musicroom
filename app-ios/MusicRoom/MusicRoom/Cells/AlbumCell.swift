@@ -39,7 +39,7 @@ class AlbumCell: UICollectionViewCell {
     let titleLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.systemFont(ofSize: 13, weight: .heavy)
+        label.font = UIFont.systemFont(ofSize: 13, weight: .medium)
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 2
@@ -50,7 +50,7 @@ class AlbumCell: UICollectionViewCell {
     let authorLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.systemFont(ofSize: 11, weight: .heavy)
+        label.font = UIFont.systemFont(ofSize: 11, weight: .medium)
         label.textColor = .lightGray
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
