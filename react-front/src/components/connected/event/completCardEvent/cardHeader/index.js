@@ -6,7 +6,9 @@ class CardHeader extends Component {
 	constructor(props) {
         super(props);
 
-
+    
+    this.state = {};
+    
     this.header = {
         margin: '5% 0 0 0'
     }

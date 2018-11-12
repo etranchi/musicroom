@@ -27,6 +27,7 @@
 }
 
 .descriptionBlockBody {
+    text-align: center;
     margin: 5% 0 0 0
 }
 
@@ -46,4 +47,24 @@
 .previewMemberLogin {
     width: 100%;
     margin: 2% 0 0 0 
+}
+
+.listMember {
+    width: 100%;
+    height: 140px;
+}
+
+.cardMember {
+    padding: 1% 0 0 2%;
+    height: 100%;
+    width: 20%;
+    display: inline-block;
+}
+.cardMemberImage {
+    display: block;
+}
+
+.cardMemberLogin {
+    padding: 0 17% 0 25%;
+    display: block;
 }

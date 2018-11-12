@@ -70,7 +70,7 @@ class CreatorProfil extends Component {
                     this.props.state.data.adminMembers.map((member, key) => {
                         let userPicture = member.facebookId ? member.picture : "https://192.168.99.100:4242/eventPicture/" + member.picture
                         return (
-                            <div className="previewMember">
+                            <div className="previewMember" key={key}>
                                 <Card.Meta avatar={<Avatar src={userPicture} />} />
                                 <div className="previewMemberLogin">
                                     <p> {member.login}</p>
@@ -84,7 +84,7 @@ class CreatorProfil extends Component {
                     this.props.state.data.members.map((member, key) => {
                         let userPicture = member.facebookId ? member.picture : "https://192.168.99.100:4242/eventPicture/" + member.picture
                         return (
-                            <div className="previewMember">
+                            <div className="previewMember" key={key}>
                                 <Card.Meta avatar={<Avatar src={userPicture} />} />
                                 <div className="previewMemberLogin">
                                     <p> {member.login}</p>

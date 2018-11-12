@@ -58,7 +58,6 @@ class PreviewCardEvent extends Component {
     }
     
     openCard = (e) => {
-        console.log("OPEN")
         this.props.updateParent({'currentComponent': 'cardEvent', 'data': this.props.event})
     }
 	render() {
@@ -83,7 +82,7 @@ class PreviewCardEvent extends Component {
                 <Card.Grid style={this.gridStyleInfo}>
                 <div style={this.iconBlockStyle}>
                     <Icon  style={this.iconStyle} type="pushpin" theme="outlined" />
-                    <b style={this.iconNameStyle}>Paris {/* {this.this.props.event.address.v} */} </b>
+                    <b style={this.iconNameStyle}> {this.props.event.location.address.v ? this.props.event.location.address.v : "Paris"}</b>
                 </div>
                 <div style={this.iconBlockStyle}>
                     <Icon  style={this.iconStyle} type="clock-circle" theme="outlined" />

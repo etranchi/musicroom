@@ -2,6 +2,12 @@ import React, { Component } from 'react';
 import './styles.css';
 
 class InfoEvent extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+
+        }
+    }
 	render() {
 
         return (
