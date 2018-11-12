@@ -40,17 +40,14 @@ class CreatorProfil extends Component {
         }
     }
     getLocation() {
-        console.log("LALALALALA")
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition( (position ) => {
-                console.log("POSITION : ", position)
+                this.updateUserLocation(position.coords.latitude, position.coords.longitude)
             });
-        } else {
-            console.log("FAIL")
         }
     }
 	render() {
-        this.getLocation
+        this.getLocation();
         return (
             <div className="bodyContent">
                 <div className="title" >

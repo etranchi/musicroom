@@ -2,13 +2,18 @@ import React, { Component } from 'react';
 import GoogleMapReact from 'google-map-react';
 import './styles.css'
  
-const AnyReactComponent = ({ text }) => <i style={{color:'#03a9f4'}}className="fas fa-map-marker-alt fa-3x"></i>;
- 
+const EventLocation = ({ text }) => <i style={{color:'#03a9f4'}}className="fas fa-map-marker-alt fa-3x"></i>;
+const UserLocation = ({ text }) => <i style={{color:'#8bc34a'}}className="fas fa-map-marker-alt fa-3x"></i>;
+
 class SimpleMap extends Component {
     constructor(props) {
       super(props);
     
-      console.log("Constructor : ", this.props.state)
+    this.state = {
+      userLatitude: this.props.myState.latitude ? this.props.myState.latitude : null,
+      userLongitude: this.props.myState.longitude ? this.props.myState.longitude : null ,
+      displayUser: this.props.myState.displayUser ? true : false
+    }
     this.mapStyle = {
       height: this.props.state.mapHeight ? this.props.state.mapHeight : '30vh',
       width: '100%',
@@ -17,7 +22,6 @@ class SimpleMap extends Component {
   }
  
   render() {
-    {console.log("Je suis ici ???", this.props.state)}
     return (
       // Important! Always set the container height explicitly
       <div className="mapContent" style={this.mapStyle}>
@@ -26,10 +30,8 @@ class SimpleMap extends Component {
           defaultCenter={this.props.state.location.coord}
           defaultZoom= {11}
         >
-          <AnyReactComponent
-            lat={this.props.state.location.coord.lat}
-            lng={this.props.state.location.coord.lng}
-          />
+          <EventLocation lat={this.props.state.location.coord.lat} lng={this.props.state.location.coord.lng} />
+          {this.state.displayUser ? <UserLocation  lat={this.state.userLatitude} lng={this.state.userLongitude} /> : null}
         </GoogleMapReact>
       </div>
     );
