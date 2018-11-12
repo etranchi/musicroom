@@ -3,7 +3,7 @@ import './styles.css';
 import defaultTrackImg from '../../../../assets/track.png'
 import moment from 'moment'
 import axios from 'axios'
-
+const DZ = window.DZ;
 
 
 class Tracks extends Component {
@@ -27,6 +27,8 @@ class Tracks extends Component {
 		})
 	}
 	render() {
+		console.log(this.props);
+		
 		if( this.state.isloading === true ) {
 			return (
 				<div>
@@ -49,6 +51,7 @@ class Tracks extends Component {
 						);
 					})}
 				</ul>
+				<iframe scrolling="no" frameborder="0" allowTransparency="true" src={"https://www.deezer.com/plugins/player?format=classic&autoplay=false&playlist=true&width=700&height=350&color=007FEB&layout=dark&size=medium&type=playlist&id="+this.props.state.id+"&app_id=310224"} width="700" height="350"></iframe>
 			</div>
 		);
   }

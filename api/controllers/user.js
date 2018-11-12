@@ -32,9 +32,11 @@ exports.connect = (req, res) => {
 
 exports.bindDeezerToken = async (req, res) => {
 	try {
-		let user = await model.findByIdAndUpdate({_id: req.user._id}, {
-				deezerToken: req.query.access_token
-			})
+		let user = await model.findByIdAndUpdate(
+			{_id: req.user._id}, 
+			{deezerToken: req.query.access_token}, 
+			{new: true}
+		)
 		res.status(200).send(user);
 	} catch (err) {
 		console.log("bindDeezerToken " + err)
@@ -44,9 +46,11 @@ exports.bindDeezerToken = async (req, res) => {
 
 exports.deleteDeezerToken = async (req, res) => {
 	try {
-		let user = await model.findByIdAndUpdate({_id: req.user._id}, {
-				deezerToken: null
-			})
+		let user = await model.findByIdAndUpdate(
+			{_id: req.user._id}, 
+			{deezerToken: null}, 
+			{new: true}
+		)
 		res.status(200).send(user);
 	} catch (err) {
 		console.log("bindDeezerToken " + err)
