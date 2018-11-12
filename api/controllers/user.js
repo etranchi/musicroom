@@ -34,7 +34,7 @@ exports.bindDeezerToken = async (req, res) => {
 	try {
 		let user = await model.findByIdAndUpdate(
 			{_id: req.user._id}, 
-			{deezerToken: req.query.access_token}, 
+			{deezerToken: req.query.deezerToken}, 
 			{new: true}
 		)
 		res.status(200).send(user);
