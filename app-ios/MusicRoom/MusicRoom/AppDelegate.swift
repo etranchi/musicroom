@@ -17,22 +17,16 @@ import GoogleToolboxForMac
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!,
-              withError error: Error!) {
-        // Perform any operations when the user disconnects from app here.
-        // ...
-        print("disconnected")
-    }
-    
+    var userManager = UserManager()
     var window: UIWindow?
     let apiManager = APIManager()
+    
     var orientationLock = UIInterfaceOrientationMask.all
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
         print(url)
-        return GIDSignIn.sharedInstance().handle(url as? URL, sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
+        return GIDSignIn.sharedInstance().handle(url as URL, sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
                                                  annotation: options[UIApplicationOpenURLOptionsKey.annotation])
-        // return SDKApplicationDelegate.shared.application(app)
     }
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
         return self.orientationLock
@@ -40,12 +34,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         //get the token if loggedin -> go home else go loginPage
-
         window = UIWindow()
         window?.makeKeyAndVisible()
-        //window?.rootViewController = TabBarController()
-        let nav = CustomNavigationController(rootViewController: AuthenticationController())
-        window?.rootViewController = nav
+        let user = userManager.getAllArticles()
+        if user.count == 0 {
+            let nav = CustomNavigationController(rootViewController: AuthenticationController())
+            window?.rootViewController = nav
+        }
+        else {
+            let nav = TabBarController()
+            nav.user = user[0]
+            window?.rootViewController = nav
+        }
         return true
     }
 

@@ -15,7 +15,7 @@ enum Status : String, Decodable {
 struct User : Decodable {
     let login : String
     let email : String
-    let password : String
+    let password : String?
     let status : Status
     let creationDate : String
     let id : String

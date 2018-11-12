@@ -11,6 +11,7 @@ import UIKit
 class TabBarController: UITabBarController {
 
     var offsetY: CGFloat = 0.0
+    var user : MyUser?
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -13,13 +13,12 @@ import Foundation
 class UserManager {
     public var context : NSManagedObjectContext
     
-    public func newUser(login : String, mdp : String) -> MyUser
+    public func newUser() -> MyUser
     {
         var user: MyUser?
         context.performAndWait {
             let ent = NSEntityDescription.entity(forEntityName: "MyUser", in: context)!
             user = MyUser(entity: ent, insertInto: context)
-            user?.login = login
         }
         return user!
     }

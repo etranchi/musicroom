@@ -14,6 +14,29 @@ import GoogleToolboxForMac
 
 class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate ,GIDSignInUIDelegate {
     var apiManager = APIManager()
+    var userManager = UserManager()
+    
+    @objc func loginButtonClicked() {
+        let loginManager = LoginManager()
+        loginManager.logIn(readPermissions: [ReadPermission.publicProfile, ReadPermission.email], viewController: self) { (loginResult) in
+            switch loginResult {
+            case .failed(let error):
+                print(error)
+            case .cancelled:
+                print("User cancelled login.")
+            case .success(let grantedPermissions, let declinedPermissions, let accessToken):
+                self.apiManager.login("facebook", accessToken.authenticationToken, completion: { (data) in
+                    let user = self.userManager.newUser()
+                    user.token = data.token
+                    user.login = data.user.login
+                    self.userManager.save()
+                    let nav = TabBarController()
+                    nav.user = user
+                    self.present(nav, animated: true, completion: nil)
+                })
+            }
+        }
+    }
     
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
         if let error = error {
@@ -27,13 +50,18 @@ class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate 
             let familyName = user.profile.familyName
             let email = user.profile.email
             apiManager.login("google", user.authentication.accessToken, completion:  { (data) in
-                print(data)
+                let user = self.userManager.newUser()
+                user.token = data.token
+                user.login = data.user.login
+                self.userManager.save()
+                let nav = TabBarController()
+                nav.user = user
+                self.present(nav, animated: true, completion: nil)
             })
         }
     }
     
     
-    let userManager : UserManager = UserManager()
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -64,20 +92,7 @@ class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate 
         view.addSubview(myLoginButton)
     }
     
-    @objc func loginButtonClicked() {
-        let loginManager = LoginManager()
-        loginManager.logIn(readPermissions: [ReadPermission.publicProfile], viewController: self) { (loginResult) in
-            switch loginResult {
-            case .failed(let error):
-                print(error)
-            case .cancelled:
-                print("User cancelled login.")
-            case .success(let grantedPermissions, let declinedPermissions, let accessToken):
-                print("Logged in!")
-                print("Facebook token : \(accessToken)")
-            }
-        }
-    }
+
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         switch textField.tag {
         case 0 : passTF.becomeFirstResponder()
