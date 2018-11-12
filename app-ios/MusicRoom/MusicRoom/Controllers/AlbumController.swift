@@ -96,11 +96,15 @@ class AlbumController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: songCellId, for: indexPath) as! AlbumTrackListCell
     
-        cell.selectedBackgroundView = UIView()
         cell.backgroundColor = UIColor(white: 0.1, alpha: 1)
         cell.track = tracks?[indexPath.row]
         cell.authorLabel.text = album.artist?.name
+        cell.selectionStyle = .none
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("selected \(indexPath.row)")
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
