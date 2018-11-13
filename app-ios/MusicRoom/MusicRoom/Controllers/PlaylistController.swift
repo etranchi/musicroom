@@ -26,7 +26,7 @@ class PlaylistController: UICollectionViewController, UICollectionViewDelegateFl
         super.viewDidLoad()
         collectionView?.backgroundColor = UIColor(white: 0.1, alpha: 1)
         collectionView?.alwaysBounceVertical = true
-        collectionView?.register(CategoryCell.self, forCellWithReuseIdentifier: categoryCellId)
+        collectionView?.register(GlobalSearchCell.self, forCellWithReuseIdentifier: categoryCellId)
         collectionView?.register(SearchCell.self, forCellWithReuseIdentifier: searchCellId)
         
         

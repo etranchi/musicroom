@@ -39,7 +39,7 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
 
         collectionView?.backgroundColor = UIColor(white: 0.1, alpha: 1)
         collectionView?.alwaysBounceVertical = true
-        collectionView?.register(CategoryCell.self, forCellWithReuseIdentifier: categoryCellId)
+        collectionView?.register(GlobalSearchCell.self, forCellWithReuseIdentifier: categoryCellId)
         collectionView?.register(SearchCell.self, forCellWithReuseIdentifier: searchCellId)
         
         performSearch(initialSearch) { (albums, tracks, artists) in
@@ -71,7 +71,7 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
             cell.vc = self
             return cell
         } else {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: categoryCellId, for: indexPath) as! CategoryCell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: categoryCellId, for: indexPath) as! GlobalSearchCell
             cell.musicCategory = musicCategories![indexPath.item - 1]
             cell.searchController = self
             return cell

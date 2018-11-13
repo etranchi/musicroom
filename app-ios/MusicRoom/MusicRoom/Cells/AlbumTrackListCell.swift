@@ -46,6 +46,17 @@ class AlbumTrackListCell: UITableViewCell {
         return label
     }()
     
+    let plusButton: UIButton = {
+        let button = UIButton(type: .system)
+        let icon = #imageLiteral(resourceName: "plus_icon")
+        let tintedIcon = icon.withRenderingMode(.alwaysTemplate)
+        button.setImage(tintedIcon, for: .normal)
+        button.tintColor = UIColor(white: 1, alpha: 1)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.isUserInteractionEnabled = true
+        return button
+    }()
+    
     let separator: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -65,17 +76,28 @@ class AlbumTrackListCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    @objc func handleAddSong() {
+        print("add song to playlist")
+    }
+    
     func setupView() {
+        plusButton.addTarget(self, action: #selector(handleAddSong), for: .touchUpInside)
+        addSubview(plusButton)
         addSubview(titleLabel)
         addSubview(authorLabel)
         addSubview(dotsLabel)
         addSubview(separator)
         
         NSLayoutConstraint.activate([
+            plusButton.centerYAnchor.constraint(equalTo: centerYAnchor),
+            plusButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 7),
+            plusButton.heightAnchor.constraint(equalToConstant: 18),
+            plusButton.widthAnchor.constraint(equalToConstant: 18),
+            
             titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 2),
             titleLabel.heightAnchor.constraint(equalToConstant: 25),
             titleLabel.trailingAnchor.constraint(equalTo: dotsLabel.leadingAnchor, constant: -10),
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 14),
+            titleLabel.leadingAnchor.constraint(equalTo: plusButton.trailingAnchor, constant: 7),
             
             authorLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: -5),
             authorLabel.heightAnchor.constraint(equalToConstant: 17),
