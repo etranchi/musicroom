@@ -65,29 +65,27 @@ class AlbumController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        guard album.tracks != nil else { return }
+        guard album.tracks != nil, tracks != nil else { return }
         tableView.separatorStyle = .none
         
         tableView.backgroundColor = UIColor(white: 0.1, alpha: 1)
+        tableView.alwaysBounceVertical = false
         setupHeader()
     }
     
     func updateHeaderView() {
-        
         var headerRect = CGRect(x: 0, y: -headerHeight, width: tableView.bounds.width, height: headerHeight)
-        if tableView.contentOffset.y < -headerHeight {
-            headerRect.origin.y = tableView.contentOffset.y
-            headerRect.size.height = -tableView.contentOffset.y
-            headerView.frame = headerRect
-        }
+        headerRect.origin.y = tableView.contentOffset.y
+        headerRect.size.height = -tableView.contentOffset.y
+        headerView.frame = headerRect
+        headerView.titleBottomConstraint?.constant = -10 - headerRect.height + 288
     }
     
     fileprivate func setupHeader() {
         headerView = AlbumHeaderView(frame: .zero, albumCover: albumCover, title: "\(album.title) by \(String(describing: album.artist!.name))")
-        headerView.translatesAutoresizingMaskIntoConstraints = true
         tableView.register(AlbumTrackListCell.self, forCellReuseIdentifier: songCellId)
-        tableView.tableHeaderView = nil
-        tableView.addSubview(headerView)
+        view.addSubview(headerView)
+        headerView.layer.zPosition = -1
         tableView.contentInset = UIEdgeInsets(top: headerHeight, left: 0, bottom: 45, right: 0)
         tableView.contentOffset = CGPoint(x: 0, y: -headerHeight)
         updateHeaderView()
@@ -96,11 +94,15 @@ class AlbumController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: songCellId, for: indexPath) as! AlbumTrackListCell
     
-        cell.selectedBackgroundView = UIView()
         cell.backgroundColor = UIColor(white: 0.1, alpha: 1)
         cell.track = tracks?[indexPath.row]
         cell.authorLabel.text = album.artist?.name
+        cell.selectionStyle = .none
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        (tabBarController as? TabBarController)?.showPlayerForSong(indexPath.row, tracks: tracks!)
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -125,7 +127,7 @@ extension AlbumController {
         var tracks: [Track] = []
         
         album.tracks?.forEach({ (track) in
-            let tr = Track.init(id: track.id, readable: track.readable, link: nil, album: nil, artist: nil, title: track.title, duration: track.duration)
+            let tr = Track.init(id: track.id, readable: track.readable, link: nil, album: album, artist: album.artist, title: track.title, duration: track.duration)
             tracks.append(tr)
         })
         return tracks

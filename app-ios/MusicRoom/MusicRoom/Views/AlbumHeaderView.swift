@@ -45,7 +45,7 @@ class AlbumHeaderView: UIView {
     let titleLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        label.font = UIFont.systemFont(ofSize: 13, weight: .medium)
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 1
@@ -61,6 +61,8 @@ class AlbumHeaderView: UIView {
         return visualEffectView
     }()
     
+    var titleBottomConstraint: NSLayoutConstraint?
+    
     func setupView() {
         titleLabel.text = title
         let view = UIView()
@@ -73,6 +75,7 @@ class AlbumHeaderView: UIView {
         addSubview(blurView)
         addSubview(albumImageView)
         addSubview(titleLabel)
+        titleBottomConstraint = titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor)
         NSLayoutConstraint.activate([
             albumImageBackground.topAnchor.constraint(equalTo: topAnchor),
             albumImageBackground.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -90,13 +93,13 @@ class AlbumHeaderView: UIView {
             blurView.leadingAnchor.constraint(equalTo: leadingAnchor),
             
             albumImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            albumImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            albumImageView.heightAnchor.constraint(equalToConstant: 150),
-            albumImageView.widthAnchor.constraint(equalToConstant: 150),
+            albumImageView.bottomAnchor.constraint(equalTo: titleLabel.topAnchor, constant: -10),
+            albumImageView.heightAnchor.constraint(equalToConstant: 190),
+            albumImageView.widthAnchor.constraint(equalToConstant: 190),
             
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 14),
             titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -14),
-            titleLabel.topAnchor.constraint(equalTo: albumImageView.bottomAnchor, constant: 10),
+            titleBottomConstraint!,
             titleLabel.heightAnchor.constraint(equalToConstant: 20)
         ])
     }
