@@ -56,7 +56,6 @@ class SeeAllSongsController: UICollectionViewController, UICollectionViewDelegat
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         searchController.showPlayerForSong(indexPath.item)
         currentTrack = tracks[indexPath.item]
-        collectionView.reloadData()
     }
 
 
@@ -69,10 +68,6 @@ class SeeAllSongsController: UICollectionViewController, UICollectionViewDelegat
         
         cell.backgroundColor = UIColor(white: 0.1, alpha: 1)
         cell.track = tracks[indexPath.item]
-        cell.titleLabel.textColor = .white
-        if tracks[indexPath.item].id == currentTrack?.id {
-            cell.titleLabel.textColor = UIColor(red: 20 / 255, green: 220 / 255, blue: 20 / 255, alpha: 1)
-        }
         return cell
     }
     

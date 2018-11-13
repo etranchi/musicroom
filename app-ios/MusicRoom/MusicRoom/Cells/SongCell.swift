@@ -11,6 +11,10 @@ import UIKit
 class SongCell: UICollectionViewCell {
     var track: Track! {
         didSet {
+            titleLabel.textColor = .white
+            if track.id == currentTrack?.id {
+                titleLabel.textColor = UIColor(red: 20 / 255, green: 220 / 255, blue: 20 / 255, alpha: 1)
+            }
             authorLabel.text = track.artist!.name
             titleLabel.text = track.title
             let sec = track.duration % 60
