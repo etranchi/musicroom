@@ -166,7 +166,7 @@ class MinimizedPlayerView: UIView {
         NSLayoutConstraint.activate([
             separator0.trailingAnchor.constraint(equalTo: playerContainerView.trailingAnchor),
             separator0.leadingAnchor.constraint(equalTo: playerContainerView.leadingAnchor),
-            separator0.topAnchor.constraint(equalTo: playerContainerView.bottomAnchor),
+            separator0.bottomAnchor.constraint(equalTo: playerContainerView.bottomAnchor),
             
             separator1.trailingAnchor.constraint(equalTo: playerContainerView.trailingAnchor),
             separator1.leadingAnchor.constraint(equalTo: playerContainerView.leadingAnchor),

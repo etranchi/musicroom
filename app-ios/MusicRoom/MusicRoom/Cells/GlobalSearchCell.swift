@@ -1,5 +1,5 @@
 //
-//  CategoryCell.swift
+//  GlobalSearchCell.swift
 //  MusicRoom
 //
 //  Created by Jonathan DAVIN on 10/30/18.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class GlobalSearchCell: UICollectionViewCell, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     private let albumCellId = "albumCellId"
     private let songCellId = "songCellId"
     private let seeAllSongsCellId = "seeAllSongsCellId"
@@ -72,6 +72,7 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
         super.init(frame: .zero)
         
         setupViews()
+        musicCollectionView.showsHorizontalScrollIndicator = false
         musicCollectionView.register(AlbumCell.self, forCellWithReuseIdentifier: albumCellId)
         musicCollectionView.register(SongCell.self, forCellWithReuseIdentifier: songCellId)
         musicCollectionView.register(SeeAllSongsCell.self, forCellWithReuseIdentifier: seeAllSongsCellId)

@@ -54,10 +54,20 @@ class AlbumHeaderView: UIView {
     }()
     
     let blurView: UIView = {
-        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
         visualEffectView.isUserInteractionEnabled = false
         visualEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         visualEffectView.translatesAutoresizingMaskIntoConstraints = false
+        let view = UIView()
+        view.backgroundColor = UIColor(white: 0, alpha: 0.7)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        visualEffectView.contentView.addSubview(view)
+        NSLayoutConstraint.activate([
+            view.topAnchor.constraint(equalTo: visualEffectView.topAnchor),
+            view.trailingAnchor.constraint(equalTo: visualEffectView.trailingAnchor),
+            view.bottomAnchor.constraint(equalTo: visualEffectView.bottomAnchor),
+            view.leadingAnchor.constraint(equalTo: visualEffectView.leadingAnchor)
+        ])
         return visualEffectView
     }()
     
@@ -65,13 +75,10 @@ class AlbumHeaderView: UIView {
     
     func setupView() {
         titleLabel.text = title
-        let view = UIView()
-        view.backgroundColor = UIColor(white: 0, alpha: 0.3)
-        view.translatesAutoresizingMaskIntoConstraints = false
+        
         albumImageBackground.image = albumCover
         albumImageView.image = albumCover
         addSubview(albumImageBackground)
-        addSubview(view)
         addSubview(blurView)
         addSubview(albumImageView)
         addSubview(titleLabel)
@@ -81,11 +88,6 @@ class AlbumHeaderView: UIView {
             albumImageBackground.trailingAnchor.constraint(equalTo: trailingAnchor),
             albumImageBackground.bottomAnchor.constraint(equalTo: bottomAnchor),
             albumImageBackground.leadingAnchor.constraint(equalTo: leadingAnchor),
-            
-            view.topAnchor.constraint(equalTo: topAnchor),
-            view.trailingAnchor.constraint(equalTo: trailingAnchor),
-            view.bottomAnchor.constraint(equalTo: bottomAnchor),
-            view.leadingAnchor.constraint(equalTo: leadingAnchor),
             
             blurView.topAnchor.constraint(equalTo: topAnchor),
             blurView.trailingAnchor.constraint(equalTo: trailingAnchor),
