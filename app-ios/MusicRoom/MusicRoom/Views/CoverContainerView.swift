@@ -19,7 +19,7 @@ class CoverContainerView: UIView {
     
     let zoomingEffect: CGFloat = 40.0
     let transparencyEffect: CGFloat = 0.4
-    let animationTime = 0.5
+    let animationTime = 0.4
     
     init(target: UIViewController, _ underPreviousTrack: Track?, _ previousTrack: Track?, _ currentTrack: Track, _ nextTrack: Track?, _ overNextTrack: Track?) {
         self.playerController = target as! PlayerController
@@ -80,12 +80,12 @@ class CoverContainerView: UIView {
     func handleAnimation(iv: UIImageView, isNext: Bool) {
         if isNext {
             currentLeadingAnchor?.constant -= offset - 30
-            currentTrailingAnchor?.constant -= offset + 10
-            nextTrailingAnchor?.constant += 40
+            currentTrailingAnchor?.constant -= offset + 5
+            nextTrailingAnchor?.constant += 35
         } else {
-            currentLeadingAnchor?.constant += offset + 10
+            currentLeadingAnchor?.constant += offset + 5
             currentTrailingAnchor?.constant += offset - 30
-            previousLeadingAnchor?.constant -= 40
+            previousLeadingAnchor?.constant -= 35
         }
         
         UIView.animate(withDuration: animationTime, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
@@ -109,7 +109,7 @@ class CoverContainerView: UIView {
     var currentTrailingAnchor: NSLayoutConstraint?
     var nextLeadingAnchor: NSLayoutConstraint?
     var nextTrailingAnchor: NSLayoutConstraint?
-    let offset = UIApplication.shared.keyWindow!.bounds.width - 80
+    let offset = UIApplication.shared.keyWindow!.bounds.width - 50
     
     func setupView() {
         downLoadImagesIfNeeded()
@@ -126,17 +126,17 @@ class CoverContainerView: UIView {
         overNextCoverImageView.alpha = transparencyEffect
         
         previousLeadingAnchor = previousCoverImageView.leadingAnchor.constraint(equalTo: currentCoverImageView.leadingAnchor, constant: -offset + 30)
-        previousTrailingAnchor = previousCoverImageView.trailingAnchor.constraint(equalTo: currentCoverImageView.leadingAnchor, constant: -10)
-        currentLeadingAnchor = currentCoverImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 40)
-        currentTrailingAnchor = currentCoverImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -40)
-        nextLeadingAnchor = nextCoverImageView.leadingAnchor.constraint(equalTo: currentCoverImageView.trailingAnchor, constant: 10)
+        previousTrailingAnchor = previousCoverImageView.trailingAnchor.constraint(equalTo: currentCoverImageView.leadingAnchor, constant: -5)
+        currentLeadingAnchor = currentCoverImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 25)
+        currentTrailingAnchor = currentCoverImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -25)
+        nextLeadingAnchor = nextCoverImageView.leadingAnchor.constraint(equalTo: currentCoverImageView.trailingAnchor, constant: 5)
         nextTrailingAnchor = nextCoverImageView.trailingAnchor.constraint(equalTo: currentCoverImageView.trailingAnchor, constant: offset - 30)
         
         NSLayoutConstraint.activate([
             underPreviousCoverImageView.topAnchor.constraint(equalTo: topAnchor),
             underPreviousCoverImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
             underPreviousCoverImageView.leadingAnchor.constraint(equalTo: previousCoverImageView.leadingAnchor, constant: -offset + 30),
-            underPreviousCoverImageView.trailingAnchor.constraint(equalTo: previousCoverImageView.leadingAnchor, constant: -10),
+            underPreviousCoverImageView.trailingAnchor.constraint(equalTo: previousCoverImageView.leadingAnchor, constant: -5),
             
             previousCoverImageView.topAnchor.constraint(equalTo: topAnchor),
             previousCoverImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
@@ -147,7 +147,7 @@ class CoverContainerView: UIView {
             
             overNextCoverImageView.topAnchor.constraint(equalTo: topAnchor),
             overNextCoverImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            overNextCoverImageView.leadingAnchor.constraint(equalTo: nextCoverImageView.trailingAnchor, constant: 10),
+            overNextCoverImageView.leadingAnchor.constraint(equalTo: nextCoverImageView.trailingAnchor, constant: 5),
             overNextCoverImageView.trailingAnchor.constraint(equalTo: nextCoverImageView.trailingAnchor, constant: offset - 30)
         ])
         
