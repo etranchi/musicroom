@@ -31,9 +31,9 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     var firstPlay = true
     
     let request = DZRRequestManager.default().sub()
-    var cancelable : DZRCancelable?
+    var cancelable: DZRCancelable?
     var deezer = DeezerManager()
-    var track : DZRTrack?
+    var track: DZRTrack?
     
     var coverContainerView: CoverContainerView?
     var backgroundCoverView: BackgroundCoverView?
@@ -151,10 +151,8 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     }
     
     func loadTrackInplayer() {
-        cancelable?.cancel()
         cancelable = DZRTrack.object(withIdentifier: String(tracks[index].id), requestManager: request, callback: { (response, err) in
-            if let err = err {
-                print("Player error: \(err)")
+            if err != nil {
                 return
             }
             DispatchQueue.main.async {
@@ -190,6 +188,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     }
 
     fileprivate func setupUI() {
+        cancelable?.cancel()
         backgroundCoverView = setupBackgroudView()
         coverContainerView = setupCoverContainer()
         playerButtonView = PlayerButtonsView(target: self, isPlaying)
