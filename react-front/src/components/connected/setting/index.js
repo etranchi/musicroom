@@ -59,26 +59,31 @@ class Setting extends Component {
     		console.log(err);
     	})
     }
+
 	render() {
-		const token = this.state.user.deezerToken
-		console.log(this.props.state);
+		let token = null
+		console.log(this.props.state.user);
+		if (this.props.state && this.props.state.user && this.props.state.user.deezerToken)
+			token = this.props.state.user.deezerToken
 		if (this.props.state.currentComponent == 'editSetting')
 			return (<EditSetting state={this.props.state} updateParent={this.props.updateParent}/>)
 		else
 		{
 			return (
 			<div>
-			<Row type="flex" justify="space-between">
-			<Col>
-				{!token ? (<Button onClick={this.loginDeezer.bind(this)}>Link Deezer</Button>): (<Button onClick={this.logoutDeezer.bind(this)}>Unlink Deezer</Button>)}
+				<Row type="flex" justify="space-between">
+					<Col>
+						<Button onClick={this.props.updateParent.bind(this,{'currentComponent': 'editSetting'})}>Edit</Button>
 					</Col>
 					<Col>
-				<Button onClick={this.props.updateParent.bind(this,{'currentComponent': 'editSetting'})}>Edit</Button>
-				</Col>
+						{!token ? (<Button onClick={this.loginDeezer.bind(this)}>Link Deezer</Button>): (<Button onClick={this.logoutDeezer.bind(this)}>Unlink Deezer</Button>)}
+					</Col>
+						
 				</Row>
-				<p> Login: {this.state.user.login}</p>
-				<p> email: {this.state.user.email}</p>
-				<p> Status: {this.state.user.status}</p>
+				<img src={this.props.state.user.picture}/>
+				<p> Login: {this.props.state.user.login}</p>
+				<p> email: {this.props.state.user.email}</p>
+				<p> Status: {this.props.state.user.status}</p>
 			</div>
 		);
 		}
