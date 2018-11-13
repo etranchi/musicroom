@@ -17,13 +17,14 @@ class APIManager: NSObject, URLSessionDelegate {
     }
     
     func getAlbumTracks(_ album: Album, completion: @escaping (Album) -> ()) {
-        let tracksUrl = self.url + "album/\(album.id)/tracks"
+        let tracksUrl = self.url + "album/\(album.id)"
+        print(tracksUrl)
         var request = URLRequest(url: URL(string: tracksUrl)!)
         request.httpMethod = "GET"
         
-        searchAll(AlbumTrackData.self, request: request) { (tracksData) in
+        searchAll(Album.self, request: request) { (tracksData) in
             var album = album
-            album.tracks = tracksData.data
+            album = tracksData
             completion(album)
         }
     }
