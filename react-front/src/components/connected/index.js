@@ -11,29 +11,26 @@ const { Header, Sider, Content } = Layout;
 
 
 class Connected extends Component {
-	constructor(props){
-		super(props);
-		this.state = {
-	    collapsed: true,
-	    height: props.height
-	  };
-	}
+		constructor(props){
+			super(props);
+			this.state = {
+				collapsed: true,
+				height: props.height
+			};
+		}
+		deleteToken() {
+			localStorage.setItem('token', '');
+			this.props.updateParent({'token': '', 'currentComponent': 'login'})
+		}
+		componentWillMount(){
+				this.setState({height: window.innerHeight + 'px'});
+		}
+		toggle(){
+				this.setState({
+					collapsed: !this.state.collapsed,
+				});
+		}
 
-	deleteToken() {
-		localStorage.setItem('token', '');
-		this.props.updateParent({'token': '', 'currentComponent': 'login'})
-	}
-
-	componentWillMount(){
-	    this.setState({height: window.innerHeight + 'px'});
-	  }
-
-
-  	toggle(){
-	    this.setState({
-	      collapsed: !this.state.collapsed,
-	    });
-	}
 
 
 	render() {

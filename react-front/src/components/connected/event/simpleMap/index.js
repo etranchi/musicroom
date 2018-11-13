@@ -9,29 +9,27 @@ class SimpleMap extends Component {
     constructor(props) {
       super(props);
     
-    this.state = {
-      userLatitude: this.props.myState.latitude ? this.props.myState.latitude : null,
-      userLongitude: this.props.myState.longitude ? this.props.myState.longitude : null ,
-      displayUser: this.props.myState.displayUser ? true : false
-    }
+      this.state = {}
+    
+
     this.mapStyle = {
-      height: this.props.state.mapHeight ? this.props.state.mapHeight : '30vh',
+      height: '30vh',
       width: '100%',
-      margin: this.props.state.mapMargin ? this.props.state.mapMargin : '0 0 10% 0'
+      margin: '0 0 10% 0'
     }
   }
  
   render() {
     return (
-      // Important! Always set the container height explicitly
       <div className="mapContent" style={this.mapStyle}>
         <GoogleMapReact
           bootstrapURLKeys={{ key: 'AIzaSyCxXsr0i2h44hpi3E7RTUDvb4_CFm52Oqw'}}
-          defaultCenter={this.props.state.location.coord}
+          defaultCenter={this.props.center ? this.props.center : this.props.state.data.userCoord}
           defaultZoom= {11}
         >
-          <EventLocation lat={this.props.state.location.coord.lat} lng={this.props.state.location.coord.lng} />
-          {this.state.displayUser ? <UserLocation  lat={this.state.userLatitude} lng={this.state.userLongitude} /> : null}
+        {this.props.center ? <EventLocation lat={this.props.center.lat} lng={this.props.center.lng} /> : null}
+        {this.props.state.data.event ? <EventLocation lat={this.props.state.data.event.location.coord.lat} lng={this.props.state.data.event.location.coord.lng} /> : null}
+          <UserLocation  lat={this.props.state.data.userCoord.userLatitude} lng={this.props.state.data.userCoord.userLongitude} /> 
         </GoogleMapReact>
       </div>
     );
