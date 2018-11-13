@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import './styles.css';
-import { message, Button } from 'antd';
-import CardHeader from './cardHeader'
+import { message, Button, Divider } from 'antd';
+import CardHeader from './Header'
 import CreatorProfil from './creatorProfil'
-import InfoEvent from './infoEvent'
-import BodyEvent from './bodyEvent'
+import BodyEvent from './Body'
 import SimpleMap from '../simpleMap'
 import axios from 'axios'
 import geolib from 'geolib'
 
-class CompletCardEvent extends Component {
+class cardEvent extends Component {
 	constructor(props) {
         super(props);
 
@@ -28,28 +27,25 @@ class CompletCardEvent extends Component {
         }
     }
 
-    updateUserLocation(latitude, longitude){
-        this.setState({'latitude': latitude,  'longitude': longitude, 'displayUser': true})
-    }
 
     updateMap(val){
         let calc = geolib.getDistanceSimple(
-            {latitude: this.state.latitude, longitude: this.state.longitude},
-            {latitude: this.props.state.data.location.coord.lat, longitude:this.props.state.data.location.coord.lng}
+            {latitude: this.props.state.data.userCoord.lat, longitude: this.props.state.data.userCoord.lng},
+            {latitude: this.props.state.data.event.location.coord.lat, longitude:this.props.state.data.event.location.coord.lng}
         );
-        this.info("EVous êtes a " + calc/1000 + " km de l'event")
+        this.info("Vous êtes a " + calc/1000 + " km de l'event")
         this.props.state.data.mapHeight = '25vh'
         this.props.state.data.mapMargin = '0 0 0 0'
         this.setState({'isHidden': !this.state.isHidden})
     }
 
-    saveEvent = () => {
-        console.log("Data : ", this.props.state.data)
-        let _id = this.props.state.data._id
-        delete this.props.state.data._id
-        axios.put('https://192.168.99.100:4242/event/' + _id,  this.props.state.data)
+    saveEvent = () => { 
+        let _id = this.props.state.data.event._id
+        delete this.props.state.data.event._id
+        axios.put('https://192.168.99.100:4242/event/' + _id,  this.props.state.data.event)
             .then((resp) => { 
                 this.info("Event saved !")
+                this.props.updateParent({'currentComponent': 'event'})
             })
             .catch((err) => { console.log("Create Event : handleSubmit :/event Error ", err); })  
     }
@@ -58,18 +54,17 @@ class CompletCardEvent extends Component {
         message.info(text);
       };
 	render() {
-          
         return (
             <div>
                 <CardHeader state={this.props.state} updateParent={this.props.updateParent} />
-                {this.state.isHidden ? <SimpleMap state={this.props.state.data} myState={this.state}/> : null}
+                {this.state.isHidden ? <SimpleMap state={this.props.state} myState={this.state}/> : null}
+                <Divider />
                 <CreatorProfil state={this.props.state} updateParent={this.props.updateParent} />
-                <InfoEvent state={this.props.state} updateParent={this.props.updateParent} />
-                <BodyEvent state={this.props.state} updateParent={this.props.updateParent} updateMap={this.updateMap.bind(this)} updateUserLocation={this.updateUserLocation.bind(this)} />
+                <BodyEvent state={this.props.state} updateParent={this.props.updateParent} updateMap={this.updateMap.bind(this)}/>
                 <Button style={this.saveButton} type="primary" onClick={this.saveEvent}> <b> Sauvegarder l'event </b> </Button>
            </div>
         );
   }
 }
 
-export default CompletCardEvent;
+export default cardEvent;

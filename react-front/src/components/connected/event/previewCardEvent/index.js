@@ -55,51 +55,29 @@ class PreviewCardEvent extends Component {
         this.iconBlockStyle = {
             padding : "20% 0 0 0 "
         }
+
     }
     
     openCard = (e) => {
-        this.props.updateParent({'currentComponent': 'cardEvent', 'data': this.props.event})
+        this.props.state.data.event = this.props.event;
+        this.props.updateParent({'currentComponent': 'cardEvent', 'data': this.props.state.data})
     }
 	render() {
         let userPicture = this.props.event.creator.facebookId ? this.props.event.creator.picture : "https://192.168.99.100:4242/eventPicture/" + this.props.event.creator.picture
+    
         return (
-            <Card title={this.props.event.title} style={this.card}>
-                <Card.Grid style={this.gridStyleProfile}>
-                    <Card.Meta
-                        style= {this.profileStyle}
-                        avatar={<Avatar src={userPicture} />}
-                        title= {this.props.event.creator && this.props.event.creator.login ? this.props.event.creator.login : "Aucun" }
-                    />
-                    <div style={this.descritpionBlockStyle}>
-                        <b> { this.props.event.description ? this.props.event.description.substring(0, 190) :  " Aucune descritpion ... " }</b>
-                    </div>
-                    <div style={this.iconEditionBlockStyle}>
-                    <Icon style={this.iconEditionStyle} onClick={this.openCard.bind(this)} type="setting" theme="outlined" />
-                    <Icon style={this.iconEditionStyle} type="edit" theme="outlined" />
-                    <Icon style={this.iconEditionStyle} type="delete" theme="outlined" />
-                    </div>
-                </Card.Grid>
-                <Card.Grid style={this.gridStyleInfo}>
-                <div style={this.iconBlockStyle}>
-                    <Icon  style={this.iconStyle} type="pushpin" theme="outlined" />
-                    <b style={this.iconNameStyle}> {this.props.event.location.address.v ? this.props.event.location.address.v : "Paris"}</b>
-                </div>
-                <div style={this.iconBlockStyle}>
-                    <Icon  style={this.iconStyle} type="clock-circle" theme="outlined" />
-                    <b style={this.iconNameStyle}> { this.props.event.date_creation ? this.props.event.date_creation : " à définir .." }</b>
-                </div>
-                <div style={this.iconBlockStyle}>
-                    <Icon  style={this.iconStyle} type={ this.props.event.public ? "unlock" : "lock" } theme="outlined" />
-                    <b style={this.iconNameStyle}> { this.props.event.public ? " Public" : " Privé" }</b>
-                </div>
-                <div style={this.iconBlockStyle}>
-                    <Icon style={this.iconStyle} type="user" theme="outlined" />
-                    <b style={this.iconNameStyle}> { this.props.event.members.length || this.props.event.adminMembers.length  ? this.props.event.members.length +  this.props.event.adminMembers.length + " participants" : "0 participant" }</b>
-                </div>
-                </Card.Grid>
-                <Card.Grid style={this.gridStylePicture}>
-                    <img style={ this.eventPicture} alt="example" src={"https://192.168.99.100:4242/eventPicture/" +  this.props.event.picture} />
-                </Card.Grid>
+            <Card
+                className="zoomCard"
+                style={{ width: 300, display: "inline-block", margin: "1% 2% 0 "}}
+                cover={ <img src={"https://192.168.99.100:4242/eventPicture/" +  this.props.event.picture} />}
+                actions={[<Icon  onClick={this.openCard.bind(this)} type="setting" theme="outlined"/>, <Icon type="edit" theme="outlined"/>, <Icon type="ellipsis" theme="outlined" />]}
+            >
+                <Card.Meta
+                avatar={<Avatar size={116} src={userPicture} />}
+                title= {this.props.event.creator && this.props.event.creator.login ? this.props.event.creator.login : "Aucun" }
+                description={ this.props.event.date_creation ? this.props.event.date_creation :  " A venir ... " }
+                />
+
             </Card>
         )
 	}

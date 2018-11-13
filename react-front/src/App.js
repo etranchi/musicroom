@@ -14,7 +14,7 @@ class App extends Component {
       token: localStorage.getItem('token'),
       'data': [],
       'id': null,
-      'user': null
+      'user': null,
 		}
 	}
 

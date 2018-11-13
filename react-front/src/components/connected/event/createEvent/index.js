@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import LocationSearchInput from '../locationSearchInput'
 import './styles.css';
 import axios from 'axios'
-import { Icon, Button, Input, DatePicker, Select, Upload, message, Divider} from 'antd';
+import { Icon, Button, Input, DatePicker, Select, Upload, message, Divider, Layout, Col, Row} from 'antd';
 
 const Search = Input.Search;
 
@@ -61,6 +61,7 @@ class CreateEvent extends Component {
             axios.post('https://192.168.99.100:4242/event/',  data)
             .then((resp) => { 
                 console.log("Create Event : handleSubmit :/event Success");
+                this.info("Evènement crée")
                 this.props.updateParent({'currentComponent' : "event"})
             })
             .catch((err) => { console.log("Create Event : handleSubmit :/event Error ", err); })  
@@ -69,13 +70,18 @@ class CreateEvent extends Component {
     }
     
     handleChange = event => {
-        if (event.target.name && event.target.name === "public") this.setState({"public":!this.state[event.target.name]})   
+        if (event.target.name && event.target.name === "public")
+         this.setState({"public":!this.state[event.target.name]})   
         else this.setState({[event.target.name]: event.target.value});
     }
 
     handleChangeDate = (date, dateString) => {
         this.setState({'date_creation': dateString})
     }
+
+    info = (text) => {
+        message.info(text);
+      };
 
     handlePicture = (info) => {
         this.setState({infoFile: info})
@@ -108,43 +114,95 @@ class CreateEvent extends Component {
               <div className="ant-upload-text">Upload</div>
             </div>
           );
+        const {Footer,Content } = Layout;
         return (
-            <div className="formEvent">
-                <Upload
-                    name="file"
-                    listType="picture-card"
-                    className="avatar-uploader"
-                    showUploadList={false}
-                    beforeUpload={this.beforeUpload}
-                    onChange={this.handlePicture}
-                >
-                    {this.state.imageUrl ? <img src={this.state.imageUrl} alt="avatar" /> : this.uploadButton}
-                </Upload>
+            <Layout>
+            <Content>
+                <Row>
+                    <Col span={8}></Col>
+                    <Col span={8}>
+                        <div style={{'margin': '0 0 0 25% '}}>
+                            <Upload
+                                    name="file"
+                                    listType="picture-card"
+                                    className="avatar-uploader"
+                                    showUploadList={false}
+                                    beforeUpload={this.beforeUpload}
+                                    onChange={this.handlePicture}
+                                >
+                                {this.state.imageUrl ? <img src={this.state.imageUrl} alt="avatar" /> : this.uploadButton}
+                            </Upload>
+                        </div>
+                    </Col>
+                    <Col span={8}></Col>
+                </Row>
+                 <Divider />
+                <Row>
+                    <Col span={8}></Col>
+                    <Col span={8}>
+                        <Input placeHolder="Titre de l'évènement : " name= "title" value={this.state.title} onChange={this.handleChange}/>
+                    </Col>
+                    <Col span={8}></Col>
+                </Row>
+                <Row>
+                    <Col span={5}></Col>
+                    <Col span={14}>
+                        <Input.TextArea  placeHolder="Descriptif de l'évènement : " name= "description" value={this.state.description} onChange={this.handleChange}/> 
+                    </Col>
+                    <Col span={5}></Col>
+                </Row>
                 <Divider />
-                <div className="textContent">
-                    <Input placeHolder="Titre de l'évènement : " name= "title" value={this.state.title} onChange={this.handleChange}/>
-                    <Input.TextArea  placeHolder="Descriptif de l'évènement : " name= "description" value={this.state.description} onChange={this.handleChange}/> 
-                </div>
+                <Row>
+                    <Col span={8}></Col>
+                    <Col span={8}>
+                        <Select style={{'margin': '0 0 0 25% '}} name= "public" value={this.state.public ? "true" : "false"} onChange={this.handleChange}>
+                            <Select.Option value='true' >Public</Select.Option>
+                            <Select.Option value='false'>Privé</Select.Option>
+                        </Select>
+                    </Col>
+                    <Col span={8}></Col>
+                </Row>
                 <Divider />
-                <div className="inputContent">
-                    <Select placeHolder="Visibilité de l'événement : " name= "public" value={this.state.public ? "true" : "false"} onChange={this.handleChange}>
-                      <Select.Option value='true' >Public</Select.Option>
-                      <Select.Option value='false'>Privé</Select.Option>
-                    </Select>
-                    <DatePicker  style={{'padding': '0 0 0 3% '}} placeHolder="Quand ? "  onChange={this.handleChangeDate} />
-                </div>
+                <Row>
+                    <Col span={8}></Col>
+                    <Col span={8}>
+                        <DatePicker  style={{'margin': '0 0 0 25% '}} onChange={this.handleChangeDate} />
+                    </Col>
+                    <Col span={8}></Col>
+                </Row>
                 <Divider />
-                    <LocationSearchInput state={this.props.state} updateLocation={this.updateLocation} />
+                <Row>
+                    <Col span={5}></Col>
+                    <Col span={14}>
+                        <LocationSearchInput state={this.props.state} updateLocation={this.updateLocation} />
+                    </Col>
+                    <Col span={5}></Col>
+                </Row>
                 <Divider />
-                <div className="textContent">
-                 <Input.Search
-                        placeholder="Ajouter une playlist"
-                        onSearch={value => console.log(value)}
-                 />
-                </div>
+                <Row>
+                    <Col span={5}></Col>
+                    <Col span={14}>
+                        <Input.Search
+                            placeholder="Ajouter une playlist"
+                            onSearch={value => console.log(value)}
+                        />
+                    </Col>
+                    <Col span={5}></Col>
+                </Row>
                 <Divider />
-                <Button onClick={this.handleSubmit.bind(this)} className="formButton" > Créer l'évènement </Button>
-            </div>
+                <Row>
+                    <Col span={8}></Col>
+                    <Col span={8}>
+                        <Button style={{'margin': '0 0 0 25% '}} onClick={this.handleSubmit.bind(this)}> Créer l'évènement </Button>
+                    </Col>
+                    <Col span={8}></Col>
+                </Row>
+
+            </Content>
+            <Footer>
+
+            </Footer>
+        </Layout>
         );
   }
 }
