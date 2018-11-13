@@ -40,7 +40,7 @@ class ArtistCell: UICollectionViewCell {
     let artistLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 2
@@ -51,7 +51,7 @@ class ArtistCell: UICollectionViewCell {
     let fanLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
         label.textColor = .lightGray
         label.numberOfLines = 2
         label.textAlignment = .center

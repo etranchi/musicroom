@@ -15,6 +15,7 @@ class SeeAllSongsController: UICollectionViewController, UICollectionViewDelegat
     let tracks: [Track]
     let searchText: String
     let searchController: SearchController
+    var lastCell: SongCell?
     
     
     init(_ tracks: [Track], _ searchText: String, _ traget: SearchController, layout: UICollectionViewFlowLayout) {
@@ -55,7 +56,12 @@ class SeeAllSongsController: UICollectionViewController, UICollectionViewDelegat
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        lastCell?.titleLabel.textColor = .white
         searchController.showPlayerForSong(indexPath.item)
+        let cell = collectionView.cellForItem(at: indexPath) as! SongCell
+        cell.titleLabel.textColor = UIColor(red: 20 / 255, green: 220 / 255, blue: 20 / 255, alpha: 1)
+        lastCell = cell
     }
 
 
@@ -72,7 +78,7 @@ class SeeAllSongsController: UICollectionViewController, UICollectionViewDelegat
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 14, bottom: 0, right: 14)
+        return UIEdgeInsets(top: 0, left: 14, bottom: 50, right: 14)
     }
     
     

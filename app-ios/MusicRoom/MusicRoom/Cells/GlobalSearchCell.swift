@@ -1,5 +1,5 @@
 //
-//  CategoryCell.swift
+//  GlobalSearchCell.swift
 //  MusicRoom
 //
 //  Created by Jonathan DAVIN on 10/30/18.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class GlobalSearchCell: UICollectionViewCell, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     private let albumCellId = "albumCellId"
     private let songCellId = "songCellId"
     private let seeAllSongsCellId = "seeAllSongsCellId"
@@ -72,6 +72,7 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
         super.init(frame: .zero)
         
         setupViews()
+        musicCollectionView.showsHorizontalScrollIndicator = false
         musicCollectionView.register(AlbumCell.self, forCellWithReuseIdentifier: albumCellId)
         musicCollectionView.register(SongCell.self, forCellWithReuseIdentifier: songCellId)
         musicCollectionView.register(SeeAllSongsCell.self, forCellWithReuseIdentifier: seeAllSongsCellId)
@@ -151,7 +152,7 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
             return CGSize(width: 150, height: frame.width)
         case "Songs":
             if indexPath.item < 4 {
-                return CGSize(width: frame.width, height: 60)
+                return CGSize(width: frame.width - 28, height: 60)
             } else {
                 return CGSize(width: frame.width, height: 40)
             }
@@ -169,7 +170,7 @@ class CategoryCell: UICollectionViewCell, UICollectionViewDataSource, UICollecti
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch musicCategory.name! {
         case "Albums":
-            print("album selected")
+            searchController?.showAlbumContent(musicCategory.albums[indexPath.item], ((collectionView.cellForItem(at: indexPath)) as! AlbumCell).imageView.image!)
         case "Songs":
             let max = musicCategory.tracks.count
             if max < 4 && indexPath.item == max || indexPath.item == 4 {

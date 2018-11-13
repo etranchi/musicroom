@@ -15,6 +15,18 @@ class APIManager: NSObject, URLSessionDelegate {
     var url : String {
         return  "https://\(self.ip):4242/"
     }
+    
+    func getAlbumTracks(_ album: Album, completion: @escaping (Album) -> ()) {
+        let tracksUrl = self.url + "album/\(album.id)/tracks"
+        var request = URLRequest(url: URL(string: tracksUrl)!)
+        request.httpMethod = "GET"
+        
+        searchAll(AlbumTrackData.self, request: request) { (tracksData) in
+            var album = album
+            album.tracks = tracksData.data
+            completion(album)
+        }
+    }
 
     func search(_ search: String, completion: @escaping ([Track], [Album], [Artist]) -> ()){
         let w = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!

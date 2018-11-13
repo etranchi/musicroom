@@ -15,8 +15,13 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     
     let manager = APIManager()
     var initialSearch = "Yo"
+    var trackListChanged = true
     
-    var musicCategories: [MusicCategory]?
+    var musicCategories: [MusicCategory]? {
+        didSet {
+            trackListChanged = true
+        }
+    }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -34,9 +39,8 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
 
         collectionView?.backgroundColor = UIColor(white: 0.1, alpha: 1)
         collectionView?.alwaysBounceVertical = true
-        collectionView?.register(CategoryCell.self, forCellWithReuseIdentifier: categoryCellId)
+        collectionView?.register(GlobalSearchCell.self, forCellWithReuseIdentifier: categoryCellId)
         collectionView?.register(SearchCell.self, forCellWithReuseIdentifier: searchCellId)
-        
         
         performSearch(initialSearch) { (albums, tracks, artists) in
             self.musicCategories = MusicCategory.sampleMusicCategories(albums, tracks, artists)
@@ -67,7 +71,7 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
             cell.vc = self
             return cell
         } else {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: categoryCellId, for: indexPath) as! CategoryCell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: categoryCellId, for: indexPath) as! GlobalSearchCell
             cell.musicCategory = musicCategories![indexPath.item - 1]
             cell.searchController = self
             return cell
@@ -81,14 +85,23 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
         navigationController?.pushViewController(vc, animated: true)
     }
     
+    func showAlbumContent(_ album: Album, _ albumCover: UIImage) {
+        manager.getAlbumTracks(album) { (album) in
+            let vc = AlbumController(album, albumCover)
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+    
     func showPlayerForSong(_ index: Int) {
-        let playerController = PlayerController(musicCategories![1].tracks, index)
-        AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
-        navigationController?.pushViewController(playerController, animated: true)
+        (tabBarController as! TabBarController).showPlayerForSong(index, tracks: musicCategories![1].tracks)
     }
 
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         collectionViewLayout.invalidateLayout()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
