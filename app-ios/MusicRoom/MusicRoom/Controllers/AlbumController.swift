@@ -127,7 +127,7 @@ extension AlbumController {
     func AlbumTracksToTracksConverter() -> [Track] {
         var tracks: [Track] = []
         
-        album.tracks?.forEach({ (track) in
+        album.tracks?.data.forEach({ (track) in
             let tr = Track.init(id: track.id, readable: track.readable, link: nil, album: album, artist: album.artist, title: track.title, duration: track.duration)
             tracks.append(tr)
         })

@@ -69,5 +69,5 @@ module.exports = {
 					res.json(err)
 				res.json(JSON.parse(body));
 			})
-	},
+	}
 }
