@@ -130,7 +130,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         playerButtonView?.playButton.addTarget(playerButtonView, action: #selector(playerButtonView?.handlePause), for: .touchUpInside)
         playerButtonView?.setPauseIcon()
         isPlaying = true
-        if firstPlay == true {
+        if firstPlay {
             self.player?.play(track)
             firstPlay = false
         } else {
@@ -153,6 +153,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     func loadTrackInplayer() {
         cancelable = DZRTrack.object(withIdentifier: String(tracks[index].id), requestManager: request, callback: { (response, err) in
             if err != nil {
+                print(err!)
                 return
             }
             DispatchQueue.main.async {
@@ -165,6 +166,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
                     self.playerButtonView?.handlePlay()
                 }
                 self.minimizedPlayer?.update(isPlaying: self.isPlaying, title: self.tracks[self.index].title, artist: self.tracks[self.index].artist!.name)
+                currentTrack = self.tracks[self.index]
             }
         })
     }
@@ -188,7 +190,9 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     }
 
     fileprivate func setupUI() {
-        cancelable?.cancel()
+        if firstPlay {
+            cancelable?.cancel()
+        }
         backgroundCoverView = setupBackgroudView()
         coverContainerView = setupCoverContainer()
         playerButtonView = PlayerButtonsView(target: self, isPlaying)
