@@ -18,7 +18,6 @@ class APIManager: NSObject, URLSessionDelegate {
     
     func getAlbumTracks(_ album: Album, completion: @escaping (Album) -> ()) {
         let tracksUrl = self.url + "album/\(album.id)"
-        print(tracksUrl)
         var request = URLRequest(url: URL(string: tracksUrl)!)
         request.httpMethod = "GET"
         
