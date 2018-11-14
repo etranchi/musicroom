@@ -308,9 +308,9 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         authorLabel.text = tracks[index].artist!.name
         
         let leftLayer = UIView(frame: CGRect(x: 50, y: 50, width: 50, height: 50))
-        leftLayer.backgroundColor = .red
+        leftLayer.backgroundColor = UIColor(white: 0.15, alpha: 0.4)
         let rightLayer = UIView(frame: CGRect(x: 50, y: 50, width: 50, height: 50))
-        rightLayer.backgroundColor = .red
+        rightLayer.backgroundColor = UIColor(white: 0.15, alpha: 0.6)
 
         view.addSubview(backgroundCoverView!)
         view.addSubview(visualEffectView)
@@ -324,6 +324,8 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         view.addSubview(leftLayer)
         view.addSubview(rightLayer)
         
+        titleLabel.layer.removeAllAnimations()
+        titleLabel.transform = CGAffineTransform.identity
         leftLayer.anchor(top: coverContainerView?.bottomAnchor, leading: view.leadingAnchor, bottom: authorLabel.topAnchor, trailing: nil, size: .init(width: 48, height: 0))
         rightLayer.anchor(top: coverContainerView?.bottomAnchor, leading: nil, bottom: authorLabel.topAnchor, trailing: view.trailingAnchor, size: .init(width: 48, height: 0))
         NSLayoutConstraint.activate([
@@ -380,15 +382,9 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
                 
                 authorLabel.centerXAnchor.constraint(equalTo: view!.centerXAnchor),
                 ])
-            UIView.animate(withDuration: 6.0, delay: 2.0, animations: {
+            UIView.animate(withDuration: 6.0, delay: 2.0, options: [.autoreverse, .repeat], animations: {
                 self.titleLabel.transform = CGAffineTransform(translationX: -200.0, y: 0.0)
-            }) {
-                (true) in
-                UIView.animate(withDuration: 6.0, delay: 2.0, animations: {
-                    self.titleLabel.transform = CGAffineTransform(translationX: 0.0, y: 0.0)
-                })
-            }
-            
+            })
         }
     }
     
