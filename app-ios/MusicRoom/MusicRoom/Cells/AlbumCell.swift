@@ -63,16 +63,16 @@ class AlbumCell: UICollectionViewCell {
         addSubview(authorLabel)
         
         NSLayoutConstraint.activate([
-            imageView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -20),
+            imageView.topAnchor.constraint(equalTo: topAnchor),
             imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
             imageView.heightAnchor.constraint(equalToConstant: 150),
             imageView.widthAnchor.constraint(equalToConstant: 150),
             
             titleLabel.centerXAnchor.constraint(equalTo: imageView.centerXAnchor),
-            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 4),
+            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 2),
             titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            
+
             authorLabel.centerXAnchor.constraint(equalTo: titleLabel.centerXAnchor),
             authorLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 2),
             authorLabel.trailingAnchor.constraint(equalTo: trailingAnchor),

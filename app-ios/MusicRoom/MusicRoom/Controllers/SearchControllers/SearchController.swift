@@ -2,87 +2,50 @@
 //  SearchController.swift
 //  MusicRoom
 //
-//  Created by Jonathan DAVIN on 10/30/18.
+//  Created by jdavin on 11/14/18.
 //  Copyright © 2018 Etienne Tranchier. All rights reserved.
 //
 
 import UIKit
 
-class SearchController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
-
-    private let categoryCellId = "categoryCellId"
-    private let searchCellId = "searchCellId"
+class SearchController: UITableViewController {
     
     let manager = APIManager()
     var initialSearch = "Yo"
-    var trackListChanged = true
     
-    var musicCategories: [MusicCategory]? {
-        didSet {
-            trackListChanged = true
-        }
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        self.navigationController?.navigationBar.topItem?.title = "Search"
-    }
+    var albums: [Album] = []
+    var tracks: [Track] = []
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        self.navigationController?.navigationBar.topItem?.title = ""
-    }
+    private let blankCellId = "blankCellId"
+    private let searchCellId = "searchCellId"
+    private let albumCellId = "albumCellId"
+    private let trackCellId = "trackCellId"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        collectionView?.backgroundColor = UIColor(white: 0.1, alpha: 1)
-        collectionView?.alwaysBounceVertical = true
-        collectionView?.register(GlobalSearchCell.self, forCellWithReuseIdentifier: categoryCellId)
-        collectionView?.register(SearchCell.self, forCellWithReuseIdentifier: searchCellId)
-        
-        performSearch(initialSearch) { (albums, tracks, artists) in
-            self.musicCategories = MusicCategory.sampleMusicCategories(albums, tracks, artists)
-            self.collectionView?.reloadData()
-        }
+        tableView.backgroundColor = UIColor(white: 0.1, alpha: 1)
+        tableView.separatorStyle = .none
+        tableView.contentInset = .init(top: 0, left: 0, bottom: 45, right: 0)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: blankCellId)
+        tableView.register(SearchCell.self, forCellReuseIdentifier: searchCellId)
+        tableView.register(SearchAlbumCell.self, forCellReuseIdentifier: albumCellId)
+        tableView.register(SearchTrackCell.self, forCellReuseIdentifier: trackCellId)
+        handleSearch(initialSearch)
     }
     
     func handleSearch(_ text: String) {
-        musicCategories?.removeAll()
-        initialSearch = text
-        performSearch(text) { (albums, tracks, artists) in
-            self.musicCategories = MusicCategory.sampleMusicCategories(albums, tracks, artists)
-            self.collectionView?.reloadData()
+        albums.removeAll()
+        tracks.removeAll()
+        tableView.reloadData()
+        manager.searchAlbums(text) { (albums) in
+            self.albums = albums
+            self.tableView.reloadData()
         }
-    }
-    
-    func performSearch(_ text: String, completion: @escaping ([Album], [Track], [Artist]) -> ())
-    {
-        manager.search(text) { (tracks, albums, artists) in
-            completion(albums, tracks, artists)
+        manager.searchTracks(text) { (tracks) in
+            self.tracks = tracks
+            self.tableView.reloadData()
         }
-    }
-    
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if indexPath.item == 0 {
-            let     cell = collectionView.dequeueReusableCell(withReuseIdentifier: searchCellId, for: indexPath) as! SearchCell
-            cell.placeholder = "artists, songs, or albums"
-            cell.vc = self
-            return cell
-        } else {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: categoryCellId, for: indexPath) as! GlobalSearchCell
-            cell.musicCategory = musicCategories![indexPath.item - 1]
-            cell.searchController = self
-            return cell
-        }
-    }
-    
-    func showTrackList() {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        let vc = SeeAllSongsController(musicCategories![1].tracks, initialSearch, self, layout: layout)
-        navigationController?.pushViewController(vc, animated: true)
     }
     
     func showAlbumContent(_ album: Album, _ albumCover: UIImage) {
@@ -92,44 +55,52 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
         }
     }
     
-    func showPlayerForSong(_ index: Int) {
-        (tabBarController as! TabBarController).showPlayerForSong(index, tracks: musicCategories![1].tracks)
-    }
-
-    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
-        collectionViewLayout.invalidateLayout()
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        switch indexPath.item {
-        case 0:
-            return CGSize(width: view.frame.width, height: 40)
-        case 1:
-            if musicCategories![indexPath.item - 1].albums.count > 0 {
-                return CGSize(width: view.frame.width, height: 240)
-            }
-        case 2:
-            if musicCategories![indexPath.item - 1].tracks.count > 0 {
-                return CGSize(width: view.frame.width, height: 360)
-            }
-        case 3:
-            if musicCategories![indexPath.item - 1].artists.count > 0 {
-                return CGSize(width: view.frame.width, height: 200)
-            }
-        default:
-            return CGSize(width: view.frame.width, height: 0)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.row == 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: searchCellId, for: indexPath) as! SearchCell
+            cell.selectionStyle = .none
+            cell.vc = self
+            return cell
+        } else if indexPath.row == 1, albums.count > 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: albumCellId, for: indexPath) as! SearchAlbumCell
+            cell.rootTarget = self
+            cell.selectionStyle = .none
+            cell.albums = albums
+            return cell
+        } else if indexPath.row == 2, tracks.count > 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: trackCellId, for: indexPath) as! SearchTrackCell
+            cell.rootTarget = self
+            cell.selectionStyle = .none
+            cell.tracks = tracks
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: blankCellId, for: indexPath)
+            return cell
         }
-        return CGSize(width: view.frame.width, height: 0)
     }
     
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let m = musicCategories {
-            return m.count + 1
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        var height: CGFloat = 0
+        if indexPath.row == 0 {
+            height = 68
+        } else if indexPath.row == 1, albums.count > 0 {
+            height = 240
+        } else if indexPath.row == 2, tracks.count > 0 {
+            if tracks.count > 3 {
+                height = 4 * 60 + 40
+            } else {
+                height = CGFloat(tracks.count * 60 + 40)
+            }
         }
+        return height
+    }
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
+
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 4
+    }
+    
 }
