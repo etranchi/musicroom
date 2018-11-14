@@ -42,16 +42,17 @@ class SearchBar extends Component {
 		}
 	}
 	fetchListUser = (value) => {
-		this.setState({'value': value, 'list': []})
-		if (this.state.list.length > 0)
-			this.searchUser();
-		axios.get("https://192.168.99.100:4242/user/", {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
-		.then((resp) => {
-			this.setState({glbUserList: resp.data || []});
-			this.searchUser();
-		})
-		.catch((err) => {
-			console.log('Playlist error', err);
+		this.setState({value:value}, () => {
+			if (this.state.list.length > 0) 
+				this.searchUser();
+			else {
+				axios.get("https://192.168.99.100:4242/user/", {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
+				.then((resp) => {
+					this.setState({glbUserList: resp.data || []});
+					this.searchUser();
+				})
+				.catch((err) => { console.log('User List error : ', err); })
+			}
 		})
 	}
 
@@ -70,14 +71,18 @@ class SearchBar extends Component {
 
 	}
 	searchUser = () => {
-		let listUserValid = [];
-		this.state.glbUserList = this.removeMember(this.state.glbUserList, [this.props.state.data.event.creator])
-		this.state.glbUserList = this.removeMember(this.state.glbUserList, this.props.state.data.event.members)
-		this.state.glbUserList = this.removeMember(this.state.glbUserList, this.props.state.data.event.adminMembers)
 
-		for (let i = 0; i < this.state.glbUserList.length; i++)
+		let listUserValid = [];
+
+		this.setState({'glbUserList': this.removeMember(this.state.glbUserList, [this.props.state.data.event.creator])})
+		this.setState({'glbUserList': this.removeMember(this.state.glbUserList, this.props.state.data.event.members)})
+		this.setState({'glbUserList': this.removeMember(this.state.glbUserList, this.props.state.data.event.adminMembers)})
+
+		if (this.state.value.length < this.state.position)
+			this.state.position = 0;
+		for (var i = 0; i < this.state.glbUserList.length; i++)
 		{
-			for (let j = this.state.position; j < this.state.glbUserList[i].login.length; j++)
+			for (var j = this.state.position; j < this.state.glbUserList[i].login.length; j++)
 			{
 				if (this.state.glbUserList[i].login[j] !== this.state.value[j])
 					break;
@@ -90,6 +95,7 @@ class SearchBar extends Component {
 		}
 		this.setState({position: this.state.value.length, list: listUserValid, glbUserList: listUserValid})
 	}
+
 	updateEventMember = (item) => {
 		this.props.updateEventMember(item, this.props.type);
 	}

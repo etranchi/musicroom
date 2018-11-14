@@ -14,6 +14,8 @@ class CreatorProfil extends Component {
     
     }
     handleChangePrivacy = event => {
+        if (!this.props.right.isCreator)
+            return ;
         if (this.props.state.user.login !== this.props.state.data.event.creator.login) return 
         this.props.state.data.event.public = !this.props.state.data.event.public
         if ( this.props.state.data.event.public) this.setState({iconPrivacy: "lock"})

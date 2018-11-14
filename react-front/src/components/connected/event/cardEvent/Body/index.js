@@ -16,7 +16,6 @@ class Body extends Component {
     }
     
     updateEventMember = (value, type) => {
-        console.log("UPDATE  : ", value)
         if (value && type === 'member')
         {
             this.props.state.data.event.members.push(value)

@@ -13,7 +13,8 @@ class Event extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {}
+		this.state = {
+		}
 	}
 
 	getLocation() {

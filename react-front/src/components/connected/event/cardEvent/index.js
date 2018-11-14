@@ -7,13 +7,18 @@ import BodyEvent from './Body'
 import SimpleMap from '../simpleMap'
 import axios from 'axios'
 import geolib from 'geolib'
+import { Tab } from 'react-bootstrap';
 
 class cardEvent extends Component {
 	constructor(props) {
         super(props);
 
         this.state = {
-            isHidden: false
+            isHidden: false,
+            isCreator: false,
+            isAdmin: false,
+            isMember: false,
+            isViewer: true,
         }
 
         this.saveButton = {
@@ -28,6 +33,26 @@ class cardEvent extends Component {
     }
 
 
+    isUser = (tab) => 
+    {
+        for (let i = 0; i < tab.length; i++) {
+            if (tab[i].email == this.props.state.user.email)
+                return true;
+        }
+        return false;
+    }
+
+    componentWillMount = () => {
+        if (this.props.state.data.event.creator.email == this.props.state.user.email)
+            this.setState({isCreator:true})
+        else  {
+            this.setState({isMember:this.isUser(this.props.state.data.event.members)})
+            this.setState({isAdmin:this.isUser(this.props.state.data.event.adminMembers)})
+        }
+
+        if (this.state.isCreator || this.state.isMember || this.state.isAdmin)
+            this.setState({isViewer:false})
+    }
     updateMap(val){
         let calc = geolib.getDistanceSimple(
             {latitude: this.props.state.data.userCoord.lat, longitude: this.props.state.data.userCoord.lng},
@@ -59,8 +84,8 @@ class cardEvent extends Component {
                 <CardHeader state={this.props.state} updateParent={this.props.updateParent} />
                 {this.state.isHidden ? <SimpleMap state={this.props.state} myState={this.state}/> : null}
                 <Divider />
-                <CreatorProfil state={this.props.state} updateParent={this.props.updateParent} />
-                <BodyEvent state={this.props.state} updateParent={this.props.updateParent} updateMap={this.updateMap.bind(this)}/>
+                <CreatorProfil right={this.state} state={this.props.state} updateParent={this.props.updateParent} />
+                <BodyEvent right={this.state} state={this.props.state} updateParent={this.props.updateParent} updateMap={this.updateMap.bind(this)}/>
                 <Button style={this.saveButton} type="primary" onClick={this.saveEvent}> <b> Sauvegarder l'event </b> </Button>
            </div>
         );
