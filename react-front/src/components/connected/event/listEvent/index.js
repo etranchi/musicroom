@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './styles.css';
-import axios from 'axios'
 import PreviewCard from '../previewCardEvent'
 import { Layout} from 'antd';
 
@@ -15,8 +14,8 @@ class ListEvent extends Component {
 	
     
 	render() {
-		const { Header, Footer, Sider, Content } = Layout;
-		{this.props.updateParent.bind(this,{'currentComponent': 'listEvent', 'data': this.state.events})}
+		const { Footer, Content } = Layout;
+		// {this.props.updateParent.bind(this,{'currentComponent': 'listEvent', 'data': this.state.events})}
 		return (
 			<Layout>
 				<Content style={{width:'82%', margin: '0 8% 0 10%'}}>

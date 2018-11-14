@@ -3,7 +3,6 @@ import './styles.css';
 import { Layout, Row, Col, Divider} from 'antd';
 import Map from './map'
 import axios from 'axios'
-import geolib from 'geolib'
 import PreviewCard from '../previewCardEvent'
 
 class listCloseEvent extends Component {

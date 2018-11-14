@@ -13,7 +13,6 @@ class CardHeader extends Component {
                 boxShadow: '1px 0 0 0',
                 padding: "0 0 0 0",
                 textAlign: 'center',
-                padding: "0 0 0 0"
         };
 
         this.gridStyleBlack = {
@@ -28,7 +27,7 @@ class CardHeader extends Component {
     }
 	render() {
         return (
-            <div className="HeaderMarge" className="headerContent">
+            <div className="HeaderMarge headerContent">
                 <Card>
                     <Card.Grid style={this.gridStyleBlack}></Card.Grid>
                     <Card.Grid style={this.gridStylePicture}>

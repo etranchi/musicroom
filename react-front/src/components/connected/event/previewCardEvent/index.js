@@ -69,7 +69,7 @@ class PreviewCardEvent extends Component {
             <Card
                 className="zoomCard"
                 style={{ width: 300, display: "inline-block", margin: "1% 2% 0 "}}
-                cover={ <img src={"https://192.168.99.100:4242/eventPicture/" +  this.props.event.picture} />}
+                cover={ <img alt="eventPicture" src={"https://192.168.99.100:4242/eventPicture/" +  this.props.event.picture} />}
                 actions={[<Icon  onClick={this.openCard.bind(this)} type="setting" theme="outlined"/>, <Icon type="edit" theme="outlined"/>, <Icon type="ellipsis" theme="outlined" />]}
             >
                 <Card.Meta
