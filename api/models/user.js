@@ -24,10 +24,11 @@ const User = new Schema({
 		type: String
 	},
 	login:{
-		type: String,
+		type: String
 	},
 	password:{
 		type: String,
+		visibility: 1
 	},
 	status:{
 		type: String,
@@ -39,6 +40,8 @@ const User = new Schema({
 	},
 	email:{
 		type: String,
+		unique:true,
+		allowNull: false
 	},
 	creationDate: {
 		type: Date,

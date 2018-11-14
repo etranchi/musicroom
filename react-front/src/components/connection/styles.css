@@ -1,0 +1,19 @@
+.facebook_button{
+	width: 150px;
+	margin:10px;
+	background-color:rgb(76, 105, 186);
+	color:white;
+	padding: 20px;
+	font-size:20px;
+	font-weight: bold;
+}
+
+.google_button{
+	width: 150px;
+	margin:10px;
+	background-color:rgb(209, 72, 54);
+	color:white;
+	padding: 20px;
+	font-size:20px;
+	font-weight: bold;
+}

@@ -4,35 +4,31 @@ import Event from './event'
 import Playlist from './playlist'
 import Setting from './setting'
 import { Layout, Menu, Icon, Button, Row, Col } from 'antd';
-import {  } from 'antd';
 
 const { Header, Sider, Content } = Layout;
 
 
 class Connected extends Component {
-	constructor(props){
-		super(props);
-		this.state = {
-	    collapsed: true,
-	    height: props.height
-	  };
-	}
+		constructor(props){
+			super(props);
+			this.state = {
+				collapsed: true,
+				height: props.height
+			};
+		}
+		deleteToken() {
+			localStorage.setItem('token', '');
+			this.props.updateParent({'token': '', 'currentComponent': 'login'})
+		}
+		componentWillMount(){
+				this.setState({height: window.innerHeight + 'px'});
+		}
+		toggle(){
+				this.setState({
+					collapsed: !this.state.collapsed,
+				});
+		}
 
-	deleteToken() {
-		localStorage.setItem('token', '');
-		this.props.updateParent({'token': '', 'currentComponent': 'login'})
-	}
-
-	componentWillMount(){
-	    this.setState({height: window.innerHeight + 'px'});
-	  }
-
-
-  	toggle(){
-	    this.setState({
-	      collapsed: !this.state.collapsed,
-	    });
-	}
 
 
 	render() {
@@ -79,8 +75,8 @@ class Connected extends Component {
           </Header>
           <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: this.state.height }}>
             {this.props.state.currentComponent === 'event' || this.props.state.currentComponent === 'cardEvent'? <Event state={this.props.state} updateParent={this.props.updateParent}/> : null}
-	 		{this.props.state.currentComponent === 'playlist' || this.props.state.currentComponent === 'tracks'? <Playlist state={this.props.state} updateParent={this.props.updateParent}/> : null}
-	 		{this.props.state.currentComponent === 'setting'? <Setting state={this.props.state} updateParent={this.props.updateParent}/> : null}
+	 					{this.props.state.currentComponent === 'playlist' || this.props.state.currentComponent === 'tracks' || this.props.state.currentComponent === 'createPlaylist' ? <Playlist state={this.props.state} updateParent={this.props.updateParent}/> : null}
+	 					{this.props.state.currentComponent === 'setting' || this.props.state.currentComponent === 'editSetting'? <Setting state={this.props.state} updateParent={this.props.updateParent}/> : null}
           </Content>
         </Layout>
       </Layout>

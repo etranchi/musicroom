@@ -3,25 +3,24 @@
 const model = require('../models/user');
 const Crypto = require('../modules/crypto');
 const Utils = require('../modules/utils');
-const jwt = require('jsonwebtoken');
 const Joi 	= require('joi');
 const config = require('../config/config.json');
 const argon = require('argon2');
 
-const nodemailer = require('nodemailer');
-const transporter = nodemailer.createTransport({
-    service: config.mail.service,
-    auth: {
-           user: config.mail.email,
-           pass: config.mail.password
-       }
-   });
-let mailOptions = {
-    from: config.mail.email, // sender address
-    to: config.mail.email, // list of receivers
-    subject: 'Music room token', // Subject line
-    html: '<p>Your html here</p>'// plain text body
-};
+// const nodemailer = require('nodemailer');
+// const transporter = nodemailer.createTransport({
+//     service: config.mail.service,
+//     auth: {
+//            user: config.mail.email,
+//            pass: config.mail.password
+//        }
+//    });
+// let mailOptions = {
+//     from: config.mail.email, // sender address
+//     to: config.mail.email, // list of receivers
+//     subject: 'Music room token', // Subject line
+//     html: '<p>Your html here</p>'// plain text body
+// };
 
 
 exports.connect = (req, res) => {
@@ -30,6 +29,34 @@ exports.connect = (req, res) => {
 			'user': Utils.filter(model.schema.obj, req.user, 0)
 		});
     }
+
+exports.bindDeezerToken = async (req, res) => {
+	try {
+		let user = await model.findByIdAndUpdate(
+			{_id: req.user._id}, 
+			{deezerToken: req.query.deezerToken}, 
+			{new: true}
+		)
+		res.status(200).send(user);
+	} catch (err) {
+		console.log("bindDeezerToken " + err)
+		res.status(400).send({error: "not linked"});
+	}
+}
+
+exports.deleteDeezerToken = async (req, res) => {
+	try {
+		let user = await model.findByIdAndUpdate(
+			{_id: req.user._id}, 
+			{deezerToken: null}, 
+			{new: true}
+		)
+		res.status(200).send(user);
+	} catch (err) {
+		console.log("bindDeezerToken " + err)
+		res.status(400).send({error: "not linked"});
+	}
+}
 
 exports.getUsers = async (req, res) => {
 	try {
@@ -48,7 +75,9 @@ exports.getUsers = async (req, res) => {
 exports.postUser = async (req, res) => {
 	try {
 		const { error } = validateUser(req.body);
-		req.body = JSON.parse(req.body.body);
+		// TODO ? A VOIR ? ADD PICTURE IN PUT?
+		if (req.body.body)
+			req.body = JSON.parse(req.body.body)
 		if (req.file && req.file.filename) {
 			req.body.picture = req.file.filename
 		}
@@ -120,6 +149,7 @@ exports.deleteUserById = async (req, res) => {
 
 exports.modifyUserById = async (req, res) => {
 	try {
+		console.log(req.body)
 		if (!req.body)
 			return res.status(204);
 		let { error } = validateUpdateUser(req.body);
@@ -131,8 +161,8 @@ exports.modifyUserById = async (req, res) => {
 		user = Utils.filter(model.schema.obj, user, 1)
 		if (user.password)
 			user.password = await argon.hash(user.password);
-		await model.updateOne({"_id": req.user._id}, user);
-		return res.status(200).send("User modified");
+		user = await model.findByIdAndUpdate({"_id": req.user._id}, user,{new: true});
+		return res.status(200).send(Utils.filter(model.schema.obj, user, 0));
 	} catch (err) {
 		console.error("Error modifyUserById: %s", err);
 		res.status(400).send({message: err.toString()});
@@ -190,8 +220,9 @@ function validateUser(user) {
 function validateUpdateUser(user) {
 
 	const schema = {
-		login: Joi.string().min(3).max(9),
-		password: Joi.string().min(8).max(30)
+		login: Joi.string().min(3),
+		password: Joi.string().min(8),
+		picture: Joi.string()
 	};
 	return Joi.validate(user, schema);
 }

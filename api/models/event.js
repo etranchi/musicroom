@@ -13,11 +13,11 @@ const Event = new Schema({
 			v: {type: String},
 			cp: {type: String},
 			r: {type: String},
-			n: {type: Number}
+			n: {type: String}
 		},
 		coord: {
 			lat: {type: Number},
-			long: {type: Number}
+			lng: {type: Number}
 		}
 	},
 	visibility: {type:Number},

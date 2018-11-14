@@ -5,7 +5,6 @@ import moment from 'moment'
 import axios from 'axios'
 
 
-
 class Tracks extends Component {
 	constructor(props){
 		super(props);
@@ -27,6 +26,8 @@ class Tracks extends Component {
 		})
 	}
 	render() {
+		console.log(this.props);
+		
 		if( this.state.isloading === true ) {
 			return (
 				<div>
@@ -49,6 +50,7 @@ class Tracks extends Component {
 						);
 					})}
 				</ul>
+				<iframe title="deezerplayer" scrolling="no" frameBorder="0" allowtransparency="true" src={"https://www.deezer.com/plugins/player?format=classic&autoplay=false&playlist=true&width=700&height=350&color=007FEB&layout=dark&size=medium&type=playlist&id="+this.props.state.id+"&app_id=310224"} width="700" height="350"></iframe>
 			</div>
 		);
   }
