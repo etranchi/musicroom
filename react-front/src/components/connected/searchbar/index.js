@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios'
-import { AutoComplete, Card, Avatar, Icon} from 'antd';
+import { AutoComplete, Card, Avatar} from 'antd';
 import './styles.css';
 
 class SearchBar extends Component {
@@ -16,9 +16,9 @@ class SearchBar extends Component {
 	}
 
 	fetchListController = (value) => {
-		if (this.props.type == '')
+		if (this.props.type === '')
 			this.setState({'value': value, 'list': []})
-		else if (this.props.type == 'member' || this.props.type == 'admin')
+		else if (this.props.type === 'member' || this.props.type === 'admin')
 			this.fetchListUser(value);
 		else
 			this.fetchListPlaylist(value);
@@ -62,7 +62,7 @@ class SearchBar extends Component {
 			for (let j = 0; j < sub.length; j++)
 			{
 
-				if (global[i].login == sub[j].login)
+				if (global[i].login === sub[j].login)
 					global.splice(i, 1);
 			}
 		}
@@ -79,9 +79,9 @@ class SearchBar extends Component {
 		{
 			for (let j = this.state.position; j < this.state.glbUserList[i].login.length; j++)
 			{
-				if (this.state.glbUserList[i].login[j] != this.state.value[j])
+				if (this.state.glbUserList[i].login[j] !== this.state.value[j])
 					break;
-				if (j + 1 == this.state.value.length)
+				if (j + 1 === this.state.value.length)
 				{
 					listUserValid.push(this.state.glbUserList[i]);
 					break;
@@ -99,10 +99,10 @@ class SearchBar extends Component {
 		{
 			let userPicture = item.facebookId ? item.picture : "https://192.168.99.100:4242/eventPicture/" + item.picture
 			return (
-				this.props.type == 'member' || this.props.type == 'admin' ? 
+				this.props.type === 'member' || this.props.type === 'admin' ? 
 					<AutoComplete.Option  onClick={(e) => this.updateEventMember(item)}  key={key}> <Card.Meta className= "cardMemberList" avatar={<Avatar src={userPicture} />} title= {item.login} /> </AutoComplete.Option>
 					: 
-					this.props.type == 'playlist' ?
+					this.props.type === 'playlist' ?
 						<AutoComplete.Option  onClick={(e) => this.props.updateEventPlaylist(item)} key={item.id}>{item.title}</AutoComplete.Option>
 						: 
 						<AutoComplete.Option onClick={(e) => this.props.updateParent({'currentComponent': 'tracks', 'id': item._id || item.id})} key={item.id}>{item.title}</AutoComplete.Option>

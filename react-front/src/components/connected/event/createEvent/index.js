@@ -4,8 +4,6 @@ import './styles.css';
 import axios from 'axios'
 import { Icon, Button, Input, DatePicker, Select, Upload, message, Divider, Layout, Col, Row} from 'antd';
 
-const Search = Input.Search;
-
 class CreateEvent extends Component {
 	constructor(props) {
         super(props);

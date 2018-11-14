@@ -65,7 +65,7 @@ class Setting extends Component {
 		console.log(this.props.state.user);
 		if (this.props.state && this.props.state.user && this.props.state.user.deezerToken)
 			token = this.props.state.user.deezerToken
-		if (this.props.state.currentComponent == 'editSetting')
+		if (this.props.state.currentComponent === 'editSetting')
 			return (<EditSetting state={this.props.state} updateParent={this.props.updateParent}/>)
 		else
 		{
@@ -80,7 +80,7 @@ class Setting extends Component {
 					</Col>
 						
 				</Row>
-				<img src={this.props.state.user.picture}/>
+				<img alt="userPicture" src={this.props.state.user.picture}/>
 				<p> Login: {this.props.state.user.login}</p>
 				<p> email: {this.props.state.user.email}</p>
 				<p> Status: {this.props.state.user.status}</p>

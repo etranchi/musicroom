@@ -1,13 +1,8 @@
 import React, { Component } from 'react';
 import './styles.css'
-import { Avatar, Row, Col} from 'antd';
+import { Avatar } from 'antd';
 
 class Marker extends Component {
-    constructor(props) {
-        super(props);
-    
-
-    }
     openCard = (e) => {
         console.log("OPEN CARD : ", this.props)
         this.props.state.data.event = this.props.event;

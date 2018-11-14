@@ -5,7 +5,7 @@ import CardEvent from './cardEvent';
 import ListCloseEvent from './listCloseEvent';
 import axios from 'axios'
 import './styles.css';
-import { Tabs, Layout, Col, Row} from 'antd';
+import { Tabs, Layout} from 'antd';
 
 import { StickyContainer, Sticky } from 'react-sticky';
 
@@ -47,7 +47,7 @@ class Event extends Component {
 		}
 
 		else {
-			const { Header, Footer, Sider, Content } = Layout;
+			const { Header, Footer, Content } = Layout;
 			const renderTabBar = (props, DefaultTabBar) => (
 			<Sticky bottomOffset={80}>
 				{({ style }) => (

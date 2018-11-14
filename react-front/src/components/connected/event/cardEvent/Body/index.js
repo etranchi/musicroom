@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import './styles.css';
 import SearchBar from '../../../searchbar';
-import  Geolocation  from 'react-geolocation';
-import { List, Divider, Card, Avatar, Modal, Icon, Col, Row, Layout } from 'antd';
+import { List, Divider, Card, Avatar, Icon, Col, Row } from 'antd';
 
 
 
@@ -18,13 +17,13 @@ class Body extends Component {
     
     updateEventMember = (value, type) => {
         console.log("UPDATE  : ", value)
-        if (value && type == 'member')
+        if (value && type === 'member')
         {
             this.props.state.data.event.members.push(value)
             console.log(  this.props.state.data.event.members[0])
             this.props.updateParent({'data': this.props.state.data})
         }
-        else if  (value && type == 'admin')
+        else if  (value && type === 'admin')
         {
             this.props.state.data.event.adminMembers.push(value)
             this.props.updateParent({'data': this.props.state.data})
@@ -41,17 +40,17 @@ class Body extends Component {
     removeMember = (type, item) => {
 
         let tab = [];
-        if (type == 'admin') tab = this.props.state.data.event.adminMembers
+        if (type === 'admin') tab = this.props.state.data.event.adminMembers
         else  tab = this.props.state.data.event.members
 
         for (let i = 0; i < tab.length; i++)
         {
-            if (tab[i]._id == item._id) {
+            if (tab[i]._id === item._id) {
                 tab.splice(i, 1)
                 break;
             }
         }
-        if (type == 'admin') this.props.state.data.event.adminMembers = tab
+        if (type === 'admin') this.props.state.data.event.adminMembers = tab
         else  this.props.state.data.event.members = tab
         this.props.updateParent({'data': this.props.state.data})
 
@@ -161,7 +160,7 @@ class Body extends Component {
                 <Row style={{height:'130px'}}>
                     <Col span={5}></Col>
                     <Col span={12}>
-                        <iframe scrolling="no" frameBorder="0" allowtransparency="true" src={"https://www.deezer.com/plugins/player?format=classic&autoplay=false&playlist=true&width=700&height=350&color=007FEB&layout=dark&size=medium&type=playlist&id="
+                        <iframe title="deezerplayer" scrolling="no" frameBorder="0" allowtransparency="true" src={"https://www.deezer.com/plugins/player?format=classic&autoplay=false&playlist=true&width=700&height=350&color=007FEB&layout=dark&size=medium&type=playlist&id="
                             + this.state.playlistId
                             + "&app_id=1"} width="700" height="350"></iframe></Col>
                     <Col span={3}></Col>
