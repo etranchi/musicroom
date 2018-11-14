@@ -8,9 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		7701FE6B21998D8400B721EB /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7701FE6A21998D8300B721EB /* GLKit.framework */; };
+		77140AC1219C616D00270002 /* MyUser+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77140AC0219C616C00270002 /* MyUser+CoreDataProperties.swift */; };
 		7743C23B2190587E002CC508 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7743C23A2190587E002CC508 /* Playlist.swift */; };
-		7743C2472190A03A002CC508 /* User+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7743C2452190A03A002CC508 /* User+CoreDataClass.swift */; };
-		7743C2482190A03A002CC508 /* User+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7743C2462190A03A002CC508 /* User+CoreDataProperties.swift */; };
+		7743C2472190A03A002CC508 /* MyUser+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7743C2452190A03A002CC508 /* MyUser+CoreDataClass.swift */; };
 		7743C24A2190A23C002CC508 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7743C2492190A23C002CC508 /* UserManager.swift */; };
 		7744A6552195DE8C0034F40E /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7744A6542195DE8C0034F40E /* AddressBook.framework */; };
 		7744A6572195E40D0034F40E /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7744A6562195E40D0034F40E /* libc++.tbd */; };
@@ -18,10 +18,10 @@
 		778BF9A921832CB800448FE6 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778BF9A821832CB800448FE6 /* Track.swift */; };
 		77AF56C22199ACF300E5FBB9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 77AF56C12199ACF200E5FBB9 /* GoogleService-Info.plist */; };
 		77B444762181CD0200B3F536 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B444752181CD0200B3F536 /* APIManager.swift */; };
-		7904E4462193A9EA009ECE1D /* PlayerButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7904E4452193A9EA009ECE1D /* PlayerButtonsView.swift */; };
 		77F5479621932172001B2901 /* AuthenticationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5479521932172001B2901 /* AuthenticationController.swift */; };
 		77F547982193257B001B2901 /* RegisterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F547972193257B001B2901 /* RegisterController.swift */; };
 		77F5479A21932CB2001B2901 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5479921932CB2001B2901 /* User.swift */; };
+		7904E4462193A9EA009ECE1D /* PlayerButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7904E4452193A9EA009ECE1D /* PlayerButtonsView.swift */; };
 		7920E79A218F0BF9008D1DD1 /* CoverContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7920E799218F0BF9008D1DD1 /* CoverContainerView.swift */; };
 		7920E79C218F65CA008D1DD1 /* BackgroundCoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7920E79B218F65CA008D1DD1 /* BackgroundCoverView.swift */; };
 		794334062192F9E50056D261 /* SeeAllSongsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794334052192F9E50056D261 /* SeeAllSongsController.swift */; };
@@ -70,9 +70,10 @@
 
 /* Begin PBXFileReference section */
 		7701FE6A21998D8300B721EB /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		77140AC0219C616C00270002 /* MyUser+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "MyUser+CoreDataProperties.swift"; path = "/Users/etranchi/MusicRoom/app-ios/MusicRoom/MusicRoom/CoreData/MyUser+CoreDataProperties.swift"; sourceTree = "<absolute>"; };
+		77140AC2219C63B800270002 /* MusicRoom 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MusicRoom 2.xcdatamodel"; sourceTree = "<group>"; };
 		7743C23A2190587E002CC508 /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
-		7743C2452190A03A002CC508 /* User+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreDataClass.swift"; sourceTree = "<group>"; };
-		7743C2462190A03A002CC508 /* User+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		7743C2452190A03A002CC508 /* MyUser+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MyUser+CoreDataClass.swift"; sourceTree = "<group>"; };
 		7743C2492190A23C002CC508 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		7744A6462195A8710034F40E /* Bolts.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Bolts.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7744A6472195A8710034F40E /* FacebookCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FacebookCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -85,10 +86,10 @@
 		778BF9A821832CB800448FE6 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		77AF56C12199ACF200E5FBB9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		77B444752181CD0200B3F536 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
-		7904E4452193A9EA009ECE1D /* PlayerButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerButtonsView.swift; sourceTree = "<group>"; };
 		77F5479521932172001B2901 /* AuthenticationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationController.swift; sourceTree = "<group>"; };
 		77F547972193257B001B2901 /* RegisterController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterController.swift; sourceTree = "<group>"; };
 		77F5479921932CB2001B2901 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		7904E4452193A9EA009ECE1D /* PlayerButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerButtonsView.swift; sourceTree = "<group>"; };
 		7920E799218F0BF9008D1DD1 /* CoverContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverContainerView.swift; sourceTree = "<group>"; };
 		7920E79B218F65CA008D1DD1 /* BackgroundCoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundCoverView.swift; sourceTree = "<group>"; };
 		794334052192F9E50056D261 /* SeeAllSongsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeeAllSongsController.swift; sourceTree = "<group>"; };
@@ -198,8 +199,8 @@
 		7743C23C21909F09002CC508 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
-				7743C2452190A03A002CC508 /* User+CoreDataClass.swift */,
-				7743C2462190A03A002CC508 /* User+CoreDataProperties.swift */,
+				7743C2452190A03A002CC508 /* MyUser+CoreDataClass.swift */,
+				77140AC0219C616C00270002 /* MyUser+CoreDataProperties.swift */,
 				7743C2492190A23C002CC508 /* UserManager.swift */,
 			);
 			path = CoreData;
@@ -277,7 +278,6 @@
 				79CDCF22218873300095CC63 /* PlaylistController.swift */,
 				79433407219308580056D261 /* SearchControllers */,
 				79CDCF282188746D0095CC63 /* LibraryController.swift */,
-				79CDCF26218874160095CC63 /* SettingsController.swift */,
 				799DA432218D19E900C803E3 /* PlayerController.swift */,
 				79CDCF26218874160095CC63 /* SettingsController.swift */,
 				7991C46B21988DAF0079F831 /* AlbumController.swift */,
@@ -585,7 +585,7 @@
 				7999CBA02199D93A004A1F18 /* AlbumHeaderView.swift in Sources */,
 				77F5479621932172001B2901 /* AuthenticationController.swift in Sources */,
 				778BF9A921832CB800448FE6 /* Track.swift in Sources */,
-				7743C2472190A03A002CC508 /* User+CoreDataClass.swift in Sources */,
+				7743C2472190A03A002CC508 /* MyUser+CoreDataClass.swift in Sources */,
 				79CDCF1F218870F70095CC63 /* LoadingController.swift in Sources */,
 				7743C24A2190A23C002CC508 /* UserManager.swift in Sources */,
 				7904E4462193A9EA009ECE1D /* PlayerButtonsView.swift in Sources */,
@@ -607,8 +607,8 @@
 				79CDCF292188746D0095CC63 /* LibraryController.swift in Sources */,
 				7920E79A218F0BF9008D1DD1 /* CoverContainerView.swift in Sources */,
 				799DA437218D289400C803E3 /* Artist.swift in Sources */,
-				7743C2482190A03A002CC508 /* User+CoreDataProperties.swift in Sources */,
 				7999CBA22199E58D004A1F18 /* AlbumTrackListCell.swift in Sources */,
+				77140AC1219C616D00270002 /* MyUser+CoreDataProperties.swift in Sources */,
 				79493E962194570600DD03FF /* MinimizedPlayerView.swift in Sources */,
 				794334062192F9E50056D261 /* SeeAllSongsController.swift in Sources */,
 				7991484221889F8D00120E2D /* Extensions.swift in Sources */,
@@ -862,6 +862,7 @@
 		8F364B89217E5B9100B57FC8 /* MusicRoom.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				77140AC2219C63B800270002 /* MusicRoom 2.xcdatamodel */,
 				8F364B8A217E5B9100B57FC8 /* MusicRoom.xcdatamodel */,
 			);
 			currentVersion = 8F364B8A217E5B9100B57FC8 /* MusicRoom.xcdatamodel */;

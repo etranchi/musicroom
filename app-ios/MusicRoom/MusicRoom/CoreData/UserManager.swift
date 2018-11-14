@@ -12,6 +12,7 @@ import Foundation
 
 class UserManager {
     public var context : NSManagedObjectContext
+    public var currentUser : MyUser?
     
     public func newUser() -> MyUser
     {
@@ -63,7 +64,7 @@ class UserManager {
         return result
     }*/
     
-    public func getAllArticles() -> [MyUser] {
+    public func getAllUsers() -> [MyUser] {
         var result : [MyUser] = []
         context.performAndWait {
             let request = NSFetchRequest<NSFetchRequestResult>(entityName: "MyUser")

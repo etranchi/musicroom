@@ -20,6 +20,13 @@ class TabBarController: UITabBarController {
     let tabViewController2 = LibraryController()
     let minimizedPlayer = MinimizedPlayerView()
     let playerView = playerController.view!
+    var deezer : DeezerManager? {
+        didSet {
+            if let d = deezer {
+                playerController.deezer = d
+            }
+        }
+    }
     var navi1: CustomNavigationController?
     var user : MyUser?
     
@@ -67,7 +74,8 @@ class TabBarController: UITabBarController {
     fileprivate func setupTabBarController() {
         playerController.rootViewController = self
         playerController.minimizedPlayer = minimizedPlayer
-        addChild(playerController)
+        self.addChildViewController(playerController)
+        // addChild(playerController)
         //addChildViewController(playerController)
         tabBar.removeFromSuperview()
         view.addSubview(playerView)
@@ -91,6 +99,8 @@ class TabBarController: UITabBarController {
         tabViewController0.title = "Playlists"
         tabViewController1.title = "Search"
         tabViewController2.title = "Library"
+        tabViewController2.user = user
+        tabViewController2.userManager = deezer?.userManager
         
         tabViewController0.tabBarItem = UITabBarItem(title: "", image: #imageLiteral(resourceName: "playlist_icon"), tag: 1)
         tabViewController1.tabBarItem = UITabBarItem(title: "", image: #imageLiteral(resourceName: "search_icon"), tag: 2)

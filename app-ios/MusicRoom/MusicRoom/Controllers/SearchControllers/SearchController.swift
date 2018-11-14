@@ -27,7 +27,7 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
         super.viewWillAppear(animated)
         
         self.navigationController?.navigationBar.topItem?.title = "Search"
-        collectionView.reloadData()
+        collectionView?.reloadData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {

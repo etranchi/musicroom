@@ -54,7 +54,7 @@ class PlaylistController: UICollectionViewController, UICollectionViewDelegateFl
             cell.vc = self
             return cell
             } else {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: categoryCellId, for: indexPath) as! CategoryCell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: categoryCellId, for: indexPath) as! GlobalSearchCell
             cell.musicCategory = musicCategories
             cell.backgroundColor = UIColor(white: 0.15, alpha: 1)
             return cell

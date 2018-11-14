@@ -17,5 +17,6 @@ public class MyUser: NSManagedObject {
     
     @NSManaged public var login: String?
     @NSManaged public var token: String?
+    @NSManaged public var deezer_token: String?
 
 }

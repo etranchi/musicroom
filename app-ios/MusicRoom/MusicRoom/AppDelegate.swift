@@ -19,6 +19,7 @@ import GoogleToolboxForMac
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var userManager = UserManager()
     var window: UIWindow?
+    let deezerManager = DeezerManager()
     let apiManager = APIManager()
     
     var orientationLock = UIInterfaceOrientationMask.all
@@ -32,18 +33,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return self.orientationLock
     }
     
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         //get the token if loggedin -> go home else go loginPage
         window = UIWindow()
         window?.makeKeyAndVisible()
-        let user = userManager.getAllArticles()
+        let user = userManager.getAllUsers()
         if user.count == 0 {
             let nav = CustomNavigationController(rootViewController: AuthenticationController())
             window?.rootViewController = nav
         }
         else {
             let nav = TabBarController()
-            nav.user = user[0]
+            userManager.currentUser = user[0]
+            deezerManager.userManager = userManager
+            nav.deezer = deezerManager
+            nav.user = nav.deezer?.user
+            print(nav.user)
             window?.rootViewController = nav
         }
         return true
