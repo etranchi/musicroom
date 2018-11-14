@@ -87,9 +87,9 @@ class SearchController: UITableViewController {
             height = 240
         } else if indexPath.row == 2, tracks.count > 0 {
             if tracks.count > 3 {
-                height = 4 * 60 + 40
+                height = 4 * 60 + 80
             } else {
-                height = CGFloat(tracks.count * 60 + 40)
+                height = CGFloat(tracks.count * 60 + 80)
             }
         }
         return height
