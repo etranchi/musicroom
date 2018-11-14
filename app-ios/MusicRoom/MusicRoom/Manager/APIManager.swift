@@ -16,6 +16,19 @@ class APIManager: NSObject, URLSessionDelegate {
         return  "https://\(self.ip):4242/"
     }
     
+    func getAlbumTracks(_ album: Album, completion: @escaping (Album) -> ()) {
+        let tracksUrl = self.url + "album/\(album.id)"
+        var request = URLRequest(url: URL(string: tracksUrl)!)
+        request.httpMethod = "GET"
+        
+        searchAll(Album.self, request: request) { (tracksData) in
+            var album = album
+            album = tracksData
+            completion(album)
+        }
+    }
+
+    
     func login(_ forg: String, _ token : String, completion: @escaping ( (DataUser) -> ())) {
         let loginUrl = self.url + "user/login/" + forg + "?access_token=" + token
         var loginRequest = URLRequest(url : URL(string : loginUrl)!)

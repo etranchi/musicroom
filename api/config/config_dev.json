@@ -8,18 +8,17 @@
         "apiUrl": "https://api.deezer.com",
         "clientID": "",
         "clientSecret": "",
-
-		"callbackURL": "/oauth/deezer/callback",
-		"scope": [
-			"basic_access",
-			"offline_access",
-			"manage_library",
-			"delete_library",
-			"email"
-		]
-	},
-	"facebook": {
-		"clientID": "",
+        "callbackURL": "/oauth/deezer/callback",
+        "scope": [
+            "basic_access",
+            "offline_access",
+            "manage_library",
+            "delete_library",
+            "email"
+        ]
+    },
+    "facebook": {
+        "clientID": "",
         "clientSecret": "",
 		"callbackURL": "/oauth/facebook/callback",
 		"scope": [
@@ -35,6 +34,19 @@
     "google": {
         "clientID": "479103948820-tb38ba04oig61ogfdjgs6s07u9ph626o.apps.googleusercontent.com",
         "clientSecret": "TA-O3Z6YyoNiwzUQoweZtfGK",
+        "scope": [
+            "email"
+        ],
+        "profileFields": [
+            "id",
+            "displayName",
+            "photos",
+            "email"
+        ]
+    },
+    "google": {
+        "clientID": "",
+        "clientSecret": "",
         "scope": [
             "email"
         ],

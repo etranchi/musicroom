@@ -11,6 +11,10 @@ import UIKit
 class SongCell: UICollectionViewCell {
     var track: Track! {
         didSet {
+            titleLabel.textColor = .white
+            if track.id == currentTrack?.id {
+                titleLabel.textColor = UIColor(red: 20 / 255, green: 220 / 255, blue: 20 / 255, alpha: 1)
+            }
             authorLabel.text = track.artist!.name
             titleLabel.text = track.title
             let sec = track.duration % 60
@@ -54,9 +58,9 @@ class SongCell: UICollectionViewCell {
     let titleLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        label.font = UIFont.systemFont(ofSize: 13, weight: .medium)
         label.textColor = .white
-        label.numberOfLines = 2
+        label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -64,7 +68,7 @@ class SongCell: UICollectionViewCell {
     let authorLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        label.font = UIFont.systemFont(ofSize: 11, weight: .medium)
         label.textColor = .lightGray
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -73,8 +77,9 @@ class SongCell: UICollectionViewCell {
     let dotsLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         label.textColor = .lightGray
+        label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "..."
         return label
@@ -95,22 +100,22 @@ class SongCell: UICollectionViewCell {
             
             titleLabel.topAnchor.constraint(equalTo: imageView.topAnchor),
             titleLabel.heightAnchor.constraint(lessThanOrEqualToConstant: 30),
-            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
+            titleLabel.trailingAnchor.constraint(equalTo: dotsLabel.leadingAnchor, constant: -10),
             titleLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 14),
-            
+
             authorLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
             authorLabel.heightAnchor.constraint(equalToConstant: 18),
             authorLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             authorLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            
+
             timeLabel.topAnchor.constraint(equalTo: authorLabel.bottomAnchor, constant: 2),
             timeLabel.heightAnchor.constraint(equalToConstant: 10),
             timeLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             timeLabel.leadingAnchor.constraint(equalTo: authorLabel.leadingAnchor),
             
-            dotsLabel.rightAnchor.constraint(lessThanOrEqualTo: safeAreaLayoutGuide.rightAnchor),
+            dotsLabel.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             dotsLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            dotsLabel.widthAnchor.constraint(equalToConstant: 40),
+            dotsLabel.widthAnchor.constraint(equalToConstant: 20),
             dotsLabel.heightAnchor.constraint(equalToConstant: 30)
         ])
     }
@@ -133,7 +138,7 @@ class SeeAllSongsCell: UICollectionViewCell {
     let messageLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        label.font = UIFont.systemFont(ofSize: 13, weight: .medium)
         label.textColor = .white
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -162,7 +167,7 @@ class SeeAllSongsCell: UICollectionViewCell {
             
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
             imageView.heightAnchor.constraint(equalToConstant: 15),
-            imageView.widthAnchor.constraint(equalToConstant: 15),
+            imageView.widthAnchor.constraint(equalToConstant: 25),
             imageView.rightAnchor.constraint(lessThanOrEqualTo: safeAreaLayoutGuide.rightAnchor, constant: -24)
         ])
     }
