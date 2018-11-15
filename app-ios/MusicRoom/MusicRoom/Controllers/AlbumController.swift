@@ -35,7 +35,7 @@ class AlbumController: UITableViewController {
         
         let navi = navigationController as? CustomNavigationController
         let offsetY = navi?.navigationBar.frame.size.height
-        navi?.visualContainerView.transform = CGAffineTransform(translationX: 0, y: -offsetY! - 50)
+        navi?.animatedHideNavigationBar()
         navigationController?.navigationBar.topItem?.title = ""
     }
     

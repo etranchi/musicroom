@@ -229,8 +229,8 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             
             downButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 40),
             downButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 14),
-            downButton.widthAnchor.constraint(equalToConstant: 26),
-            downButton.heightAnchor.constraint(equalToConstant: 26),
+            downButton.widthAnchor.constraint(equalToConstant: 15),
+            downButton.heightAnchor.constraint(equalToConstant: 15),
             
             coverContainerView!.topAnchor.constraint(equalTo: view.topAnchor, constant: 40),
             coverContainerView!.bottomAnchor.constraint(equalTo: titleLabel.topAnchor, constant: -5),

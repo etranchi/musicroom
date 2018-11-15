@@ -15,23 +15,27 @@ class SearchController: UITableViewController {
     
     var albums: [Album] = []
     var tracks: [Track] = []
+    var artists: [Artist] = []
     
     private let blankCellId = "blankCellId"
     private let searchCellId = "searchCellId"
     private let albumCellId = "albumCellId"
     private let trackCellId = "trackCellId"
+    private let artistCellId = "artistCellId"
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         tableView.backgroundColor = UIColor(white: 0.1, alpha: 1)
         tableView.separatorStyle = .none
-        tableView.contentInset = .init(top: 0, left: 0, bottom: 45, right: 0)
+        tableView.contentInset = .init(top: 0, left: 0, bottom: 59, right: 0)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: blankCellId)
         tableView.register(SearchBarCell.self, forCellReuseIdentifier: searchCellId)
+        
         tableView.register(SearchAlbumCell.self, forCellReuseIdentifier: albumCellId)
         tableView.register(SearchTrackCell.self, forCellReuseIdentifier: trackCellId)
-        handleSearch(initialSearch)
+        tableView.register(SearchArtistCell.self, forCellReuseIdentifier: artistCellId)
+        searchAll(initialSearch)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -40,21 +44,28 @@ class SearchController: UITableViewController {
         tableView.reloadRows(at: [IndexPath(row: 2, section: 0)], with: .none)
     }
     
+    func searchAll(_ text: String) {
+        manager.searchAlbums(text) { (albums) in
+            self.albums = albums
+            self.tableView.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .automatic)
+            self.manager.searchTracks(text) { (tracks) in
+                self.tracks = tracks
+                self.tableView.reloadRows(at: [IndexPath(row: 2, section: 0)], with: .automatic)
+                self.manager.searchArtists(text, completion: { (artists) in
+                    self.artists = artists
+                    self.tableView.reloadRows(at: [IndexPath(row: 3, section: 0)], with: .automatic)
+                })
+            }
+        }
+    }
+    
     func handleSearch(_ text: String) {
         initialSearch = text
         albums.removeAll()
         tracks.removeAll()
+        artists.removeAll()
         tableView.reloadData()
-        manager.searchAlbums(text) { (albums) in
-            self.albums = albums
-            self.tableView.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .automatic)
-            self.tableView.rectForRow(at: )
-            self.manager.searchTracks(text) { (tracks) in
-                self.tracks = tracks
-                self.tableView.reloadRows(at: [IndexPath(row: 2, section: 0)], with: .automatic)
-            }
-        }
-        
+        searchAll(text)
     }
     
     func showPlayerForSong(_ index: Int) {
@@ -66,6 +77,10 @@ class SearchController: UITableViewController {
             let vc = AlbumController(album, albumCover)
             self.navigationController?.pushViewController(vc, animated: true)
         }
+    }
+    
+    func showArtistContent(_ artist: Artist, _ artistCover: UIImage) {
+        print("show Artist")
     }
     
     func showTrackList() {
@@ -96,6 +111,12 @@ class SearchController: UITableViewController {
             cell.selectionStyle = .none
             cell.tracks = tracks
             return cell
+        } else if indexPath.row == 3, artists.count > 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: artistCellId, for: indexPath) as! SearchArtistCell
+            cell.rootTarget = self
+            cell.selectionStyle = .none
+            cell.artists = artists
+            return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: blankCellId, for: indexPath)
             return cell
@@ -114,6 +135,8 @@ class SearchController: UITableViewController {
             } else {
                 height = CGFloat(tracks.count * 60 + 80)
             }
+        } else if indexPath.row == 3, artists.count > 0 {
+            height = 185
         }
         return height
     }

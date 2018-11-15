@@ -44,6 +44,8 @@
 		79DD4A7D219C51B7005578EB /* AlbumCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79DD4A7C219C51B7005578EB /* AlbumCollectionView.swift */; };
 		79DD4A7F219C6D55005578EB /* SearchTrackCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79DD4A7E219C6D55005578EB /* SearchTrackCell.swift */; };
 		79FF7D10219D795A001DAE17 /* SeeAllSongsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79FF7D0F219D7959001DAE17 /* SeeAllSongsController.swift */; };
+		79FF7D12219D9B11001DAE17 /* SearchArtistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79FF7D11219D9B11001DAE17 /* SearchArtistCell.swift */; };
+		79FF7D14219D9BCC001DAE17 /* ArtistsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79FF7D13219D9BCC001DAE17 /* ArtistsCollectionView.swift */; };
 		8F189888217F22EE00CE1A8D /* libDeezer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F189867217F22EE00CE1A8D /* libDeezer.a */; };
 		8F189889217F22EE00CE1A8D /* DZRResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 8F189887217F22EE00CE1A8D /* DZRResources.bundle */; };
 		8F18988C217F230D00CE1A8D /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F18988B217F230D00CE1A8D /* CoreAudio.framework */; };
@@ -98,6 +100,8 @@
 		79DD4A7C219C51B7005578EB /* AlbumCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumCollectionView.swift; sourceTree = "<group>"; };
 		79DD4A7E219C6D55005578EB /* SearchTrackCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTrackCell.swift; sourceTree = "<group>"; };
 		79FF7D0F219D7959001DAE17 /* SeeAllSongsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeeAllSongsController.swift; sourceTree = "<group>"; };
+		79FF7D11219D9B11001DAE17 /* SearchArtistCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchArtistCell.swift; sourceTree = "<group>"; };
+		79FF7D13219D9BCC001DAE17 /* ArtistsCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistsCollectionView.swift; sourceTree = "<group>"; };
 		8F189867217F22EE00CE1A8D /* libDeezer.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libDeezer.a; sourceTree = "<group>"; };
 		8F189869217F22EE00CE1A8D /* DZRPlaylist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DZRPlaylist.h; sourceTree = "<group>"; };
 		8F18986A217F22EE00CE1A8D /* Deezer+Compatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Deezer+Compatibility.h"; sourceTree = "<group>"; };
@@ -200,6 +204,7 @@
 				7999CB9F2199D93A004A1F18 /* AlbumHeaderView.swift */,
 				79DD4A7C219C51B7005578EB /* AlbumCollectionView.swift */,
 				791358A2219D605500F30BF9 /* SongsCollectionView.swift */,
+				79FF7D13219D9BCC001DAE17 /* ArtistsCollectionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -247,6 +252,7 @@
 				7999CBA12199E58D004A1F18 /* AlbumTrackListCell.swift */,
 				79DD4A7A219C4A49005578EB /* SearchAlbumCell.swift */,
 				79DD4A7E219C6D55005578EB /* SearchTrackCell.swift */,
+				79FF7D11219D9B11001DAE17 /* SearchArtistCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -458,6 +464,7 @@
 				7991C46C21988DAF0079F831 /* AlbumController.swift in Sources */,
 				79B15ECE218C69AA00B84BCB /* MusicCategory.swift in Sources */,
 				8F18989C217F3B4D00CE1A8D /* DeezerManager.swift in Sources */,
+				79FF7D12219D9B11001DAE17 /* SearchArtistCell.swift in Sources */,
 				8F364B83217E5B9100B57FC8 /* AppDelegate.swift in Sources */,
 				796ECB3A218DCAE400321B3B /* ProgressCircle.swift in Sources */,
 				799DA43D218D3ED300C803E3 /* AlbumCell.swift in Sources */,
@@ -468,6 +475,7 @@
 				7920E79C218F65CA008D1DD1 /* BackgroundCoverView.swift in Sources */,
 				79CDCF292188746D0095CC63 /* LibraryController.swift in Sources */,
 				7920E79A218F0BF9008D1DD1 /* CoverContainerView.swift in Sources */,
+				79FF7D14219D9BCC001DAE17 /* ArtistsCollectionView.swift in Sources */,
 				799DA437218D289400C803E3 /* Artist.swift in Sources */,
 				7743C2482190A03A002CC508 /* User+CoreDataProperties.swift in Sources */,
 				79DD4A7B219C4A49005578EB /* SearchAlbumCell.swift in Sources */,
