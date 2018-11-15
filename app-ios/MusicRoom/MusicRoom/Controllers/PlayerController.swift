@@ -167,8 +167,20 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
                 }
                 self.minimizedPlayer?.update(isPlaying: self.isPlaying, title: self.tracks[self.index].title, artist: self.tracks[self.index].artist!.name)
                 currentTrack = self.tracks[self.index]
+                self.reloadView()
             }
         })
+    }
+    
+    fileprivate func reloadView() {
+        if let cu = (UIApplication.shared.keyWindow?.rootViewController as? TabBarController)?.selectedViewController as? CustomNavigationController {
+            if let co = cu.topViewController as? UICollectionViewController {
+                co.collectionView?.reloadData()
+            }
+            if let ta = cu.topViewController as? UITableViewController {
+                ta.tableView.reloadData()
+            }
+        }
     }
     
     @objc func handleHide() {

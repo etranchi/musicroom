@@ -20,6 +20,7 @@ class SongCell: UICollectionViewCell {
                 timeLabel.text = String(track.duration / 60) + ":" + String(sec)
             }
             imageView.loadImageUsingCacheWithUrlString(urlString: (track.album!.cover_small))
+            titleLabel.textColor = .white
             if track.id == currentTrack?.id {
                 titleLabel.textColor = UIColor(red: 20 / 255, green: 220 / 255, blue: 20 / 255, alpha: 1)
             }

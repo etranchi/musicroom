@@ -13,6 +13,10 @@ class AlbumTrackListCell: UITableViewCell {
     var track: Track? {
         didSet {
             titleLabel.text = track?.title
+            titleLabel.textColor = .white
+            if track?.id == currentTrack?.id {
+                titleLabel.textColor = UIColor(red: 20 / 255, green: 220 / 255, blue: 20 / 255, alpha: 1)
+            }
         }
     }
     
