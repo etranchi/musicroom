@@ -175,6 +175,17 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         
     }
     
+    fileprivate func reloadView() {
+        if let cu = (UIApplication.shared.keyWindow?.rootViewController as? TabBarController)?.selectedViewController as? CustomNavigationController {
+            if let co = cu.topViewController as? UICollectionViewController {
+                co.collectionView?.reloadData()
+            }
+            if let ta = cu.topViewController as? UITableViewController {
+                ta.tableView.reloadData()
+            }
+        }
+    }
+    
     @objc func handleHide() {
         rootViewController?.animatedHidePlayer()
     }

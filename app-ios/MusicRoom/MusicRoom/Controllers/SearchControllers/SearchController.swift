@@ -34,6 +34,12 @@ class SearchController: UITableViewController {
         handleSearch(initialSearch)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        tableView.reloadRows(at: [IndexPath(row: 2, section: 0)], with: .none)
+    }
+    
     func handleSearch(_ text: String) {
         initialSearch = text
         albums.removeAll()
