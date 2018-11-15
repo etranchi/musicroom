@@ -65,8 +65,8 @@ class TabBarController: UITabBarController {
     fileprivate func setupTabBarController() {
         playerController.rootViewController = self
         playerController.minimizedPlayer = minimizedPlayer
-        addChild(playerController)
-        //addChildViewController(playerController)
+        //addChild(playerController)
+        addChildViewController(playerController)
         tabBar.removeFromSuperview()
         view.addSubview(playerView)
         view.addSubview(minimizedPlayer)

@@ -27,7 +27,7 @@ class PlaylistController: UICollectionViewController, UICollectionViewDelegateFl
         collectionView?.backgroundColor = UIColor(white: 0.1, alpha: 1)
         collectionView?.alwaysBounceVertical = true
         //collectionView?.register(GlobalSearchCell.self, forCellWithReuseIdentifier: categoryCellId)
-        //collectionView?.register(SearchCell.self, forCellWithReuseIdentifier: searchCellId)
+        //collectionView?.register(SearchBarCell.self, forCellWithReuseIdentifier: searchCellId)
         
         
         /*performSearch(initialSearch) { (albums, tracks, artists) in
@@ -42,7 +42,7 @@ class PlaylistController: UICollectionViewController, UICollectionViewDelegateFl
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         // if indexPath.item == 0 {
-//            let     cell = collectionView.dequeueReusableCell(withReuseIdentifier: searchCellId, for: indexPath) as! SearchCell
+//            let     cell = collectionView.dequeueReusableCell(withReuseIdentifier: searchCellId, for: indexPath) as! SearchBarCell
 //            cell.placeholder = "playlists, events..."
 //            cell.vc = self
 //            return cell

@@ -1,5 +1,5 @@
 //
-//  SearchCell.swift
+//  SearchBarCell.swift
 //  MusicRoom
 //
 //  Created by jdavin on 11/1/18.
@@ -8,11 +8,11 @@
 
 import UIKit
 
-class SearchCell: UITableViewCell, UITextFieldDelegate {
+class SearchBarCell: UITableViewCell, UITextFieldDelegate {
     
     var vc : UITableViewController?
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         textField.delegate = self

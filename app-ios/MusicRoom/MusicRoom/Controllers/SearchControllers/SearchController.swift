@@ -28,24 +28,31 @@ class SearchController: UITableViewController {
         tableView.separatorStyle = .none
         tableView.contentInset = .init(top: 0, left: 0, bottom: 45, right: 0)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: blankCellId)
-        tableView.register(SearchCell.self, forCellReuseIdentifier: searchCellId)
+        tableView.register(SearchBarCell.self, forCellReuseIdentifier: searchCellId)
         tableView.register(SearchAlbumCell.self, forCellReuseIdentifier: albumCellId)
         tableView.register(SearchTrackCell.self, forCellReuseIdentifier: trackCellId)
         handleSearch(initialSearch)
     }
     
     func handleSearch(_ text: String) {
+        initialSearch = text
         albums.removeAll()
         tracks.removeAll()
         tableView.reloadData()
         manager.searchAlbums(text) { (albums) in
             self.albums = albums
-            self.tableView.reloadData()
+            self.tableView.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .automatic)
+            self.tableView.rectForRow(at: )
+            self.manager.searchTracks(text) { (tracks) in
+                self.tracks = tracks
+                self.tableView.reloadRows(at: [IndexPath(row: 2, section: 0)], with: .automatic)
+            }
         }
-        manager.searchTracks(text) { (tracks) in
-            self.tracks = tracks
-            self.tableView.reloadData()
-        }
+        
+    }
+    
+    func showPlayerForSong(_ index: Int) {
+        (tabBarController as! TabBarController).showPlayerForSong(index, tracks: tracks)
     }
     
     func showAlbumContent(_ album: Album, _ albumCover: UIImage) {
@@ -55,10 +62,20 @@ class SearchController: UITableViewController {
         }
     }
     
+    func showTrackList() {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        layout.minimumInteritemSpacing = 0
+        layout.minimumLineSpacing = 0
+        let vc = SeeAllSongsController(tracks, initialSearch, self, layout: layout)
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: searchCellId, for: indexPath) as! SearchCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: searchCellId, for: indexPath) as! SearchBarCell
             cell.selectionStyle = .none
+            cell.textField.placeholder = "artists, songs, or albums"
             cell.vc = self
             return cell
         } else if indexPath.row == 1, albums.count > 0 {

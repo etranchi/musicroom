@@ -34,21 +34,21 @@ class SearchTrackCell: UITableViewCell {
     func setupView() {
         label.removeFromSuperview()
         label.text = "Songs"
-        backgroundColor = .blue
-        //let songsCollectionView = SongsCollectionView(tracks!, .vertical, rootTarget)
-        //songsCollectionView.removeFromSuperview()
-        //songsCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        backgroundColor = .clear
+        let songsCollectionView = SongsCollectionView(tracks!, .vertical, rootTarget)
+        songsCollectionView.removeFromSuperview()
+        songsCollectionView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(label)
-        //addSubview(songsCollectionView)
+        addSubview(songsCollectionView)
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: topAnchor),
             label.leadingAnchor.constraint(equalTo: leadingAnchor),
             label.trailingAnchor.constraint(equalTo: trailingAnchor),
             label.heightAnchor.constraint(equalToConstant: 40),
-//            songsCollectionView.topAnchor.constraint(equalTo: label.bottomAnchor),
-//            songsCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
-//            songsCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
-//            songsCollectionView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            songsCollectionView.topAnchor.constraint(equalTo: label.bottomAnchor),
+            songsCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            songsCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            songsCollectionView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
 }

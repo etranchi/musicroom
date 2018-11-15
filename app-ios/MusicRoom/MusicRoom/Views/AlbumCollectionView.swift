@@ -15,11 +15,11 @@ class AlbumCollectionView: UICollectionView, UICollectionViewDataSource, UIColle
     private let albumCellId = "albumCellId"
     
     
-    init(_ albums: [Album], _ scrollDirection: UICollectionView.ScrollDirection, _ rootTarget: UITableViewController?) {
+    init(_ albums: [Album], _ scrollDirection: UICollectionViewScrollDirection, _ rootTarget: UITableViewController?) {
         self.rootTarget = rootTarget
         self.albums = albums
         let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
+        layout.scrollDirection = scrollDirection
         layout.minimumInteritemSpacing = 14
         layout.minimumLineSpacing = 14
         super.init(frame: .zero, collectionViewLayout: layout)
