@@ -14,6 +14,8 @@ class Event extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			loading: false,
+			currentComponent: 'createEvent'
 		}
 	}
 
@@ -26,27 +28,28 @@ class Event extends Component {
 				this.props.updateParent({'data': this.props.state.data})
 			});
 		}
+
 	}
 
-	componentWillMount() {
-		this.setState({loading:true});
+	componentDidMount() {
+		this.getLocation()
 		axios.get('https://192.168.99.100:4242/event')
 		.then((resp) => {
 			this.props.state.data.events = resp.data.reverse()
 			this.props.updateParent({'data' : this.props.state.data})
+			this.setState({loading:true});
 		})
 		.catch((err) => {
 			this.setState({events: [],loading:false})
 			console.log('Events error', err);
 		})
 	}
-
 	render() {
-		this.getLocation();
 		if (this.props.state.currentComponent === "cardEvent") {
 			return (<CardEvent state={this.props.state} updateParent={this.props.updateParent} />)
 		}
-
+		if (!this.state.loading)
+			return <p> OUPSI </p>
 		else {
 			const { Header, Footer, Content } = Layout;
 			const renderTabBar = (props, DefaultTabBar) => (
@@ -67,7 +70,7 @@ class Event extends Component {
 									<Tabs.TabPane tab="Créer un Event" key="1">
 										<Create state={this.props.state} updateParent={this.props.updateParent}/>
 									</Tabs.TabPane>
-									<Tabs.TabPane tab="Liste de vos Events" key="2">
+									<Tabs.TabPane tab="Liste de vos Events" key="2" >
 										<List state={this.props.state} updateParent={this.props.updateParent}/>
 									</Tabs.TabPane>
 									<Tabs.TabPane tab="Liste des évents à proximité" key="3">

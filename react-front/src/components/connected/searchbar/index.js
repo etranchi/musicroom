@@ -79,7 +79,7 @@ class SearchBar extends Component {
 		this.setState({'glbUserList': this.removeMember(this.state.glbUserList, this.props.state.data.event.adminMembers)})
 
 		if (this.state.value.length < this.state.position)
-			this.state.position = 0;
+			this.setState({position:0})
 		for (var i = 0; i < this.state.glbUserList.length; i++)
 		{
 			for (var j = this.state.position; j < this.state.glbUserList[i].login.length; j++)

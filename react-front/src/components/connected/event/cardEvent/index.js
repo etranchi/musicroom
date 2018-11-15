@@ -7,7 +7,6 @@ import BodyEvent from './Body'
 import SimpleMap from '../simpleMap'
 import axios from 'axios'
 import geolib from 'geolib'
-import { Tab } from 'react-bootstrap';
 
 class cardEvent extends Component {
 	constructor(props) {
@@ -36,14 +35,14 @@ class cardEvent extends Component {
     isUser = (tab) => 
     {
         for (let i = 0; i < tab.length; i++) {
-            if (tab[i].email == this.props.state.user.email)
+            if (tab[i].email === this.props.state.user.email)
                 return true;
         }
         return false;
     }
 
-    componentWillMount = () => {
-        if (this.props.state.data.event.creator.email == this.props.state.user.email)
+    componentDidMount = () => {
+        if (this.props.state.data.event.creator.email === this.props.state.user.email)
             this.setState({isCreator:true})
         else  {
             this.setState({isMember:this.isUser(this.props.state.data.event.members)})
@@ -65,12 +64,14 @@ class cardEvent extends Component {
     }
 
     saveEvent = () => { 
+        console.log("ICI : ", this.props.state.data.event)
         let _id = this.props.state.data.event._id
         delete this.props.state.data.event._id
         axios.put('https://192.168.99.100:4242/event/' + _id,  this.props.state.data.event)
             .then((resp) => { 
                 this.info("Event saved !")
-                this.props.updateParent({'currentComponent': 'event'})
+                this.props.state.data.event._id = _id;
+                this.props.updateParent({"currentComponent":'event'}, {'data':this.props.state.data})
             })
             .catch((err) => { console.log("Create Event : handleSubmit :/event Error ", err); })  
     }

@@ -28,11 +28,11 @@ class Body extends Component {
             this.props.updateParent({'data': this.props.state.data})
         }
     }
-    updateEventPlaylist = (value, type) => {
-        if (value)
+    updateEventPlaylist = (playlist) => {
+        if (playlist)
         {
-            this.props.state.data.event.playlist = value;
-            this.setState({playlistId:value.id})
+            this.props.state.data.event.playlist = playlist;
+            this.setState({playlistId:playlist.id})
             this.props.updateParent({'data' : this.props.state.data})
         }
     }
@@ -67,10 +67,12 @@ class Body extends Component {
                     </Col>
                 </Row>
                 <Row style={{height:'80px'}}>
-                    <Col span={5}></Col>
-                    <Col span={2} style={{ borderLeft: '1px solid #03a9f4'}}>
-                        <Icon  className="titleMedium" type="pushpin" theme="outlined" />
-                        <b className="titleMedium"> {this.props.state.data.event.location.address.v} </b>
+                    <Col span={5} ></Col>
+                    <Col span={2} style={{ borderLeft: '2px solid #03a9f4'}}>
+                        <div style={{margin:'0 0 0 3%'}}>
+                            <Icon  className="titleMedium" type="pushpin" theme="outlined" />
+                            <b className="titleMedium"> {this.props.state.data.event.location.address.v} </b>
+                        </div>
                     </Col>
                     <Col span={3}>
                         <Icon className="titleMedium"  type="clock-circle" theme="outlined" />
@@ -104,7 +106,7 @@ class Body extends Component {
                             renderItem={item => (
                                 <List.Item>
                                     <Card.Meta
-                                        avatar={<Avatar size={116} src={item.facebookId ? item.picture : "https://192.168.99.100:4242/eventPicture/" + item.picture} />}
+                                        avatar={<Avatar size={116} src={item.facebookId ? item.picture : "https://192.168.99.100:4242/userPicture/" + item.picture} />}
                                         title={item.login}
                                         description={item.email}
                                     />
@@ -134,7 +136,7 @@ class Body extends Component {
                             renderItem={item => (
                                 <List.Item>
                                     <Card.Meta
-                                        avatar={<Avatar size={116} src={item.facebookId ? item.picture : "https://192.168.99.100:4242/eventPicture/" + item.picture} />}
+                                        avatar={<Avatar size={116} src={item.facebookId ? item.picture : "https://192.168.99.100:4242/userPicture/" + item.picture} />}
                                         title={item.login}
                                         description={item.email}
                                     />
@@ -146,7 +148,6 @@ class Body extends Component {
                     </Col>
                     <Col span={3}></Col>
                 </Row>
-                <Divider />
                 <Row style={{height:'70px'}}>
                     <Col span={5}> </Col>
                     <Col span={3} >
@@ -159,9 +160,12 @@ class Body extends Component {
                 <Row style={{height:'130px'}}>
                     <Col span={5}></Col>
                     <Col span={12}>
-                        <iframe title="deezerplayer" scrolling="no" frameBorder="0" allowtransparency="true" src={"https://www.deezer.com/plugins/player?format=classic&autoplay=false&playlist=true&width=700&height=350&color=007FEB&layout=dark&size=medium&type=playlist&id="
-                            + this.state.playlistId
-                            + "&app_id=1"} width="700" height="350"></iframe></Col>
+                    {
+                        this.state.playlistId ? <iframe title="deezerplayer" scrolling="no" frameBorder="0" allowtransparency="true" src={"https://www.deezer.com/plugins/player?format=classic&autoplay=false&playlist=true&width=700&height=350&color=007FEB&layout=dark&size=medium&type=playlist&id="
+                        + this.state.playlistId
+                        + "&app_id=1"} width="700" height="350"></iframe> : null
+                    }
+                    </Col>
                     <Col span={3}></Col>
                 </Row>
             </div>

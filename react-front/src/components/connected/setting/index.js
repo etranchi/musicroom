@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import './styles.css';
-import {Button, Col, Row} from 'antd';
 import EditSetting from './edit';
+import {Button, Divider, Layout, Col, Row, Card, Avatar} from 'antd';
+
 const DZ = window.DZ;
 
 class Setting extends Component {
@@ -10,23 +11,24 @@ class Setting extends Component {
 		super(props);
 		this.state = {
 			user: props.state.user,
-			error: {}
+			error: {},
+			loading: false
 		}
-		this.getUser();
 		this.loginDeezer = this.loginDeezer.bind(this);
 		this.logoutDeezer = this.logoutDeezer.bind(this);
 	}
 
-	getUser() {
+	componentWillMount = () => {
 		axios.get('https://192.168.99.100:4242/user/me', 
 		{'headers':{'Authorization':'Bearer '+ localStorage.getItem('token')}})
 		.then((resp) => {
-			this.setState({user:resp.data});
+			this.setState({user:resp.data, loading:true});
 		})
 		.catch((err) => {
 			this.setState({error: err})
 		})
 	}
+
 	loginDeezer () {
 		const that = this;
 		DZ.init({
@@ -61,30 +63,64 @@ class Setting extends Component {
     }
 
 	render() {
-		let token = null
-		console.log(this.props.state.user);
-		if (this.props.state && this.props.state.user && this.props.state.user.deezerToken)
-			token = this.props.state.user.deezerToken
+		const {Content, Footer, Header} = Layout;
+		if (!this.state.loading)
+			return <p> OUPSI </p>
 		if (this.props.state.currentComponent === 'editSetting')
 			return (<EditSetting state={this.props.state} updateParent={this.props.updateParent}/>)
 		else
 		{
+			let userPicture = this.props.state.user.facebookId ? this.props.state.user.picture : "https://192.168.99.100:4242/userPicture/" + this.props.state.user.picture
 			return (
-			<div>
-				<Row type="flex" justify="space-between">
-					<Col>
-						<Button onClick={this.props.updateParent.bind(this,{'currentComponent': 'editSetting'})}>Edit</Button>
-					</Col>
-					<Col>
-						{!token ? (<Button onClick={this.loginDeezer.bind(this)}>Link Deezer</Button>): (<Button onClick={this.logoutDeezer.bind(this)}>Unlink Deezer</Button>)}
-					</Col>
-						
-				</Row>
-				<img alt="userPicture" src={this.props.state.user.picture}/>
-				<p> Login: {this.props.state.user.login}</p>
-				<p> email: {this.props.state.user.email}</p>
-				<p> Status: {this.props.state.user.status}</p>
-			</div>
+				<Layout>
+					<Header> <h1>Profil : </h1></Header>
+					<Content>
+						<Row style={{height:50}}/>
+						<Row>
+							<Col span={4}/>
+							<Col span={4}>
+								<Card.Meta avatar={<Avatar size={116} src={userPicture}/>} />
+							</Col>
+							<Col>
+								<Button onClick={this.props.updateParent.bind(this,{'currentComponent': 'editSetting'})}>Edit</Button>
+							</Col>
+						</Row>
+						<Divider />
+						<Row>
+							<Col span={4}/>
+							<Col span={3}>
+								<p style={{float:'right'}}>Adresse électronique :</p>
+							</Col>
+							<Col span={1}/>
+							<Col span={6}>
+								<b> {this.props.state.user.email}</b>
+							</Col>
+						</Row>
+						<Row>
+							<Col span={4}/>
+							<Col span={3}>
+								<p style={{float:'right'}}> Login :</p>
+							</Col>
+							<Col span={1}/>
+							<Col span={6}>
+								<b> { this.props.state.user.login }</b>
+							</Col>
+						</Row>
+						<Row>
+							<Col span={4}/>
+							<Col span={3}>
+								<p style={{float:'right'}}> Instruit depuis le : </p>
+							</Col>
+							<Col span={1}/>
+							<Col span={6}>
+								<b> { new Date(this.props.state.user.creationDate).toLocaleDateString('fr-FR')}</b>
+							</Col>
+						</Row>
+						<Divider />
+					</Content>
+					<Footer>
+					</Footer>
+				</Layout>
 		);
 		}
   }

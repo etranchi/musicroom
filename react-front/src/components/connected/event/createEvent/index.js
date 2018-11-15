@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import LocationSearchInput from '../locationSearchInput'
 import './styles.css';
 import axios from 'axios'
+import SearchBar from '../../searchbar'
 import { Icon, Button, Input, DatePicker, Select, Upload, message, Divider, Layout, Col, Row} from 'antd';
 
 class CreateEvent extends Component {
@@ -15,19 +16,18 @@ class CreateEvent extends Component {
             "description": "",
             "picture": '',
             "playlist": null,
-            "date_creation": new Date(),
+            "event_date": new Date(),
             "date": "",
             "public": true,
             "location": { "address" : {"p": "","v": "","cp": "","r": "","n": 0}, "coord": {"lat": 0,"lng": 0}},
             'imageUrl': '',
             'infoFile': '',
-            'loading' : false
+            'loading' : false,
         };
         this.handlePicture = this.handlePicture.bind(this);
         this.updateLocation = this.updateLocation.bind(this);
     }
     updateLocation(val){
-        console.log("Update : ", val)
         let location = {
                 "address" : {
                     "p": val.addressObj.address_components[5]  ? val.addressObj.address_components[5].long_name : "Inconnue",
@@ -42,6 +42,10 @@ class CreateEvent extends Component {
                 }
         }
         this.setState({'location':location})
+    }
+
+    updateEventPlaylist = (playlist) => {
+        this.setState({playlist:playlist})
     }
 
 	handleSubmit = event => {
@@ -74,7 +78,7 @@ class CreateEvent extends Component {
     }
 
     handleChangeDate = (date, dateString) => {
-        this.setState({'date_creation': dateString})
+        this.setState({'event_date': dateString})
     }
 
     info = (text) => {
@@ -115,91 +119,99 @@ class CreateEvent extends Component {
         const {Footer,Content } = Layout;
         return (
             <Layout>
-            <Content>
-                <Row>
-                    <Col span={8}></Col>
-                    <Col span={8}>
-                        <div style={{'margin': '0 0 0 25% '}}>
-                            <Upload
-                                    name="file"
-                                    listType="picture-card"
-                                    className="avatar-uploader"
-                                    showUploadList={false}
-                                    beforeUpload={this.beforeUpload}
-                                    onChange={this.handlePicture}
-                                >
-                                {this.state.imageUrl ? <img src={this.state.imageUrl} alt="avatar" /> : this.uploadButton}
-                            </Upload>
-                        </div>
-                    </Col>
-                    <Col span={8}></Col>
-                </Row>
-                 <Divider />
-                <Row>
-                    <Col span={8}></Col>
-                    <Col span={8}>
-                        <Input placeHolder="Titre de l'évènement : " name= "title" value={this.state.title} onChange={this.handleChange}/>
-                    </Col>
-                    <Col span={8}></Col>
-                </Row>
-                <Row>
-                    <Col span={5}></Col>
-                    <Col span={14}>
-                        <Input.TextArea  placeHolder="Descriptif de l'évènement : " name= "description" value={this.state.description} onChange={this.handleChange}/> 
-                    </Col>
-                    <Col span={5}></Col>
-                </Row>
-                <Divider />
-                <Row>
-                    <Col span={8}></Col>
-                    <Col span={8}>
-                        <Select style={{'margin': '0 0 0 25% '}} name= "public" value={this.state.public ? "true" : "false"} onChange={this.handleChange}>
-                            <Select.Option value='true' >Public</Select.Option>
-                            <Select.Option value='false'>Privé</Select.Option>
-                        </Select>
-                    </Col>
-                    <Col span={8}></Col>
-                </Row>
-                <Divider />
-                <Row>
-                    <Col span={8}></Col>
-                    <Col span={8}>
-                        <DatePicker  style={{'margin': '0 0 0 25% '}} onChange={this.handleChangeDate} />
-                    </Col>
-                    <Col span={8}></Col>
-                </Row>
-                <Divider />
-                <Row>
-                    <Col span={5}></Col>
-                    <Col span={14}>
-                        <LocationSearchInput state={this.props.state} updateLocation={this.updateLocation} />
-                    </Col>
-                    <Col span={5}></Col>
-                </Row>
-                <Divider />
-                <Row>
-                    <Col span={5}></Col>
-                    <Col span={14}>
-                        <Input.Search
-                            placeholder="Ajouter une playlist"
-                            onSearch={value => console.log(value)}
-                        />
-                    </Col>
-                    <Col span={5}></Col>
-                </Row>
-                <Divider />
-                <Row>
-                    <Col span={8}></Col>
-                    <Col span={8}>
-                        <Button style={{'margin': '0 0 0 25% '}} onClick={this.handleSubmit.bind(this)}> Créer l'évènement </Button>
-                    </Col>
-                    <Col span={8}></Col>
-                </Row>
+                <Content>
+                    <Row>
+                        <Col span={8}></Col>
+                        <Col span={8}>
+                            <div style={{'margin': '0 0 0 25% '}}>
+                                <Upload
+                                        name="file"
+                                        listType="picture-card"
+                                        className="avatar-uploader"
+                                        showUploadList={false}
+                                        beforeUpload={this.beforeUpload}
+                                        onChange={this.handlePicture}
+                                    >
+                                    {this.state.imageUrl ? <img src={this.state.imageUrl} alt="avatar" /> : this.uploadButton}
+                                </Upload>
+                            </div>
+                        </Col>
+                        <Col span={8}></Col>
+                    </Row>
+                    <Divider />
+                    <Row>
+                        <Col span={8}></Col>
+                        <Col span={8}>
+                            <Input placeholder="Titre de l'évènement : " name= "title" value={this.state.title} onChange={this.handleChange}/>
+                        </Col>
+                        <Col span={8}></Col>
+                    </Row>
+                    <Row>
+                        <Col span={5}></Col>
+                        <Col span={14}>
+                            <Input.TextArea  placeholder="Descriptif de l'évènement : " name= "description" value={this.state.description} onChange={this.handleChange}/> 
+                        </Col>
+                        <Col span={5}></Col>
+                    </Row>
+                    <Divider />
+                    <Row>
+                        <Col span={8}></Col>
+                        <Col span={8}>
+                            <Select style={{'margin': '0 0 0 25% '}} name= "public" value={this.state.public ? "true" : "false"} onChange={this.handleChange}>
+                                <Select.Option value='true' >Public</Select.Option>
+                                <Select.Option value='false'>Privé</Select.Option>
+                            </Select>
+                        </Col>
+                        <Col span={8}></Col>
+                    </Row>
+                    <Divider />
+                    <Row>
+                        <Col span={8}></Col>
+                        <Col span={8}>
+                            <DatePicker  style={{'margin': '0 0 0 25% '}} onChange={this.handleChangeDate} />
+                        </Col>
+                        <Col span={8}></Col>
+                    </Row>
+                    <Divider />
+                    <Row>
+                        <Col span={5}></Col>
+                        <Col span={14}>
+                            <LocationSearchInput state={this.props.state} updateLocation={this.updateLocation} />
+                        </Col>
+                        <Col span={5}></Col>
+                    </Row>
+                    <Divider />
+                    <Row>
+                        <Col span={5}></Col>
+                        <Col span={14}>
+                            <SearchBar state={this.props.state} type="playlist" updateEventPlaylist={this.updateEventPlaylist}/>
+                        </Col>
+                        <Col span={5}></Col>
+                    </Row>
+                    <Row>
+                        <Col span={8}></Col>
+                        <Col span={8}>
+                        {
+                            this.state.playlist && this.state.playlist.id ? <iframe title="deezerplayer" scrolling="no" frameBorder="0" allowtransparency="true" src={"https://www.deezer.com/plugins/player?format=classic&autoplay=false&playlist=true&width=700&height=350&color=007FEB&layout=dark&size=medium&type=playlist&id="
+                            + this.state.playlist.id
+                            + "&app_id=1"} width="700" height="350"></iframe> : null
+                        }
+                        </Col>
+                        <Col span={8}></Col>
+                    </Row>
+                    <Divider />
+                    <Row>
+                        <Col span={8}></Col>
+                        <Col span={8}>
+                            <Button style={{'margin': '0 0 0 25% '}} onClick={this.handleSubmit.bind(this)}> Créer l'évènement </Button>
+                        </Col>
+                        <Col span={8}></Col>
+                    </Row>
 
-            </Content>
-            <Footer>
+                </Content>
+                <Footer>
 
-            </Footer>
+                </Footer>
         </Layout>
         );
   }

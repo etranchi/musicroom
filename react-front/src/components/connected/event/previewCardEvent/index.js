@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Card, Avatar, Icon } from 'antd';
+import { Card, Avatar, Icon, Divider } from 'antd';
 import './styles.css';
+import geolib from 'geolib'
 
 class PreviewCardEvent extends Component {
 	constructor(props) {
@@ -57,14 +58,47 @@ class PreviewCardEvent extends Component {
         }
 
     }
+
+    getDistance(coordA, coordB){
+        const calc = geolib.getDistanceSimple(
+            {latitude: coordA.lat, longitude: coordA.lng},
+            {latitude: coordB.lat, longitude:coordB.lng}
+        );
+        return (calc/1000)
+    }
     
     openCard = (e) => {
         this.props.state.data.event = this.props.event;
         this.props.updateParent({'currentComponent': 'cardEvent', 'data': this.props.state.data})
     }
+
+    componentWillMount = () => {
+        this.distance = this.getDistance(this.props.state.data.userCoord, this.props.event.location.coord).toFixed(0)
+        this.date = this.props.event.event_date ? this.formatDateAnnounce(this.props.event.event_date) : "Inconnue"
+    }
+
+    formatDateAnnounce = (date) => {
+
+        let classicDate = new Date(date).toLocaleDateString('fr-Fr')
+        let timeEvent = new Date(date).getTime();
+        let curTime = new Date(new Date()).getTime()
+        let timeBeforeEvent = timeEvent - curTime;
+        let dayTimeStamp = (3600 * 1000) * 24;
+        let weekTimeStamp = dayTimeStamp * 7;
+
+
+        if (timeBeforeEvent < 0) return "Out dated"
+        if (timeBeforeEvent > weekTimeStamp)return "Le : " + classicDate
+        else if (timeBeforeEvent === weekTimeStamp) return ("In one week")
+        else {
+           let day = timeBeforeEvent / dayTimeStamp
+            if (day > 0) return ('Tomorow')
+            else if (day < 0) return ("Today")
+            else return ("In " + day + 'days')
+        }
+    }
 	render() {
-        let userPicture = this.props.event.creator.facebookId ? this.props.event.creator.picture : "https://192.168.99.100:4242/eventPicture/" + this.props.event.creator.picture
-    
+        const userPicture = this.props.event.creator.facebookId ? this.props.event.creator.picture : "https://192.168.99.100:4242/userPicture/" + this.props.event.creator.picture
         return (
             <Card
                 className="zoomCard"
@@ -75,7 +109,14 @@ class PreviewCardEvent extends Component {
                 <Card.Meta
                 avatar={<Avatar size={116} src={userPicture} />}
                 title= {this.props.event.creator && this.props.event.creator.login ? this.props.event.creator.login : "Aucun" }
-                description={ this.props.event.date_creation ? this.props.event.date_creation :  " A venir ... " }
+                description=
+                {
+                    <div>
+                        <p style={{textAlign:'center'}}>{this.date}</p>
+                        <Divider />
+                        <p style={{textAlign:'center'}}>À {this.distance} km</p>
+                    </div>
+                }
                 />
 
             </Card>

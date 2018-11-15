@@ -48,7 +48,7 @@ class LocationSearchInput extends Component {
 			return (
         <div>
           <PlacesAutocomplete
-            value={this.state.address}
+            value={this.state.address ? this.state.address : ''}
             onChange={this.handleChange}
             onSelect={this.handleSelect.bind(this)}
           >

@@ -19,8 +19,7 @@ class ListEvent extends Component {
 	isUser = (tab) => 
     {
         for (let i = 0; i < tab.length; i++) {
-			console.log(tab[i].email, this.props.state.user.email)
-            if (tab[i].email == this.props.state.user.email)
+            if (tab[i].email === this.props.state.user.email)
                 return true;
         }
         return false;
@@ -31,11 +30,11 @@ class ListEvent extends Component {
 
 		for (let i = 0; i < this.props.state.data.events.length; i++)
 		{
-			if (type == 'myEvents' && (this.props.state.data.events[i].creator.email == this.props.state.user.email))
+			if (type === 'myEvents' && (this.props.state.data.events[i].creator.email === this.props.state.user.email))
 				ret.push(this.props.state.data.events[i])
-			if (type == 'friendEvents' && (this.isUser(this.props.state.data.events[i].members) || this.isUser(this.props.state.data.events[i].adminMembers)))
+			if (type === 'friendEvents' && (this.isUser(this.props.state.data.events[i].members) || this.isUser(this.props.state.data.events[i].adminMembers)))
 				ret.push(this.props.state.data.events[i])
-			if (type == 'allEvents' && (!this.isUser(this.props.state.data.events[i].members) && !this.isUser(this.props.state.data.events[i].adminMembers)))
+			if (type === 'allEvents' && (!this.isUser(this.props.state.data.events[i].members) && !this.isUser(this.props.state.data.events[i].adminMembers)))
 				ret.push(this.props.state.data.events[i])
 		}
 		return ret;
@@ -52,7 +51,7 @@ class ListEvent extends Component {
 	
 	render() {
 		const { Footer, Content } = Layout;
-		if (this.state.loading == false) 
+		if (!this.state.loading) 
 			return ( <p> OUPSI </p>)
 		else {
 			return (

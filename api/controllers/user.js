@@ -74,10 +74,11 @@ exports.getUsers = async (req, res) => {
 
 exports.postUser = async (req, res) => {
 	try {
-		const { error } = validateUser(req.body);
 		// TODO ? A VOIR ? ADD PICTURE IN PUT?
 		if (req.body.body)
 			req.body = JSON.parse(req.body.body)
+		console.log("BODY : ", req.body)
+		const { error } = validateUser(req.body);
 		if (req.file && req.file.filename) {
 			req.body.picture = req.file.filename
 		}
@@ -148,15 +149,16 @@ exports.deleteUserById = async (req, res) => {
 }
 
 exports.modifyUserById = async (req, res) => {
+	req.body = JSON.parse(req.body.body);
 	try {
-		console.log(req.body)
 		if (!req.body)
 			return res.status(204);
-		let { error } = validateUpdateUser(req.body);
-		if (error) {
-			console.error("Error modifyUserById : invalid user format.");
-			throw new Error('Bad request' + error.details[0].message);
-		}
+		if (req.file && req.file.filename) req.body.picture = req.file.filename
+		// let { error } = validateUpdateUser(req.body);
+		// if (error) {
+		// 	console.error("Error modifyUserById : invalid user format.");
+		// 	throw new Error('Bad request' + error.details[0].message);
+		// }
 		let user = req.body
 		user = Utils.filter(model.schema.obj, user, 1)
 		if (user.password)
