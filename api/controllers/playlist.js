@@ -76,6 +76,7 @@ module.exports = {
 		}
 	},
 	postPlaylist: async (req, res) => {
+		console.log('posting playlist');
 		try {
 			req.body.idUser = req.user._id
 			if (!req.body.creator)
@@ -87,7 +88,8 @@ module.exports = {
 					type: 'user'
 				}
 			}
-			res.status(201).json(await playlistModel.create(req.body));
+			let playlist = await playlistModel.create(req.body);
+			res.status(201).json(playlist);
 		} catch (err) {
 			console.log(err)
 			res.status(400).json(err);
