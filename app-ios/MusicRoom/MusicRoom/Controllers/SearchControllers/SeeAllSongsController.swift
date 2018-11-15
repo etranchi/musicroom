@@ -46,7 +46,6 @@ class SeeAllSongsController: UICollectionViewController, UICollectionViewDelegat
         self.collectionView!.register(SongCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         collectionView?.alwaysBounceVertical = true
         collectionView?.backgroundColor = UIColor(white: 0.1, alpha: 1)
-        
     }
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {

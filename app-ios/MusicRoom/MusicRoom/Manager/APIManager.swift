@@ -27,6 +27,28 @@ class APIManager: NSObject, URLSessionDelegate {
             completion(album)
         }
     }
+    
+    func searchAlbums(_ search: String, completion: @escaping ([Album]) -> ()) {
+        let w = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+        
+        let albumsUrl = self.url + "search/album?q=\(w)"
+        var albumsRequest = URLRequest(url: URL(string: albumsUrl)!)
+        albumsRequest.httpMethod = "GET"
+        self.searchAll(AlbumData.self, request: albumsRequest, completion: { (albumData) in
+            completion(albumData.data)
+        })
+    }
+    
+    func searchTracks(_ search: String, completion: @escaping ([Track]) -> ()) {
+        let w = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+        
+        let tracksUrl = self.url + "search/track?q=\(w)"
+        var tracksRequest = URLRequest(url: URL(string: tracksUrl)!)
+        tracksRequest.httpMethod = "GET"
+        self.searchAll(TrackData.self, request: tracksRequest, completion: { (trackData) in
+            completion(trackData.data)
+        })
+    }
 
     
     func login(_ forg: String, _ token : String, completion: @escaping ( (DataUser) -> ())) {

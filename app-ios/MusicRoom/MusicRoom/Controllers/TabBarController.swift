@@ -16,7 +16,7 @@ class TabBarController: UITabBarController {
     var offsetY: CGFloat = 0.0
     let imageInsets = UIEdgeInsets(top: 10, left: 0, bottom: -10, right: 0)
     let tabViewController0 = PlaylistController(collectionViewLayout: UICollectionViewFlowLayout())
-    let tabViewController1 = SearchController(collectionViewLayout: UICollectionViewFlowLayout())
+    let tabViewController1 = SearchController()
     let tabViewController2 = LibraryController()
     let minimizedPlayer = MinimizedPlayerView()
     let playerView = playerController.view!
@@ -63,7 +63,6 @@ class TabBarController: UITabBarController {
             return
         }
         playerController.tracks = tracks
-        tabViewController1.trackListChanged = false
         playerController.index = index
         playerController.viewDidPop()
         playerController.loadTrackInplayer()
@@ -74,9 +73,8 @@ class TabBarController: UITabBarController {
     fileprivate func setupTabBarController() {
         playerController.rootViewController = self
         playerController.minimizedPlayer = minimizedPlayer
-        self.addChildViewController(playerController)
-        // addChild(playerController)
-        //addChildViewController(playerController)
+        //addChild(playerController)
+        addChildViewController(playerController)
         tabBar.removeFromSuperview()
         view.addSubview(playerView)
         view.addSubview(minimizedPlayer)
