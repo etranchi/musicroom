@@ -31,12 +31,14 @@ class SeeAllSongsController: UICollectionViewController, UICollectionViewDelegat
         super.viewWillDisappear(animated)
         
         title = ""
+        navigationController?.navigationBar.topItem?.title = "Search"
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         title = "\"\(searchText)\" in Songs"
+        navigationController?.navigationBar.topItem?.title = ""
     }
     
     override func viewDidLoad() {
