@@ -10,13 +10,9 @@ import UIKit
 
 class LibraryController: UITableViewController {
 
-    var user : MyUser?
-    var userManager : UserManager?
     
     @objc func handleWheel() {
         let vc = SettingsController()
-        vc.user = user
-        vc.userManager = userManager
         self.navigationController?.pushViewController(vc, animated: true)
     }
     

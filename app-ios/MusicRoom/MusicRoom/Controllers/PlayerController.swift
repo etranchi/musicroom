@@ -32,7 +32,6 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     
     let request = DZRRequestManager.default().sub()
     var cancelable: DZRCancelable?
-    var deezer : DeezerManager?
     var track: DZRTrack?
     
     var coverContainerView: CoverContainerView?
@@ -188,17 +187,6 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     
     @objc func handleHide() {
         rootViewController?.animatedHidePlayer()
-    }
-    
-    fileprivate func reloadView() {
-        if let cu = (UIApplication.shared.keyWindow?.rootViewController as? TabBarController)?.selectedViewController as? CustomNavigationController {
-            if let co = cu.topViewController as? UICollectionViewController {
-                co.collectionView?.reloadData()
-            }
-            if let ta = cu.topViewController as? UITableViewController {
-                ta.tableView.reloadData()
-            }
-        }
     }
     
     func setupTrack(indexOffset: Int) {

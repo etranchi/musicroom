@@ -8,27 +8,38 @@
 
 import UIKit
 
-class SettingsController: UIViewController {
+class SettingsController: UIViewController, DeezerSessionDelegate {
 
-    var user : MyUser?
-    var userManager : UserManager?
     var deezerButton : UIButton?
-    
+
     @objc func handleDeezer() {
         guard let manager = DeezerManager.sharedInstance.deezerConnect else { return }
-        if user?.deezer_token == nil {
+        manager.sessionDelegate = self
+        deezerManager.deezerConnect = manager
+        if userManager.currentUser?.deezer_token == nil {
             manager.authorize([DeezerConnectPermissionEmail, DeezerConnectPermissionBasicAccess, DeezerConnectPermissionDeleteLibrary, DeezerConnectPermissionManageLibrary, DeezerConnectPermissionOfflineAccess, DeezerConnectPermissionListeningHistory])
-
         } else {
             manager.logout()
-            user?.deezer_token = nil
-            userManager?.save()
+            userManager.currentUser?.deezer_token = nil
+            userManager.save()
+            updateButton()
         }
-        updateButton()
+    }
+    func deezerDidLogin() {
+        print(userManager.currentUser)
+        let user = userManager.currentUser
+        if user != nil {
+            print(deezerManager.deezerConnect?.accessToken)
+            user!.deezer_token = deezerManager.deezerConnect?.accessToken
+            userManager.save()
+            updateButton()
+            
+        }
     }
     
     func updateButton() {
-        let text = user?.deezer_token == nil ? "Link with Deezer" : "Unlink with Deezer"
+        print("update")
+        let text = userManager.currentUser?.deezer_token == nil ? "Link with Deezer" : "Unlink with Deezer"
         deezerButton!.setAttributedTitle(NSAttributedString(string: text, attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
     }
     override func viewDidLoad() {

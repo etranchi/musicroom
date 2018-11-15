@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		7701FE6B21998D8400B721EB /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7701FE6A21998D8300B721EB /* GLKit.framework */; };
 		77140AC1219C616D00270002 /* MyUser+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77140AC0219C616C00270002 /* MyUser+CoreDataProperties.swift */; };
+		772E7702219DC78C0005AE33 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 772E7701219DC78C0005AE33 /* MapKit.framework */; };
+		772E7704219DC7CB0005AE33 /* MapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772E7703219DC7CB0005AE33 /* MapController.swift */; };
+		772E7706219DCB4C0005AE33 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 772E7705219DCB4C0005AE33 /* CoreLocation.framework */; };
 		7743C23B2190587E002CC508 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7743C23A2190587E002CC508 /* Playlist.swift */; };
 		7743C2472190A03A002CC508 /* MyUser+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7743C2452190A03A002CC508 /* MyUser+CoreDataClass.swift */; };
 		7743C24A2190A23C002CC508 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7743C2492190A23C002CC508 /* UserManager.swift */; };
@@ -21,6 +24,7 @@
 		77F5479621932172001B2901 /* AuthenticationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5479521932172001B2901 /* AuthenticationController.swift */; };
 		77F547982193257B001B2901 /* RegisterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F547972193257B001B2901 /* RegisterController.swift */; };
 		77F5479A21932CB2001B2901 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5479921932CB2001B2901 /* User.swift */; };
+		77FA6AF4219DDC6200884428 /* EventController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FA6AF3219DDC6200884428 /* EventController.swift */; };
 		7904E4462193A9EA009ECE1D /* PlayerButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7904E4452193A9EA009ECE1D /* PlayerButtonsView.swift */; };
 		791358A3219D605500F30BF9 /* SongsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791358A2219D605500F30BF9 /* SongsCollectionView.swift */; };
 		7920E79A218F0BF9008D1DD1 /* CoverContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7920E799218F0BF9008D1DD1 /* CoverContainerView.swift */; };
@@ -66,7 +70,6 @@
 		8F364B8B217E5B9100B57FC8 /* MusicRoom.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8F364B89217E5B9100B57FC8 /* MusicRoom.xcdatamodeld */; };
 		8F364B8D217E5B9200B57FC8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F364B8C217E5B9200B57FC8 /* Assets.xcassets */; };
 		8F364B90217E5B9200B57FC8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F364B8E217E5B9200B57FC8 /* LaunchScreen.storyboard */; };
-		8FEFE2952191DC420002E966 /* PlaylistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FEFE2942191DC420002E966 /* PlaylistCell.swift */; };
 		8FEFE2972191E2CD0002E966 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FEFE2962191E2CD0002E966 /* LoginController.swift */; };
 		E997985E32780E8DC3179DD4 /* Pods_MusicRoom.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC674AABD535B082079B3A49 /* Pods_MusicRoom.framework */; };
 /* End PBXBuildFile section */
@@ -75,6 +78,9 @@
 		7701FE6A21998D8300B721EB /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		77140AC0219C616C00270002 /* MyUser+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "MyUser+CoreDataProperties.swift"; path = "/Users/etranchi/MusicRoom/app-ios/MusicRoom/MusicRoom/CoreData/MyUser+CoreDataProperties.swift"; sourceTree = "<absolute>"; };
 		77140AC2219C63B800270002 /* MusicRoom 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MusicRoom 2.xcdatamodel"; sourceTree = "<group>"; };
+		772E7701219DC78C0005AE33 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		772E7703219DC7CB0005AE33 /* MapController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapController.swift; sourceTree = "<group>"; };
+		772E7705219DCB4C0005AE33 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		7743C23A2190587E002CC508 /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
 		7743C2452190A03A002CC508 /* MyUser+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MyUser+CoreDataClass.swift"; sourceTree = "<group>"; };
 		7743C2492190A23C002CC508 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
@@ -92,6 +98,7 @@
 		77F5479521932172001B2901 /* AuthenticationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationController.swift; sourceTree = "<group>"; };
 		77F547972193257B001B2901 /* RegisterController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterController.swift; sourceTree = "<group>"; };
 		77F5479921932CB2001B2901 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		77FA6AF3219DDC6200884428 /* EventController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventController.swift; sourceTree = "<group>"; };
 		7904E4452193A9EA009ECE1D /* PlayerButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerButtonsView.swift; sourceTree = "<group>"; };
 		791358A2219D605500F30BF9 /* SongsCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongsCollectionView.swift; sourceTree = "<group>"; };
 		7920E799218F0BF9008D1DD1 /* CoverContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverContainerView.swift; sourceTree = "<group>"; };
@@ -183,6 +190,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				772E7706219DCB4C0005AE33 /* CoreLocation.framework in Frameworks */,
+				772E7702219DC78C0005AE33 /* MapKit.framework in Frameworks */,
 				7701FE6B21998D8400B721EB /* GLKit.framework in Frameworks */,
 				7744A6592195E4220034F40E /* libz.tbd in Frameworks */,
 				7744A6572195E40D0034F40E /* libc++.tbd in Frameworks */,
@@ -202,6 +211,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		772E7700219D87360005AE33 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				8FEFE2942191DC420002E966 /* PlaylistCell.swift */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		7743C23C21909F09002CC508 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
@@ -235,13 +252,13 @@
 			path = Authentication;
 			sourceTree = "<group>";
 		};
-		79433407219308580056D261 /* SearchControllers */ = {
+		77FA6AF2219DDC3500884428 /* Map */ = {
 			isa = PBXGroup;
 			children = (
-				79CDCF24218873D20095CC63 /* SearchController.swift */,
-				794334052192F9E50056D261 /* SeeAllSongsController.swift */,
+				772E7703219DC7CB0005AE33 /* MapController.swift */,
+				77FA6AF3219DDC6200884428 /* EventController.swift */,
 			);
-			path = SearchControllers;
+			path = Map;
 			sourceTree = "<group>";
 		};
 		796ECB38218DC9E200321B3B /* Views */ = {
@@ -279,6 +296,7 @@
 		79CDCF1A21886EE40095CC63 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				77FA6AF2219DDC3500884428 /* Map */,
 				77F54792219320B1001B2901 /* Authentication */,
 				799C8BFA219029A3003868A2 /* UICustomisation */,
 				79CDCF1E218870F70095CC63 /* LoadingController.swift */,
@@ -366,6 +384,8 @@
 		8F18988A217F230D00CE1A8D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				772E7705219DCB4C0005AE33 /* CoreLocation.framework */,
+				772E7701219DC78C0005AE33 /* MapKit.framework */,
 				7701FE6A21998D8300B721EB /* GLKit.framework */,
 				7744A6582195E4220034F40E /* libz.tbd */,
 				7744A6562195E40D0034F40E /* libc++.tbd */,
@@ -406,6 +426,7 @@
 				8F364B80217E5B9100B57FC8 /* Products */,
 				8F18988A217F230D00CE1A8D /* Frameworks */,
 				ADBFE756833B4B20F11FB7AC /* Pods */,
+				772E7700219D87360005AE33 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -616,6 +637,7 @@
 				8FEFE2972191E2CD0002E966 /* LoginController.swift in Sources */,
 				796ECB3A218DCAE400321B3B /* ProgressCircle.swift in Sources */,
 				799DA43D218D3ED300C803E3 /* AlbumCell.swift in Sources */,
+				77FA6AF4219DDC6200884428 /* EventController.swift in Sources */,
 				79B4DE73218B4637001031D2 /* SearchBarCell.swift in Sources */,
 				79A3F9A92193E602007CEB86 /* PlayerManager.swift in Sources */,
 				799DA43B218D3E7F00C803E3 /* SongCell.swift in Sources */,
@@ -637,8 +659,8 @@
 				77F5479A21932CB2001B2901 /* User.swift in Sources */,
 				799DA439218D3D8500C803E3 /* ArtistCell.swift in Sources */,
 				791358A3219D605500F30BF9 /* SongsCollectionView.swift in Sources */,
+				772E7704219DC7CB0005AE33 /* MapController.swift in Sources */,
 				79CDCF23218873300095CC63 /* PlaylistController.swift in Sources */,
-				8FEFE2952191DC420002E966 /* PlaylistCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -885,7 +907,7 @@
 				77140AC2219C63B800270002 /* MusicRoom 2.xcdatamodel */,
 				8F364B8A217E5B9100B57FC8 /* MusicRoom.xcdatamodel */,
 			);
-			currentVersion = 8F364B8A217E5B9100B57FC8 /* MusicRoom.xcdatamodel */;
+			currentVersion = 77140AC2219C63B800270002 /* MusicRoom 2.xcdatamodel */;
 			path = MusicRoom.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

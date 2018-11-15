@@ -9,7 +9,6 @@
 import UIKit
 
 class AuthenticationController: UIViewController {
-    let userManager : UserManager = UserManager()
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.

@@ -15,12 +15,14 @@ import GoogleSignIn
 import Google
 import GoogleToolboxForMac
 
+var deezerManager = DeezerManager()
+var apiManager = APIManager()
+var userManager = UserManager()
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    var userManager = UserManager()
+
     var window: UIWindow?
-    let deezerManager = DeezerManager()
-    let apiManager = APIManager()
     
     var orientationLock = UIInterfaceOrientationMask.all
     
@@ -37,6 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //get the token if loggedin -> go home else go loginPage
         window = UIWindow()
         window?.makeKeyAndVisible()
+        deezerManager.startDeezer()
         let user = userManager.getAllUsers()
         if user.count == 0 {
             let nav = CustomNavigationController(rootViewController: AuthenticationController())
@@ -45,10 +48,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         else {
             let nav = TabBarController()
             userManager.currentUser = user[0]
-            deezerManager.userManager = userManager
-            nav.deezer = deezerManager
-            nav.user = nav.deezer?.user
-            print(nav.user)
             window?.rootViewController = nav
         }
         return true

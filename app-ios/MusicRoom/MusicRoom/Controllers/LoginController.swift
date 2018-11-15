@@ -13,8 +13,6 @@ import GoogleSignIn
 import GoogleToolboxForMac
 
 class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate ,GIDSignInUIDelegate {
-    var apiManager = APIManager()
-    var userManager = UserManager()
     
     @objc func loginButtonClicked() {
         let loginManager = LoginManager()
@@ -25,13 +23,12 @@ class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate 
             case .cancelled:
                 print("User cancelled login.")
             case .success(let grantedPermissions, let declinedPermissions, let accessToken):
-                self.apiManager.login("facebook", accessToken.authenticationToken, completion: { (data) in
-                    let user = self.userManager.newUser()
+                apiManager.login("facebook", accessToken.authenticationToken, completion: { (data) in
+                    let user = userManager.newUser()
                     user.token = data.token
                     user.login = data.user.login
-                    self.userManager.save()
+                    userManager.save()
                     let nav = TabBarController()
-                    nav.user = user
                     self.present(nav, animated: true, completion: nil)
                 })
             }
@@ -50,12 +47,11 @@ class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate 
             let familyName = user.profile.familyName
             let email = user.profile.email
             apiManager.login("google", user.authentication.accessToken, completion:  { (data) in
-                let user = self.userManager.newUser()
+                let user = userManager.newUser()
                 user.token = data.token
                 user.login = data.user.login
-                self.userManager.save()
+                userManager.save()
                 let nav = TabBarController()
-                nav.user = user
                 self.present(nav, animated: true, completion: nil)
             })
         }
