@@ -12,6 +12,8 @@ import CoreLocation
 
 class MapController: UIViewController {
     let locationManager = CLLocationManager()
+    var resultSearchController:UISearchController? = nil
+    var selectedPin:MKPlacemark? = nil
     
     let mapView : MKMapView = {
         let mk = MKMapView()
@@ -36,7 +38,27 @@ class MapController: UIViewController {
         mapView.showsUserLocation = true
         mapView.setCenter(mapView.userLocation.coordinate, animated: true)
         self.view = mapView
+        let locationSearchTable = LocationSearchController()
+        resultSearchController = UISearchController(searchResultsController: locationSearchTable)
+        resultSearchController?.searchResultsUpdater = locationSearchTable as UISearchResultsUpdating
+        let searchBar = resultSearchController!.searchBar
+        searchBar.sizeToFit()
+        searchBar.placeholder = "Search for places"
+        resultSearchController?.isActive = true
+        navigationItem.titleView = resultSearchController?.searchBar
+
+        resultSearchController?.hidesNavigationBarDuringPresentation = false
+        resultSearchController?.dimsBackgroundDuringPresentation = true
+        definesPresentationContext = true
+        
+        locationSearchTable.mapView = mapView
+        
+        locationSearchTable.handleMapSearchDelegate = self
         // Do any additional setup after loading the view.
+    }
+    
+    func printToastMsg() {
+        ToastView.shared.short(self.view, txt_msg: "Event created")
     }
     
     @objc func addEvent() {
@@ -87,7 +109,7 @@ extension MapController : CLLocationManagerDelegate {
 }
 
 extension MapController : MKMapViewDelegate {
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+    internal func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if annotation is MKUserLocation {
             //return nil so map view draws "blue dot" for standard user location
             return nil
@@ -102,7 +124,7 @@ extension MapController : MKMapViewDelegate {
         pinView?.leftCalloutAccessoryView = button
         return pinView
     }
-    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+    internal func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let renderer = MKPolylineRenderer(overlay: overlay)
         renderer.strokeColor = UIColor(red: 17.0/255.0, green: 147.0/255.0, blue: 255.0/255.0, alpha: 1)
         renderer.lineWidth = 5.0
@@ -110,4 +132,24 @@ extension MapController : MKMapViewDelegate {
     }
 }
 
+
+extension MapController: HandleMapSearch {
+    func dropPinZoomIn(placemark:MKPlacemark){
+        // cache the pin
+        selectedPin = placemark
+        // clear existing pins
+        mapView.removeAnnotations(mapView.annotations)
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = placemark.coordinate
+        annotation.title = placemark.name
+        if let city = placemark.locality,
+            let state = placemark.administrativeArea {
+            annotation.subtitle = "\(city) \(state)"
+        }
+        mapView.addAnnotation(annotation)
+        let span = MKCoordinateSpanMake(0.05, 0.05)
+        let region = MKCoordinateRegionMake(placemark.coordinate, span)
+        mapView.setRegion(region, animated: true)
+    }
+}
 

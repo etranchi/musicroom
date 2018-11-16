@@ -21,6 +21,8 @@
 		778BF9A921832CB800448FE6 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778BF9A821832CB800448FE6 /* Track.swift */; };
 		77AF56C22199ACF300E5FBB9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 77AF56C12199ACF200E5FBB9 /* GoogleService-Info.plist */; };
 		77B444762181CD0200B3F536 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B444752181CD0200B3F536 /* APIManager.swift */; };
+		77F2F50A219F101100CC9E8D /* LocationSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F2F509219F101100CC9E8D /* LocationSearchController.swift */; };
+		77F2F50C219F431800CC9E8D /* ToastMsg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F2F50B219F431700CC9E8D /* ToastMsg.swift */; };
 		77F5479621932172001B2901 /* AuthenticationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5479521932172001B2901 /* AuthenticationController.swift */; };
 		77F547982193257B001B2901 /* RegisterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F547972193257B001B2901 /* RegisterController.swift */; };
 		77F5479A21932CB2001B2901 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5479921932CB2001B2901 /* User.swift */; };
@@ -95,6 +97,8 @@
 		778BF9A821832CB800448FE6 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		77AF56C12199ACF200E5FBB9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		77B444752181CD0200B3F536 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
+		77F2F509219F101100CC9E8D /* LocationSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchController.swift; sourceTree = "<group>"; };
+		77F2F50B219F431700CC9E8D /* ToastMsg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastMsg.swift; sourceTree = "<group>"; };
 		77F5479521932172001B2901 /* AuthenticationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationController.swift; sourceTree = "<group>"; };
 		77F547972193257B001B2901 /* RegisterController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterController.swift; sourceTree = "<group>"; };
 		77F5479921932CB2001B2901 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -257,6 +261,7 @@
 			children = (
 				772E7703219DC7CB0005AE33 /* MapController.swift */,
 				77FA6AF3219DDC6200884428 /* EventController.swift */,
+				77F2F509219F101100CC9E8D /* LocationSearchController.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -281,6 +286,7 @@
 			children = (
 				7991484121889F8D00120E2D /* Extensions.swift */,
 				7970B6EE2190C3980007F831 /* AppUtility.swift */,
+				77F2F50B219F431700CC9E8D /* ToastMsg.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -626,7 +632,9 @@
 				7743C2472190A03A002CC508 /* MyUser+CoreDataClass.swift in Sources */,
 				79DD4A79219C3F04005578EB /* SearchController.swift in Sources */,
 				79CDCF1F218870F70095CC63 /* LoadingController.swift in Sources */,
+				77F2F50C219F431800CC9E8D /* ToastMsg.swift in Sources */,
 				7743C24A2190A23C002CC508 /* UserManager.swift in Sources */,
+				77F2F50A219F101100CC9E8D /* LocationSearchController.swift in Sources */,
 				7904E4462193A9EA009ECE1D /* PlayerButtonsView.swift in Sources */,
 				77F547982193257B001B2901 /* RegisterController.swift in Sources */,
 				79B15ED0218C700C00B84BCB /* Album.swift in Sources */,
