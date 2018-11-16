@@ -20,8 +20,24 @@ class SearchBar extends Component {
 			this.setState({'value': value, 'list': []})
 		else if (this.props.type === 'member' || this.props.type === 'admin')
 			this.fetchListUser(value);
+		else if (this.props.type === 'tracks')
+			this.fetchTracks(value);
 		else
 			this.fetchListPlaylist(value);
+	}
+
+	fetchTracks = (value) => {
+		this.setState({value:value}, () => {
+				axios.get('https://192.168.99.100:4242/search/track?q='+ value)
+				.then((resp) => {
+					console.log(resp);
+					this.setState({'list': resp.data.data || []});
+				})
+				.catch((err) => {
+					console.log('tracks error');
+					console.log(err);
+				})
+		})
 	}
 
 	fetchListPlaylist = (value) => {
@@ -97,8 +113,21 @@ class SearchBar extends Component {
 	}
 
 	updateEventMember = (item) => {
+		
 		this.props.updateEventMember(item, this.props.type);
 	}
+
+	addTrack = (item) => {
+		this.setState({
+			value: '',
+			list: [],
+			glbUserList: [],
+			position: 0
+		}, () => {
+			this.props.addTrack(item)		
+		})
+	}
+
 	render() {
 		const { list } = this.state;
 		const children = list.map((item, key) => 
@@ -111,13 +140,17 @@ class SearchBar extends Component {
 					this.props.type === 'playlist' ?
 						<AutoComplete.Option  onClick={(e) => this.props.updateEventPlaylist(item)} key={item.id}>{item.title}</AutoComplete.Option>
 						: 
-						<AutoComplete.Option onClick={(e) => this.props.updateParent({'currentComponent': 'tracks', 'id': item._id || item.id})} key={item.id}>{item.title}</AutoComplete.Option>
+						this.props.type === 'tracks' ?
+							<AutoComplete.Option onClick={(e) => this.addTrack(item)} key={item.id}> {item.artist.name} - {item.title}</AutoComplete.Option>
+							:
+							<AutoComplete.Option onClick={(e) => this.props.updateParent({'currentComponent': 'tracks', 'id': item._id || item.id})} key={item.id}>{item.title}</AutoComplete.Option>
 			)
 		});
 		return (
 			<AutoComplete
 				allowClear={true}
 				style={{ width: 200 }}
+				value={this.state.value}
 				onSelect={this.onSelect}
 				onSearch={this.fetchListController}>
 					{children}

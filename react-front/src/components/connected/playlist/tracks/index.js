@@ -26,7 +26,6 @@ class Tracks extends Component {
 		})
 	}
 	render() {
-		console.log(this.props);
 		
 		if( this.state.isloading === true ) {
 			return (
