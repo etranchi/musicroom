@@ -3,7 +3,7 @@ import LocationSearchInput from '../locationSearchInput'
 import './styles.css';
 import axios from 'axios'
 import SearchBar from '../../searchbar'
-import { Icon, Button, Input, DatePicker, Select, Upload, message, Divider, Layout, Col, Row} from 'antd';
+import { Avatar, Card, Icon, Button, Input, DatePicker, Select, Upload, message, Divider, Layout, Col, Row} from 'antd';
 
 class CreateEvent extends Component {
 	constructor(props) {
@@ -19,7 +19,7 @@ class CreateEvent extends Component {
             "event_date": new Date(),
             "date": "",
             "public": true,
-            "location": { "address" : {"p": "","v": "","cp": "","r": "","n": 0}, "coord": {"lat": 0,"lng": 0}},
+            "location": { "address" : {"p": "","v": "","cp": "","r": "","n": 0}, "coord": {}},
             'imageUrl': '',
             'infoFile': '',
             'loading' : false,
@@ -47,11 +47,16 @@ class CreateEvent extends Component {
     updateEventPlaylist = (playlist) => {
         this.setState({playlist:playlist})
     }
-
+    info = (text) => {
+        message.info(text);
+      };
 	handleSubmit = event => {
+        if (!this.state.description || !this.state.title || !this.state.event_date || !this.state.location.coord)
+            this.info("Error input invalid")
         event.preventDefault();
         let data = new FormData();
-        data.append('file', this.state.infoFile.file.originFileObj);
+        if (this.state.infoFile && this.state.infoFile.file && this.state.infoFile.file.originFileObj)
+         data.append('file', this.state.infoFile.file.originFileObj);
         delete this.state.imageUrl
         delete this.state.loading
         delete this.state.infoFile
@@ -108,6 +113,10 @@ class CreateEvent extends Component {
         return isJPG && isLt2M;
       }
 
+    resetPicture = () => {
+        console.log("JE SUIS IC ")
+        this.setState({infoFile:null, imageUrl: null, loadind:false})
+    }
 	render() {
         console.log(localStorage.getItem('token'))
         this.uploadButton = (
@@ -120,92 +129,109 @@ class CreateEvent extends Component {
         return (
             <Layout>
                 <Content>
-                    <Row>
-                        <Col span={8}></Col>
-                        <Col span={8}>
-                            <div style={{'margin': '0 0 0 25% '}}>
-                                <Upload
-                                        name="file"
-                                        listType="picture-card"
-                                        className="avatar-uploader"
-                                        showUploadList={false}
-                                        beforeUpload={this.beforeUpload}
-                                        onChange={this.handlePicture}
-                                    >
-                                    {this.state.imageUrl ? <img src={this.state.imageUrl} alt="avatar" /> : this.uploadButton}
-                                </Upload>
-                            </div>
-                        </Col>
-                        <Col span={8}></Col>
-                    </Row>
-                    <Divider />
+                    {
+                        this.state.imageUrl ?
+                            null
+                            :
+                            <Row>
+                                <Col span={8}></Col>
+                                <Col span={8}>
+                                    <div style={{'margin': '0 0 0 12% '}}>
+                                        <Upload
+                                                name="file"
+                                                listType="picture-card"
+                                                className="avatar-uploader"
+                                                showUploadList={false}
+                                                beforeUpload={this.beforeUpload}
+                                                onChange={this.handlePicture}
+                                            >
+                                            {this.uploadButton}
+                                        </Upload>
+                                    </div>
+                                    <Divider />
+                                </Col>
+                            </Row>
+                    }
+                    {
+                        this.state.imageUrl ?
+                            <Row>
+                                <Col span={8}></Col>
+                                <Col span={8}>
+                                    <div style={{'textAlign': 'center', 'margin': '0 0 0 12% '}}>
+                                        <Card.Meta avatar={ <Avatar  size={448}src={this.state.imageUrl} alt="avatar" />}/>
+                                        <i onClick={() => this.resetPicture()} className="zoomCard fas fa-sync-alt"></i>
+                                    </div>
+                                    <Divider />
+                                </Col>
+                            </Row>
+                            :
+                            null
+                    }
                     <Row>
                         <Col span={8}></Col>
                         <Col span={8}>
                             <Input placeholder="Titre de l'évènement : " name= "title" value={this.state.title} onChange={this.handleChange}/>
                         </Col>
-                        <Col span={8}></Col>
                     </Row>
                     <Row>
                         <Col span={5}></Col>
                         <Col span={14}>
                             <Input.TextArea  placeholder="Descriptif de l'évènement : " name= "description" value={this.state.description} onChange={this.handleChange}/> 
+                            <Divider />
                         </Col>
-                        <Col span={5}></Col>
                     </Row>
-                    <Divider />
                     <Row>
-                        <Col span={8}></Col>
-                        <Col span={8}>
-                            <Select style={{'margin': '0 0 0 25% '}} name= "public" value={this.state.public ? "true" : "false"} onChange={this.handleChange}>
-                                <Select.Option value='true' >Public</Select.Option>
-                                <Select.Option value='false'>Privé</Select.Option>
-                            </Select>
+                        <Col span={11}></Col>
+                        <Col span={2}>
+                            <div style={{'margin': '0 0 0 12% '}}>
+                                <Select  name= "public" value={this.state.public ? "true" : "false"} onChange={this.handleChange}>
+                                    <Select.Option value='true' >Public</Select.Option>
+                                    <Select.Option value='false'>Privé</Select.Option>
+                                </Select>
+                            </div>
+                            <Divider />
                         </Col>
-                        <Col span={8}></Col>
                     </Row>
-                    <Divider />
                     <Row>
-                        <Col span={8}></Col>
-                        <Col span={8}>
-                            <DatePicker  style={{'margin': '0 0 0 25% '}} onChange={this.handleChangeDate} />
+                        <Col span={10}></Col>
+                        <Col span={4}>
+                            <div style={{'margin': '0 0 0 12% '}}>
+                                <DatePicker onChange={this.handleChangeDate} />
+                            </div>
+                            <Divider />
                         </Col>
-                        <Col span={8}></Col>
                     </Row>
-                    <Divider />
                     <Row>
                         <Col span={5}></Col>
                         <Col span={14}>
                             <LocationSearchInput state={this.props.state} updateLocation={this.updateLocation} />
+                            <Divider />
                         </Col>
-                        <Col span={5}></Col>
                     </Row>
-                    <Divider />
                     <Row>
-                        <Col span={5}></Col>
-                        <Col span={14}>
+                        <Col span={10}></Col>
+                        <Col span={4}>
                             <SearchBar state={this.props.state} type="playlist" updateEventPlaylist={this.updateEventPlaylist}/>
                         </Col>
-                        <Col span={5}></Col>
                     </Row>
                     <Row>
-                        <Col span={8}></Col>
-                        <Col span={8}>
+                        <Col span={6}></Col>
+                        <Col span={13}>
                         {
                             this.state.playlist && this.state.playlist.id ? <iframe title="deezerplayer" scrolling="no" frameBorder="0" allowtransparency="true" src={"https://www.deezer.com/plugins/player?format=classic&autoplay=false&playlist=true&width=700&height=350&color=007FEB&layout=dark&size=medium&type=playlist&id="
                             + this.state.playlist.id
                             + "&app_id=1"} width="700" height="350"></iframe> : null
                         }
+                        <Divider />
                         </Col>
-                        <Col span={8}></Col>
                     </Row>
-                    <Divider />
                     <Row>
-                        <Col span={8}></Col>
-                        <Col span={8}>
-                            <Button style={{'margin': '0 0 0 25% '}} onClick={this.handleSubmit.bind(this)}> Créer l'évènement </Button>
+                        <Col span={10}></Col>
+                        <Col span={4}>
+                            <div style={{'margin': '0 0 0 12% '}}>
+                                <Button  onClick={this.handleSubmit.bind(this)}> Créer l'évènement </Button>
+                            </div>
                         </Col>
-                        <Col span={8}></Col>
                     </Row>
 
                 </Content>

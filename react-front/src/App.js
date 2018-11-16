@@ -4,7 +4,11 @@ import './App.css'
 import Connection from './components/connection'
 import Connected from './components/connected'
 import "antd/dist/antd.css";
+// import "./default.less";   // override variables here
 import axios from 'axios'
+import {Button, Layout, Menu, Icon} from 'antd';
+
+const { Header, Content } = Layout
 
 class App extends Component {
 	constructor(props) {
@@ -15,7 +19,9 @@ class App extends Component {
       'data': [],
       'id': null,
       'user': null,
-		}
+      'playlistId': null
+    }
+    
 	}
 
   updateState = (val) => {
@@ -45,19 +51,48 @@ class App extends Component {
     })
     }
   }
-
+  deleteToken() {
+    localStorage.setItem('token', '');
+    this.updateState({'token': '', 'currentComponent': 'login'})
+  }
   render() {
     const token = localStorage.getItem('token')
     return (
-      <div className="App">
-      <div id="dz-root"></div>
-      {token ? (
-        <Connected updateParent={this.updateState} state={this.state}/>
+        <Layout className="App">
+          <Header className="HeaderApp">
+              <img className="HeaderImage" src="/header.png"></img>
+              <div className="disconnect"> 
+                	<Button type="primary" onClick={this.deleteToken.bind(this)}>Disconnect</Button>
+              </div>
+              <div className="navBar">
+                  <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
+                    <Menu.Item key="1" onClick={this.updateState.bind(this, {'currentComponent':'event'})}>
+                        <Icon type="calendar" />
+                        <span><b>Event</b></span>
+                    </Menu.Item>
+                    <Menu.Item key="2" onClick={this.updateState.bind(this, {'currentComponent':'playlist'})}>
+                      <Icon size={16} type="bars" />
+                      <span> <b>Playlist</b> </span>
+                    </Menu.Item>
+                    <Menu.Item key="3" onClick={this.updateState.bind(this, {'currentComponent':'setting'})}>
+                      <Icon type="tool" />
+                      <span><b>Setting</b></span>
+                    </Menu.Item>
+                  </Menu>
+              </div>
 
-      ) : (
-        <Connection updateParent={this.updateState} state={this.state}/>
-      )}
-      </div>
+          </Header>
+          <Content>
+              <div id="dz-root"></div>
+              {token ? (
+                <Connected updateParent={this.updateState} state={this.state}/>
+
+              ) : (
+                <Connection updateParent={this.updateState} state={this.state}/>
+              )}
+
+          </Content>
+        </Layout>
       
     );
   }

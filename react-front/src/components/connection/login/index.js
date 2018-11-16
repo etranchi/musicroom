@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import {Button, Input, Layout, Col, Row, Divider} from 'antd';
+import {Button, Input, Layout, Col, Row, Divider, Checkbox} from 'antd';
 import axios from 'axios'
 import './styles.css';
+import Cookies from 'universal-cookie';
 
 class Login extends Component {
 	constructor(props) {
@@ -10,8 +11,9 @@ class Login extends Component {
 		this.state = {
 			email: "",
 			password: ""
-		};
+		}
 	}
+
 	validateForm() {
 		return this.state.email.length > 0 && this.state.password.length > 0;
 	}

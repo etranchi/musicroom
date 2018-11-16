@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import GoogleMapReact from 'google-map-react';
 import './styles.css'
+import { Avatar} from 'antd';
  
-const EventLocation = ({ text }) => <i style={{color:'#03a9f4'}}className="fas fa-map-marker-alt fa-3x"></i>;
+const EventLocation = ({ openCard, eventPicture }) => <Avatar className="zoomCardMap" onClick={openCard} size={48} src={eventPicture} />;
 const UserLocation = ({ text }) => <i style={{color:'#8bc34a'}}className="fas fa-map-marker-alt fa-3x"></i>;
+const NewEventLocation = ({ text }) => <i style={{color:'#8bc34a'}}className="fas fa-map-marker-alt fa-3x"></i>;
 
 class SimpleMap extends Component {
     constructor(props) {
@@ -13,13 +15,14 @@ class SimpleMap extends Component {
     
 
     this.mapStyle = {
-      height: '30vh',
-      width: '100%',
-      margin: '0 0 10% 0'
+      height: '40vh',
+      width: '100%'
     }
   }
  
   render() {
+    console.log(this.props.state)
+    let eventPicture = this.props.event.picture ? "https://192.168.99.100:4242/eventPicture/" + this.props.event.picture : "https://192.168.99.100:4242/eventPicture/default.jpeg"
     return (
       <div className="mapContent" style={this.mapStyle}>
         <GoogleMapReact
@@ -27,9 +30,13 @@ class SimpleMap extends Component {
           defaultCenter={this.props.center ? this.props.center : this.props.state.data.userCoord}
           defaultZoom= {11}
         >
-        {this.props.center ? <EventLocation lat={this.props.center.lat} lng={this.props.center.lng} /> : null}
-        {this.props.state.data.event ? <EventLocation lat={this.props.state.data.event.location.coord.lat} lng={this.props.state.data.event.location.coord.lng} /> : null}
-          <UserLocation  lat={this.props.state.data.userCoord.userLatitude} lng={this.props.state.data.userCoord.userLongitude} /> 
+        {
+          this.props.center ?  
+          <NewEventLocation lat={this.props.center.lat} lng={this.props.center.lng} eventPicture={eventPicture} /> 
+          :
+          <EventLocation openCard={this.props.openCard} lat={this.props.event.location.coord.lat} lng={this.props.event.location.coord.lng} eventPicture={eventPicture} />
+        }
+        <UserLocation  lat={this.props.state.data.userCoord.lat} lng={this.props.state.data.userCoord.lng} /> 
         </GoogleMapReact>
       </div>
     );

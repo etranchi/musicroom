@@ -17,10 +17,8 @@ class Event extends Component {
 			loading: false,
 			currentComponent: 'createEvent'
 		}
-	}
 
-	getLocation() {
-		if (navigator.geolocation) {
+		if (navigator.geolocation && !this.props.state.data.userCoord) {
 			navigator.geolocation.getCurrentPosition( (position ) => {
 				this.props.state.data.userCoord = {}
 				this.props.state.data.userCoord.lat = position.coords.latitude
@@ -28,11 +26,10 @@ class Event extends Component {
 				this.props.updateParent({'data': this.props.state.data})
 			});
 		}
-
 	}
 
+
 	componentDidMount() {
-		this.getLocation()
 		axios.get('https://192.168.99.100:4242/event')
 		.then((resp) => {
 			this.props.state.data.events = resp.data.reverse()
@@ -61,13 +58,10 @@ class Event extends Component {
 			);
 			return (
 				<Layout>
-					<Header>
-						<h1 style={{'textAlign':'center', fontSize:'28px'}}>Gestion des évènenements</h1>
-					</Header>
 					<Content>
 						<StickyContainer>
 								<Tabs defaultActiveKey="1" renderTabBar={renderTabBar}>
-									<Tabs.TabPane tab="Créer un Event" key="1">
+									<Tabs.TabPane  tab="Créer un Event" key="1">
 										<Create state={this.props.state} updateParent={this.props.updateParent}/>
 									</Tabs.TabPane>
 									<Tabs.TabPane tab="Liste de vos Events" key="2" >
@@ -79,9 +73,6 @@ class Event extends Component {
 								</Tabs>
 						</StickyContainer>
 					</Content>
-					<Footer>
-
-					</Footer>
 				</Layout>
 			);
 		}

@@ -40,7 +40,6 @@ class cardEvent extends Component {
         }
         return false;
     }
-
     componentDidMount = () => {
         if (this.props.state.data.event.creator.email === this.props.state.user.email)
             this.setState({isCreator:true})
@@ -83,7 +82,7 @@ class cardEvent extends Component {
         return (
             <div>
                 <CardHeader state={this.props.state} updateParent={this.props.updateParent} />
-                {this.state.isHidden ? <SimpleMap state={this.props.state} myState={this.state}/> : null}
+                {this.state.isHidden ? <SimpleMap state={this.props.state} event={this.props.state.data.event}/> : null}
                 <Divider />
                 <CreatorProfil right={this.state} state={this.props.state} updateParent={this.props.updateParent} />
                 <BodyEvent right={this.state} state={this.props.state} updateParent={this.props.updateParent} updateMap={this.updateMap.bind(this)}/>
