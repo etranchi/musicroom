@@ -15,8 +15,12 @@ class CreatePlaylist extends Component {
 		}
 	}
 	save(){
+		var body = {title: '', tracks:{data:[]}};
+		body.tracks.data = this.state.tracks;
+		body.title = this.state.title;
+		console.log(body);
 		axios.post('https://192.168.99.100:4242/playlist', 
-			this.state,
+			body,
 			{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}}
 		)
 		.then(resp => {
@@ -53,7 +57,6 @@ class CreatePlaylist extends Component {
             <Divider />
             <SearchBar state={this.props.state} type="tracks" addTrack={this.addTrack}/>
             {this.state.tracks.map((val, i) => {
-            	console.log(val)
 						return (
 						<Row type="flex" justify="space-between" key={val.id}>
 								<Col>
