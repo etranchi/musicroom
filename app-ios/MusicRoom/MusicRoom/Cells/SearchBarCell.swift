@@ -1,5 +1,5 @@
 //
-//  SearchCell.swift
+//  SearchBarCell.swift
 //  MusicRoom
 //
 //  Created by jdavin on 11/1/18.
@@ -8,12 +8,13 @@
 
 import UIKit
 
-class SearchCell: UICollectionViewCell, UITextFieldDelegate {
+class SearchBarCell: UITableViewCell, UITextFieldDelegate {
     
-    var vc : UICollectionViewController?
+    var vc : UITableViewController?
     
-    override init(frame: CGRect) {
-        super.init(frame: .zero)
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
         textField.delegate = self
         setupViews()
     }
@@ -60,12 +61,13 @@ class SearchCell: UICollectionViewCell, UITextFieldDelegate {
         if let vc = vc as? SearchController {
             vc.handleSearch(text)
         }
-        if let vc = vc as? PlaylistHomeController {
-            vc.handleSearch(text)
-        }
+//        if let vc = vc as? PlaylistController {
+//            vc.handleSearch(text)
+//        }
     }
     
     func setupViews() {
+        backgroundColor = .clear
         let searchButton = UIButton(type: .system)
         let searchIcon = UIImage(named: "search_icon")
         let tintedIcon = searchIcon?.withRenderingMode(.alwaysTemplate)
@@ -79,7 +81,7 @@ class SearchCell: UICollectionViewCell, UITextFieldDelegate {
         containerView.addSubview(searchButton)
         
         NSLayoutConstraint.activate([
-            containerView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 10),
+            containerView.centerYAnchor.constraint(equalTo: centerYAnchor),
             containerView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 14),
             containerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -14),
             containerView.heightAnchor.constraint(equalToConstant: 40),

@@ -8,154 +8,56 @@
 
 import UIKit
 
-class PlaylistController: UITableViewController {
+class PlaylistController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+    private let categoryCellId = "categoryCellId"
+    private let searchCellId = "searchCellId"
     
-    let cellId = "cellId"
     let manager = APIManager()
+    let initialSearch = "Daft Punk"
     
-    var edit : Bool = false
-    var tracks : [PlaylistTrack] = [PlaylistTrack]()
     
-    func createProductArray() {
-        tracks.append(PlaylistTrack(name: "name1", artist: "artist1"))
-        tracks.append(PlaylistTrack(name: "name2", artist: "artist2"))
-        tracks.append(PlaylistTrack(name: "name3", artist: "artist3"))
-        tracks.append(PlaylistTrack(name: "name4", artist: "artist4"))
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.navigationController?.navigationBar.topItem?.title = "Playlist"
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        createProductArray()
-        let editBtn = UIBarButtonItem(title: "Edit current playlist", style: UIBarButtonItemStyle.plain, target: self, action: #selector(showEditingMode))
-        navigationItem.rightBarButtonItem = editBtn
-        navigationController?.navigationBar.tintColor = .white
+        collectionView?.backgroundColor = UIColor(white: 0.1, alpha: 1)
+        collectionView?.alwaysBounceVertical = true
+        //collectionView?.register(GlobalSearchCell.self, forCellWithReuseIdentifier: categoryCellId)
+        //collectionView?.register(SearchBarCell.self, forCellWithReuseIdentifier: searchCellId)
         
-        tableView.backgroundColor = UIColor(white: 0.2, alpha: 1)
-        tableView.estimatedRowHeight = tableView.rowHeight
-        tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.register(PlaylistCell.self, forCellReuseIdentifier: cellId)
         
-    }
-    
-    @objc func showEditingMode(sender: UIBarButtonItem) {
-        print(tableView.isEditing)
-        edit = !edit
-        tableView.setEditing(!tableView.isEditing, animated: true)
-        navigationItem.rightBarButtonItem?.title = tableView.isEditing ? "Done" : "Edit current playlist"
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! PlaylistCell
-        let currentLastItem = tracks[indexPath.row]
-        print(currentLastItem)
-        cell.track = currentLastItem
-        return cell
-    }
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tracks.count
-    }
-    
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 50
-    }
-    
-    // MARK: - Edit Tableview
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == UITableViewCellEditingStyle.delete {
-            self.tracks.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: UITableViewRowAnimation.automatic)
-        }
-    }
-    
-    // MARK: - Moving Cells
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    
-    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath)
-    {
-        let cellToMove = self.tracks[sourceIndexPath.row]
-        
-        // move targeted cell
-        self.tracks.insert(cellToMove, at: destinationIndexPath.row)
-        
-        // remove cell
-        self.tracks.remove(at: sourceIndexPath.row)
-    }
-}
-
-
-class PlaylistHomeController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
-    var collectionViewA: UICollectionView!
-    var collectionViewB: UICollectionView!
-    let collectionViewAIdentifier = "collectionViewAIdentifier"
-    let collectionViewBIdentifier = "collectionViewBIdentifier"
-    
-    var playlists : [PlaylistHome] = [PlaylistHome]()
-    
-    func createPlaylistArray() {
-        playlists.append(PlaylistHome(name: "playlist 1"))
-        playlists.append(PlaylistHome(name: "playlist 2"))
-        playlists.append(PlaylistHome(name: "playlist 3"))
-        playlists.append(PlaylistHome(name: "playlist 4"))
+        /*performSearch(initialSearch) { (albums, tracks, artists) in
+         self.musicCategories = MusicCategory.sampleMusicCategories(albums, tracks, artists)
+         self.collectionView?.reloadData()
+         }*/
     }
     
     func handleSearch(_ text: String) {
         
     }
     
-    override func viewDidLoad() {
-        createPlaylistArray()
-        collectionViewB?.alwaysBounceVertical = true
-        let layoutA = UICollectionViewFlowLayout()
-        let layoutB = UICollectionViewFlowLayout()
-        
-        collectionViewA = UICollectionView(frame: self.view.frame, collectionViewLayout: layoutA)
-        collectionViewB = UICollectionView(frame: self.view.frame, collectionViewLayout: layoutB)
-        
-        collectionViewA.delegate = self
-        collectionViewB.delegate = self
-
-        collectionViewA.dataSource = self
-        collectionViewB.dataSource = self
-        
-        collectionViewA.register(SearchCell.self, forCellWithReuseIdentifier: collectionViewAIdentifier)
-        collectionViewB.register(PlaylistHomeCell.self, forCellWithReuseIdentifier: collectionViewBIdentifier)
-        
-        self.view.addSubview(collectionViewA)
-        self.view.addSubview(collectionViewB)
-    }
-
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if indexPath.item == 0 {
-            let searchBarCell = collectionViewA.dequeueReusableCell(withReuseIdentifier: collectionViewAIdentifier, for: indexPath) as! SearchCell
-            searchBarCell.placeholder = "playlists, events..."
-            searchBarCell.vc = self
-            print("indexpath in search", indexPath.item)
-            print("end searchCell")
-            return searchBarCell
-        }
-        else if indexPath.item <= playlists.count {
-            print("count : ", playlists.count)
-            let playlistHomeCell = collectionViewB.dequeueReusableCell(withReuseIdentifier: collectionViewBIdentifier, for: indexPath) as! PlaylistHomeCell
-            print("indexpath playlists : ", indexPath.item - 1)
-            print(playlists[indexPath.item - 1])
-            playlistHomeCell.playlist = playlists[indexPath.item - 1]
-            return playlistHomeCell
-        }
-        else {
-            let searchBarCell = collectionViewA.dequeueReusableCell(withReuseIdentifier: collectionViewAIdentifier, for: indexPath) as! SearchCell
-            searchBarCell.placeholder = "playlists, events..."
-            searchBarCell.vc = self
-            print("indexpath in search", indexPath.item)
-            print("end searchCell else")
-            return searchBarCell
-        }
+        // if indexPath.item == 0 {
+        //            let     cell = collectionView.dequeueReusableCell(withReuseIdentifier: searchCellId, for: indexPath) as! SearchBarCell
+        //            cell.placeholder = "playlists, events..."
+        //            cell.vc = self
+        //            return cell
+        // } else {
+        /*let cell = collectionView.dequeueReusableCell(withReuseIdentifier: categoryCellId, for: indexPath) as! CategoryCell
+         cell.musicCategory = musicCategories![indexPath.item - 1]
+         cell.backgroundColor = UIColor(white: 0.15, alpha: 1)
+         cell.searchController = self
+         return cell*/
+        // }
+        return UICollectionViewCell()
     }
     
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return playlists.count + 1
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        collectionViewLayout.invalidateLayout()
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -163,11 +65,11 @@ class PlaylistHomeController: UICollectionViewController, UICollectionViewDelega
         case 0:
             return CGSize(width: view.frame.width, height: 40)
         default:
-            return CGSize(width: view.frame.width, height: 150)
+            return CGSize(width: view.frame.width, height: 0)
         }
     }
     
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        navigationController?.pushViewController(PlaylistController(), animated: true)
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 0
     }
 }

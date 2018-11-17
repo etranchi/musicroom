@@ -26,7 +26,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window = UIWindow()
         window?.makeKeyAndVisible()
-        window?.rootViewController = TabBarController()
+        let tabBarController = TabBarController()
+        window?.rootViewController = tabBarController
         
         return true
     }

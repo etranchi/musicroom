@@ -15,8 +15,7 @@ class SeeAllSongsController: UICollectionViewController, UICollectionViewDelegat
     let tracks: [Track]
     let searchText: String
     let searchController: SearchController
-    
-    
+
     init(_ tracks: [Track], _ searchText: String, _ traget: SearchController, layout: UICollectionViewFlowLayout) {
         self.tracks = tracks
         self.searchText = searchText
@@ -32,12 +31,14 @@ class SeeAllSongsController: UICollectionViewController, UICollectionViewDelegat
         super.viewWillDisappear(animated)
         
         title = ""
+        navigationController?.navigationBar.topItem?.title = "Search"
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         title = "\"\(searchText)\" in Songs"
+        navigationController?.navigationBar.topItem?.title = ""
     }
     
     override func viewDidLoad() {
@@ -47,7 +48,6 @@ class SeeAllSongsController: UICollectionViewController, UICollectionViewDelegat
         self.collectionView!.register(SongCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         collectionView?.alwaysBounceVertical = true
         collectionView?.backgroundColor = UIColor(white: 0.1, alpha: 1)
-        
     }
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -56,6 +56,7 @@ class SeeAllSongsController: UICollectionViewController, UICollectionViewDelegat
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         searchController.showPlayerForSong(indexPath.item)
+        currentTrack = tracks[indexPath.item]
     }
 
 
@@ -72,7 +73,7 @@ class SeeAllSongsController: UICollectionViewController, UICollectionViewDelegat
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 14, bottom: 0, right: 14)
+        return UIEdgeInsets(top: 0, left: 14, bottom: 50, right: 14)
     }
     
     

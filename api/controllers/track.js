@@ -1,6 +1,6 @@
 const trackModel = require('../models/track');
 const config = require('../config/config');
-const request = require('request');
+const request = require('request-promise');
 
 module.exports = {
 	getTracks: async (req, res) => {

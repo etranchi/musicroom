@@ -40,7 +40,7 @@ class ArtistCell: UICollectionViewCell {
     let artistLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 2
@@ -51,9 +51,9 @@ class ArtistCell: UICollectionViewCell {
     let fanLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        label.font = UIFont.systemFont(ofSize: 10, weight: .medium)
         label.textColor = .lightGray
-        label.numberOfLines = 2
+        label.numberOfLines = 1
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -65,20 +65,18 @@ class ArtistCell: UICollectionViewCell {
         addSubview(fanLabel)
         
         NSLayoutConstraint.activate([
-            imageView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -30),
+            imageView.topAnchor.constraint(equalTo: topAnchor),
             imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
             imageView.heightAnchor.constraint(equalToConstant: 100),
             imageView.widthAnchor.constraint(equalToConstant: 100),
-            
-            artistLabel.centerXAnchor.constraint(equalTo: imageView.centerXAnchor),
-            artistLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 5),
-            artistLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            artistLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            
-            fanLabel.centerXAnchor.constraint(equalTo: artistLabel.centerXAnchor),
-            fanLabel.topAnchor.constraint(equalTo: artistLabel.bottomAnchor, constant: 2),
-            fanLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            fanLabel.leadingAnchor.constraint(equalTo: leadingAnchor)
+            artistLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 1),
+            artistLabel.leadingAnchor.constraint(equalTo: imageView.leadingAnchor),
+            artistLabel.trailingAnchor.constraint(equalTo: imageView.trailingAnchor),
+            artistLabel.heightAnchor.constraint(lessThanOrEqualToConstant: 29),
+            fanLabel.topAnchor.constraint(equalTo: artistLabel.bottomAnchor),
+            fanLabel.leadingAnchor.constraint(equalTo: artistLabel.leadingAnchor),
+            fanLabel.trailingAnchor.constraint(equalTo: artistLabel.trailingAnchor),
+            fanLabel.heightAnchor.constraint(equalToConstant: 15),
         ])
     }
 }
