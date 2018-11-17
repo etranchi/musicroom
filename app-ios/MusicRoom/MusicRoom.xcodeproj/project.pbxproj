@@ -60,6 +60,7 @@
 		8F364B8B217E5B9100B57FC8 /* MusicRoom.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8F364B89217E5B9100B57FC8 /* MusicRoom.xcdatamodeld */; };
 		8F364B8D217E5B9200B57FC8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F364B8C217E5B9200B57FC8 /* Assets.xcassets */; };
 		8F364B90217E5B9200B57FC8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F364B8E217E5B9200B57FC8 /* LaunchScreen.storyboard */; };
+		F42C5DBA21A03FF400111835 /* UIViewAnchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42C5DB921A03FF400111835 /* UIViewAnchor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -150,6 +151,7 @@
 		8F364B8C217E5B9200B57FC8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8F364B8F217E5B9200B57FC8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8F364B91217E5B9200B57FC8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F42C5DB921A03FF400111835 /* UIViewAnchor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewAnchor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -214,6 +216,7 @@
 			children = (
 				7991484121889F8D00120E2D /* Extensions.swift */,
 				7970B6EE2190C3980007F831 /* AppUtility.swift */,
+				F42C5DB921A03FF400111835 /* UIViewAnchor.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -464,6 +467,7 @@
 				7991C46C21988DAF0079F831 /* AlbumController.swift in Sources */,
 				79B15ECE218C69AA00B84BCB /* MusicCategory.swift in Sources */,
 				8F18989C217F3B4D00CE1A8D /* DeezerManager.swift in Sources */,
+				F42C5DBA21A03FF400111835 /* UIViewAnchor.swift in Sources */,
 				79FF7D12219D9B11001DAE17 /* SearchArtistCell.swift in Sources */,
 				8F364B83217E5B9100B57FC8 /* AppDelegate.swift in Sources */,
 				796ECB3A218DCAE400321B3B /* ProgressCircle.swift in Sources */,
