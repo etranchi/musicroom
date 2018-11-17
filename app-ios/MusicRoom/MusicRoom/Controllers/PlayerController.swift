@@ -48,8 +48,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         
         label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
         label.textColor = .white
-//        label.textAlignment = .center
-        label.center = CGPoint(x: 0.0, y: 0.0)
+        label.textAlignment = .center
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -285,8 +284,6 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         return BackgroundCoverView(previousTrack, currentTrack, nextTrack)
     }
     
-    
-    
     fileprivate func setupUI() {
         previousButton.addTarget(self, action: #selector(handlePrevious), for: .touchUpInside)
         playButton.addTarget(self, action: #selector(handlePlay), for: .touchUpInside)
@@ -307,11 +304,6 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         titleLabel.text = tracks[index].title
         authorLabel.text = tracks[index].artist!.name
         
-        let leftLayer = UIView(frame: CGRect(x: 50, y: 50, width: 50, height: 50))
-        leftLayer.backgroundColor = UIColor(white: 0.15, alpha: 0.4)
-        let rightLayer = UIView(frame: CGRect(x: 50, y: 50, width: 50, height: 50))
-        rightLayer.backgroundColor = UIColor(white: 0.15, alpha: 0.6)
-
         view.addSubview(backgroundCoverView!)
         view.addSubview(visualEffectView)
         view.addSubview(middleLineView)
@@ -321,13 +313,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         view.addSubview(previousButton)
         view.addSubview(playButton)
         view.addSubview(nextButton)
-        view.addSubview(leftLayer)
-        view.addSubview(rightLayer)
         
-        titleLabel.layer.removeAllAnimations()
-        titleLabel.transform = CGAffineTransform.identity
-        leftLayer.anchor(top: coverContainerView?.bottomAnchor, leading: view.leadingAnchor, bottom: authorLabel.topAnchor, trailing: nil, size: .init(width: 48, height: 0))
-        rightLayer.anchor(top: coverContainerView?.bottomAnchor, leading: nil, bottom: authorLabel.topAnchor, trailing: view.trailingAnchor, size: .init(width: 48, height: 0))
         NSLayoutConstraint.activate([
             backgroundCoverView!.topAnchor.constraint(equalTo: view.topAnchor),
             backgroundCoverView!.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -344,14 +330,18 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             coverContainerView!.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             coverContainerView!.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
+            titleLabel.centerXAnchor.constraint(equalTo: view!.centerXAnchor),
             titleLabel.bottomAnchor.constraint(equalTo: authorLabel.topAnchor, constant: -5),
             titleLabel.heightAnchor.constraint(equalToConstant: 20),
+            titleLabel.trailingAnchor.constraint(equalTo: coverContainerView!.trailingAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: coverContainerView!.leadingAnchor),
             
+            authorLabel.centerXAnchor.constraint(equalTo: titleLabel.centerXAnchor),
             authorLabel.bottomAnchor.constraint(equalTo: playButton.topAnchor, constant: -20),
             authorLabel.heightAnchor.constraint(equalToConstant: 20),
             authorLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
             authorLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-
+            
             previousButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -80),
             previousButton.centerYAnchor.constraint(equalTo: playButton.centerYAnchor),
             previousButton.widthAnchor.constraint(equalToConstant: 30),
@@ -366,29 +356,8 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             nextButton.centerYAnchor.constraint(equalTo: playButton.centerYAnchor),
             nextButton.widthAnchor.constraint(equalToConstant: 30),
             nextButton.heightAnchor.constraint(equalToConstant: 30)
-            ])
-        if (titleLabel.text?.count)! < 39 {
-            titleLabel.textAlignment = .center
-            NSLayoutConstraint.activate([
-                titleLabel.centerXAnchor.constraint(equalTo: view!.centerXAnchor),
-                titleLabel.trailingAnchor.constraint(equalTo: coverContainerView!.trailingAnchor),
-                titleLabel.leadingAnchor.constraint(equalTo: coverContainerView!.leadingAnchor),
-                
-                authorLabel.centerXAnchor.constraint(equalTo: titleLabel.centerXAnchor),
-            ])
-        } else {
-            NSLayoutConstraint.activate([
-                titleLabel.leadingAnchor.constraint(equalTo: leftLayer.trailingAnchor),
-                
-                authorLabel.centerXAnchor.constraint(equalTo: view!.centerXAnchor),
-                ])
-            UIView.animate(withDuration: 6.0, delay: 2.0, options: [.autoreverse, .repeat], animations: {
-                self.titleLabel.transform = CGAffineTransform(translationX: -200.0, y: 0.0)
-            })
-        }
+        ])
     }
-    
-    
     
     fileprivate func setupButtons() {
         

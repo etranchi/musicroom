@@ -33,7 +33,7 @@ class PlaylistCell: UITableViewCell {
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        backgroundColor = UIColor(white: 0.2, alpha: 1)
+        backgroundColor = UIColor(white: 0.15, alpha: 1)
         addSubview(artistLabel)
         addSubview(nameLabel)
         
@@ -79,7 +79,7 @@ class PlaylistHomeCell: UICollectionViewCell {
     }()
     
     func setupViews() {
-        backgroundColor = UIColor(white: 0.2, alpha: 1)
+        backgroundColor = UIColor(white: 0.15, alpha: 1)
         addSubview(nameLabel)
         addSubview(imagePlst)
         
