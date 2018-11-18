@@ -4,7 +4,7 @@ import './styles.css'
 import { Avatar} from 'antd';
  
 const EventLocation = ({ openCard, eventPicture }) => <Avatar className="zoomCardMap" onClick={openCard} size={48} src={eventPicture} />;
-const UserLocation = ({ text }) => <i style={{color:'#8bc34a'}}className="fas fa-map-marker-alt fa-3x"></i>;
+const UserLocation = ({ text }) => <i style={{color:'#00695c'}}className="fas fa-map-marker-alt fa-3x"></i>;
 const NewEventLocation = ({ text }) => <i style={{color:'#8bc34a'}}className="fas fa-map-marker-alt fa-3x"></i>;
 
 class SimpleMap extends Component {

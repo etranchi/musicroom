@@ -1,5 +1,25 @@
-.ant-upload-select-picture-card {
+.ant-upload {
     border-radius: 50% !important;
-    height: 448px !important;
-    width: 448px !important;
+    height: 15vw !important;
+    width: 15vw !important;
+}
+
+.ant-upload:hover {
+   border: 1px solid #00695c !important
+}
+
+input.ant-input:hover {
+    border-bottom: 1px solid #00695c !important
+}
+
+textArea.ant-input:hover {
+    border: 1px solid #00695c !important
+}
+
+div.ant-select-selection--single:hover {
+    border: 1px solid #00695c !important
+}
+
+.input.location-search-input:hover {
+    border-bottom: 1px solid #00695c !important
 }

@@ -3,7 +3,7 @@ import GoogleMapReact from 'google-map-react';
 import './styles.css'
 import Marker from './marker'
  
-const UserLocation = ({ text }) => <i style={{color:'#8bc34a'}}className="fas fa-map-marker-alt fa-3x"></i>;
+const UserLocation = ({ text }) => <i style={{color:'#00695c'}}className="fas fa-map-marker-alt fa-3x"></i>;
 
 const EventLocation = ({ event, state, updateParent}) => {
 

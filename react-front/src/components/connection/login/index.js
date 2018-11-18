@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import {Button, Input, Layout, Col, Row, Divider, Checkbox} from 'antd';
+import {Button, Input, Layout, Col, Row, Divider} from 'antd';
 import axios from 'axios'
 import './styles.css';
-import Cookies from 'universal-cookie';
 
 class Login extends Component {
 	constructor(props) {
@@ -54,8 +53,8 @@ class Login extends Component {
 			</Row>
 			<Row>
 				<Col span={11}></Col>
-				<Col span={4}>
-					<Button  onClick={this.handleSubmit.bind(this)}> Login </Button>
+				<Col span={2}>
+					<Button style={{'width':'100%'}}size="large"  onClick={this.handleSubmit.bind(this)}> Login </Button>
 				</Col>
 			</Row>
 			<Divider />

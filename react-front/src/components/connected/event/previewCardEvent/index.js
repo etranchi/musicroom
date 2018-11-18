@@ -37,7 +37,7 @@ class PreviewCardEvent extends Component {
             {latitude: this.props.state.data.userCoord.lat, longitude: this.props.state.data.userCoord.lng},
             {latitude: this.props.event.location.coord.lat, longitude:this.props.event.location.coord.lng}
         );
-        this.state.distance = calc/1000;
+        this.setState({'distance':calc/1000});
         this.showModal();
     }
     showModal = () => {

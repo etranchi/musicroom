@@ -4,7 +4,6 @@ import { Avatar } from 'antd';
 
 class Marker extends Component {
     openCard = (e) => {
-        console.log("OPEN CARD : ", this.props)
         this.props.state.data.event = this.props.event;
         this.props.updateParent({'currentComponent': 'cardEvent', 'data': this.props.state.data})
     }

@@ -5,10 +5,10 @@ import CardEvent from './cardEvent';
 import ListCloseEvent from './listCloseEvent';
 import axios from 'axios'
 import './styles.css';
-import { Tabs, Layout} from 'antd';
-
+import { Tabs, Layout, Row} from 'antd';
 import { StickyContainer, Sticky } from 'react-sticky';
 
+const {Content } = Layout;
 class Event extends Component {
 
 	constructor(props) {
@@ -48,7 +48,6 @@ class Event extends Component {
 		if (!this.state.loading)
 			return <p> OUPSI </p>
 		else {
-			const { Header, Footer, Content } = Layout;
 			const renderTabBar = (props, DefaultTabBar) => (
 			<Sticky bottomOffset={80}>
 				{({ style }) => (
@@ -59,8 +58,9 @@ class Event extends Component {
 			return (
 				<Layout>
 					<Content>
-						<StickyContainer>
-								<Tabs defaultActiveKey="1" renderTabBar={renderTabBar}>
+						<Row>
+							<StickyContainer style={{'textAlign':'center'}}>
+								<Tabs style={{'textAlign':'center'}} defaultActiveKey="1" renderTabBar={renderTabBar}>
 									<Tabs.TabPane  tab="Créer un Event" key="1">
 										<Create state={this.props.state} updateParent={this.props.updateParent}/>
 									</Tabs.TabPane>
@@ -71,7 +71,9 @@ class Event extends Component {
 										<ListCloseEvent state={this.props.state} updateParent={this.props.updateParent}/>
 									</Tabs.TabPane>
 								</Tabs>
-						</StickyContainer>
+							</StickyContainer>
+						</Row>
+						
 					</Content>
 				</Layout>
 			);

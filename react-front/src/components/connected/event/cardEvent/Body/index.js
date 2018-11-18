@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './styles.css';
 import SearchBar from '../../../searchbar';
 import MemberList  from './MemberList';
-import { List, Divider, Card, Avatar, Icon, Col, Row } from 'antd';
+import {Divider, Icon, Col, Row } from 'antd';
 
 
 
@@ -63,7 +63,7 @@ class Body extends Component {
                     <Col span={4}></Col>
                     <Col span={14}>
                         <h1 className="titleBig" > {this.props.state.data.event.title || "Aucun"}</h1>
-                        <i className="titleBig fas fa-map" style={{color:'#03a9f4'}}onClick={this.props.updateMap.bind(this)}></i>
+                        <i className="titleBig fas fa-map" style={{color:'#00695c'}}onClick={this.props.updateMap.bind(this)}></i>
                         <Divider />
                     </Col>
                 </Row>

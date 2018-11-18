@@ -3,12 +3,13 @@ import './reset.css';
 import './App.css'
 import Connection from './components/connection'
 import Connected from './components/connected'
+import Menu from './components/other/menu'
+import FooterLegacy from './components/other/footerLegacy'
 import "antd/dist/antd.css";
-// import "./default.less";   // override variables here
 import axios from 'axios'
-import {Button, Layout, Menu, Icon} from 'antd';
+import {Button, Layout} from 'antd';
 
-const { Header, Content } = Layout
+const { Header, Content, Footer } = Layout
 
 class App extends Component {
 	constructor(props) {
@@ -19,7 +20,8 @@ class App extends Component {
       'data': [],
       'id': null,
       'user': null,
-      'playlistId': null
+      'playlistId': null,
+      'selected':'event'
     }
     
 	}
@@ -60,29 +62,20 @@ class App extends Component {
     return (
         <Layout className="App">
           <Header className="HeaderApp">
-              <img className="HeaderImage" src="/header.png"></img>
+              <img alt="headerImg" className="HeaderImage" src="/header.png"></img>
               <div className="disconnect"> 
                 	<Button type="primary" onClick={this.deleteToken.bind(this)}>Disconnect</Button>
               </div>
-              <div className="navBar">
-                  <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
-                    <Menu.Item key="1" onClick={this.updateState.bind(this, {'currentComponent':'event'})}>
-                        <Icon type="calendar" />
-                        <span><b>Event</b></span>
-                    </Menu.Item>
-                    <Menu.Item key="2" onClick={this.updateState.bind(this, {'currentComponent':'playlist'})}>
-                      <Icon size={16} type="bars" />
-                      <span> <b>Playlist</b> </span>
-                    </Menu.Item>
-                    <Menu.Item key="3" onClick={this.updateState.bind(this, {'currentComponent':'setting'})}>
-                      <Icon type="tool" />
-                      <span><b>Setting</b></span>
-                    </Menu.Item>
-                  </Menu>
-              </div>
-
+              {
+                token ?
+                  <Menu  state={this.state} updateParent={this.updateState}/>
+                  :
+                  null
+              }
           </Header>
-          <Content>
+
+
+          <Content style={{backgroundColor:'#263238 !important'}}>
               <div id="dz-root"></div>
               {token ? (
                 <Connected updateParent={this.updateState} state={this.state}/>
@@ -92,6 +85,9 @@ class App extends Component {
               )}
 
           </Content>
+          <Footer style={{backgroundColor:'#263238'}}>
+                <FooterLegacy />
+          </Footer>
         </Layout>
       
     );

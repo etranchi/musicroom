@@ -4,9 +4,9 @@ import Event from './event'
 import Playlist from './playlist'
 import Setting from './setting'
 import Player from './player'
-import { Layout, Menu, Icon, Button, Row, Col } from 'antd';
+import { Layout} from 'antd';
 
-const { Header, Sider, Content, Footer } = Layout;
+const {Content} = Layout;
 
 
 class Connected extends Component {

@@ -127,7 +127,7 @@ class CreateEvent extends Component {
           );
         const {Footer,Content } = Layout;
         return (
-            <Layout>
+            <Layout >
                 <Content>
                     {
                         this.state.imageUrl ?
@@ -136,7 +136,7 @@ class CreateEvent extends Component {
                             <Row>
                                 <Col span={8}></Col>
                                 <Col span={8}>
-                                    <div style={{'margin': '0 0 0 12% '}}>
+                                    <div style={{'margin': '0 0 0 25% '}}>
                                         <Upload
                                                 name="file"
                                                 listType="picture-card"
@@ -184,7 +184,7 @@ class CreateEvent extends Component {
                         <Col span={11}></Col>
                         <Col span={2}>
                             <div style={{'margin': '0 0 0 12% '}}>
-                                <Select  name= "public" value={this.state.public ? "true" : "false"} onChange={this.handleChange}>
+                                <Select name= "public" value={this.state.public ? "true" : "false"} onChange={this.handleChange}>
                                     <Select.Option value='true' >Public</Select.Option>
                                     <Select.Option value='false'>Privé</Select.Option>
                                 </Select>
@@ -196,7 +196,7 @@ class CreateEvent extends Component {
                         <Col span={10}></Col>
                         <Col span={4}>
                             <div style={{'margin': '0 0 0 12% '}}>
-                                <DatePicker onChange={this.handleChangeDate} />
+                                <DatePicker className="datePicker" onChange={this.handleChangeDate} />
                             </div>
                             <Divider />
                         </Col>
