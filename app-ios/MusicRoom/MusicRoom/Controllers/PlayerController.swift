@@ -239,9 +239,9 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         
         containerTitleLabel.anchor(top: coverContainerView?.bottomAnchor, leading: coverContainerView?.leadingAnchor, bottom: authorLabel.bottomAnchor, trailing: coverContainerView?.trailingAnchor, padding: .init(top: 0, left: 40, bottom: 0, right: 40),size: .init(width: 0, height: 45))
         
+        print(titleLabel.text?.size(withAttributes: [.font: UIFont.systemFont(ofSize: 14, weight: .heavy)]))
         
-        
-        if titleLabel.text!.count >= 41 {
+        if titleLabel.text!.count >= 40 {
             UIView.animate(withDuration: 4.0, delay: 2.0, options: [.autoreverse, .repeat], animations: {
                 self.titleLabel.transform = CGAffineTransform(translationX: -150, y: 0)
             })
