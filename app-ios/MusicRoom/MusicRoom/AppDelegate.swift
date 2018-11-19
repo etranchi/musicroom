@@ -9,26 +9,47 @@
 import UIKit
 import CoreData
 
+import FacebookLogin
+import FacebookCore
+import GoogleSignIn
+import Google
+import GoogleToolboxForMac
+
+var deezerManager = DeezerManager()
+var apiManager = APIManager()
+var userManager = UserManager()
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    let apiManager = APIManager()
+    
     var orientationLock = UIInterfaceOrientationMask.all
     
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+        print(url)
+        return GIDSignIn.sharedInstance().handle(url as URL, sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
+                                                 annotation: options[UIApplicationOpenURLOptionsKey.annotation])
+    }
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
         return self.orientationLock
     }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         //get the token if loggedin -> go home else go loginPage
-        
-        
         window = UIWindow()
         window?.makeKeyAndVisible()
-        let tabBarController = TabBarController()
-        window?.rootViewController = tabBarController
-        
+        deezerManager.startDeezer()
+        let user = userManager.getAllUsers()
+        if user.count == 0 {
+            let nav = CustomNavigationController(rootViewController: AuthenticationController())
+            window?.rootViewController = nav
+        }
+        else {
+            let nav = TabBarController()
+            userManager.currentUser = user[0]
+            window?.rootViewController = nav
+        }
         return true
     }
 

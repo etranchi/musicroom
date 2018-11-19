@@ -22,10 +22,16 @@ const upload = multer({ dest: "./public/userPicture/"})
 router.post('/login',
     	passport.authenticate('local', {session: false}), userController.connect
     );
+// 192.....4242/user/login
+// object user dans body mail,mdp
+
 
 router.get('/login/facebook',
 		passport.authenticate('facebook-token', { session: false } ), userController.connect
 	);
+// 192.....4242/user/login/facebook
+// recuperer token depuis mail mdp
+// authorization bearer token fb
 
 router.get('/login/google',
 		passport.authenticate('google-token', { session: false } ), userController.connect
