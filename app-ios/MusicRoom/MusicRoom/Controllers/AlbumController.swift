@@ -34,8 +34,7 @@ class AlbumController: UITableViewController {
         super.viewWillAppear(animated)
         
         let navi = navigationController as? CustomNavigationController
-        let offsetY = navi?.navigationBar.frame.size.height
-        navi?.visualContainerView.transform = CGAffineTransform(translationX: 0, y: -offsetY! - 50)
+        navi?.animatedHideNavigationBar()
         navigationController?.navigationBar.topItem?.title = ""
     }
     
@@ -46,6 +45,8 @@ class AlbumController: UITableViewController {
         navi?.animatedShowNavigationBar()
         navigationController?.navigationBar.topItem?.title = "Search"
     }
+    
+    
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
