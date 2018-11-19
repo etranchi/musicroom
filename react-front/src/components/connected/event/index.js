@@ -20,6 +20,7 @@ class Event extends Component {
 
 		if (navigator.geolocation && !this.props.state.data.userCoord) {
 			navigator.geolocation.getCurrentPosition( (position ) => {
+				console.log(position);
 				this.props.state.data.userCoord = {}
 				this.props.state.data.userCoord.lat = position.coords.latitude
 				this.props.state.data.userCoord.lng = position.coords.longitude
