@@ -3,7 +3,8 @@ import './styles.css';
 import axios from 'axios'
 import defaultTrackImg from '../../../../assets/track.png'
 import moment from 'moment'
-import { Input, Button } from 'antd'
+import { Input, Button, Icon } from 'antd'
+import SearchBar from '../../searchbar'
 
 class EditPlaylist extends Component {
 	constructor(props){
@@ -35,6 +36,7 @@ class EditPlaylist extends Component {
 	}
 
 	save = () =>{
+		console.log('toto');
 		console.log(this.state.playlist);
 		axios.put('https://192.168.99.100:4242/playlist/' + this.state.playlist._id || this.state.playlist.id, 
 			this.state.playlist,
@@ -61,6 +63,18 @@ class EditPlaylist extends Component {
 		})
 	}
 
+	deleteTrack = (index) => {
+		var state = this.state;
+		state.playlist.tracks.data.splice(index,1);
+    	this.setState(state);
+	}
+	
+	addTrack = (item) => {
+		var state = this.state;
+		state.playlist.tracks.data.push(item);
+		this.setState(state);
+    }
+
 	render() {
 		console.log(this.state.playlist);
 		if( this.state.isloading === true ) {
@@ -81,14 +95,16 @@ class EditPlaylist extends Component {
 				<ul className="collection">
 						{this.state.playlist.tracks && this.state.playlist.tracks.data.map((val, i) => {
 							return (
-								<li className="collection-item avatar" key={i}>
+								<li className="collection-item avatar" key={i} >
 									<img src={val.album ? val.album.cover_small || defaultTrackImg : defaultTrackImg} alt="" className="circle"/>
 									<span className="title">Title: {val.title} - Duration: {moment.utc(val.duration * 1000).format('mm:ss')}</span>
 									<p>Album: {val.album ? val.album.title : ""}</p>
+									<Icon type="close" onClick={() => this.deleteTrack(i)}></Icon>
 								</li>
 							);
 						})}
 					</ul>
+					<SearchBar state={this.props.state} type="tracks" addTrack={this.addTrack}/>
 					<Button onClick={this.save}>
 						Save
 					</Button>
