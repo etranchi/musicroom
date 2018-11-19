@@ -3,7 +3,8 @@ import './styles.css';
 import SearchBar from '../../../searchbar';
 import MemberList  from './MemberList';
 import {Divider, Icon, Col, Row } from 'antd';
-
+import PersonalPlayer from '../../personalPlayer'
+import axios from 'axios'
 
 
 class Body extends Component {
@@ -32,9 +33,16 @@ class Body extends Component {
     updateEventPlaylist = (playlist) => {
         if (playlist)
         {
-            this.props.state.data.event.playlist = playlist;
-            this.setState({playlistId:playlist.id})
-            this.props.updateParent({'data' : this.props.state.data, 'playlistId':playlist.id})
+            axios.get('https://192.168.99.100:4242/playlist/' + playlist.id, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
+            .then((resp) => { 
+                playlist.tracks.data= resp.data.data
+                this.props.state.data.event.playlist = playlist;
+                this.props.updateParent({'data' : this.props.state.data, 'playlistId':playlist.id})
+                this.setState({playlistId:playlist.id})
+
+                
+            })
+            .catch((err) => { console.log("Wrong Playlist id.", err); })  
         }
     }
     removeMember = (type, item) => {
@@ -102,7 +110,7 @@ class Body extends Component {
                         <SearchBar state={this.props.state} type="playlist" updateEventPlaylist={this.updateEventPlaylist}/>
                     </Col>
                 </Row>
-                <Row style={{height:'130px'}}>
+                {/* <Row style={{height:'130px'}}>
                     <Col span={5}></Col>
                     <Col span={12}>
                     {
@@ -111,7 +119,8 @@ class Body extends Component {
                         + "&app_id=1"} width="700" height="350"></iframe> : null
                     }
                     </Col>
-                </Row>
+                </Row> */}
+                <PersonalPlayer  playlist={this.props.state.data.event.playlist}/>
             </div>
         );
   }
