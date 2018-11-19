@@ -137,6 +137,37 @@ class APIManager: NSObject, URLSessionDelegate {
             }.resume()
     }
     
+    func postEvent(_ token : String, event : Event, completion: @escaping (Event) -> ()) {
+        let postEventUrl = self.url + "event"
+        print("1")
+        var request = URLRequest(url: URL(string: postEventUrl)!)
+        print("1.1")
+        var jsonData = Event.archive(w: event)
+        print("3")
+        request.httpMethod = "POST"
+        request.httpBody = jsonData
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer " + token, forHTTPHeaderField: "Authorization")
+        print("j'ai tous set")
+        URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: request) { (data, response, err) in
+            if err != nil {
+                print("error while requesting")
+            }
+            do {
+                print(data, response, err)
+                let responseJSON = try JSONSerialization.jsonObject(with: data!, options: [])
+                
+                if let responseJSON = responseJSON as? [String: Any] {
+                    print(responseJSON)
+                }
+            }
+            catch (let err){
+                print(err.localizedDescription)
+            }
+            }.resume()
+        
+    }
+    
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         completionHandler(.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
     }
@@ -149,6 +180,7 @@ class APIManager: NSObject, URLSessionDelegate {
             }
             if let d = data {
                 do {
+                    print("J'ai tous")
                     let dic = try JSONDecoder().decode(myType.self, from: d)
                     DispatchQueue.main.async {
                         completion(dic)

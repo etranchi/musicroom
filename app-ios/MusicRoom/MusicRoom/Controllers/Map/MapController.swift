@@ -22,12 +22,6 @@ class MapController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let button = UIButton(type: UIButtonType.contactAdd)
-        button.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
-        button.addTarget(self, action: #selector(addEvent), for: .touchUpInside)
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
-        view.backgroundColor = UIColor(white: 0.1, alpha: 1)
-        
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestWhenInUseAuthorization()
@@ -61,11 +55,12 @@ class MapController: UIViewController {
         ToastView.shared.short(self.view, txt_msg: "Event created", color : UIColor.green)
     }
     
-    @objc func addEvent() {
-        print("yo")
-        self.navigationController?.pushViewController(EventController(), animated: true)
+    @objc func createEvent() {
+        let dest = EventController()
+        dest.selectedPin = selectedPin
+        self.navigationController?.pushViewController(dest, animated: true)
+        
     }
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -121,14 +116,10 @@ extension MapController : MKMapViewDelegate {
         pinView?.canShowCallout = true
         let smallSquare = CGSize(width: 30, height: 30)
         let button = UIButton(frame: CGRect(origin: CGPoint(), size: smallSquare))
+        button.backgroundColor = UIColor.red
+        button.addTarget(self, action: #selector(createEvent), for: .touchUpInside)
         pinView?.leftCalloutAccessoryView = button
         return pinView
-    }
-    internal func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-        let renderer = MKPolylineRenderer(overlay: overlay)
-        renderer.strokeColor = UIColor(red: 17.0/255.0, green: 147.0/255.0, blue: 255.0/255.0, alpha: 1)
-        renderer.lineWidth = 5.0
-        return renderer
     }
 }
 

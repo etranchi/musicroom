@@ -23,6 +23,7 @@
 		77B444762181CD0200B3F536 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B444752181CD0200B3F536 /* APIManager.swift */; };
 		77F2F50A219F101100CC9E8D /* LocationSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F2F509219F101100CC9E8D /* LocationSearchController.swift */; };
 		77F2F50C219F431800CC9E8D /* ToastMsg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F2F50B219F431700CC9E8D /* ToastMsg.swift */; };
+		77F5157E21A2FA9300A12148 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5157D21A2FA9300A12148 /* Event.swift */; };
 		77F5479621932172001B2901 /* AuthenticationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5479521932172001B2901 /* AuthenticationController.swift */; };
 		77F547982193257B001B2901 /* RegisterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F547972193257B001B2901 /* RegisterController.swift */; };
 		77F5479A21932CB2001B2901 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5479921932CB2001B2901 /* User.swift */; };
@@ -101,6 +102,7 @@
 		77B444752181CD0200B3F536 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		77F2F509219F101100CC9E8D /* LocationSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchController.swift; sourceTree = "<group>"; };
 		77F2F50B219F431700CC9E8D /* ToastMsg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastMsg.swift; sourceTree = "<group>"; };
+		77F5157D21A2FA9300A12148 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		77F5479521932172001B2901 /* AuthenticationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationController.swift; sourceTree = "<group>"; };
 		77F547972193257B001B2901 /* RegisterController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterController.swift; sourceTree = "<group>"; };
 		77F5479921932CB2001B2901 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -246,6 +248,7 @@
 				799DA436218D289400C803E3 /* Artist.swift */,
 				7743C23A2190587E002CC508 /* Playlist.swift */,
 				77F5479921932CB2001B2901 /* User.swift */,
+				77F5157D21A2FA9300A12148 /* Event.swift */,
 			);
 			path = Modele;
 			sourceTree = "<group>";
@@ -652,6 +655,7 @@
 				8FEFE2972191E2CD0002E966 /* LoginController.swift in Sources */,
 				796ECB3A218DCAE400321B3B /* ProgressCircle.swift in Sources */,
 				799DA43D218D3ED300C803E3 /* AlbumCell.swift in Sources */,
+				77F5157E21A2FA9300A12148 /* Event.swift in Sources */,
 				77FA6AF4219DDC6200884428 /* EventController.swift in Sources */,
 				79B4DE73218B4637001031D2 /* SearchBarCell.swift in Sources */,
 				79A3F9A92193E602007CEB86 /* PlayerManager.swift in Sources */,

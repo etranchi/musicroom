@@ -15,6 +15,7 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
     let imagePicker = UIImagePickerController()
     var resultSearchController:UISearchController? = nil
     var searchBar : UISearchBar?
+    var urlImageToString : URL?
     var locationManager = CLLocationManager()
     var selectedPin:MKPlacemark? = nil
     var scrollView : UIScrollView? = nil
@@ -188,12 +189,23 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
     }
     
     @objc func createEvent() {
-        print("create")
         // if data is good
-        if titleTF.text != nil && myPosition != nil && imageView.image != nil {
-            self.navigationController?.popViewController(animated: true)
+        if titleTF.text != nil && imageView.image != nil {
+            let user = userManager.currentUser
+            let coord = Coord(lat: (selectedPin?.coordinate.latitude)!, long: (selectedPin?.coordinate.longitude)!)
+            // pays ville codepostale rue numero
+            let address = Address(p: (selectedPin?.administrativeArea)!, v: (selectedPin?.locality)!, cp: (selectedPin?.countryCode)!, r: (selectedPin?.thoroughfare)!, n: (selectedPin?.subThoroughfare)!)
+            let location = Location(address: address, coord: coord)
+            let dataImg = NSData(contentsOf: urlImageToString!)
+            let imgString = dataImg?.base64EncodedString(options: .endLineWithLineFeed)
+            let event = Event(login: (user?.login)!, title: titleTF.text!, description: descriptionTV.text!, location: location, visibility: segmentedBar.selectedSegmentIndex, shared: segmentedBar.selectedSegmentIndex == 0 ? true : false , creationDate: String(describing: Date()), date: String(describing: Date()), playlist: nil, members: [], picture: imgString!, adminMembers: [])
+            print("yo")
+            apiManager.postEvent((user?.token)!, event: event) { (resp) in
+                print(resp)
+            }
+            /*self.navigationController?.popViewController(animated: true)
             let vc = self.navigationController?.viewControllers[0] as! MapController
-            vc.printToastMsg()
+            vc.printToastMsg()*/
         }
         else {
             ToastView.shared.short(self.view, txt_msg: "Check twice your information", color : UIColor.red)
@@ -223,7 +235,8 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
 extension EventController : UIImagePickerControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         print(info)
-        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage , let urlImage = info[UIImagePickerControllerImageURL] as? URL{
+            urlImageToString = urlImage
             imageView.image = pickedImage
             NSLayoutConstraint.activate([
                 imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.6)
