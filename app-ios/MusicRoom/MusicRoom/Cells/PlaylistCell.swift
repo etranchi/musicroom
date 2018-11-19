@@ -2,54 +2,24 @@
 //  PlaylistCell.swift
 //  MusicRoom
 //
-//  Created by Cheloudiakoff on 07/11/2018.
+//  Created by Etienne Tranchier on 06/11/2018.
 //  Copyright © 2018 Etienne Tranchier. All rights reserved.
 //
 
 import UIKit
 
-class PlaylistCell: UITableViewCell {
-    
-    var track : PlaylistTrack? {
+class PlaylistCell: UICollectionViewCell {
+    var playlist: Playlist! {
         didSet {
-            nameLabel.text = track?.name
-            artistLabel.text = track?.artist
+            authorLabel.text = playlist.title
+            titleLabel.text = playlist.title
+            imageView.loadImageUsingCacheWithUrlString(urlString: playlist.picture)
         }
     }
     
-    private let nameLabel : UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        
-        return label
-    }()
-    
-    private let artistLabel : UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        
-        return label
-    }()
-    
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        backgroundColor = UIColor(white: 0.15, alpha: 1)
-        addSubview(artistLabel)
-        addSubview(nameLabel)
-        
-        nameLabel.anchor(top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: nil, padding: .init(top: 12, left: 12, bottom: 12, right: 0))
-        artistLabel.anchor(top: topAnchor, leading: nameLabel.trailingAnchor, bottom: bottomAnchor, trailing: nil, padding: .init(top: 12, left: 12, bottom: 12, right: 0))
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-}
-
-class PlaylistHomeCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: .zero)
+        
         setupViews()
     }
     
@@ -57,33 +27,65 @@ class PlaylistHomeCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    var playlist : PlaylistHome? {
-        didSet {
-            nameLabel.text = playlist?.name
-        }
-    }
+    let imageView: UIImageView = {
+        let iv = UIImageView()
+        
+        iv.contentMode = .scaleAspectFit
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        iv.layer.masksToBounds = true
+        return iv
+    }()
     
-    let nameLabel : UILabel = {
+    let timeLabel: UILabel = {
         let label = UILabel()
         
-        label.textColor = .white
-        
+        label.font = UIFont.systemFont(ofSize: 14, weight: .light)
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    let imagePlst : UIImageView = {
-        let image = UIImageView()
+    let titleLabel: UILabel = {
+        let label = UILabel()
         
-        image.backgroundColor = .lightGray
-        return image
+        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        label.textColor = .white
+        label.textAlignment = .center
+        label.numberOfLines = 2
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let authorLabel: UILabel = {
+        let label = UILabel()
+        
+        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        label.textColor = .lightGray
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     func setupViews() {
-        backgroundColor = UIColor(white: 0.15, alpha: 1)
-        addSubview(nameLabel)
-        addSubview(imagePlst)
+        addSubview(imageView)
+        addSubview(titleLabel)
+        addSubview(authorLabel)
         
-        imagePlst.anchor(top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: nil, padding: .init(top: 12, left: 12, bottom: 12, right: 0), size: .init(width: 120, height: 100))
-        nameLabel.anchor(top: topAnchor, leading: imagePlst.trailingAnchor, bottom: bottomAnchor, trailing: nil, padding: .init(top: 0, left: 12, bottom: 0, right: 0))
+        NSLayoutConstraint.activate([
+            imageView.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -30),
+            imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            imageView.heightAnchor.constraint(equalToConstant: 150),
+            imageView.widthAnchor.constraint(equalToConstant: 150),
+            
+            titleLabel.centerXAnchor.constraint(equalTo: imageView.centerXAnchor),
+            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor),
+            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
+            
+            authorLabel.centerXAnchor.constraint(equalTo: titleLabel.centerXAnchor),
+            authorLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 2),
+            authorLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
+            authorLabel.leadingAnchor.constraint(equalTo: leadingAnchor)
+            ])
     }
+
 }

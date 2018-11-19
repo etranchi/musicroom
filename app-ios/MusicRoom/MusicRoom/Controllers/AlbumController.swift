@@ -46,6 +46,8 @@ class AlbumController: UITableViewController {
         navigationController?.navigationBar.topItem?.title = "Search"
     }
     
+    
+    
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         

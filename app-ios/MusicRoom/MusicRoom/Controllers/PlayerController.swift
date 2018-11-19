@@ -32,7 +32,6 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     
     let request = DZRRequestManager.default().sub()
     var cancelable: DZRCancelable?
-    var deezer = DeezerManager()
     var track: DZRTrack?
     
     var coverContainerView: CoverContainerView?
@@ -158,6 +157,8 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         minimizedPlayer?.update(isPlaying: false, title: tracks[index].title, artist: tracks[index].artist!.name)
     }
     
+    
+    
     func loadTrackInplayer() {
         cancelable = DZRTrack.object(withIdentifier: String(tracks[index].id), requestManager: request, callback: { (response, err) in
             if err != nil {
@@ -178,6 +179,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
                 self.reloadView()
             }
         })
+        
     }
     
     fileprivate func reloadView() {

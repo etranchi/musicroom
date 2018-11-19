@@ -15,7 +15,6 @@ enum SessionState {
 class DeezerManager: NSObject, DeezerSessionDelegate {
     // Needed to handle every types of request from DeezerSDK
     var deezerConnect: DeezerConnect?
-    
     // .diconnected / .connected
     var sessionState: SessionState {
         if let connect = deezerConnect {
@@ -23,9 +22,6 @@ class DeezerManager: NSObject, DeezerSessionDelegate {
         }
         return .disconnected
     }
-    
-    // Set a function or callback to this property if you want to get the result after login
-    
     static let sharedInstance : DeezerManager = {
         let instance = DeezerManager()
         instance.startDeezer()

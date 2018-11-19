@@ -13,8 +13,8 @@ class PlaylistController: UICollectionViewController, UICollectionViewDelegateFl
     private let searchCellId = "searchCellId"
     
     let manager = APIManager()
-    let initialSearch = "Daft Punk"
-    
+    let initialSearch = "A"
+    var musicCategories : MusicCategory?
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -30,10 +30,17 @@ class PlaylistController: UICollectionViewController, UICollectionViewDelegateFl
         //collectionView?.register(SearchBarCell.self, forCellWithReuseIdentifier: searchCellId)
         
         
-        /*performSearch(initialSearch) { (albums, tracks, artists) in
-         self.musicCategories = MusicCategory.sampleMusicCategories(albums, tracks, artists)
-         self.collectionView?.reloadData()
-         }*/
+        performSearch(initialSearch) { (playlists) in
+            self.musicCategories = MusicCategory.sampleMusicCategories([], [], [], playlists)[3]
+            self.collectionView?.reloadData()
+        }
+    }
+    
+    func performSearch(_ text: String, completion: @escaping ([Playlist]) -> ())
+    {
+        manager.searchPlaylist(text) { (playlist) in
+            completion(playlist)
+        }
     }
     
     func handleSearch(_ text: String) {
@@ -62,11 +69,16 @@ class PlaylistController: UICollectionViewController, UICollectionViewDelegateFl
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         switch indexPath.item {
-        case 0:
-            return CGSize(width: view.frame.width, height: 40)
-        default:
-            return CGSize(width: view.frame.width, height: 0)
+            case 0:
+                return CGSize(width: view.frame.width, height: 40)
+            case 1:
+                if musicCategories != nil && musicCategories!.playlists.count > 0 {
+                    return CGSize(width: view.frame.width, height: 240)
+                }
+            default:
+                return CGSize(width: view.frame.width, height: 0)
         }
+        return CGSize(width: view.frame.width, height: 0)
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

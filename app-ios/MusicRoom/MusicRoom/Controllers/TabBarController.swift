@@ -18,13 +18,13 @@ class TabBarController: UITabBarController {
     let tabViewController0 = PlaylistController(collectionViewLayout: UICollectionViewFlowLayout())
     let tabViewController1 = SearchController()
     let tabViewController2 = LibraryController()
+    let tabViewController3 = MapController()
     let minimizedPlayer = MinimizedPlayerView()
     let playerView = playerController.view!
     var navi1: CustomNavigationController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = UIColor(white: 0.2, alpha: 1)
         setupBlurTabBar()
         setupTabBarController()
@@ -89,19 +89,23 @@ class TabBarController: UITabBarController {
         tabViewController0.title = "Playlists"
         tabViewController1.title = "Search"
         tabViewController2.title = "Library"
+        tabViewController3.title = "Map"
         
         tabViewController0.tabBarItem = UITabBarItem(title: "", image: #imageLiteral(resourceName: "playlist_icon"), tag: 1)
         tabViewController1.tabBarItem = UITabBarItem(title: "", image: #imageLiteral(resourceName: "search_icon"), tag: 2)
         tabViewController2.tabBarItem = UITabBarItem(title: "", image: #imageLiteral(resourceName: "library_icon"), tag: 3)
+        tabViewController3.tabBarItem = UITabBarItem(title: "", image: #imageLiteral(resourceName: "map"), tag: 4)
         tabViewController0.tabBarItem.imageInsets = imageInsets
         tabViewController1.tabBarItem.imageInsets = imageInsets
         tabViewController2.tabBarItem.imageInsets = imageInsets
+        tabViewController3.tabBarItem.imageInsets = imageInsets
         
         let navi0 = CustomNavigationController(rootViewController: tabViewController0)
         navi1 = CustomNavigationController(rootViewController: tabViewController1)
         let navi2 = CustomNavigationController(rootViewController: tabViewController2)
+        let navi3 = CustomNavigationController(rootViewController: tabViewController3)
         
-        viewControllers = [navi0, navi1!, navi2]
+        viewControllers = [navi0, navi1!, navi2, navi3]
     }
     
     func animatedShowPlayer() {

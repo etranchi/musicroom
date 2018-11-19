@@ -20,32 +20,6 @@ struct Playlist : Decodable {
     let tracks : TrackData?
 }
 
-struct PlaylistByUserId : Decodable {
-    var userId : Int
-    var nbrPlaylists : Int?
-    var playlists : [Playlist]?
-    
-    init(_ id: Int) {
-        userId = id
-        playlists = []
-    }
-    
-    static func samplePlaylistById(_ playlist: [Playlist]) -> [PlaylistByUserId]
-    {
-        var sample = PlaylistByUserId(1306931615)
-        sample.playlists = playlist
-        
-        print(sample)
-        return [sample]
-    }
-}
-
-// stucture model tracks PlaylistTableView
-struct PlaylistTrack {
-    let name : String
-    let artist : String
-}
-
-struct PlaylistHome {
-    let name : String
+struct PlaylistData: Decodable {
+    let data : [Playlist]
 }

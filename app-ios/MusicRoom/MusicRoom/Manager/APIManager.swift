@@ -11,7 +11,7 @@ import UIKit
 class APIManager: NSObject, URLSessionDelegate {
     let ip : String = "192.168.99.100"
     let token : String? = nil
-    
+    // Route google url +  user/login/google?access_token=\(token)
     var url : String {
         return  "https://\(self.ip):4242/"
     }
@@ -49,6 +49,16 @@ class APIManager: NSObject, URLSessionDelegate {
             completion(trackData.data)
         })
     }
+
+    
+    func login(_ forg: String, _ token : String, completion: @escaping ( (DataUser) -> ())) {
+        let loginUrl = self.url + "user/login/" + forg + "?access_token=" + token
+        var loginRequest = URLRequest(url : URL(string : loginUrl)!)
+        loginRequest.httpMethod = "GET"
+        searchAll(DataUser.self, request: loginRequest, completion: { (res) in
+            completion(res)
+        })
+    }
     
     func searchArtists(_ search: String, completion: @escaping ([Artist]) -> ()) {
         let w = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
@@ -71,6 +81,62 @@ class APIManager: NSObject, URLSessionDelegate {
         }
     }
 
+    func searchPlaylist(_ search: String, completion: @escaping ([Playlist]) -> ()){
+        let w = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+        
+        let playlistsUrl = self.url + "search/playlist?q=\(w)"
+        var playlistsRequest = URLRequest(url: URL(string: playlistsUrl)!)
+        playlistsRequest.httpMethod = "GET"
+        self.searchAll(PlaylistData.self, request: playlistsRequest, completion: { (playlistData) in
+            completion(playlistData.data)
+        })
+    }
+    
+    func registerUser(_ user : Data?) {
+        let registerUrl = self.url + "user/"
+        var registerRequest = URLRequest(url: URL(string: registerUrl)!)
+        registerRequest.httpMethod = "POST"
+        registerRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        registerRequest.httpBody = user
+        
+        URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: registerRequest) { (data, response, err) in
+            if err != nil {
+                print("error while requesting")
+            }
+            do {
+                let responseJSON = try JSONSerialization.jsonObject(with: data!, options: [])
+                if let responseJSON = responseJSON as? [String: Any] {
+                    print(responseJSON)
+                }
+            }
+            catch (let err){
+                print(err.localizedDescription)
+            }
+        }.resume()
+    }
+    
+    func loginUser(_ json : Data?, completion : @escaping (DataUser?) -> ()) {
+        let loginUrl = self.url + "user/login"
+        var loginRequest = URLRequest(url: URL(string: loginUrl)!)
+        loginRequest.httpMethod = "POST"
+        loginRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        loginRequest.httpBody = json
+        URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: loginRequest) { (data, response, err) in
+            if err != nil {
+                completion(nil)
+            }
+            if let d = data {
+                do {
+                    let dic = try JSONDecoder().decode(DataUser.self, from: d)
+                    completion(dic)
+                }
+                catch (let err){
+                    print(err.localizedDescription)
+                }
+            }
+            }.resume()
+    }
+    
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         completionHandler(.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
     }
