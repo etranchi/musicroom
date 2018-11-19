@@ -88,6 +88,7 @@ module.exports = {
 					type: 'user'
 				}
 			}
+			console.log(req.body)
 			let playlist = await playlistModel.create(req.body);
 			res.status(201).json(playlist);
 		} catch (err) {

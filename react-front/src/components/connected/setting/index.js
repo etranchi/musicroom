@@ -64,6 +64,9 @@ class Setting extends Component {
 
 	render() {
 		const {Content, Footer, Header} = Layout;
+		let token = null;
+		if (this.props.state && this.props.state.user && this.props.state.user.deezerToken)
+			token = this.props.state.user.deezerToken
 		if (!this.state.loading)
 			return <p> OUPSI </p>
 		if (this.props.state.currentComponent === 'editSetting')
@@ -76,6 +79,13 @@ class Setting extends Component {
 					<Header> <h1>Profil : </h1></Header>
 					<Content>
 						<Row style={{height:50}}/>
+						<Row>
+							<Col span={8}/>
+							<Col>
+							{!token ? (<Button onClick={this.loginDeezer.bind(this)}>Link Deezer</Button>): (<Button onClick={this.logoutDeezer.bind(this)}>Unlink Deezer</Button>)}
+							</Col>
+						</Row>
+						<Divider />
 						<Row>
 							<Col span={4}/>
 							<Col span={4}>

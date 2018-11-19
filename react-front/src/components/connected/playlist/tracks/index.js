@@ -3,6 +3,7 @@ import './styles.css';
 import defaultTrackImg from '../../../../assets/track.png'
 import moment from 'moment'
 import axios from 'axios'
+import { Button } from 'antd'
 
 
 class Tracks extends Component {
@@ -26,8 +27,7 @@ class Tracks extends Component {
 		})
 	}
 	render() {
-		console.log(this.props);
-		
+		console.log(this.state)
 		if( this.state.isloading === true ) {
 			return (
 				<div>
@@ -39,6 +39,7 @@ class Tracks extends Component {
 		return (
 			<div>
 				<a href="#!" className="btn waves-effect waves-teal" onClick={this.props.updateParent.bind(this,{'currentComponent': 'playlist', 'data': []})}>Back</a>
+				<Button onClick={this.props.updateParent.bind(this,{'currentComponent': 'editPlaylist'})}>Edit</Button>
 				<ul className="collection">
 					{this.state.tracks.map((val, i) => {
 						return (
