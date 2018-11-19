@@ -98,38 +98,40 @@ module.exports = {
 	},
 	putPlaylistById: async (req, res) => {
 		try {
-			if (!Number(req.params.id)) {
-				let options = {
-					method: 'GET',
-					uri: config.deezer.apiUrl + '/track/' + req.body.id,
-					json: true
-				};
-				let track = await request(options)
-				if (!track.id)
-					throw 'No track found'
-				if (!await playlistModel.findOne({_id: req.params.id, idUser: req.user._id, 'tracks.data': {$elemMatch: {id: track.id}}})) {
-					await playlistModel.updateOne({_id: req.params.id, idUser: req.user._id},
-						{$push: {'tracks.data': track}}
-					)
-				} else {
-					throw 'This song already exists in this playlist'
-				}
-			}
-			else {
-				let options = {
-					method: 'POST',
-					uri: config.deezer.apiUrl + '/playlist/' + req.params.id + '/tracks',
-					json: true,
-					qs: {
-						"access_token": req.user.deezerToken,
-						"songs": req.body.id
-					}
-				};
-				playlist = await request(options)
-				if (playlist !== true)
-					throw playlist.error.message
-			}
-			res.status(200).json({message: 'Track added'});
+			let playlist = await playlistModel.findByIdAndUpdate({_id: req.params.id}, req.body, {new: true})			
+			res.status(200).json(playlist);
+			// if (!Number(req.params.id)) {
+			// 	let options = {
+			// 		method: 'GET',
+			// 		uri: config.deezer.apiUrl + '/track/' + req.body.id,
+			// 		json: true
+			// 	};
+			// 	let track = await request(options)
+			// 	if (!track.id)
+			// 		throw 'No track found'
+			// 	if (!await playlistModel.findOne({_id: req.params.id, idUser: req.user._id, 'tracks.data': {$elemMatch: {id: track.id}}})) {
+			// 		await playlistModel.updateOne({_id: req.params.id, idUser: req.user._id},
+			// 			{$push: {'tracks.data': track}}
+			// 		)
+			// 	} else {
+			// 		throw 'This song already exists in this playlist'
+			// 	}
+			// }
+			// else {
+			// 	let options = {
+			// 		method: 'POST',
+			// 		uri: config.deezer.apiUrl + '/playlist/' + req.params.id + '/tracks',
+			// 		json: true,
+			// 		qs: {
+			// 			"access_token": req.user.deezerToken,
+			// 			"songs": req.body.id
+			// 		}
+			// 	};
+			// 	playlist = await request(options)
+			// 	if (playlist !== true)
+			// 		throw playlist.error.message
+			// }
+			// res.status(200).json({message: 'Track added'});
 		} catch (err) {
 			console.log("Bad Request putPlaylistById" + err)
 			res.status(400).send(err);
