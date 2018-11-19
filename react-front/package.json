@@ -5,16 +5,25 @@
   "dependencies": {
     "antd": "^3.10.3",
     "axios": "^0.18.0",
+    "cors": "^2.8.5",
+    "google-map-react": "^1.0.9",
     "moment": "^2.22.2",
+    "npm": "^6.4.1",
     "react": "^16.6.0",
     "react-bootstrap": "^0.32.4",
     "react-dom": "^16.6.0",
+    "react-facebook-login": "^4.1.1",
+    "react-geolocation": "^1.0.4",
+    "react-google-login": "^3.2.1",
+    "react-images-upload": "^1.2.3",
     "react-materialize": "^2.4.8",
+    "react-places-autocomplete": "^7.2.0",
     "react-redux": "^5.1.0",
+    "react-router": "^4.3.1",
     "react-scripts": "2.0.5"
   },
   "scripts": {
-    "start": "PORT=80 react-scripts start",
+    "start": "PORT=3000 HTTPS=true react-scripts start --cert=./certs/server.crt --key=./certs/server.key",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

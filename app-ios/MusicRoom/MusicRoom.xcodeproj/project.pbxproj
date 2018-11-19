@@ -7,12 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7701FE6B21998D8400B721EB /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7701FE6A21998D8300B721EB /* GLKit.framework */; };
+		77140AC1219C616D00270002 /* MyUser+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77140AC0219C616C00270002 /* MyUser+CoreDataProperties.swift */; };
+		772E7702219DC78C0005AE33 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 772E7701219DC78C0005AE33 /* MapKit.framework */; };
+		772E7704219DC7CB0005AE33 /* MapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772E7703219DC7CB0005AE33 /* MapController.swift */; };
+		772E7706219DCB4C0005AE33 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 772E7705219DCB4C0005AE33 /* CoreLocation.framework */; };
 		7743C23B2190587E002CC508 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7743C23A2190587E002CC508 /* Playlist.swift */; };
-		7743C2472190A03A002CC508 /* User+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7743C2452190A03A002CC508 /* User+CoreDataClass.swift */; };
-		7743C2482190A03A002CC508 /* User+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7743C2462190A03A002CC508 /* User+CoreDataProperties.swift */; };
+		7743C2472190A03A002CC508 /* MyUser+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7743C2452190A03A002CC508 /* MyUser+CoreDataClass.swift */; };
 		7743C24A2190A23C002CC508 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7743C2492190A23C002CC508 /* UserManager.swift */; };
+		7744A6552195DE8C0034F40E /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7744A6542195DE8C0034F40E /* AddressBook.framework */; };
+		7744A6572195E40D0034F40E /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7744A6562195E40D0034F40E /* libc++.tbd */; };
+		7744A6592195E4220034F40E /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7744A6582195E4220034F40E /* libz.tbd */; };
 		778BF9A921832CB800448FE6 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778BF9A821832CB800448FE6 /* Track.swift */; };
+		77AF56C22199ACF300E5FBB9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 77AF56C12199ACF200E5FBB9 /* GoogleService-Info.plist */; };
 		77B444762181CD0200B3F536 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B444752181CD0200B3F536 /* APIManager.swift */; };
+		77F2F50A219F101100CC9E8D /* LocationSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F2F509219F101100CC9E8D /* LocationSearchController.swift */; };
+		77F2F50C219F431800CC9E8D /* ToastMsg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F2F50B219F431700CC9E8D /* ToastMsg.swift */; };
+		77F5479621932172001B2901 /* AuthenticationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5479521932172001B2901 /* AuthenticationController.swift */; };
+		77F547982193257B001B2901 /* RegisterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F547972193257B001B2901 /* RegisterController.swift */; };
+		77F5479A21932CB2001B2901 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5479921932CB2001B2901 /* User.swift */; };
+		77FA6AF4219DDC6200884428 /* EventController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FA6AF3219DDC6200884428 /* EventController.swift */; };
 		7904E4462193A9EA009ECE1D /* PlayerButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7904E4452193A9EA009ECE1D /* PlayerButtonsView.swift */; };
 		791358A3219D605500F30BF9 /* SongsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791358A2219D605500F30BF9 /* SongsCollectionView.swift */; };
 		7920E79A218F0BF9008D1DD1 /* CoverContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7920E799218F0BF9008D1DD1 /* CoverContainerView.swift */; };
@@ -60,15 +74,37 @@
 		8F364B8B217E5B9100B57FC8 /* MusicRoom.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8F364B89217E5B9100B57FC8 /* MusicRoom.xcdatamodeld */; };
 		8F364B8D217E5B9200B57FC8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F364B8C217E5B9200B57FC8 /* Assets.xcassets */; };
 		8F364B90217E5B9200B57FC8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F364B8E217E5B9200B57FC8 /* LaunchScreen.storyboard */; };
+		8FEFE2972191E2CD0002E966 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FEFE2962191E2CD0002E966 /* LoginController.swift */; };
+		E997985E32780E8DC3179DD4 /* Pods_MusicRoom.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC674AABD535B082079B3A49 /* Pods_MusicRoom.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7701FE6A21998D8300B721EB /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		77140AC0219C616C00270002 /* MyUser+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "MyUser+CoreDataProperties.swift"; path = "/Users/etranchi/MusicRoom/app-ios/MusicRoom/MusicRoom/CoreData/MyUser+CoreDataProperties.swift"; sourceTree = "<absolute>"; };
+		77140AC2219C63B800270002 /* MusicRoom 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MusicRoom 2.xcdatamodel"; sourceTree = "<group>"; };
+		772E7701219DC78C0005AE33 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		772E7703219DC7CB0005AE33 /* MapController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapController.swift; sourceTree = "<group>"; };
+		772E7705219DCB4C0005AE33 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		7743C23A2190587E002CC508 /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
-		7743C2452190A03A002CC508 /* User+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreDataClass.swift"; sourceTree = "<group>"; };
-		7743C2462190A03A002CC508 /* User+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		7743C2452190A03A002CC508 /* MyUser+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MyUser+CoreDataClass.swift"; sourceTree = "<group>"; };
 		7743C2492190A23C002CC508 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
+		7744A6462195A8710034F40E /* Bolts.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Bolts.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7744A6472195A8710034F40E /* FacebookCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FacebookCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7744A6482195A8710034F40E /* FacebookLogin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FacebookLogin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7744A6492195A8710034F40E /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7744A64A2195A8710034F40E /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7744A6542195DE8C0034F40E /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		7744A6562195E40D0034F40E /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		7744A6582195E4220034F40E /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		778BF9A821832CB800448FE6 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
+		77AF56C12199ACF200E5FBB9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		77B444752181CD0200B3F536 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
+		77F2F509219F101100CC9E8D /* LocationSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchController.swift; sourceTree = "<group>"; };
+		77F2F50B219F431700CC9E8D /* ToastMsg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastMsg.swift; sourceTree = "<group>"; };
+		77F5479521932172001B2901 /* AuthenticationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationController.swift; sourceTree = "<group>"; };
+		77F547972193257B001B2901 /* RegisterController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterController.swift; sourceTree = "<group>"; };
+		77F5479921932CB2001B2901 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		77FA6AF3219DDC6200884428 /* EventController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventController.swift; sourceTree = "<group>"; };
 		7904E4452193A9EA009ECE1D /* PlayerButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerButtonsView.swift; sourceTree = "<group>"; };
 		791358A2219D605500F30BF9 /* SongsCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongsCollectionView.swift; sourceTree = "<group>"; };
 		7920E799218F0BF9008D1DD1 /* CoverContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverContainerView.swift; sourceTree = "<group>"; };
@@ -150,6 +186,11 @@
 		8F364B8C217E5B9200B57FC8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8F364B8F217E5B9200B57FC8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8F364B91217E5B9200B57FC8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8FEFE2942191DC420002E966 /* PlaylistCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistCell.swift; sourceTree = "<group>"; };
+		8FEFE2962191E2CD0002E966 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LoginController.swift; path = ../LoginController.swift; sourceTree = "<group>"; };
+		AC674AABD535B082079B3A49 /* Pods_MusicRoom.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MusicRoom.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B6FE34DBAE1555D838A7EBD9 /* Pods-MusicRoom.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicRoom.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom.debug.xcconfig"; sourceTree = "<group>"; };
+		C1F4CA7BD395A780F23DCE88 /* Pods-MusicRoom.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicRoom.release.xcconfig"; path = "Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,6 +198,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				772E7706219DCB4C0005AE33 /* CoreLocation.framework in Frameworks */,
+				772E7702219DC78C0005AE33 /* MapKit.framework in Frameworks */,
+				7701FE6B21998D8400B721EB /* GLKit.framework in Frameworks */,
+				7744A6592195E4220034F40E /* libz.tbd in Frameworks */,
+				7744A6572195E40D0034F40E /* libc++.tbd in Frameworks */,
+				7744A6552195DE8C0034F40E /* AddressBook.framework in Frameworks */,
 				8F18989E217F523800CE1A8D /* SafariServices.framework in Frameworks */,
 				8F189899217F25DA00CE1A8D /* AVFoundation.framework in Frameworks */,
 				8F189894217F233500CE1A8D /* MediaPlayer.framework in Frameworks */,
@@ -165,17 +212,26 @@
 				8F18988E217F231800CE1A8D /* AudioToolbox.framework in Frameworks */,
 				8F18988C217F230D00CE1A8D /* CoreAudio.framework in Frameworks */,
 				8F189888217F22EE00CE1A8D /* libDeezer.a in Frameworks */,
+				E997985E32780E8DC3179DD4 /* Pods_MusicRoom.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		772E7700219D87360005AE33 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				8FEFE2942191DC420002E966 /* PlaylistCell.swift */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		7743C23C21909F09002CC508 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
-				7743C2452190A03A002CC508 /* User+CoreDataClass.swift */,
-				7743C2462190A03A002CC508 /* User+CoreDataProperties.swift */,
+				7743C2452190A03A002CC508 /* MyUser+CoreDataClass.swift */,
+				77140AC0219C616C00270002 /* MyUser+CoreDataProperties.swift */,
 				7743C2492190A23C002CC508 /* UserManager.swift */,
 			);
 			path = CoreData;
@@ -189,8 +245,29 @@
 				79B15ECF218C700C00B84BCB /* Album.swift */,
 				799DA436218D289400C803E3 /* Artist.swift */,
 				7743C23A2190587E002CC508 /* Playlist.swift */,
+				77F5479921932CB2001B2901 /* User.swift */,
 			);
 			path = Modele;
+			sourceTree = "<group>";
+		};
+		77F54792219320B1001B2901 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				8FEFE2962191E2CD0002E966 /* LoginController.swift */,
+				77F5479521932172001B2901 /* AuthenticationController.swift */,
+				77F547972193257B001B2901 /* RegisterController.swift */,
+			);
+			path = Authentication;
+			sourceTree = "<group>";
+		};
+		77FA6AF2219DDC3500884428 /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				772E7703219DC7CB0005AE33 /* MapController.swift */,
+				77FA6AF3219DDC6200884428 /* EventController.swift */,
+				77F2F509219F101100CC9E8D /* LocationSearchController.swift */,
+			);
+			path = Map;
 			sourceTree = "<group>";
 		};
 		796ECB38218DC9E200321B3B /* Views */ = {
@@ -214,6 +291,7 @@
 			children = (
 				7991484121889F8D00120E2D /* Extensions.swift */,
 				7970B6EE2190C3980007F831 /* AppUtility.swift */,
+				77F2F50B219F431700CC9E8D /* ToastMsg.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -229,6 +307,8 @@
 		79CDCF1A21886EE40095CC63 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				77FA6AF2219DDC3500884428 /* Map */,
+				77F54792219320B1001B2901 /* Authentication */,
 				799C8BFA219029A3003868A2 /* UICustomisation */,
 				79CDCF1E218870F70095CC63 /* LoadingController.swift */,
 				79CDCF20218871A20095CC63 /* TabBarController.swift */,
@@ -316,6 +396,17 @@
 		8F18988A217F230D00CE1A8D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				772E7705219DCB4C0005AE33 /* CoreLocation.framework */,
+				772E7701219DC78C0005AE33 /* MapKit.framework */,
+				7701FE6A21998D8300B721EB /* GLKit.framework */,
+				7744A6582195E4220034F40E /* libz.tbd */,
+				7744A6562195E40D0034F40E /* libc++.tbd */,
+				7744A6542195DE8C0034F40E /* AddressBook.framework */,
+				7744A6462195A8710034F40E /* Bolts.framework */,
+				7744A6472195A8710034F40E /* FacebookCore.framework */,
+				7744A6482195A8710034F40E /* FacebookLogin.framework */,
+				7744A6492195A8710034F40E /* FBSDKCoreKit.framework */,
+				7744A64A2195A8710034F40E /* FBSDKLoginKit.framework */,
 				8F18989D217F523800CE1A8D /* SafariServices.framework */,
 				8F189898217F25DA00CE1A8D /* AVFoundation.framework */,
 				8F189893217F233500CE1A8D /* MediaPlayer.framework */,
@@ -323,6 +414,7 @@
 				8F18988F217F232100CE1A8D /* SystemConfiguration.framework */,
 				8F18988D217F231800CE1A8D /* AudioToolbox.framework */,
 				8F18988B217F230D00CE1A8D /* CoreAudio.framework */,
+				AC674AABD535B082079B3A49 /* Pods_MusicRoom.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -345,6 +437,8 @@
 				8F364B81217E5B9100B57FC8 /* MusicRoom */,
 				8F364B80217E5B9100B57FC8 /* Products */,
 				8F18988A217F230D00CE1A8D /* Frameworks */,
+				ADBFE756833B4B20F11FB7AC /* Pods */,
+				772E7700219D87360005AE33 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -370,10 +464,20 @@
 				8F364B8C217E5B9200B57FC8 /* Assets.xcassets */,
 				8F364B8E217E5B9200B57FC8 /* LaunchScreen.storyboard */,
 				8F364B91217E5B9200B57FC8 /* Info.plist */,
+				77AF56C12199ACF200E5FBB9 /* GoogleService-Info.plist */,
 				8F364B89217E5B9100B57FC8 /* MusicRoom.xcdatamodeld */,
 				8F189895217F23DD00CE1A8D /* bridge.h */,
 			);
 			path = MusicRoom;
+			sourceTree = "<group>";
+		};
+		ADBFE756833B4B20F11FB7AC /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				B6FE34DBAE1555D838A7EBD9 /* Pods-MusicRoom.debug.xcconfig */,
+				C1F4CA7BD395A780F23DCE88 /* Pods-MusicRoom.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -383,9 +487,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8F364B94217E5B9200B57FC8 /* Build configuration list for PBXNativeTarget "MusicRoom" */;
 			buildPhases = (
+				92FC604B71B7C7A83D33E63C /* [CP] Check Pods Manifest.lock */,
 				8F364B7B217E5B9100B57FC8 /* Sources */,
 				8F364B7C217E5B9100B57FC8 /* Frameworks */,
 				8F364B7D217E5B9100B57FC8 /* Resources */,
+				049E39241575533CD7B6141F /* [CP] Embed Pods Frameworks */,
+				49B292DD4F23CBBF7B07A046 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -436,12 +543,84 @@
 			buildActionMask = 2147483647;
 			files = (
 				8F364B90217E5B9200B57FC8 /* LaunchScreen.storyboard in Resources */,
+				77AF56C22199ACF300E5FBB9 /* GoogleService-Info.plist in Resources */,
 				8F364B8D217E5B9200B57FC8 /* Assets.xcassets in Resources */,
 				8F189889217F22EE00CE1A8D /* DZRResources.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		049E39241575533CD7B6141F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Bolts/Bolts.framework",
+				"${BUILT_PRODUCTS_DIR}/FBSDKCoreKit/FBSDKCoreKit.framework",
+				"${BUILT_PRODUCTS_DIR}/FBSDKLoginKit/FBSDKLoginKit.framework",
+				"${BUILT_PRODUCTS_DIR}/FacebookCore/FacebookCore.framework",
+				"${BUILT_PRODUCTS_DIR}/FacebookLogin/FacebookLogin.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMOAuth2/GTMOAuth2.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Bolts.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKCoreKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKLoginKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FacebookCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FacebookLogin.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMOAuth2.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		49B292DD4F23CBBF7B07A046 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom-resources.sh",
+				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		92FC604B71B7C7A83D33E63C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MusicRoom-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8F364B7B217E5B9100B57FC8 /* Sources */ = {
@@ -454,20 +633,26 @@
 				79DD4A7F219C6D55005578EB /* SearchTrackCell.swift in Sources */,
 				77B444762181CD0200B3F536 /* APIManager.swift in Sources */,
 				7999CBA02199D93A004A1F18 /* AlbumHeaderView.swift in Sources */,
+				77F5479621932172001B2901 /* AuthenticationController.swift in Sources */,
 				778BF9A921832CB800448FE6 /* Track.swift in Sources */,
+				7743C2472190A03A002CC508 /* MyUser+CoreDataClass.swift in Sources */,
 				79DD4A79219C3F04005578EB /* SearchController.swift in Sources */,
-				7743C2472190A03A002CC508 /* User+CoreDataClass.swift in Sources */,
 				79CDCF1F218870F70095CC63 /* LoadingController.swift in Sources */,
+				77F2F50C219F431800CC9E8D /* ToastMsg.swift in Sources */,
 				7743C24A2190A23C002CC508 /* UserManager.swift in Sources */,
+				77F2F50A219F101100CC9E8D /* LocationSearchController.swift in Sources */,
 				7904E4462193A9EA009ECE1D /* PlayerButtonsView.swift in Sources */,
+				77F547982193257B001B2901 /* RegisterController.swift in Sources */,
 				79B15ED0218C700C00B84BCB /* Album.swift in Sources */,
 				7991C46C21988DAF0079F831 /* AlbumController.swift in Sources */,
 				79B15ECE218C69AA00B84BCB /* MusicCategory.swift in Sources */,
 				8F18989C217F3B4D00CE1A8D /* DeezerManager.swift in Sources */,
 				79FF7D12219D9B11001DAE17 /* SearchArtistCell.swift in Sources */,
 				8F364B83217E5B9100B57FC8 /* AppDelegate.swift in Sources */,
+				8FEFE2972191E2CD0002E966 /* LoginController.swift in Sources */,
 				796ECB3A218DCAE400321B3B /* ProgressCircle.swift in Sources */,
 				799DA43D218D3ED300C803E3 /* AlbumCell.swift in Sources */,
+				77FA6AF4219DDC6200884428 /* EventController.swift in Sources */,
 				79B4DE73218B4637001031D2 /* SearchBarCell.swift in Sources */,
 				79A3F9A92193E602007CEB86 /* PlayerManager.swift in Sources */,
 				799DA43B218D3E7F00C803E3 /* SongCell.swift in Sources */,
@@ -477,9 +662,9 @@
 				7920E79A218F0BF9008D1DD1 /* CoverContainerView.swift in Sources */,
 				79FF7D14219D9BCC001DAE17 /* ArtistsCollectionView.swift in Sources */,
 				799DA437218D289400C803E3 /* Artist.swift in Sources */,
-				7743C2482190A03A002CC508 /* User+CoreDataProperties.swift in Sources */,
 				79DD4A7B219C4A49005578EB /* SearchAlbumCell.swift in Sources */,
 				7999CBA22199E58D004A1F18 /* AlbumTrackListCell.swift in Sources */,
+				77140AC1219C616D00270002 /* MyUser+CoreDataProperties.swift in Sources */,
 				79493E962194570600DD03FF /* MinimizedPlayerView.swift in Sources */,
 				7991484221889F8D00120E2D /* Extensions.swift in Sources */,
 				79CDCF2B218876ED0095CC63 /* CustomNavigationController.swift in Sources */,
@@ -487,8 +672,10 @@
 				79FF7D10219D795A001DAE17 /* SeeAllSongsController.swift in Sources */,
 				8F364B8B217E5B9100B57FC8 /* MusicRoom.xcdatamodeld in Sources */,
 				799DA433218D19E900C803E3 /* PlayerController.swift in Sources */,
+				77F5479A21932CB2001B2901 /* User.swift in Sources */,
 				799DA439218D3D8500C803E3 /* ArtistCell.swift in Sources */,
 				791358A3219D605500F30BF9 /* SongsCollectionView.swift in Sources */,
+				772E7704219DC7CB0005AE33 /* MapController.swift in Sources */,
 				79CDCF23218873300095CC63 /* PlaylistController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -511,6 +698,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -540,6 +728,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -558,13 +747,14 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VALID_ARCHS = "armv7 armv7s x86_64";
 			};
 			name = Debug;
 		};
@@ -572,6 +762,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -601,6 +792,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -613,21 +805,43 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = "armv7 armv7s x86_64";
 			};
 			name = Release;
 		};
 		8F364B95217E5B9200B57FC8 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B6FE34DBAE1555D838A7EBD9 /* Pods-MusicRoom.debug.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = R5PF2384QF;
+				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Bolts\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FBSDKCoreKit\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FBSDKLoginKit\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FBSDKShareKit\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FacebookCore\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FacebookLogin\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FacebookShare\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GTMOAuth2\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GTMSessionFetcher\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleToolboxForMac\"",
+					"\"${PODS_ROOT}/FirebaseAnalytics/Frameworks\"",
+					"\"${PODS_ROOT}/FirebaseCore/Frameworks\"",
+					"\"${PODS_ROOT}/FirebaseInstanceID/Frameworks\"",
+					"\"${PODS_ROOT}/Google/Frameworks\"",
+					"\"${PODS_ROOT}/GoogleSignIn/Frameworks\"",
+				);
 				INFOPLIST_FILE = MusicRoom/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -635,21 +849,29 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/DeezerSDK",
 				);
-				OTHER_LDFLAGS = "-all_load";
+				OTHER_LDFLAGS = (
+					"-all_load",
+					"$(inherited)",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = jdavin.MusicRoom;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = MusicRoom/bridge.h;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "i386 x86_64";
 			};
 			name = Debug;
 		};
 		8F364B96217E5B9200B57FC8 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C1F4CA7BD395A780F23DCE88 /* Pods-MusicRoom.release.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = R5PF2384QF;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = MusicRoom/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -657,12 +879,17 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/DeezerSDK",
 				);
-				OTHER_LDFLAGS = "-all_load";
+				OTHER_LDFLAGS = (
+					"-all_load",
+					"$(inherited)",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = jdavin.MusicRoom;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = MusicRoom/bridge.h;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "i386 x86_64";
 			};
 			name = Release;
 		};
@@ -693,9 +920,10 @@
 		8F364B89217E5B9100B57FC8 /* MusicRoom.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				77140AC2219C63B800270002 /* MusicRoom 2.xcdatamodel */,
 				8F364B8A217E5B9100B57FC8 /* MusicRoom.xcdatamodel */,
 			);
-			currentVersion = 8F364B8A217E5B9100B57FC8 /* MusicRoom.xcdatamodel */;
+			currentVersion = 77140AC2219C63B800270002 /* MusicRoom 2.xcdatamodel */;
 			path = MusicRoom.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

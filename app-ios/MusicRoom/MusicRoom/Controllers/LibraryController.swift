@@ -10,9 +10,20 @@ import UIKit
 
 class LibraryController: UITableViewController {
 
+    
+    @objc func handleWheel() {
+        let vc = SettingsController()
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(named:"reglage")?.withRenderingMode(.automatic), for: .normal)
+        button.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
+        button.contentMode = .scaleAspectFill
+        button.addTarget(self, action: #selector(handleWheel), for: .touchUpInside)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
         view.backgroundColor = UIColor(white: 0.1, alpha: 1)
     }
     

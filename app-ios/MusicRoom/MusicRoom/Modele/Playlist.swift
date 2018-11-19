@@ -15,3 +15,7 @@ struct Playlist : Decodable {
     let tracklist : String
     let tracks : TrackData?
 }
+
+struct PlaylistData: Decodable {
+    let data : [Playlist]
+}

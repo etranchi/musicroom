@@ -12,19 +12,20 @@ import Foundation
 
 class UserManager {
     public var context : NSManagedObjectContext
+    public var currentUser : MyUser?
     
-    public func newArticle() -> MyUser
+    public func newUser() -> MyUser
     {
-        var article: MyUser?
+        var user: MyUser?
         context.performAndWait {
             let ent = NSEntityDescription.entity(forEntityName: "MyUser", in: context)!
-            article = MyUser(entity: ent, insertInto: context)
+            user = MyUser(entity: ent, insertInto: context)
         }
-        return article!
+        return user!
     }
     
     private lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator = {
-        let modelUrl: URL = Bundle(for: MyUser.self).url(forResource: "user", withExtension: "momd")!
+        let modelUrl: URL = Bundle(for: MyUser.self).url(forResource: "MusicRoom", withExtension: "momd")!
         let managedObjectModel = NSManagedObjectModel(contentsOf: modelUrl)!
         let persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
         
@@ -34,9 +35,9 @@ class UserManager {
         let documentsDirectoryURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
         
         let persistentStoreURL = documentsDirectoryURL.appendingPathComponent(storeName)
-        
+        let options = [NSInferMappingModelAutomaticallyOption : true, NSMigratePersistentStoresAutomaticallyOption : true]
         do {
-            try persistentStoreCoordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: persistentStoreURL, options: nil)
+            try persistentStoreCoordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: persistentStoreURL, options: options)
         } catch {
             fatalError("Unable to Load Persistent Store")
         }
@@ -62,6 +63,19 @@ class UserManager {
         }
         return result
     }*/
+    
+    public func getAllUsers() -> [MyUser] {
+        var result : [MyUser] = []
+        context.performAndWait {
+            let request = NSFetchRequest<NSFetchRequestResult>(entityName: "MyUser")
+            do {
+                result = try context.fetch(request) as! [MyUser]
+            } catch (let err){
+                print(err.localizedDescription)
+            }
+        }
+        return result
+    }
     
     public func save() -> Void {
         context.performAndWait {
