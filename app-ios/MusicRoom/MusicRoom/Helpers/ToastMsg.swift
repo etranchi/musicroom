@@ -22,7 +22,7 @@ open class ToastView: UILabel {
         return Static.instance
     }
     
-    func setup(_ view: UIView,txt_msg:String)
+    func setup(_ view: UIView,txt_msg:String, color : UIColor)
     {
         let white = UIColor ( red: 1/255, green: 0/255, blue:0/255, alpha: 0.0 )
         
@@ -33,7 +33,7 @@ open class ToastView: UILabel {
         
         overlayView.frame = CGRect(x: 0, y: 0, width: view.frame.width - 60  , height: 50)
         overlayView.center = CGPoint(x: view.bounds.width / 2, y: view.frame.height * 0.2)
-        overlayView.backgroundColor = UIColor.black
+        overlayView.backgroundColor = color
         overlayView.clipsToBounds = true
         overlayView.layer.cornerRadius = 10
         overlayView.alpha = 0
@@ -50,8 +50,8 @@ open class ToastView: UILabel {
         view.addSubview(overlayView)
     }
     
-    open func short(_ view: UIView,txt_msg:String) {
-        self.setup(view,txt_msg: txt_msg)
+    open func short(_ view: UIView,txt_msg:String, color : UIColor) {
+        self.setup(view,txt_msg: txt_msg, color : color)
         //Animation
         UIView.animate(withDuration: 1, animations: {
             self.overlayView.alpha = 1
@@ -71,8 +71,8 @@ open class ToastView: UILabel {
         }
     }
     
-    open func long(_ view: UIView,txt_msg:String) {
-        self.setup(view,txt_msg: txt_msg)
+    open func long(_ view: UIView,txt_msg:String, color : UIColor) {
+        self.setup(view,txt_msg: txt_msg, color : color)
         //Animation
         UIView.animate(withDuration: 2, animations: {
             self.overlayView.alpha = 1

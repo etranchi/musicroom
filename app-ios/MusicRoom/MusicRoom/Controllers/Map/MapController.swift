@@ -58,7 +58,7 @@ class MapController: UIViewController {
     }
     
     func printToastMsg() {
-        ToastView.shared.short(self.view, txt_msg: "Event created")
+        ToastView.shared.short(self.view, txt_msg: "Event created", color : UIColor.green)
     }
     
     @objc func addEvent() {

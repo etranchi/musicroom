@@ -196,7 +196,7 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
             vc.printToastMsg()
         }
         else {
-            ToastView.shared.short(self.view, txt_msg: "Check twice your information")
+            ToastView.shared.short(self.view, txt_msg: "Check twice your information", color : UIColor.red)
         }
     }
     
