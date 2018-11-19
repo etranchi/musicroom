@@ -32,7 +32,7 @@ class CardHeader extends Component {
                     <Card.Grid style={this.gridStyleBlack}></Card.Grid>
                     <Card.Grid style={this.gridStylePicture}>
                         <img className="Image" alt="eventPicture" src={"https://192.168.99.100:4242/eventPicture/" + this.props.state.data.event.picture} />
-                        <div className="CenterTitle"> <h1 className="Title">  {this.props.state.data.event.title[0].toUpperCase() + this.props.state.data.event.title.slice(1)} </h1> </div>
+                        <div className="CenterTitle"> <h1 className="Title">  {this.props.state.data.event.title ? this.props.state.data.event.title[0].toUpperCase() + this.props.state.data.event.title.slice(1) : "Aucun"} </h1> </div>
                     </Card.Grid>
                     <Card.Grid style={this.gridStyleBlack}></Card.Grid>
                     

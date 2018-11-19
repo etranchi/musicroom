@@ -111,6 +111,7 @@ router.get('/me',
 router.put('/me',
 		passport.authenticate('bearer'),
 		middlewares.isConfirmed,
+		upload.single('file'),
 		userController.modifyUserById
 	);
 

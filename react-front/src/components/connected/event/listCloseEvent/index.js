@@ -3,7 +3,7 @@ import './styles.css';
 import { Layout, Row, Col, Divider} from 'antd';
 import Map from './map'
 import axios from 'axios'
-import PreviewCard from '../previewCardEvent'
+import List from '../listEvent'
 
 class listCloseEvent extends Component {
 	constructor(props) {
@@ -47,20 +47,12 @@ class listCloseEvent extends Component {
                             <Row>
                                 <Col span={6}></Col>
                                 <Col span={12}>
-                                <Map  state={this.props.state} center={this.state.center} updateParent={this.props.updateParent}/>
+                                    <Map  state={this.props.state} center={this.state.center} updateParent={this.props.updateParent}/>
                                 </Col>
                                 <Col span={6}></Col>
                             </Row>
                             <Divider />
-                            <div style={{width:'82%', margin: '0 8% 0 10%'}}>
-                                {
-                                    this.props.state.data.events.map((event, key) => {
-                                        return (
-                                            <PreviewCard key={key} event={event} state={this.props.state} updateParent={this.props.updateParent}/>
-                                        )
-                                    })
-                                }
-                            </div>
+                            <List state={this.props.state} updateParent={this.props.updateParent}/>
                         </Content>
                         <Footer>
 

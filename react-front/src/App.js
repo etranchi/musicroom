@@ -3,8 +3,13 @@ import './reset.css';
 import './App.css'
 import Connection from './components/connection'
 import Connected from './components/connected'
+import Menu from './components/other/menu'
+import FooterLegacy from './components/other/footerLegacy'
 import "antd/dist/antd.css";
 import axios from 'axios'
+import {Button, Layout} from 'antd';
+
+const { Header, Content, Footer } = Layout
 
 class App extends Component {
 	constructor(props) {
@@ -15,7 +20,10 @@ class App extends Component {
       'data': [],
       'id': null,
       'user': null,
-		}
+      'playlistId': null,
+      'selected':'event'
+    }
+    
 	}
 
   updateState = (val) => {
@@ -45,19 +53,42 @@ class App extends Component {
     })
     }
   }
-
+  deleteToken() {
+    localStorage.setItem('token', '');
+    this.updateState({'token': '', 'currentComponent': 'login'})
+  }
   render() {
     const token = localStorage.getItem('token')
     return (
-      <div className="App">
-      <div id="dz-root"></div>
-      {token ? (
-        <Connected updateParent={this.updateState} state={this.state}/>
+        <Layout className="App">
+          <Header className="HeaderApp">
+              <img alt="headerImg" className="HeaderImage" src="/header.png"></img>
+              <div className="disconnect"> 
+                	<Button type="primary" onClick={this.deleteToken.bind(this)}>Disconnect</Button>
+              </div>
+              {
+                token ?
+                  <Menu  state={this.state} updateParent={this.updateState}/>
+                  :
+                  null
+              }
+          </Header>
 
-      ) : (
-        <Connection updateParent={this.updateState} state={this.state}/>
-      )}
-      </div>
+
+          <Content style={{backgroundColor:'#263238 !important'}}>
+              <div id="dz-root"></div>
+              {token ? (
+                <Connected updateParent={this.updateState} state={this.state}/>
+
+              ) : (
+                <Connection updateParent={this.updateState} state={this.state}/>
+              )}
+
+          </Content>
+          <Footer style={{backgroundColor:'#263238'}}>
+                <FooterLegacy />
+          </Footer>
+        </Layout>
       
     );
   }
