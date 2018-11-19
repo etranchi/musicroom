@@ -10,8 +10,9 @@ class Login extends Component {
 		this.state = {
 			email: "",
 			password: ""
-		};
+		}
 	}
+
 	validateForm() {
 		return this.state.email.length > 0 && this.state.password.length > 0;
 	}
@@ -52,8 +53,8 @@ class Login extends Component {
 			</Row>
 			<Row>
 				<Col span={11}></Col>
-				<Col span={4}>
-					<Button  onClick={this.handleSubmit.bind(this)}> Login </Button>
+				<Col span={2}>
+					<Button style={{'width':'100%'}}size="large"  onClick={this.handleSubmit.bind(this)}> Login </Button>
 				</Col>
 			</Row>
 			<Divider />

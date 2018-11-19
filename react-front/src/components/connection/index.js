@@ -2,12 +2,20 @@ import React, { Component } from 'react';
 import './styles.css';
 import Login from './login'
 import Register from './register'
-import {Button, Row,  Col} from 'antd'
+import {Row,  Col, Menu, Icon} from 'antd'
 import axios from 'axios'
 import FacebookLogin from 'react-facebook-login';
 import GoogleLogin from 'react-google-login';
 
 class Connection extends Component {
+
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      current:"mail"
+    }
+  }
   responseFacebook(response) {
     if (response.accessToken)
     {
@@ -37,16 +45,39 @@ class Connection extends Component {
       })
     }
   }
+  handleClick = (e) => {
+    console.log('click ', e);
+    this.setState({
+      current: e.key,
+    });
+  }
   render() {
     return (
       <div>
-      	<div style={{'textAlign':'center', 'margin': '1em'}}>	
-        <div>
-      	{this.props.state.currentComponent === 'register'? <Button type="primary" onClick={this.props.updateParent.bind(this, {'currentComponent':'login'})}>Login</Button> : null}
-      	{this.props.state.currentComponent === 'login'? <Button type="primary" onClick={this.props.updateParent.bind(this, {'currentComponent':'register'})}>Register</Button> : null}
-        </div>
-        <Row type="flex" justify="center" style={{'max-height':'fill-available'}}>
-          <Col>
+        <Row>
+          <Col span={10}></Col>
+          <Col span={4}>
+            <div style={{textAlign:'center'}}>
+              <Menu
+                onClick={this.handleClick}
+                selectedKeys={[this.state.current]}
+                mode="horizontal"
+              >
+                <Menu.Item key="login" onClick={this.props.updateParent.bind(this, {'currentComponent': 'login'})}>
+                  <Icon type="login" />Login
+                </Menu.Item>
+                <Menu.Item key="register" onClick={this.props.updateParent.bind(this,{'currentComponent': 'register'})}>
+                <Icon type="form" /> Register
+                </Menu.Item>
+              </Menu>
+            </div>
+          </Col>
+         </Row>
+       	  {this.props.state.currentComponent === 'register'? <Register updateParent={this.props.updateParent}/> : null}
+          {this.props.state.currentComponent === 'login'? <Login updateParent={this.props.updateParent}/> : null}
+         <Row style={{height:'80px'}}>
+          <Col span={8}></Col>
+          <Col span={3}>
             <FacebookLogin
               appId="711181125906087"
               autoLoad={false}
@@ -54,20 +85,19 @@ class Connection extends Component {
               cssClass="facebook_button"
               callback={this.responseFacebook.bind(this)} />
           </Col>
-          <Col>
+          <Col span={2}></Col>
+          <Col span={3}>
             <GoogleLogin
               clientId="479103948820-tb38ba04oig61ogfdjgs6s07u9ph626o.apps.googleusercontent.com"
               className="google_button"
               onSuccess={this.responseGoogle.bind(this)}
               onFailure={this.responseGoogle.bind(this)}/>
           </Col>
-        </Row>
-      	</div>
-       	{this.props.state.currentComponent === 'register'? <Register updateParent={this.props.updateParent}/> : null}
-       	{this.props.state.currentComponent === 'login'? <Login updateParent={this.props.updateParent}/> : null}
+         </Row>
       </div>
     );
   }
 }
+
 
 export default Connection;

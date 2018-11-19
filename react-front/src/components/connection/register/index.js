@@ -94,7 +94,7 @@ class Register extends Component {
 				<Content>
 				<Divider/>
 				<Row>
-                    <Col span={11}></Col>
+                    <Col span={10}></Col>
                     <Col span={8}>
 						<Upload
 							name="file"
@@ -107,7 +107,6 @@ class Register extends Component {
 							{this.state.imageUrl ? <img src={this.state.imageUrl} alt="avatar" /> : this.uploadButton}
 						</Upload>
                     </Col>
-
                 </Row>
 				<Row>
                     <Col span={10}></Col>
@@ -129,8 +128,8 @@ class Register extends Component {
                 </Row>
 				<Row>
 					<Col span={11}></Col>
-					<Col span={4}>
-						<Button  onClick={this.handleSubmit.bind(this)}> Register</Button>
+					<Col span={2}>
+						<Button style={{'width':'100%'}}size="large"  onClick={this.handleSubmit.bind(this)}> Register </Button>
 					</Col>
 				</Row>
 				<Divider />

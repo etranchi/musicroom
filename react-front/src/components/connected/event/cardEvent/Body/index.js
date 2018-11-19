@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import './styles.css';
 import SearchBar from '../../../searchbar';
-import { List, Divider, Card, Avatar, Icon, Col, Row } from 'antd';
+import MemberList  from './MemberList';
+import {Divider, Icon, Col, Row } from 'antd';
 
 
 
@@ -33,7 +34,7 @@ class Body extends Component {
         {
             this.props.state.data.event.playlist = playlist;
             this.setState({playlistId:playlist.id})
-            this.props.updateParent({'data' : this.props.state.data})
+            this.props.updateParent({'data' : this.props.state.data, 'playlistId':playlist.id})
         }
     }
     removeMember = (type, item) => {
@@ -62,7 +63,7 @@ class Body extends Component {
                     <Col span={4}></Col>
                     <Col span={14}>
                         <h1 className="titleBig" > {this.props.state.data.event.title || "Aucun"}</h1>
-                        <i className="titleBig fas fa-map" style={{color:'#03a9f4'}}onClick={this.props.updateMap.bind(this)}></i>
+                        <i className="titleBig fas fa-map" style={{color:'#00695c'}}onClick={this.props.updateMap.bind(this)}></i>
                         <Divider />
                     </Col>
                 </Row>
@@ -87,67 +88,11 @@ class Body extends Component {
                         <Divider />
                     </Col>
                 </Row>
-                <Row style={{height:'70px'}}>
-                    <Col span={5}></Col>
-                    <Col span={3} >
-                        <b style={{display:'inline-block'}} > ({this.props.state.data.event.members.length}) </b>
-                        <p style={{display:'inline-block'}} > Ajouter un membres : </p>
-                    </Col>
-                    <Col span={3}>
-                        <SearchBar state={this.props.state} type="member" updateEventMember={this.updateEventMember}/>
-                    </Col>
-                </Row>
-                <Row style={{height:'120px'}}>
-                    <Col span={5}></Col>
-                    <Col span={12}>
-                        <List
-                            grid={{ gutter: 16, column: 3 }}
-                            dataSource={this.props.state.data.event.members}
-                            renderItem={item => (
-                                <List.Item>
-                                    <Card.Meta
-                                        avatar={<Avatar size={116} src={item.facebookId ? item.picture : "https://192.168.99.100:4242/userPicture/" + item.picture} />}
-                                        title={item.login}
-                                        description={item.email}
-                                    />
-                                    <div  className="zoomCard" style={{width:'5%', margin:'-10% 0 0 40%'}} onClick={this.removeMember.bind(this, "member", item)}><Icon style={{color:'#B71C1C'}}  type="close" theme="outlined"/></div>
-                                </List.Item>     
-                            )}
-                        />
-                    </Col>
-                    <Col span={3}></Col>
-                </Row>
-                <Row style={{margin: '3% 0 0 0',height:'70px'}}>
-                    <Col span={5}> </Col>
-                    <Col span={3} >
-                        <b style={{display:'inline-block'}} > ({this.props.state.data.event.adminMembers.length}) </b>
-                        <p style={{display:'inline-block'}} > Ajouter un admin : </p>
-                    </Col>
-                    <Col span={3}>
-                        <SearchBar state={this.props.state} type="admin" updateEventMember={this.updateEventMember}/>
-                    </Col>
-                </Row>
-                <Row style={{height:'130px'}}>
-                    <Col span={5}></Col>
-                    <Col span={12}>
-                        <List
-                             grid={{ gutter: 16, column: 3 }}
-                            dataSource={this.props.state.data.event.adminMembers}
-                            renderItem={item => (
-                                <List.Item>
-                                    <Card.Meta
-                                        avatar={<Avatar size={116} src={item.facebookId ? item.picture : "https://192.168.99.100:4242/userPicture/" + item.picture} />}
-                                        title={item.login}
-                                        description={item.email}
-                                    />
-                                     <div className="zoomCard" style={{width:'5%', margin:'-10% 0 0 40%'}} onClick={this.removeMember.bind(this, "admin", item)}><Icon size={36} style={{color:'#B71C1C'}} type="close" theme="outlined"/></div>
-                                </List.Item>     
-                            )}
-                        />   
-                        <Divider />
-                    </Col>
-                    <Col span={3}></Col>
-                </Row>
+
+                <MemberList state={this.props.state} name={" Ajouter un membre :"} members={this.props.state.data.event.members} type={"member"} removeMember={this.removeMember} updateEventMember={this.updateEventMember}/>
+                <MemberList state={this.props.state} name={" Ajouter un admin :"} members={this.props.state.data.event.adminMembers} type={"admin"} removeMember={this.removeMember} updateEventMember={this.updateEventMember}/>
+                
+                <Divider />
                 <Row style={{height:'70px'}}>
                     <Col span={5}> </Col>
                     <Col span={3} >
@@ -166,7 +111,6 @@ class Body extends Component {
                         + "&app_id=1"} width="700" height="350"></iframe> : null
                     }
                     </Col>
-                    <Col span={3}></Col>
                 </Row>
             </div>
         );

@@ -50,7 +50,7 @@ class ListEvent extends Component {
 	}
 	
 	render() {
-		const { Footer, Content } = Layout;
+		const {Content } = Layout;
 		if (!this.state.loading) 
 			return ( <p> OUPSI </p>)
 		else {
@@ -82,9 +82,6 @@ class ListEvent extends Component {
 						}
 					</div>
 					</Content>
-					<Footer>
-
-					</Footer>
 				</Layout>
 			);
 		}
