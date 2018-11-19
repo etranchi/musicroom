@@ -12,6 +12,12 @@ class LibraryController: UITableViewController {
 
     private let libraryCellId = "libraryCellId"
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationController?.navigationBar.topItem?.title = "Your Library"
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(white: 0.1, alpha: 1)

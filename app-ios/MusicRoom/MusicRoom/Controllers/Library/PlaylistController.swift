@@ -14,13 +14,7 @@ class PlaylistController: UIViewController {
         super.viewWillAppear(animated)
         
         navigationController?.navigationBar.topItem?.title = ""
-        title = "Your Playlists"
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        navigationController?.navigationBar.topItem?.title = "Your Library"
+        title = "Playlists"
     }
     
     override func viewDidLoad() {
