@@ -150,6 +150,8 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         minimizedPlayer?.update(isPlaying: false, title: tracks[index].title, artist: tracks[index].artist!.name)
     }
     
+    
+    
     func loadTrackInplayer() {
         cancelable = DZRTrack.object(withIdentifier: String(tracks[index].id), requestManager: request, callback: { (response, err) in
             if err != nil {
@@ -170,6 +172,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
                 self.reloadView()
             }
         })
+        
     }
     
     fileprivate func reloadView() {
@@ -185,6 +188,17 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     
     @objc func handleHide() {
         rootViewController?.animatedHidePlayer()
+    }
+    
+    fileprivate func reloadView() {
+        if let cu = (UIApplication.shared.keyWindow?.rootViewController as? TabBarController)?.selectedViewController as? CustomNavigationController {
+            if let co = cu.topViewController as? UICollectionViewController {
+                co.collectionView.reloadData()
+            }
+            if let ta = cu.topViewController as? UITableViewController {
+                ta.tableView.reloadData()
+            }
+        }
     }
     
     func setupTrack(indexOffset: Int) {
