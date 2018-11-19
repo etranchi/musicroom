@@ -15,7 +15,7 @@ class TabBarController: UITabBarController {
 
     var offsetY: CGFloat = 0.0
     let imageInsets = UIEdgeInsets(top: 10, left: 0, bottom: -10, right: 0)
-    let tabViewController0 = PlaylistController(collectionViewLayout: UICollectionViewFlowLayout())
+    let tabViewController0 = HomeController(collectionViewLayout: UICollectionViewFlowLayout())
     let tabViewController1 = SearchController()
     let tabViewController2 = LibraryController()
     let tabViewController3 = MapController()
@@ -46,7 +46,6 @@ class TabBarController: UITabBarController {
     
     func showPlayerFromMinimized() {
         animatedShowPlayer()
-        
     }
     
     func showPlayerForSong(_ index: Int, tracks: [Track]) {
@@ -88,10 +87,10 @@ class TabBarController: UITabBarController {
         playerView.transform = CGAffineTransform(translationX: 0, y: view.bounds.height - offsetY - 44)
         tabViewController0.title = "Playlists"
         tabViewController1.title = "Search"
-        tabViewController2.title = "Library"
+        tabViewController2.title = "Your Library"
         tabViewController3.title = "Map"
         
-        tabViewController0.tabBarItem = UITabBarItem(title: "", image: #imageLiteral(resourceName: "playlist_icon"), tag: 1)
+        tabViewController0.tabBarItem = UITabBarItem(title: "", image: #imageLiteral(resourceName: "home_icon"), tag: 1)
         tabViewController1.tabBarItem = UITabBarItem(title: "", image: #imageLiteral(resourceName: "search_icon"), tag: 2)
         tabViewController2.tabBarItem = UITabBarItem(title: "", image: #imageLiteral(resourceName: "library_icon"), tag: 3)
         tabViewController3.tabBarItem = UITabBarItem(title: "", image: #imageLiteral(resourceName: "map"), tag: 4)

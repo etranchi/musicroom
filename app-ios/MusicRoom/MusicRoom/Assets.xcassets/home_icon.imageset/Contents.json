@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "logo_deezer.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "home_icon.png",
       "scale" : "2x"
     },
     {

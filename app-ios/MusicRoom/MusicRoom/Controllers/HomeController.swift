@@ -1,5 +1,5 @@
 //
-//  PlaylistController.swift
+//  HomeController.swift
 //  MusicRoom
 //
 //  Created by Jonathan DAVIN on 10/30/18.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PlaylistController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     private let categoryCellId = "categoryCellId"
     private let searchCellId = "searchCellId"
     
