@@ -160,17 +160,17 @@ class APIManager: NSObject, URLSessionDelegate {
         }.resume()
     }
     
-    func playlistsByUserId(_ currentUserId: Int, completion: @escaping ([Playlist]) -> ()) {
-        
-        let playlistsUrl = self.url + "search/playlist?q=\(currentUserId)"
-        var playlistsRequest = URLRequest(url: URL(string: playlistsUrl)!)
-        playlistsRequest.httpMethod = "GET"
-        print("url playlist")
-        print(playlistsUrl)
-        getPlaylistsByUserId(PlaylistByUserId.self, request: playlistsRequest) { (playlistData) in
-            completion(playlistData.playlists!)
-        }
-    }
+//    func playlistsByUserId(_ currentUserId: Int, completion: @escaping ([Playlist]) -> ()) {
+//        
+//        let playlistsUrl = self.url + "search/playlist?q=\(currentUserId)"
+//        var playlistsRequest = URLRequest(url: URL(string: playlistsUrl)!)
+//        playlistsRequest.httpMethod = "GET"
+//        print("url playlist")
+//        print(playlistsUrl)
+//        getPlaylistsByUserId(PlaylistByUserId.self, request: playlistsRequest) { (playlistData) in
+//            completion(playlistData.playlists!)
+//        }
+//    }
     
     func getPlaylistsByUserId<T: Decodable>(_ myType: T.Type, request: URLRequest, completion: @escaping (T) -> ()) {
         URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: request) {(data, response, err) in

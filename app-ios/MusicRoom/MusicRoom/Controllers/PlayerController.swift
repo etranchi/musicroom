@@ -52,7 +52,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
         label.textAlignment = .center
         label.textColor = .white
-        label.numberOfLines = 0
+        label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -235,6 +235,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         view.addSubview(downButton)
         
         print(titleLabel.text!)
+        print(titleLabel.text!.count)
         
         containerTitleLabel.anchor(top: coverContainerView?.bottomAnchor, leading: coverContainerView?.leadingAnchor, bottom: authorLabel.bottomAnchor, trailing: coverContainerView?.trailingAnchor, padding: .init(top: 0, left: 30, bottom: 0, right: 30),size: .init(width: 0, height: 45))
         
@@ -260,9 +261,9 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             coverContainerView!.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             coverContainerView!.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             titleLabel.topAnchor.constraint(equalTo: containerTitleLabel.topAnchor),
             titleLabel.leadingAnchor.constraint(equalTo: containerTitleLabel.leadingAnchor),
+            titleLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 3000),
             titleLabel.bottomAnchor.constraint(equalTo: authorLabel.bottomAnchor, constant: -20),
             
             authorLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
