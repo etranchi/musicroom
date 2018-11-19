@@ -27,28 +27,27 @@ class LocationSearchInput extends Component {
   handleSelect = address => {
     geocodeByAddress(address)
       .then(results =>  {
-        let location = {
-          address : results[0],
-
-        }
-        this.setState({'address': results[0].formatted_address}) 
-        this.setState({'addressObj': results[0]})
-        this.setState({'key': 1})
+        let location = { address : results[0]}
+        this.setState({'address': results[0].formatted_address,'addressObj': results[0]}) 
         getLatLng(results[0]).then(results => {
           location.coord = results;
-          this.setState({location: location})
+          this.setState({location: location, 'key': 1})
           this.props.updateLocation(this.state)
         })
       })
       .then(latLng => console.log('Success', latLng))
       .catch(error => console.error('Error', error));
-  };
+  }
+
+  openCard = () => {
+    return;
+  }
  
 	render() {
 			return (
-        <div>
+        <div >
           <PlacesAutocomplete
-            value={this.state.address}
+            value={this.state.address ? this.state.address : ''}
             onChange={this.handleChange}
             onSelect={this.handleSelect.bind(this)}
           >
@@ -85,7 +84,7 @@ class LocationSearchInput extends Component {
             </div>
           )}
         </PlacesAutocomplete>
-          {this.state.key === 1 ? <SimpleMap state={this.state} /> : null}
+          {this.state.key === 1 ? <SimpleMap event={this.props.state} state={this.props.state} center={this.state.location.coord}/> : null}
         </div>
 			);
 		}

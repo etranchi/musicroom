@@ -1,63 +1,88 @@
 import React, { Component } from 'react';
 import './styles.css';
-import axios from 'axios'
 import PreviewCard from '../previewCardEvent'
+import { Layout} from 'antd';
 
 class ListEvent extends Component {
 	constructor(props) {
         super(props);
         this.state = {
-			events: [],
-			loading:false
+			loading:false,
+			myEvents: [],
+			friendEvents: [],
+			allEvent: []
+
 		}
 		this.onLoad = false;
-		// this.getEvents()
+	}
+
+	isUser = (tab) => 
+    {
+        for (let i = 0; i < tab.length; i++) {
+            if (tab[i].email === this.props.state.user.email)
+                return true;
+        }
+        return false;
+	}
+
+	sortEvent = (type) => {
+		let ret = [];
+
+		for (let i = 0; i < this.props.state.data.events.length; i++)
+		{
+			if (type === 'myEvents' && (this.props.state.data.events[i].creator.email === this.props.state.user.email))
+				ret.push(this.props.state.data.events[i])
+			if (type === 'friendEvents' && (this.isUser(this.props.state.data.events[i].members) || this.isUser(this.props.state.data.events[i].adminMembers)))
+				ret.push(this.props.state.data.events[i])
+			if (type === 'allEvents' && (!this.isUser(this.props.state.data.events[i].members) && !this.isUser(this.props.state.data.events[i].adminMembers)))
+				ret.push(this.props.state.data.events[i])
+		}
+		return ret;
+	}
+
+	componentWillMount = () => {
+		this.setState({myEvents:this.sortEvent("myEvents")}, () => {
+			this.setState({friendEvents:this.sortEvent("friendEvents")}, () => {
+				this.setState({allEvents:this.sortEvent("allEvents")})
+				this.setState({loading:true})
+			})
+		})
 	}
 	
-	componentWillMount() {
-		console.log('REQUEST')
-		this.setState({loading:true});
-		axios.get('https://192.168.99.100:4242/event')
-		.then((resp) => {
-			console.log("ICI")
-			this.setState({events: resp.data.reverse(),loading:false})
-		})
-		.catch((err) => {
-			console.log("ICIsadadadadsa")
-			this.setState({events: [],loading:false})
-			console.log('Events error', err);
-		})
-	}
-
-
-	// deleteEvent = () => {
-	// 	axios.delete('https://192.168.99.100:4242/event');
-	// 	console.log("Event Trashed.");
-	// }
-
-    
 	render() {
-		console.log("list event")
-		if (this.props.state.currentComponent != "listEvent" && this.onLoad === false) {
-			this.onLoad = true;
-		}
-		if(this.state.loading === true ) {
-			this.onLoad = false;
-			return <div>Loading...</div>
-		}
-		else
-		{
-			{this.props.updateParent.bind(this,{'currentComponent': 'listEvent', 'data': this.state.events})}
+		const {Content } = Layout;
+		if (!this.state.loading) 
+			return ( <p> OUPSI </p>)
+		else {
 			return (
-				<div>
-				{
-					this.state.events.map((event, key) => {
-							return (
-								<PreviewCard key={key} event={event} updateParent={this.props.updateParent}/>
-							)
-						})
-				}
-				</div>
+				<Layout>
+					<Content style={{width:'82%', margin: '0 8% 0 10%'}}>
+					<div style={{padding:'1% 0 1% 0'}}>
+						{ this.state.myEvents.length > 0 ? <h1 style={{fontSize:'36px'}}> Mes événements : </h1> : null }
+						{
+							this.state.myEvents.map((event, key) => {
+									return ( <PreviewCard key={key} event={event} state={this.props.state} updateParent={this.props.updateParent}/> )
+							})
+						}
+					</div>
+					<div style={{padding:'1% 0 1% 0'}}>
+						{ this.state.friendEvents.length > 0 ? <h1 style={{fontSize:'36px'}}>  Evénement ou je participe : </h1> : null }
+						{
+							this.state.friendEvents.map((event, key) => {
+									return ( <PreviewCard key={key} event={event} state={this.props.state} updateParent={this.props.updateParent}/> )
+							})
+						}
+					</div>
+					<div style={{padding:'1% 0 1% 0'}}>
+						{ this.state.allEvents.length > 0 ? <h1 style={{fontSize:'36px'}}> Tous les èvènemenets : </h1> : null }
+						{
+							this.state.allEvents.map((event, key) => {
+									return ( <PreviewCard key={key} event={event} state={this.props.state} updateParent={this.props.updateParent}/> )
+								})
+						}
+					</div>
+					</Content>
+				</Layout>
 			);
 		}
 	}

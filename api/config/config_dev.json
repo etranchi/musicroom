@@ -20,20 +20,7 @@
     "facebook": {
         "clientID": "",
         "clientSecret": "",
-		"callbackURL": "/oauth/facebook/callback",
-		"scope": [
-			"email"
-		],
-		"profileFields": [
-			"id",
-			"displayName",
-			"photos",
-			"email"
-		]
-	},
-    "google": {
-        "clientID": "479103948820-tb38ba04oig61ogfdjgs6s07u9ph626o.apps.googleusercontent.com",
-        "clientSecret": "TA-O3Z6YyoNiwzUQoweZtfGK",
+        "callbackURL": "/oauth/facebook/callback",
         "scope": [
             "email"
         ],

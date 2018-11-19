@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import './styles.css';
 import defaultImage from '../../../../assets/playlist.png'
 import axios from 'axios'
+import {Button, Row, Col} from 'antd'
+import SearchBar from '../../searchbar'
 
 class List extends Component {
 	constructor(props) {
@@ -44,6 +46,14 @@ class List extends Component {
 		else{
 		return (
 			<div>
+			<Row type="flex" justify="space-between">
+				<Col>
+					<SearchBar updateParent={this.props.updateParent}/>
+				</Col>
+				<Col>
+					<Button onClick={this.props.updateParent.bind(this, {'currentComponent': 'createPlaylist'})}>+</Button>
+				</Col>
+			</Row>
 				<ul className="collection">
 					{this.state.playlist.map((val, i) => {
 						return (

@@ -1,31 +1,25 @@
-.row {
-    width: 50%;
+.ant-upload {
+    border-radius: 50% !important;
+    height: 15vw !important;
+    width: 15vw !important;
 }
 
-.formEvent {
-    margin-top : 8%;
+.ant-upload:hover {
+   border: 1px solid #00695c !important
 }
 
-.formButton {
-    width: 50%;
-    margin: 0 25% 0 25%
+input.ant-input:hover {
+    border-bottom: 1px solid #00695c !important
 }
 
-
-
-.textContent {
-    width: 80%;
-    margin: 2% 10% 2% 10% ;
+textArea.ant-input:hover {
+    border: 1px solid #00695c !important
 }
 
-
-.inputContent {
-    width: 35%;
-    margin: 0 0 0 37%;
+div.ant-select-selection--single:hover {
+    border: 1px solid #00695c !important
 }
 
-.searchContent {
-    width: 35%;
-    margin: 0 0 0 37%;
+.input.location-search-input:hover {
+    border-bottom: 1px solid #00695c !important
 }
-

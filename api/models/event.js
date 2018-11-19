@@ -23,7 +23,7 @@ const Event = new Schema({
 	visibility: {type:Number},
 	public: {type: Boolean},
 	creation_date: {type: Date, default: Date.now},
-	date: {type: Date, default: Date.now},
+	event_date: {type: Date, default: Date.now},
 	playlist: {type: Playlist.schema},
 	members : [User.schema],
 	picture: {type: String, default: "default.jpeg"},
