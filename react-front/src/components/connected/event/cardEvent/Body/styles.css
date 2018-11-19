@@ -1,15 +1,18 @@
-.title {
+.titleBig {
     font-weight: bold;
-    font-size: 40px;
-    display: inline-block;
-    margin-right: 10px;
+    font-size: 36px;
+    padding: 0 2% 0 2%;
+    display: inline;
 }
 
-.mapLink {
-    color: #03a9f4;
-    font-size: 40px;
-    display: inline-block;
+.titleMedium {
+    font-weight: bold;
+    font-size: 21px;
+    padding: 0 2% 0 2%;
+    display: inline;
 }
+
+
 
 .bodyContent {
     width: 60%;
@@ -18,7 +21,7 @@
 
 .iconBlockBody {
     height:80px;
-    border-left: 1px solid #03a9f4;
+    border-left: 1px solid #00695c;
 }
 
 .iconBlockBody div {
