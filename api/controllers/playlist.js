@@ -98,8 +98,14 @@ module.exports = {
 	},
 	putPlaylistById: async (req, res) => {
 		try {
-			let playlist = await playlistModel.findByIdAndUpdate({_id: req.params.id}, req.body, {new: true})			
-			res.status(200).json(playlist);
+			let playlist = await playlistModel.findByIdAndUpdate({_id: req.params.id}, req.body, {new: true})		// Simple update pour dev a supprimer quand ca sera fix
+			res.status(200).json(playlist);																			// Simple update pour dev a supprimer quand ca sera fix
+
+			// TODO
+			// J'ai l'impression que si y'a pas de tracks l'update de playlist est pas trop contente. j'ai mis en commentaire pour l'instant pour pouvoir dev le front react a revoir
+			// @kvignau
+
+
 			// if (!Number(req.params.id)) {
 			// 	let options = {
 			// 		method: 'GET',
