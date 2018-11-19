@@ -26,8 +26,8 @@ class PlaylistController: UICollectionViewController, UICollectionViewDelegateFl
         super.viewDidLoad()
         collectionView?.backgroundColor = UIColor(white: 0.1, alpha: 1)
         collectionView?.alwaysBounceVertical = true
-        collectionView?.register(GlobalSearchCell.self, forCellWithReuseIdentifier: categoryCellId)
-        collectionView?.register(SearchCell.self, forCellWithReuseIdentifier: searchCellId)
+        //collectionView?.register(GlobalSearchCell.self, forCellWithReuseIdentifier: categoryCellId)
+        //collectionView?.register(SearchBarCell.self, forCellWithReuseIdentifier: searchCellId)
         
         
         /*performSearch(initialSearch) { (albums, tracks, artists) in
@@ -42,10 +42,10 @@ class PlaylistController: UICollectionViewController, UICollectionViewDelegateFl
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         // if indexPath.item == 0 {
-            let     cell = collectionView.dequeueReusableCell(withReuseIdentifier: searchCellId, for: indexPath) as! SearchCell
-            cell.placeholder = "playlists, events..."
-            cell.vc = self
-            return cell
+//            let     cell = collectionView.dequeueReusableCell(withReuseIdentifier: searchCellId, for: indexPath) as! SearchBarCell
+//            cell.placeholder = "playlists, events..."
+//            cell.vc = self
+//            return cell
         // } else {
             /*let cell = collectionView.dequeueReusableCell(withReuseIdentifier: categoryCellId, for: indexPath) as! CategoryCell
             cell.musicCategory = musicCategories![indexPath.item - 1]
@@ -53,6 +53,7 @@ class PlaylistController: UICollectionViewController, UICollectionViewDelegateFl
             cell.searchController = self
             return cell*/
         // }
+        return UICollectionViewCell()
     }
     
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -69,6 +70,6 @@ class PlaylistController: UICollectionViewController, UICollectionViewDelegateFl
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 1
+        return 0
     }
 }

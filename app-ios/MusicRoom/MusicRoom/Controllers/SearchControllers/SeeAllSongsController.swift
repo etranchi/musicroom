@@ -15,9 +15,7 @@ class SeeAllSongsController: UICollectionViewController, UICollectionViewDelegat
     let tracks: [Track]
     let searchText: String
     let searchController: SearchController
-    var lastCell: SongCell?
-    
-    
+
     init(_ tracks: [Track], _ searchText: String, _ traget: SearchController, layout: UICollectionViewFlowLayout) {
         self.tracks = tracks
         self.searchText = searchText
@@ -33,12 +31,14 @@ class SeeAllSongsController: UICollectionViewController, UICollectionViewDelegat
         super.viewWillDisappear(animated)
         
         title = ""
+        navigationController?.navigationBar.topItem?.title = "Search"
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         title = "\"\(searchText)\" in Songs"
+        navigationController?.navigationBar.topItem?.title = ""
     }
     
     override func viewDidLoad() {
@@ -48,7 +48,6 @@ class SeeAllSongsController: UICollectionViewController, UICollectionViewDelegat
         self.collectionView!.register(SongCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         collectionView?.alwaysBounceVertical = true
         collectionView?.backgroundColor = UIColor(white: 0.1, alpha: 1)
-        
     }
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -56,12 +55,8 @@ class SeeAllSongsController: UICollectionViewController, UICollectionViewDelegat
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        lastCell?.titleLabel.textColor = .white
         searchController.showPlayerForSong(indexPath.item)
-        let cell = collectionView.cellForItem(at: indexPath) as! SongCell
-        cell.titleLabel.textColor = UIColor(red: 20 / 255, green: 220 / 255, blue: 20 / 255, alpha: 1)
-        lastCell = cell
+        currentTrack = tracks[indexPath.item]
     }
 
 

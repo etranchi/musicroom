@@ -13,11 +13,11 @@ const Event = new Schema({
 			v: {type: String},
 			cp: {type: String},
 			r: {type: String},
-			n: {type: Number}
+			n: {type: String}
 		},
 		coord: {
 			lat: {type: Number},
-			long: {type: Number}
+			lng: {type: Number}
 		}
 	},
 	visibility: {type:Number},
@@ -26,7 +26,7 @@ const Event = new Schema({
 	date: {type: Date, default: Date.now},
 	playlist: {type: Playlist.schema},
 	members : [User.schema],
-	picture: {type: String},
+	picture: {type: String, default: "default.jpeg"},
 	adminMembers: [User.schema]
 
 }, { versionKey: false });

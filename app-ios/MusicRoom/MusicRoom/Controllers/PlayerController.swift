@@ -31,9 +31,9 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     var firstPlay = true
     
     let request = DZRRequestManager.default().sub()
-    var cancelable : DZRCancelable?
+    var cancelable: DZRCancelable?
     var deezer = DeezerManager()
-    var track : DZRTrack?
+    var track: DZRTrack?
     
     var coverContainerView: CoverContainerView?
     var backgroundCoverView: BackgroundCoverView?
@@ -130,7 +130,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         playerButtonView?.playButton.addTarget(playerButtonView, action: #selector(playerButtonView?.handlePause), for: .touchUpInside)
         playerButtonView?.setPauseIcon()
         isPlaying = true
-        if firstPlay == true {
+        if firstPlay {
             self.player?.play(track)
             firstPlay = false
         } else {
@@ -151,10 +151,9 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     }
     
     func loadTrackInplayer() {
-        cancelable?.cancel()
         cancelable = DZRTrack.object(withIdentifier: String(tracks[index].id), requestManager: request, callback: { (response, err) in
-            if let err = err {
-                print("Player error: \(err)")
+            if err != nil {
+                print(err!)
                 return
             }
             DispatchQueue.main.async {
@@ -167,8 +166,21 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
                     self.playerButtonView?.handlePlay()
                 }
                 self.minimizedPlayer?.update(isPlaying: self.isPlaying, title: self.tracks[self.index].title, artist: self.tracks[self.index].artist!.name)
+                currentTrack = self.tracks[self.index]
+                self.reloadView()
             }
         })
+    }
+    
+    fileprivate func reloadView() {
+        if let cu = (UIApplication.shared.keyWindow?.rootViewController as? TabBarController)?.selectedViewController as? CustomNavigationController {
+            if let co = cu.topViewController as? UICollectionViewController {
+                co.collectionView?.reloadData()
+            }
+            if let ta = cu.topViewController as? UITableViewController {
+                ta.tableView.reloadData()
+            }
+        }
     }
     
     @objc func handleHide() {
@@ -190,6 +202,9 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     }
 
     fileprivate func setupUI() {
+        if firstPlay {
+            cancelable?.cancel()
+        }
         backgroundCoverView = setupBackgroudView()
         coverContainerView = setupCoverContainer()
         playerButtonView = PlayerButtonsView(target: self, isPlaying)
@@ -212,9 +227,9 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             backgroundCoverView!.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             backgroundCoverView!.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            downButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 40),
-            downButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 14),
-            downButton.widthAnchor.constraint(equalToConstant: 26),
+            downButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 45),
+            downButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 7),
+            downButton.widthAnchor.constraint(equalToConstant: 27),
             downButton.heightAnchor.constraint(equalToConstant: 26),
             
             coverContainerView!.topAnchor.constraint(equalTo: view.topAnchor, constant: 40),

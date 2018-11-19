@@ -17,36 +17,55 @@ class APIManager: NSObject, URLSessionDelegate {
     }
     
     func getAlbumTracks(_ album: Album, completion: @escaping (Album) -> ()) {
-        let tracksUrl = self.url + "album/\(album.id)/tracks"
+        let tracksUrl = self.url + "album/\(album.id)"
         var request = URLRequest(url: URL(string: tracksUrl)!)
         request.httpMethod = "GET"
         
-        searchAll(AlbumTrackData.self, request: request) { (tracksData) in
+        searchAll(Album.self, request: request) { (tracksData) in
             var album = album
-            album.tracks = tracksData.data
+            album = tracksData
             completion(album)
         }
     }
-
-    func search(_ search: String, completion: @escaping ([Track], [Album], [Artist]) -> ()){
+    
+    func searchAlbums(_ search: String, completion: @escaping ([Album]) -> ()) {
+        let w = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+        
+        let albumsUrl = self.url + "search/album?q=\(w)"
+        var albumsRequest = URLRequest(url: URL(string: albumsUrl)!)
+        albumsRequest.httpMethod = "GET"
+        self.searchAll(AlbumData.self, request: albumsRequest, completion: { (albumData) in
+            completion(albumData.data)
+        })
+    }
+    
+    func searchTracks(_ search: String, completion: @escaping ([Track]) -> ()) {
         let w = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
         
         let tracksUrl = self.url + "search/track?q=\(w)"
         var tracksRequest = URLRequest(url: URL(string: tracksUrl)!)
         tracksRequest.httpMethod = "GET"
-        
-        let albumsUrl = self.url + "search/album?q=\(w)"
-        var albumsRequest = URLRequest(url: URL(string: albumsUrl)!)
-        albumsRequest.httpMethod = "GET"
+        self.searchAll(TrackData.self, request: tracksRequest, completion: { (trackData) in
+            completion(trackData.data)
+        })
+    }
+    
+    func searchArtists(_ search: String, completion: @escaping ([Artist]) -> ()) {
+        let w = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
         
         let artistsUrl = self.url + "search/artist?q=\(w)"
         var artistsRequest = URLRequest(url: URL(string: artistsUrl)!)
         artistsRequest.httpMethod = "GET"
-        
-        searchAll(TrackData.self, request: tracksRequest) { (tracksData) in
-            self.searchAll(AlbumData.self, request: albumsRequest, completion: { (albumData) in
-                self.searchAll(ArtistData.self, request: artistsRequest, completion: { (artistsData) in
-                    completion(tracksData.data, albumData.data, artistsData.data)
+        self.searchAll(ArtistData.self, request: artistsRequest, completion: { (artistData) in
+            completion(artistData.data)
+        })
+    }
+
+    func searchATA(_ search: String, completion: @escaping ([Track], [Album], [Artist]) -> ()){
+        searchAlbums(search) { (albums) in
+            self.searchTracks(search, completion: { (tracks) in
+                self.searchArtists(search, completion: { (artists) in
+                    completion(tracks, albums, artists)
                 })
             })
         }

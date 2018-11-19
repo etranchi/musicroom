@@ -29,13 +29,13 @@ class AlbumController: UITableViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         let navi = navigationController as? CustomNavigationController
-        let offsetY = navi?.navigationBar.frame.size.height
-        navi?.visualContainerView.transform = CGAffineTransform(translationX: 0, y: -offsetY! - 50)
+        navi?.animatedHideNavigationBar()
+        navigationController?.navigationBar.topItem?.title = ""
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -43,7 +43,10 @@ class AlbumController: UITableViewController {
         
         let navi = navigationController as? CustomNavigationController
         navi?.animatedShowNavigationBar()
+        navigationController?.navigationBar.topItem?.title = "Search"
     }
+    
+    
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -83,6 +86,7 @@ class AlbumController: UITableViewController {
     
     fileprivate func setupHeader() {
         headerView = AlbumHeaderView(frame: .zero, albumCover: albumCover, title: "\(album.title) by \(String(describing: album.artist!.name))")
+        headerView.isUserInteractionEnabled = false
         tableView.register(AlbumTrackListCell.self, forCellReuseIdentifier: songCellId)
         view.addSubview(headerView)
         headerView.layer.zPosition = -1
@@ -126,7 +130,7 @@ extension AlbumController {
     func AlbumTracksToTracksConverter() -> [Track] {
         var tracks: [Track] = []
         
-        album.tracks?.forEach({ (track) in
+        album.tracks?.data.forEach({ (track) in
             let tr = Track.init(id: track.id, readable: track.readable, link: nil, album: album, artist: album.artist, title: track.title, duration: track.duration)
             tracks.append(tr)
         })

@@ -6,4 +6,4 @@ RUN npm install -g pm2
 ADD . .
 RUN npm install
 EXPOSE 4242
-CMD ["pm2-runtime", "ecosystem.config.js"]
+CMD ["pm2-runtime", "ecosystem.config.json"]

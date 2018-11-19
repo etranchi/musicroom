@@ -1,6 +1,7 @@
 'use strict'
 
 const modelEvent = require('../models/event');
+const ObjectId = require('mongodb').ObjectID;
 // geolib pour le calcul de radius
 module.exports = {
 	getEvents: async (req, res) => {
@@ -19,18 +20,20 @@ module.exports = {
 	},
 	postEvent: async (req, res) => {
 		req.body = JSON.parse(req.body.body);
+
 		try {
-			if (req.file && req.file.filename) req.body.picture = req.file.filename;
-			else req.body.picture =  'default.jpeg';
+			if (req.file && req.file.filename) req.body.picture = req.file.filename
 			res.status(200).json(await modelEvent.create(req.body))
 		} catch (err) {
 			res.status(400).json(err);
 		}
 	},
 	putEventById: async (req, res) => {
+		console.log("Je suis ici", req.params)
 		try {
 			// ADD JOI.VALIDATION
-			res.status(200).json(await modelEvent.updateOne({_id: req.params.id}, req.body, {new: true}))
+			let test = await modelEvent.updateOne({_id: req.params.id}, req.body, {new: true})
+			res.status(200).json(test)
 		} catch (err) {
 			res.status(400).json(err);
 		}
@@ -45,3 +48,26 @@ module.exports = {
 		}
 	}
 };
+
+
+
+// if (req.file && req.file.filename) {
+// 	console.log("Resize Image")
+// 	name = req.file.filename
+
+// 	let smallPicture 	= await sharp( "./public/eventPicture/default/" + name).resize(320)
+// 	let mediumPicture 	= await sharp( "./public/eventPicture/default/" + name).resize(480)
+// 	let largePicture 	= await sharp( "./public/eventPicture/default/" + name).resize(800)
+	
+// 	await fs.writeFile("./public/eventPicture/small/" + name, smallPicture.toBuffer(), (err, res) => {
+
+// 	});
+// 	await fs.writeFile("./public/eventPicture/medium/" + name, mediumPicture.toBuffer(), (err, res) => {
+
+// 	});
+// 	await fs.writeFile("./public/eventPicture/large/" + name, largePicture.toBuffer(), (err, res) => {
+
+// 	});
+
+// 	console.log("Image resized")
+// }
