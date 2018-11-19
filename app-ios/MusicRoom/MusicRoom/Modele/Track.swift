@@ -9,7 +9,7 @@
 import Foundation
 
 
-struct Track : Decodable {
+struct Track : Codable {
     var id : Int
     let readable : Bool
     let link : String?
@@ -19,17 +19,17 @@ struct Track : Decodable {
     let duration : Int
 }
 
-struct AlbumTrack: Decodable {
+struct AlbumTrack: Codable {
     let id : Int
     let readable : Bool
     let title : String
     let duration : Int
 }
 
-struct AlbumTrackData: Decodable {
+struct AlbumTrackData: Codable {
     let data : [AlbumTrack]
 }
 
-struct TrackData: Decodable {
+struct TrackData: Codable {
     let data : [Track]
 }

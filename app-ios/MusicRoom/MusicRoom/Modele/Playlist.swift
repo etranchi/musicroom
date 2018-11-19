@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Playlist : Decodable {
+struct Playlist : Codable {
     let id : Int
     let title : String
     let picture : String
@@ -16,6 +16,6 @@ struct Playlist : Decodable {
     let tracks : TrackData?
 }
 
-struct PlaylistData: Decodable {
+struct PlaylistData: Codable {
     let data : [Playlist]
 }

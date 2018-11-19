@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Artist : Decodable {
+struct Artist : Codable {
     let id : Int
     let picture : String
     let picture_medium : String
@@ -17,6 +17,6 @@ struct Artist : Decodable {
     let nb_fan : Int?
 }
 
-struct ArtistData: Decodable {
+struct ArtistData: Codable {
     let data : [Artist]
 }

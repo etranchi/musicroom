@@ -137,34 +137,75 @@ class APIManager: NSObject, URLSessionDelegate {
             }.resume()
     }
     
-    func postEvent(_ token : String, event : Event, completion: @escaping (Event) -> ()) {
-        let postEventUrl = self.url + "event"
-        print("1")
-        var request = URLRequest(url: URL(string: postEventUrl)!)
-        print("1.1")
-        var jsonData = Event.archive(w: event)
-        print("3")
-        request.httpMethod = "POST"
-        request.httpBody = jsonData
-        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        request.setValue("Bearer " + token, forHTTPHeaderField: "Authorization")
-        print("j'ai tous set")
-        URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: request) { (data, response, err) in
-            if err != nil {
-                print("error while requesting")
-            }
-            do {
-                print(data, response, err)
-                let responseJSON = try JSONSerialization.jsonObject(with: data!, options: [])
-                
-                if let responseJSON = responseJSON as? [String: Any] {
-                    print(responseJSON)
+    func postEvent(_ token : String, event : Event, img : UIImage, completion: @escaping (Event) -> ()) {
+        let postEventUrl = self.url + "event/"
+        let jsonEncoder = JSONEncoder()
+        do {
+            let dataBody = try jsonEncoder.encode(event)
+            // let string = try JSONSerialization.jsonObject(with: data, options: .mutableContainers)
+            var request = URLRequest(url: URL(string: postEventUrl)!)
+            let imgRepresentation = UIImagePNGRepresentation(img)
+            request.httpMethod = "POST"
+            let boundary = "Boundary-\(NSUUID().uuidString)"
+            request.setValue("Bearer " + token, forHTTPHeaderField: "Authorization")
+            request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+            let body = NSMutableData()
+            body.appendString(boundary)
+            body.appendString("Content-Disposition: form-data; name=\"body\"\r\n\r\n")
+            body.append(dataBody)
+            body.appendString(boundary)
+            body.appendString("Content-Disposition: form-data; name=\"file\"; filename=test.png\r\n\r\n")
+            body.append("Content-Type: image/png\r\n\r\n".data(using: String.Encoding.utf8)!)
+            body.append(imgRepresentation!)
+            body.appendString("\r\n")
+            body.appendString("--".appending(boundary.appending("--")))
+            request.httpBody = body as Data
+            
+            
+            
+            
+            /* var body = NSMutableData()
+            body.append("Content-Disposition:form-data; name=\"body\"\r\n\r\n".data(using: String.Encoding.utf8)!)
+            body.append(data)
+            // body.append(("body=\(string)").data(using:String.Encoding.ascii, allowLossyConversion: false)!)
+            body.append("Content-Disposition:form-data; name=\"file\"\r\n\r\n".data(using: String.Encoding.utf8)!)
+            body.append("Content-Type: image/png\r\n\r\n".data(using: String.Encoding.utf8)!)
+            body.append(("").data(using:String.Encoding.ascii, allowLossyConversion: false)!)
+            body.append("\r\n".data(using: String.Encoding.utf8)!)
+            body.append("--\(boundary)--\r\n".data(using: String.Encoding.utf8)!)
+            print(body)
+            request.httpBody = body as Data */
+            /*let boundary = NSString(format: "---------------------------14737809831466499882746641449")
+            var body = Data()
+            body.append(NSString(format: "\r\n--%@\r\n", boundary).data(using: String.Encoding.utf8.rawValue)!)
+            body.append(NSString(format:"Content-Disposition: form-data;name=\"uploaded_file\";filename=\"image.jpg\"\\r\n").data
+                (using:String.Encoding.utf8.rawValue)!) //Here replace your image name and file name
+            body.append(NSString(format: "Content-Type: image/jpeg\r\n\r\n").data(using: String.Encoding.utf8.rawValue)!)
+            body.append(data)
+            body.append(NSString(format: "\r\n--%@\r\n", boundary).data(using: String.Encoding.utf8.rawValue)!)
+            request.httpBody = body*/
+            print("j'ai tous set")
+            URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: request) { (data, response, err) in
+                if err != nil {
+                    print("error while requesting")
                 }
-            }
-            catch (let err){
-                print(err.localizedDescription)
-            }
+                if let d = data {
+                    do {
+                        print(d, response, err)
+                        let responseJSON = try JSONSerialization.jsonObject(with: d, options: [])
+                        
+                        if let responseJSON = responseJSON as? [String: Any] {
+                            print(responseJSON)
+                        }
+                    }
+                    catch (let err){
+                        print(err.localizedDescription)
+                    }
+                }
             }.resume()
+        } catch (let err) {
+            print(err.localizedDescription)
+        }
         
     }
     
@@ -192,3 +233,12 @@ class APIManager: NSObject, URLSessionDelegate {
         }.resume()
     }
 }
+
+
+extension NSMutableData {
+    func appendString(_ string: String) {
+        let data = string.data(using: String.Encoding.utf8, allowLossyConversion: false)
+        append(data!)
+    }
+}
+

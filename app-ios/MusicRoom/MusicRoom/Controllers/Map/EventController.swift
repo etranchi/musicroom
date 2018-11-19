@@ -194,13 +194,12 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
             let user = userManager.currentUser
             let coord = Coord(lat: (selectedPin?.coordinate.latitude)!, long: (selectedPin?.coordinate.longitude)!)
             // pays ville codepostale rue numero
-            let address = Address(p: (selectedPin?.administrativeArea)!, v: (selectedPin?.locality)!, cp: (selectedPin?.countryCode)!, r: (selectedPin?.thoroughfare)!, n: (selectedPin?.subThoroughfare)!)
+            let address = Address(p: (selectedPin?.administrativeArea)!, v: (selectedPin?.locality)!, cp: (selectedPin?.isoCountryCode)!, r: (selectedPin?.thoroughfare)!, n: (selectedPin?.subThoroughfare)!)
             let location = Location(address: address, coord: coord)
             let dataImg = NSData(contentsOf: urlImageToString!)
             let imgString = dataImg?.base64EncodedString(options: .endLineWithLineFeed)
-            let event = Event(login: (user?.login)!, title: titleTF.text!, description: descriptionTV.text!, location: location, visibility: segmentedBar.selectedSegmentIndex, shared: segmentedBar.selectedSegmentIndex == 0 ? true : false , creationDate: String(describing: Date()), date: String(describing: Date()), playlist: nil, members: [], picture: imgString!, adminMembers: [])
-            print("yo")
-            apiManager.postEvent((user?.token)!, event: event) { (resp) in
+            let event = Event(login: (user?.login)!, title: titleTF.text!, description: descriptionTV.text!, location: location, visibility: segmentedBar.selectedSegmentIndex, shared: segmentedBar.selectedSegmentIndex == 0 ? true : false , creationDate: String(describing: Date()), date: String(describing: Date()), playlist: nil, members: [], adminMembers: [])
+            apiManager.postEvent((user?.token)!, event: event, img: imageView.image!) { (resp) in
                 print(resp)
             }
             /*self.navigationController?.popViewController(animated: true)

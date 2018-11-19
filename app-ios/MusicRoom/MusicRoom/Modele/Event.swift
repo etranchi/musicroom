@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Address : Decodable {
+struct Address : Codable {
     let p : String
     let v : String
     let cp : String
@@ -16,17 +16,17 @@ struct Address : Decodable {
     let n : String
 }
 
-struct Coord : Decodable {
+struct Coord : Codable {
     let lat : Double
     let long : Double
 }
 
-struct Location : Decodable {
+struct Location : Codable {
     let address : Address
     let coord : Coord
 }
 
-struct Event : Decodable {
+struct Event : Codable {
     let login : String
     let title : String
     let description : String
@@ -37,11 +37,5 @@ struct Event : Decodable {
     let date : String
     let playlist : Playlist?
     let members : [User]
-    let picture : String
     let adminMembers : [User]
-    
-    static func archive(w: Event) -> Data {
-        var fw = w
-        return Data(bytes: &fw, count: MemoryLayout<Event>.stride)
-    }
 }
