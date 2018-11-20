@@ -32,7 +32,7 @@ exports.connect = (req, res) => {
 
 exports.bindDeezerToken = async (req, res) => {
 	try {
-		let user = await model.findByIdAndUpdate(
+		let user = await model.findOneAndUpdate(
 			{_id: req.user._id}, 
 			{deezerToken: req.query.deezerToken}, 
 			{new: true}
@@ -46,7 +46,7 @@ exports.bindDeezerToken = async (req, res) => {
 
 exports.deleteDeezerToken = async (req, res) => {
 	try {
-		let user = await model.findByIdAndUpdate(
+		let user = await model.findOneAndUpdate(
 			{_id: req.user._id}, 
 			{deezerToken: null}, 
 			{new: true}
@@ -163,7 +163,7 @@ exports.modifyUserById = async (req, res) => {
 		user = Utils.filter(model.schema.obj, user, 1)
 		if (user.password)
 			user.password = await argon.hash(user.password);
-		user = await model.findByIdAndUpdate({"_id": req.user._id}, user,{new: true});
+		user = await model.findOneAndUpdate({"_id": req.user._id}, user,{new: true});
 		return res.status(200).send(Utils.filter(model.schema.obj, user, 0));
 	} catch (err) {
 		console.error("Error modifyUserById: %s", err);

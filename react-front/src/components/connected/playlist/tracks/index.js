@@ -6,6 +6,8 @@ import axios from 'axios'
 import { Col, Row, Icon } from 'antd'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import PersonalPlayer from '../../event/personalPlayer'
+import { moveMusic } from '../../sockets';
+
 
 const reorder = (list, startIndex, endIndex) => {
 	const result = Array.from(list);
@@ -98,6 +100,7 @@ class Tracks extends Component {
 		)
 		.then(resp => {
 			this.setState(items);
+			moveMusic(this.state.playlist._id)
 		})
 		.catch(err => {
 			console.log(err);

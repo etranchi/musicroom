@@ -6,13 +6,13 @@ import CreatePlaylist from './createPlaylist'
 import EditPlaylist from './editPlaylist'
 
 // TO DEL
-import { addInPlaylist } from '../sockets'
+// import { addInPlaylist } from '../sockets'
 
 class Playlist extends Component {
 	render() {
 		console.log(this.props.state);
 		// TO DEL
-		addInPlaylist(10)
+		// addInPlaylist(10)
 	return (
 		<div>
 		{this.props.state.currentComponent === 'playlist'? <List updateParent={this.props.updateParent}/> : null}

@@ -15,6 +15,7 @@ const config = require('./config/config.json');
 const bodyParser = require('body-parser');
 const expressSwagger = require('express-swagger-generator')(app);
 const socketIo = require('socket.io');
+const ftSocket = require('./modules/socket');
 
 const credentials = {key: privateKey, cert: certificate};
 
@@ -68,7 +69,11 @@ io.on('connection', (socket) => {
     console.log("delMusicInPlaylist -> ");
     console.log(musicId);
   });
-  socket.on('moveMusic', (playlistId) => {
+  socket.on('moveMusic', async (playlistId) => {
+    console.log("JE SUIS LA ET JE VAIS EMIT UN EVENT")
+    let playlist = await ftSocket.sendPlaylist(playlistId)
+    console.log(playlist)
+    io.emit('musicMoved', playlist)
     // add a hash of plylistId if playlistId in hash block moves
     console.log("moveMusic -> ");
     console.log(playlistId);
