@@ -18,7 +18,7 @@ struct Address : Codable {
 
 struct Coord : Codable {
     let lat : Double
-    let long : Double
+    let lng : Double
 }
 
 struct Location : Codable {
@@ -27,7 +27,7 @@ struct Location : Codable {
 }
 
 struct Event : Codable {
-    let login : String
+    let creator : User?
     let title : String
     let description : String
     let location : Location
@@ -38,4 +38,11 @@ struct Event : Codable {
     let playlist : Playlist?
     let members : [User]
     let adminMembers : [User]
+    let picture : String?
+    enum CodingKeys : CodingKey, String {
+        case shared = "public"
+        case creationDate = "creation_date"
+        case date = "event_date"
+        case creator, title, description, location, visibility, playlist, members, adminMembers, picture
+    }
 }

@@ -7,14 +7,51 @@
 //
 
 import UIKit
+import Alamofire
 
 class APIManager: NSObject, URLSessionDelegate {
     let ip : String = "192.168.99.100"
     let token : String? = nil
-    // Route google url +  user/login/google?access_token=\(token)
+    let delegate: Alamofire.SessionDelegate = Manager.delegate
     var url : String {
         return  "https://\(self.ip):4242/"
     }
+    private static var Manager: Alamofire.SessionManager = {
+        let serverTrustPolicies: [String: ServerTrustPolicy] = [
+            "https://192.168.99.100:4242/event": .disableEvaluation,
+            "https://192.168.99.100:4242/": .disableEvaluation,
+        ]
+        let configuration = URLSessionConfiguration.default
+        configuration.httpAdditionalHeaders = Alamofire.SessionManager.defaultHTTPHeaders
+        let manager = Alamofire.SessionManager(
+            configuration: URLSessionConfiguration.default,
+            serverTrustPolicyManager: ServerTrustPolicyManager(policies: serverTrustPolicies)
+        )
+        return manager
+    }()
+    
+    override init() {
+        delegate.sessionDidReceiveChallenge = { session, challenge in
+            var disposition: URLSession.AuthChallengeDisposition = .performDefaultHandling
+            var credential: URLCredential?
+            if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
+                disposition = URLSession.AuthChallengeDisposition.useCredential
+                credential = URLCredential(trust: challenge.protectionSpace.serverTrust!)
+            } else {
+                if challenge.previousFailureCount > 0 {
+                    disposition = .cancelAuthenticationChallenge
+                } else {
+                    credential = APIManager.Manager.session.configuration.urlCredentialStorage?.defaultCredential(for: challenge.protectionSpace)
+                    if credential != nil {
+                        disposition = .useCredential
+                    }
+                }
+            }
+            return (disposition, credential)
+        }
+    }
+    
+    
     
     func getAlbumTracks(_ album: Album, completion: @escaping (Album) -> ()) {
         let tracksUrl = self.url + "album/\(album.id)"
@@ -50,6 +87,27 @@ class APIManager: NSObject, URLSessionDelegate {
         })
     }
 
+    
+    func giveDeezerToken(_ user : MyUser) {
+        let url = self.url + "user/login/deezer?deezerToken=\(user.deezer_token!)"
+        var req = URLRequest(url : URL(string : url)!)
+        req.httpMethod = "PUT"
+        req.setValue("Bearer " + user.token!, forHTTPHeaderField: "Authorization")
+        URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: req) { (data, response, err) in
+            if err != nil {
+                print("error while requesting")
+            }
+            do {
+                let responseJSON = try JSONSerialization.jsonObject(with: data!, options: [])
+                if let responseJSON = responseJSON as? [String: Any] {
+                    print(responseJSON)
+                }
+            }
+            catch (let err){
+                print(err.localizedDescription)
+            }
+            }.resume()
+    }
     
     func login(_ forg: String, _ token : String, completion: @escaping ( (DataUser) -> ())) {
         let loginUrl = self.url + "user/login/" + forg + "?access_token=" + token
@@ -137,31 +195,74 @@ class APIManager: NSObject, URLSessionDelegate {
             }.resume()
     }
     
-    func postEvent(_ token : String, event : Event, img : UIImage, completion: @escaping (Event) -> ()) {
-        let postEventUrl = self.url + "event/"
-        let jsonEncoder = JSONEncoder()
+    func getMe(_ token : String, completion : @escaping ((User) -> ())) {
+        let meUrl = self.url + "user/me"
+        var request = URLRequest(url: URL(string: meUrl)!)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        searchAll(User.self, request: request) { (me) in
+            completion(me)
+        }
+    }
+    
+    
+    func getEvents(completion : @escaping (([Event]) -> ())){
+        let eventsUrl = self.url + "event"
+        var request = URLRequest(url: URL(string: eventsUrl)!)
+        request.httpMethod = "GET"
+        print("je ;annceeee")
+        self.searchAll([Event].self, request: request) { (res) in
+            completion(res)
+        }
+        /*URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: request) { (data, response, err) in
+            if err != nil {
+                print("error while requesting")
+            }
+            do {
+                let responseJSON = try JSONSerialization.jsonObject(with: data!, options: [])
+                print(responseJSON)
+                if let responseJSON = responseJSON as? [String: Any] {
+                    print(responseJSON)
+                }
+            }
+            catch (let err){
+                print(err.localizedDescription)
+            }
+            }.resume()*/
+    }
+    
+    func postEvent(_ token : String, event : Event, img : UIImage, onCompletion: @escaping ((Bool) -> Void)) {
         do {
+            let jsonEncoder = JSONEncoder()
+            let postEventUrl = self.url + "event/"
             let dataBody = try jsonEncoder.encode(event)
-            // let string = try JSONSerialization.jsonObject(with: data, options: .mutableContainers)
-            var request = URLRequest(url: URL(string: postEventUrl)!)
-            let imgRepresentation = UIImagePNGRepresentation(img)
-            request.httpMethod = "POST"
-            let boundary = "Boundary-\(NSUUID().uuidString)"
-            request.setValue("Bearer " + token, forHTTPHeaderField: "Authorization")
-            request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-            let body = NSMutableData()
-            body.appendString(boundary)
-            body.appendString("Content-Disposition: form-data; name=\"body\"\r\n\r\n")
-            body.append(dataBody)
-            body.appendString(boundary)
-            body.appendString("Content-Disposition: form-data; name=\"file\"; filename=test.png\r\n\r\n")
-            body.append("Content-Type: image/png\r\n\r\n".data(using: String.Encoding.utf8)!)
-            body.append(imgRepresentation!)
-            body.appendString("\r\n")
-            body.appendString("--".appending(boundary.appending("--")))
-            request.httpBody = body as Data
-            
-            
+            let dataImg = UIImagePNGRepresentation(img)
+            let headers : HTTPHeaders = [
+                "Authorization": "Bearer \(token)",
+                "Content-type": "multipart/form-data"
+            ]
+            APIManager.Manager.upload(multipartFormData: { (multipartFormData) in
+                multipartFormData.append(dataBody, withName: "body")
+                if let data = dataImg {
+                    multipartFormData.append(data, withName: "file", fileName: "image.png", mimeType: "image/png")
+                }
+            }, usingThreshold: UInt64.init(), to: postEventUrl, method: .post, headers: headers) { (result) in
+                switch result{
+                case .success(let upload, _, _):
+                    upload.responseJSON { response in
+                        if let err = response.error {
+                            onCompletion(false)
+                            return
+                        }
+                        print("response")
+                        print(response)
+                        onCompletion(true)
+                    }
+                case .failure(let error):
+                    print("Error in upload: \(error.localizedDescription)")
+                    onCompletion(false)
+                }
+            }
             
             
             /* var body = NSMutableData()
@@ -184,7 +285,7 @@ class APIManager: NSObject, URLSessionDelegate {
             body.append(data)
             body.append(NSString(format: "\r\n--%@\r\n", boundary).data(using: String.Encoding.utf8.rawValue)!)
             request.httpBody = body*/
-            print("j'ai tous set")
+            /*print("j'ai tous set")
             URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: request) { (data, response, err) in
                 if err != nil {
                     print("error while requesting")
@@ -202,7 +303,8 @@ class APIManager: NSObject, URLSessionDelegate {
                         print(err.localizedDescription)
                     }
                 }
-            }.resume()
+            }.resume()*/
+            
         } catch (let err) {
             print(err.localizedDescription)
         }
@@ -215,6 +317,7 @@ class APIManager: NSObject, URLSessionDelegate {
     
     func searchAll<T: Decodable>(_ myType: T.Type, request: URLRequest, completion: @escaping (T) -> ())
     {
+        let config = URLSessionConfiguration()
         URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: request) { (data, response, err) in
             if err != nil {
                 print("error while requesting")
@@ -222,6 +325,7 @@ class APIManager: NSObject, URLSessionDelegate {
             if let d = data {
                 do {
                     print("J'ai tous")
+                    print(d)
                     let dic = try JSONDecoder().decode(myType.self, from: d)
                     DispatchQueue.main.async {
                         completion(dic)

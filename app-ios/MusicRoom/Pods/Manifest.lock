@@ -1,4 +1,5 @@
 PODS:
+  - Alamofire (4.7.3)
   - Bolts (1.9.0):
     - Bolts/AppLinks (= 1.9.0)
     - Bolts/Tasks (= 1.9.0)
@@ -25,8 +26,6 @@ PODS:
     - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
   - FirebaseInstanceID (1.0.10):
     - FirebaseCore (~> 3.6)
-  - Google (3.1.0):
-    - Google/Core (= 3.1.0)
   - Google/Core (3.1.0):
     - FirebaseAnalytics (~> 3.2)
   - Google/SignIn (3.1.0):
@@ -49,20 +48,21 @@ PODS:
   - "GoogleToolboxForMac/NSString+URLArguments (2.1.4)"
   - GTMOAuth2 (1.1.6):
     - GTMSessionFetcher (~> 1.1)
-  - GTMSessionFetcher (1.2.0):
-    - GTMSessionFetcher/Full (= 1.2.0)
-  - GTMSessionFetcher/Core (1.2.0)
-  - GTMSessionFetcher/Full (1.2.0):
-    - GTMSessionFetcher/Core (= 1.2.0)
+  - GTMSessionFetcher (1.2.1):
+    - GTMSessionFetcher/Full (= 1.2.1)
+  - GTMSessionFetcher/Core (1.2.1)
+  - GTMSessionFetcher/Full (1.2.1):
+    - GTMSessionFetcher/Core (= 1.2.1)
 
 DEPENDENCIES:
+  - Alamofire
   - FacebookCore (= 0.3.0)
   - FacebookLogin (= 0.3.0)
-  - Google
   - Google/SignIn
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - Alamofire
     - Bolts
     - FacebookCore
     - FacebookLogin
@@ -78,6 +78,7 @@ SPEC REPOS:
     - GTMSessionFetcher
 
 SPEC CHECKSUMS:
+  Alamofire: c7287b6e5d7da964a70935e5db17046b7fde6568
   Bolts: ac6567323eac61e203f6a9763667d0f711be34c8
   FacebookCore: 3ffa190a3f1f96cec0e44d3fc221bc322c595ffa
   FacebookLogin: 0af839ea858faef99550d16596b87b4a8e8906e6
@@ -90,8 +91,8 @@ SPEC CHECKSUMS:
   GoogleSignIn: 11183592dc63e105475c7305a325045ff95e02b7
   GoogleToolboxForMac: 91c824d21e85b31c2aae9bb011c5027c9b4e738f
   GTMOAuth2: c77fe325e4acd453837e72d91e3b5f13116857b2
-  GTMSessionFetcher: 0c4baf0a73acd0041bf9f71ea018deedab5ea84e
+  GTMSessionFetcher: 32aeca0aa144acea523e1c8e053089dec2cb98ca
 
-PODFILE CHECKSUM: cf4b80686c5c367ad0c811c5daa03991fc429cef
+PODFILE CHECKSUM: 112de2c04e9d61b55dbd25f925060b57afdb8257
 
 COCOAPODS: 1.5.3

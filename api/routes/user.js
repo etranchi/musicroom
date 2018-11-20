@@ -38,7 +38,7 @@ router.get('/login/google',
 	);
 
 
-router.get('/login/deezer',
+router.put('/login/deezer',
 		passport.authenticate('bearer'),
 		middlewares.isConfirmed,
 		userController.bindDeezerToken

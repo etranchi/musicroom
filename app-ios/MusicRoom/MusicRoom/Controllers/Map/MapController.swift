@@ -14,6 +14,7 @@ class MapController: UIViewController {
     let locationManager = CLLocationManager()
     var resultSearchController:UISearchController? = nil
     var selectedPin:MKPlacemark? = nil
+    var events : [Event]?
     
     let mapView : MKMapView = {
         let mk = MKMapView()
@@ -31,6 +32,23 @@ class MapController: UIViewController {
         mapView.delegate = self
         mapView.showsUserLocation = true
         mapView.setCenter(mapView.userLocation.coordinate, animated: true)
+
+        apiManager.getEvents(completion: { res in
+            if res.count > 0 {
+                self.events = res
+                DispatchQueue.main.async {
+                    for ev in self.events! {
+                        let annotation = MKPointAnnotation()
+                        annotation.coordinate = CLLocationCoordinate2DMake(ev.location.coord.lat, ev.location.coord.lng)
+                        annotation.title = ev.title
+                        let city = ev.location.address.p
+                        let state = ev.location.address.v
+                        annotation.subtitle = "\(city) \(state)"
+                        self.mapView.addAnnotation(annotation)
+                    }
+                }
+            }
+        })
         self.view = mapView
         let locationSearchTable = LocationSearchController()
         resultSearchController = UISearchController(searchResultsController: locationSearchTable)
@@ -53,6 +71,7 @@ class MapController: UIViewController {
     
     func printToastMsg() {
         ToastView.shared.short(self.view, txt_msg: "Event created", color : UIColor.green)
+        selectedPin = nil
     }
     
     @objc func createEvent() {
@@ -112,7 +131,11 @@ extension MapController : MKMapViewDelegate {
         let reuseId = "pin"
         var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
         pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
-        pinView?.pinTintColor = UIColor.orange
+        if (selectedPin != nil) && annotation.title! == selectedPin!.name && annotation.coordinate.latitude == selectedPin!.coordinate.latitude && annotation.coordinate.longitude == selectedPin!.coordinate.longitude {
+            pinView?.pinTintColor = UIColor.orange
+        } else {
+            pinView?.pinTintColor = UIColor.red
+        }
         pinView?.canShowCallout = true
         let smallSquare = CGSize(width: 30, height: 30)
         let button = UIButton(frame: CGRect(origin: CGPoint(), size: smallSquare))
@@ -127,9 +150,19 @@ extension MapController : MKMapViewDelegate {
 extension MapController: HandleMapSearch {
     func dropPinZoomIn(placemark:MKPlacemark){
         // cache the pin
+        if selectedPin != nil {
+            let remove = mapView.annotations.first { (annotation) -> Bool in
+                if annotation.title! == selectedPin!.name && annotation.coordinate.latitude == selectedPin!.coordinate.latitude && annotation.coordinate.longitude == selectedPin!.coordinate.longitude {
+                    return true
+                } else {
+                    return false
+                }
+            }
+            if remove != nil {
+                mapView.removeAnnotation(remove!)
+            }
+        }
         selectedPin = placemark
-        // clear existing pins
-        mapView.removeAnnotations(mapView.annotations)
         let annotation = MKPointAnnotation()
         annotation.coordinate = placemark.coordinate
         annotation.title = placemark.name

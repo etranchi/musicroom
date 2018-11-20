@@ -191,20 +191,25 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
     @objc func createEvent() {
         // if data is good
         if titleTF.text != nil && imageView.image != nil {
-            let user = userManager.currentUser
-            let coord = Coord(lat: (selectedPin?.coordinate.latitude)!, long: (selectedPin?.coordinate.longitude)!)
+            let myUser = userManager.currentUser
+            let coord = Coord(lat: (selectedPin?.coordinate.latitude)!, lng: (selectedPin?.coordinate.longitude)!)
             // pays ville codepostale rue numero
             let address = Address(p: (selectedPin?.administrativeArea)!, v: (selectedPin?.locality)!, cp: (selectedPin?.isoCountryCode)!, r: (selectedPin?.thoroughfare)!, n: (selectedPin?.subThoroughfare)!)
             let location = Location(address: address, coord: coord)
             let dataImg = NSData(contentsOf: urlImageToString!)
-            let imgString = dataImg?.base64EncodedString(options: .endLineWithLineFeed)
-            let event = Event(login: (user?.login)!, title: titleTF.text!, description: descriptionTV.text!, location: location, visibility: segmentedBar.selectedSegmentIndex, shared: segmentedBar.selectedSegmentIndex == 0 ? true : false , creationDate: String(describing: Date()), date: String(describing: Date()), playlist: nil, members: [], adminMembers: [])
-            apiManager.postEvent((user?.token)!, event: event, img: imageView.image!) { (resp) in
-                print(resp)
-            }
-            /*self.navigationController?.popViewController(animated: true)
-            let vc = self.navigationController?.viewControllers[0] as! MapController
-            vc.printToastMsg()*/
+            apiManager.getMe((myUser?.token)!, completion: { (user) in
+                let event = Event(creator : user, title: self.titleTF.text!, description: self.descriptionTV.text!, location: location, visibility: self.segmentedBar.selectedSegmentIndex, shared: self.segmentedBar.selectedSegmentIndex == 0 ? true : false , creationDate: String(describing: Date()), date: String(describing: Date()), playlist: nil, members: [], adminMembers: [], picture : nil)
+                apiManager.postEvent((myUser?.token)!, event: event, img: self.imageView.image!) { (resp) in
+                    if resp {
+                        self.navigationController?.popViewController(animated: true)
+                        let vc = self.navigationController?.viewControllers[0] as! MapController
+                        vc.printToastMsg()
+                    } else {
+                        ToastView.shared.short(self.view, txt_msg: "Error while creating your event", color : UIColor.red)
+                    }
+                }
+            })
+    
         }
         else {
             ToastView.shared.short(self.view, txt_msg: "Check twice your information", color : UIColor.red)

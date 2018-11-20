@@ -8,7 +8,7 @@ target 'MusicRoom' do
   # Pods for MusicRoom
   pod 'FacebookCore', '0.3.0'
   pod 'FacebookLogin', '0.3.0'
-  pod 'Google'
   pod 'Google/SignIn'
+  pod 'Alamofire'
 end
 
