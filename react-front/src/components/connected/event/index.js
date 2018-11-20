@@ -43,6 +43,7 @@ class Event extends Component {
 			console.log('Events error', err);
 		})
 	}
+
 	render() {
 		if (this.props.state.currentComponent === "cardEvent") {
 			return (<CardEvent state={this.props.state} updateParent={this.props.updateParent} />)
