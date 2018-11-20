@@ -5,6 +5,7 @@ import moment from 'moment'
 import axios from 'axios'
 import { Col, Row, Icon } from 'antd'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import PersonalPlayer from '../../event/personalPlayer'
 
 const reorder = (list, startIndex, endIndex) => {
 	const result = Array.from(list);
@@ -153,6 +154,7 @@ class Tracks extends Component {
 				)}
         		</Droppable>
       			</DragDropContext>
+				{this.state.playlist.tracks.data.length > 0 && <PersonalPlayer  tracks={this.state.playlist.tracks.data}></PersonalPlayer>}
 		</div>
 		)
   }
