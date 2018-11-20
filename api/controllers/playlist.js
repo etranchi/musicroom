@@ -98,19 +98,7 @@ module.exports = {
 	},
 	putPlaylistById: async (req, res) => {
 		try {
-			if (!req.body.tracks)
-				throw Error('No tracks')
-			let playlist = await playlistModel.findOne({_id: req.params.id})
-			if (playlist.tracks.data.length >= req.body.tracks.data.length) {
-				for(let elem of req.body.tracks.data) {
-					if (!playlist.tracks.data.find(function(element) {
-						return element._id == elem._id;
-					})) {
-						throw Error('You cannot add a track')
-					}
-				}
-			}
-			playlist = await playlistModel.findOneAndUpdate({_id: req.params.id}, req.body, {new: true})
+			playlist = await playlistModel.findOneAndUpdate({_id: req.params.id, idUser: req.user._id}, req.body, {new: true})
 			res.status(200).json(playlist);
 		} catch (err) {
 			console.log("Bad Request putPlaylistById" + err)
