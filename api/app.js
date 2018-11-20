@@ -14,6 +14,7 @@ require('./db/mongo.js');
 const config = require('./config/config.json');
 const bodyParser = require('body-parser');
 const expressSwagger = require('express-swagger-generator')(app);
+const socketIo = require('socket.io');
 
 const credentials = {key: privateKey, cert: certificate};
 
@@ -42,11 +43,38 @@ app.get('/', ( req, res) =>  {
 });
 
 let httpsServer = https.createServer(credentials, app);
+const io = socketIo(httpsServer)
 
 let options = config.swagger
 options.basedir = __dirname
 options.files = ["./routes/**/*.js"]
 expressSwagger(options)
+
+io.on('connection', (socket) => {
+  socket.on('addPlaylist', (playlistId) => {
+    // BROADCAST NEW PLAYLIST io.emit('newPlaylist', () => {})
+    console.log("addPlaylist -> ");
+    console.log(playlistId);
+  });
+  socket.on('delPlaylist', (playlistId) => {
+    console.log("delPlaylist -> ");
+    console.log(playlistId);
+  });
+  socket.on('addMusicInPlaylist', (musicId) => {
+    console.log("addMusicInPlaylist -> ");
+    console.log(musicId);
+  });
+  socket.on('delMusicInPlaylist', (musicId) => {
+    console.log("delMusicInPlaylist -> ");
+    console.log(musicId);
+  });
+  socket.on('moveMusic', (playlistId) => {
+    // add a hash of plylistId if playlistId in hash block moves
+    console.log("moveMusic -> ");
+    console.log(playlistId);
+  });
+});
+
 httpsServer.listen(config.port, config.host);
 
 module.exports = httpsServer;
