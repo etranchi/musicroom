@@ -98,6 +98,8 @@ module.exports = {
 	},
 	putPlaylistById: async (req, res) => {
 		try {
+			console.log('id');
+			console.log(req.body);
 			let playlist = await playlistModel.findByIdAndUpdate({_id: req.params.id}, req.body, {new: true})		// Simple update pour dev a supprimer quand ca sera fix
 			res.status(200).json(playlist);																			// Simple update pour dev a supprimer quand ca sera fix
 
