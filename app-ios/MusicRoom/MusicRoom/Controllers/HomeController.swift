@@ -28,19 +28,6 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         collectionView?.alwaysBounceVertical = true
         //collectionView?.register(GlobalSearchCell.self, forCellWithReuseIdentifier: categoryCellId)
         //collectionView?.register(SearchBarCell.self, forCellWithReuseIdentifier: searchCellId)
-        
-        
-        performSearch(initialSearch) { (playlists) in
-            self.musicCategories = MusicCategory.sampleMusicCategories([], [], [], playlists)[3]
-            self.collectionView?.reloadData()
-        }
-    }
-    
-    func performSearch(_ text: String, completion: @escaping ([Playlist]) -> ())
-    {
-        manager.searchPlaylist(text) { (playlist) in
-            completion(playlist)
-        }
     }
     
     func handleSearch(_ text: String) {

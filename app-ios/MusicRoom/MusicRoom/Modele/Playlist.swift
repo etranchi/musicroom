@@ -8,14 +8,16 @@
 
 import Foundation
 
-struct Playlist : Decodable {
-    let id : Int
-    let title : String
-    let picture : String
-    let tracklist : String
-    let tracks : TrackData?
+
+
+struct Creator: Decodable {
+    let id: Int
+    let name: String
 }
 
-struct PlaylistData: Decodable {
-    let data : [Playlist]
+struct Playlist: Decodable {
+    let creator: Creator
+    let tracks: PlaylistTrackData
+    let title: String
+    let picture_medium: String?
 }

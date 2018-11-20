@@ -9,14 +9,15 @@
 import UIKit
 
 class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    let playlists: [Playlist]
+    var playlists: [Playlist]
     let rootTarget: UIViewController?
-    private let albumCellId = "albumCellId"
+    private let playlistCellId = "playlistCellId"
+    private let buttonCellId = "buttonCellId"
     
     init(_ playlists: [Playlist], _ scrollDirection: UICollectionViewScrollDirection, _ rootTarget: UIViewController?) {
         self.rootTarget = rootTarget
         self.playlists = playlists
-        let layout = UICollectionViewFlowLayout()
+        let layout = AlignedCollectionViewFlowLayout(horizontalAlignment: .left, verticalAlignment: .top)
         layout.scrollDirection = scrollDirection
         layout.minimumInteritemSpacing = 14
         layout.minimumLineSpacing = 14
@@ -28,11 +29,17 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
         fatalError("init(coder:) has not been implemented")
     }
     
+    func createPlaylistPopUp() {
+        print("Create Playlist")
+    }
+    
     func setupView() {
         delegate = self
         dataSource = self
-        showsVerticalScrollIndicator = false
-        register(AlbumCell.self, forCellWithReuseIdentifier: albumCellId)
+        alwaysBounceVertical = true
+        register(PlaylistCell.self, forCellWithReuseIdentifier: playlistCellId)
+        register(CreatePlaylistButtonCell.self, forCellWithReuseIdentifier: buttonCellId)
+        contentInset = UIEdgeInsets(top: 14, left: 14, bottom: 14, right: 14)
         backgroundColor = .clear
     }
     
@@ -41,20 +48,26 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return playlists.count
+        return playlists.count + 1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = dequeueReusableCell(withReuseIdentifier: albumCellId, for: indexPath)// as! AlbumCell
-        //cell.album = playlists[indexPath.item]
+        if indexPath.item == playlists.count {
+            let cell = dequeueReusableCell(withReuseIdentifier: buttonCellId, for: indexPath) as! CreatePlaylistButtonCell
+            cell.vc = self
+            return cell
+        }
+        let cell = dequeueReusableCell(withReuseIdentifier: playlistCellId, for: indexPath) as! PlaylistCell
+        cell.playlist = playlists[indexPath.item]
         return cell
     }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 14, bottom: 0, right: 14)
-    }
-    
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 150, height: 200)
+        if indexPath.item == playlists.count {
+            return CGSize(width: bounds.width - 28, height: 40)
+        }
+        return CGSize(width: bounds.width / 2 - 21, height: 200)
     }
+    
+    
 }

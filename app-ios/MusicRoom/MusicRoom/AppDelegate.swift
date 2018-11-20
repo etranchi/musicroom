@@ -11,6 +11,7 @@ import CoreData
 
 import FacebookLogin
 import FacebookCore
+import FirebaseCore
 import GoogleSignIn
 import Google
 import GoogleToolboxForMac

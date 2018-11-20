@@ -25,7 +25,6 @@ router.post('/login',
 // 192.....4242/user/login
 // object user dans body mail,mdp
 
-
 router.get('/login/facebook',
 		passport.authenticate('facebook-token', { session: false } ), userController.connect
 	);

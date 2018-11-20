@@ -70,6 +70,16 @@ class APIManager: NSObject, URLSessionDelegate {
             completion(artistData.data)
         })
     }
+    
+    func getUserPlaylists(completion: @escaping ([Playlist]) -> ()) {
+        let playlistsUrl = self.url + "playlist"
+        var playlistsRequest = URLRequest(url: URL(string: playlistsUrl)!)
+        playlistsRequest.httpMethod = "GET"
+        playlistsRequest.addValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
+        self.searchAll([Playlist].self, request: playlistsRequest, completion: { (playlists) in
+            completion(playlists)
+        })
+    }
 
     func searchATA(_ search: String, completion: @escaping ([Track], [Album], [Artist]) -> ()){
         searchAlbums(search) { (albums) in
@@ -79,17 +89,6 @@ class APIManager: NSObject, URLSessionDelegate {
                 })
             })
         }
-    }
-
-    func searchPlaylist(_ search: String, completion: @escaping ([Playlist]) -> ()){
-        let w = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
-        
-        let playlistsUrl = self.url + "search/playlist?q=\(w)"
-        var playlistsRequest = URLRequest(url: URL(string: playlistsUrl)!)
-        playlistsRequest.httpMethod = "GET"
-        self.searchAll(PlaylistData.self, request: playlistsRequest, completion: { (playlistData) in
-            completion(playlistData.data)
-        })
     }
     
     func registerUser(_ user : Data?) {

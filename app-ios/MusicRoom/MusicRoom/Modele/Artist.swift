@@ -10,8 +10,8 @@ import Foundation
 
 struct Artist : Decodable {
     let id : Int
-    let picture : String
-    let picture_medium : String
+    let picture : String?
+    let picture_medium : String?
     let name : String
     let tracklist : String
     let nb_fan : Int?
