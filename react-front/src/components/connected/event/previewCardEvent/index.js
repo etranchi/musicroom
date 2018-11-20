@@ -3,6 +3,7 @@ import { Card, Avatar, Icon, Divider, Modal, Row, Col, Button } from 'antd';
 import './styles.css';
 import geolib from 'geolib'
 import Map from "../simpleMap"
+import axios from 'axios'
 
 class PreviewCardEvent extends Component {
 	constructor(props) {
@@ -69,6 +70,19 @@ class PreviewCardEvent extends Component {
             else return ("In " + day + 'days')
         }
     }
+    delete = () => {
+        console.log('couccou');
+        console.log(this.props.event);
+        axios.delete('https://192.168.99.100:4242/event/'+ this.props.event._id, {headers:{Authorization: 'Bearer ' + localStorage.getItem('token')}})
+        .then(resp => {
+            console.log(resp);
+            console.log('deleted soit disant');
+        })
+        .catch(err => {
+            console.log(err);
+            console.log('not deleted');
+        })
+    }
 	render() {
         const userPicture = this.props.event.creator.facebookId ? this.props.event.creator.picture : "https://192.168.99.100:4242/userPicture/" + this.props.event.creator.picture
         return (
@@ -76,7 +90,7 @@ class PreviewCardEvent extends Component {
                 className="zoomCard"
                 style={{ width: 300, display: "inline-block", margin: "1% 2% 0 "}}
                 cover={ <img onClick={this.openCard.bind(this)} alt="eventPicture" src={"https://192.168.99.100:4242/eventPicture/" +  this.props.event.picture} />}
-                actions={[<Icon type="setting" theme="outlined"/>, <Icon type="edit" theme="outlined"/>, <i onClick={this.openMap.bind(this)} className="fas fa-map-marker"></i>]}
+                actions={[<Icon type="setting" theme="outlined"/>, <Icon type="edit" theme="outlined"/>, <i onClick={this.openMap.bind(this)} className="fas fa-map-marker"></i>,<i onClick={this.delete} className="fas fa-trash-alt"></i>]}
             >
                 <Card.Meta
                     onClick={this.openCard.bind(this)}

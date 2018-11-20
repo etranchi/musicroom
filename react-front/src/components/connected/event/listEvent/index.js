@@ -74,7 +74,7 @@ class ListEvent extends Component {
 						}
 					</div>
 					<div style={{padding:'1% 0 1% 0'}}>
-						{ this.state.allEvents.length > 0 ? <h1 style={{fontSize:'36px'}}> Tous les èvènemenets : </h1> : null }
+						{ this.state.allEvents.length > 0 ? <h1 style={{fontSize:'36px'}}> Tous les évenements : </h1> : null }
 						{
 							this.state.allEvents.map((event, key) => {
 									return ( <PreviewCard key={key} event={event} state={this.props.state} updateParent={this.props.updateParent}/> )
