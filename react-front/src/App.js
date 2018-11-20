@@ -63,9 +63,11 @@ class App extends Component {
         <Layout className="App">
           <Header className="HeaderApp">
               <img alt="headerImg" className="HeaderImage" src="/header.png"></img>
+              {token &&
               <div className="disconnect"> 
-                	<Button type="primary" onClick={this.deleteToken.bind(this)}>Disconnect</Button>
+                	 <Button type="primary" onClick={this.deleteToken.bind(this)}>Disconnect</Button>
               </div>
+              }
               {
                 token ?
                   <Menu  state={this.state} updateParent={this.updateState}/>
