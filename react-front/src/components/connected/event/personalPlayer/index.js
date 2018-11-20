@@ -45,10 +45,22 @@ export default class PersonalPlayer extends Component {
         console.log("Playlist : ", this.props.tracks[this.state.currentTracksID])
         console.log(this.state)
         return (
+<<<<<<< HEAD
                 <Row style={{height:'100px', width:'100%'}} >
                     <Col span={3} style={{'backgroundColor': 'red', height:'100px'}}></Col>
                     <Col span={5}>
                         <TrackInformation  updateParentState={this.updateState} track={this.props.tracks[this.state.currentTracksID]}/>
+=======
+            <Content style={{height:'100px'}}>
+                <Row style={{'backgroudColor':'black'}}>
+                    <Col span={4}></Col>
+                    <Col span={1}>
+                        <img alt="playlist" src={this.props.tracks[this.state.currentTracksID].album.cover_small}/>
+                    </Col>
+                    <Col span={1}>
+                        <b> {this.props.tracks[this.state.currentTracksID].title_short}</b>
+                        <p> {this.props.tracks[this.state.currentTracksID].artist.name} </p>
+>>>>>>> dbaf8656d0bb767ab864432600a1e763a5e75186
                     </Col>
                     <Col span={1} style={{'backgroundColor': 'red', height:'100px'}}></Col>
                     <Col span={6}>
