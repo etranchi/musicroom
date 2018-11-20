@@ -35,7 +35,7 @@ class Body extends Component {
         {
             axios.get('https://192.168.99.100:4242/playlist/' + playlist.id, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
             .then((resp) => { 
-                playlist.tracks.data= resp.data.data
+                playlist = resp.data
                 this.props.state.data.event.playlist = playlist;
                 this.props.updateParent({'data' : this.props.state.data, 'playlistId':playlist.id})
                 this.setState({playlistId:playlist.id})
@@ -120,7 +120,7 @@ class Body extends Component {
                     }
                     </Col>
                 </Row> */}
-                <PersonalPlayer  playlist={this.props.state.data.event.playlist}/>
+                { this.state.playlistId ?    <PersonalPlayer  playlist={this.props.state.data.event.playlist}/> : null} 
             </div>
         );
   }
