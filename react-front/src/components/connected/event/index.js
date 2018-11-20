@@ -3,6 +3,7 @@ import Create from './createEvent';
 import List from './listEvent';
 import CardEvent from './cardEvent';
 import ListCloseEvent from './listCloseEvent';
+import PersonalPlayer from './personalPlayer';
 import axios from 'axios'
 import './styles.css';
 import { Tabs, Layout, Row} from 'antd';
@@ -70,6 +71,9 @@ class Event extends Component {
 									</Tabs.TabPane>
 									<Tabs.TabPane tab="Liste des évents à proximité" key="3">
 										<ListCloseEvent state={this.props.state} updateParent={this.props.updateParent}/>
+									</Tabs.TabPane>
+									<Tabs.TabPane tab="Personal Player" key="4">
+										<PersonalPlayer/>
 									</Tabs.TabPane>
 								</Tabs>
 							</StickyContainer>
