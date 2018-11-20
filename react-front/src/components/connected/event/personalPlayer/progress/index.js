@@ -1,9 +1,17 @@
 import React, { Component } from 'react';
+import {Layout, Row, Col, Progress } from 'antd';
+
+
+const {Content } = Layout;
 const { DZ } = window;
 
-export default class Progress extends Component {
-    constructor() {
-        super()
+export default class Progressor extends Component {
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            percent:0
+        }
         this.elapsed = React.createRef()
         this.duration = React.createRef()
         this.progress = React.createRef()
@@ -17,17 +25,21 @@ export default class Progress extends Component {
 
     showPosition = () => {
         DZ.Event.subscribe('player_position', e => {
-            if (this.elapsed.current && this.duration.current && this.progress.current) {
-                this.elapsed.current.textContent = this.convertTime(e[0]);
-                this.duration.current.textContent = this.convertTime(e[1]);
-                e[1] && this.progress.current.setAttribute('value', e[0] / e[1]);
+            if (this.elapsed.current && this.duration.current && e[1]) {
+                e[1] && this.setState({percent:e[0]/e[1] * 100}, () => {
+                    console.log('2 ', this.state.percent)
+                    this.elapsed.current.textContent = this.convertTime(e[0]);
+                    this.duration.current.textContent = this.convertTime(e[1]);
+                })
             }
         });
     }
 
     changeSeek = ({ target, clientX }) => {
         const { x, width } = target.getBoundingClientRect()
-        DZ.player.seek((clientX - x) / width * 100);
+        this.setState({percent:(clientX - x) / width * 100}, () => {
+            DZ.player.seek((clientX - x) / width * 100);
+        })
     }
 
     componentDidMount() {
@@ -36,14 +48,19 @@ export default class Progress extends Component {
 
     render() {
         return (
-            <div className="progress">
-                <progress onClick={this.changeSeek} value={0} max={1} ref={this.progress} />
-                <div className='time'>
-                    <span className="elapsed" ref={this.elapsed}>0:00</span>
-                    <span> | </span>
-                    <span className="duration" ref={this.duration}>0:00</span>
-                </div>
-            </div>
+            <Content>
+            <Row>
+                <Col span={2}>
+                    <b className="elapsed" ref={this.elapsed}>0:00</b>
+                </Col>
+                <Col span={20}>
+                    <Progress  onClick={this.changeSeek.bind(this)} percent={this.state.percent}  showInfo={false}/>
+                </Col>
+                <Col span={2}>
+                    <b className="duration" ref={this.duration}>0:00</b>
+                </Col>
+            </Row>
+        </Content>
         );
     }
 }

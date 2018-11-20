@@ -120,7 +120,7 @@ class Body extends Component {
                     }
                     </Col>
                 </Row> */}
-                { this.state.playlistId ?    <PersonalPlayer  playlist={this.props.state.data.event.playlist}/> : null} 
+                { this.state.playlistId ?    <PersonalPlayer  tracks={this.props.state.data.event.playlist.tracks.data}/> : null} 
             </div>
         );
   }
