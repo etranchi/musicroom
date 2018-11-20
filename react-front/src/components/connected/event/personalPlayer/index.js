@@ -75,7 +75,7 @@ export default class PersonalPlayer extends Component {
                 <Row style={{'backgroudColor':'black'}}>
                     <Col span={4}></Col>
                     <Col span={1}>
-                        <img alt="playlist" src={this.props.tracks[this.state.currentTracksID].album.cover_small} />
+                        <img alt="playlist" src={this.props.tracks[this.state.currentTracksID].album.cover_small}/>
                     </Col>
                     <Col span={1}>
                         <b> {this.props.tracks[this.state.currentTracksID].title_short}</b>
