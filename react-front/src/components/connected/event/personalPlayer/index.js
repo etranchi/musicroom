@@ -34,47 +34,24 @@ export default class PersonalPlayer extends Component {
 
     updateState = (value) =>  {
         this.setState({value})
-        console.log("Personal player old state : ", this.state)
-        this.setState(value, () =>{
-            console.log("Personal player new state : ", this.state)
-        })
     }
 
 	render() {
-        console.log(this.props.tracks)
-        console.log("Playlist : ", this.props.tracks[this.state.currentTracksID])
-        console.log(this.state)
-        return (
-<<<<<<< HEAD
-                <Row style={{height:'100px', width:'100%'}} >
-                    <Col span={3} style={{'backgroundColor': 'red', height:'100px'}}></Col>
-                    <Col span={5}>
-                        <TrackInformation  updateParentState={this.updateState} track={this.props.tracks[this.state.currentTracksID]}/>
-=======
-            <Content style={{height:'100px'}}>
-                <Row style={{'backgroudColor':'black'}}>
-                    <Col span={4}></Col>
-                    <Col span={1}>
-                        <img alt="playlist" src={this.props.tracks[this.state.currentTracksID].album.cover_small}/>
-                    </Col>
-                    <Col span={1}>
-                        <b> {this.props.tracks[this.state.currentTracksID].title_short}</b>
-                        <p> {this.props.tracks[this.state.currentTracksID].artist.name} </p>
->>>>>>> dbaf8656d0bb767ab864432600a1e763a5e75186
-                    </Col>
-                    <Col span={1} style={{'backgroundColor': 'red', height:'100px'}}></Col>
-                    <Col span={6}>
-                        <div style={{padding:'5% 0 0 0', 'height':'80px'}}>
-                            <Control updateParentState={this.updateState} tracks={this.props.tracks}/>
-                            <Progress updateParentState={this.updateState} tracks={this.props.tracks}/>
-                        </div>
-                     </Col>
-                    <Col span={1} style={{'backgroundColor': 'red', height:'100px'}}></Col>
-                    <Col span={4}>
-                        <Options updateParentState={this.updateState} tracks={this.props.tracks}/>
-                     </Col>
-                     <Col span={4} style={{'backgroundColor': 'red', height:'100px'}}></Col>
-                </Row>
+        return ( 
+            <div className='player' style={{backgroundColor:this.props.color ? this.props.color : 'white'}}>
+                <div className='defaultComponentProperty' style={{float:'left', minWidth:"300px"}}> 
+                    <TrackInformation  updateParentState={this.updateState} track={this.props.tracks[this.state.currentTracksID]}/>
+                </div>
+                <div className='defaultComponentProperty'></div>
+                <div className='defaultComponentProperty' style={{minWidth:"600px"}}>
+                    <div style={{height:'50px'}}><Control updateParentState={this.updateState} tracks={this.props.tracks}/></div>
+                    <div style={{height:'30px'}}><Progress strokesColor={this.props.strokesColor} updateParentState={this.updateState} tracks={this.props.tracks}/></div>
+                </div>
+                <div className='defaultComponentProperty'></div>
+                <div className='defaultComponentProperty' style={{float:'right', minWidth:"300px"}}> 
+                    <Options strokesColor={this.props.strokesColor} updateParentState={this.updateState} tracks={this.props.tracks}/>  
+                </div>
+            </div>
         )
     }
 }

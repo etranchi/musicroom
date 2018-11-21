@@ -28,25 +28,22 @@ export default class TrackInformation extends Component {
 	render() {
         const {title_short, artist, album} = this.props.track
         return (
-            <Content >
-            <Row style={{maxHeight:'100px', 'width':'300px'}}>
-                <Col span={6}>
-                    <img  style={{padding:'25%', maxHeight:'100px'}} alt="playlist" src={album.cover_small} />
+            <Row style={{padding: '12% 0 0 0', height:'inherit'}}>
+                <Col span={1}></Col>
+                <Col span={8}>
+                    <img alt="playlist" src={album.cover_small} />
                 </Col>
-                <Col span={10}>
-                    <div style={{float:'left', padding:'20% 0 0 5%', 'minwidth':'60%', maxHeight:'100px'}}>
-                        <p style={{margin:0, padding:0}}><b> {title_short}</b></p>
+                <Col span={9}>
+                    <div style={{float:'left', padding: '3% 0 0 0'}}>
+                        <b> {title_short}</b>
+                        <br/>
                         <p style={{ display:'inline'}}> {artist.name} </p>
                     </div>
                 </Col>
-                <Col span={2}>
-                    <div style={{padding:'146% 0 0 5%'}}>
-                        <Icon className="playerLike" type="heart" />
-                    </div>
-                    
+                <Col span={4}>
+                    <Icon style={{float:'left', margin: '40% 0 0 0'}} className="playerLike" type="heart" />
                 </Col>
             </Row>
-            </Content>
         )
     }
 }

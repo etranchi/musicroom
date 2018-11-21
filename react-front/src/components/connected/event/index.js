@@ -4,6 +4,7 @@ import List from './listEvent';
 import CardEvent from './cardEvent';
 import ListCloseEvent from './listCloseEvent';
 import PersonalPlayer from './personalPlayer';
+import LiveEvent from './liveEvent';
 import axios from 'axios'
 import './styles.css';
 import { Tabs, Layout, Row} from 'antd';
@@ -43,7 +44,6 @@ class Event extends Component {
 			console.log('Events error', err);
 		})
 	}
-
 	render() {
 		if (this.props.state.currentComponent === "cardEvent") {
 			return (<CardEvent state={this.props.state} updateParent={this.props.updateParent} />)
@@ -57,8 +57,7 @@ class Event extends Component {
 				<DefaultTabBar {...props} style={{ ...style, zIndex: 1, background: '#fff' }} />
 				)}
 			</Sticky>
-			);
-			console.log("EVENT  : ",  this.props.state.data.events[0].playlist.tracks.data)
+			); 
 			return (
 				<Layout>
 					<Content>
@@ -75,7 +74,10 @@ class Event extends Component {
 										<ListCloseEvent state={this.props.state} updateParent={this.props.updateParent}/>
 									</Tabs.TabPane>
 									<Tabs.TabPane tab="Personal Player" key="4">
-										<PersonalPlayer tracks={this.props.state.data.events[0].playlist.tracks.data}/>
+										<PersonalPlayer strokeColor={'#e0e0e0'} color={'#d84315'} tracks={this.props.state.data.events[0].playlist.tracks.data}/>
+									</Tabs.TabPane>
+									<Tabs.TabPane tab="Live Event" key="5">
+										<LiveEvent playlist={this.props.state.data.events[0].playlist.tracks.data}/>
 									</Tabs.TabPane>
 								</Tabs>
 							</StickyContainer>

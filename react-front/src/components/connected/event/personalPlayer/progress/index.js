@@ -47,19 +47,17 @@ export default class Progressor extends Component {
 
     render() {
         return (
-            <Content>
-            <Row>
-                <Col span={2}>
+            <Row style={{height:'inherit'}}>
+                <Col span={3}>
                     <b className="elapsed" ref={this.elapsed}>0:00</b>
                 </Col>
-                <Col span={20}>
-                    <Progress  onClick={this.changeSeek.bind(this)} percent={this.state.percent}  showInfo={false}/>
+                <Col span={19}>
+                    <Progress  strokeColor={this.props.stokeColor ? this.props.stokeColor : '#bdbdbd'} onClick={this.changeSeek.bind(this)} percent={this.state.percent}  showInfo={false}/>
                 </Col>
                 <Col span={2}>
                     <b className="duration" ref={this.duration}>0:00</b>
                 </Col>
             </Row>
-        </Content>
         );
     }
 }

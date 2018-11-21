@@ -29,21 +29,19 @@ export default class PersonalPlayer extends Component {
 	
 	render() {
         return (
-            <Content>
-                <Row style={{height:'80px', padding:'12% 0 0 5%'}}>
-                    <Col span={1}>
-                        <i class="fas fa-bars"></i>
-                    </Col>
-                    <Col span={2}></Col>
-                    <Col span={1}>
-                        <i onClick={this.muteVolume} className={this.state.mute ? "fas fa-volume-mute" : "fas fa-volume-up" }></i>
-                    </Col>
-                    <Col span={2}></Col>
-                    <Col span={12}>
-                        <Progress  onClick={this.changeVolume.bind(this)} percent={this.state.volume}  showInfo={false}/>
-                    </Col>
-                </Row>
-            </Content>
+            <Row style={{padding:'20% 0 0 0'}}>
+                <Col span={1}>
+                    <i class="fas fa-bars"></i>
+                </Col>
+                <Col span={2}></Col>
+                <Col span={1}>
+                    <i onClick={this.muteVolume} className={this.state.mute ? "fas fa-volume-mute" : "fas fa-volume-up" }></i>
+                </Col>
+                <Col span={2}></Col>
+                <Col span={16}>
+                    <Progress strokeColor={this.props.stokeColor ? this.props.stokeColor : '#bdbdbd'} onClick={this.changeVolume.bind(this)} percent={this.state.volume}  showInfo={false}/>
+                </Col>
+            </Row>
         )
     }
 }
