@@ -27,6 +27,7 @@ class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate 
                     let user = userManager.newUser()
                     user.token = data.token
                     user.login = data.user.login
+                    userManager.currentUser = user
                     userManager.save()
                     let nav = TabBarController()
                     self.present(nav, animated: true, completion: nil)
@@ -50,6 +51,7 @@ class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate 
                 let user = userManager.newUser()
                 user.token = data.token
                 user.login = data.user.login
+                userManager.currentUser = user
                 userManager.save()
                 let nav = TabBarController()
                 self.present(nav, animated: true, completion: nil)

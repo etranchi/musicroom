@@ -10,10 +10,10 @@ import UIKit
 import Alamofire
 
 class APIManager: NSObject, URLSessionDelegate {
-    let ip : String = "192.168.99.100"
-    let token : String? = nil
+    let ip: String = "192.168.99.100"
+    let token: String? = nil
     let delegate: Alamofire.SessionDelegate = Manager.delegate
-    var url : String {
+    var url: String {
         return  "https://\(self.ip):4242/"
     }
     private static var Manager: Alamofire.SessionManager = {
@@ -29,6 +29,7 @@ class APIManager: NSObject, URLSessionDelegate {
         )
         return manager
     }()
+    let jsonEncoder: JSONEncoder = JSONEncoder()
     
     override init() {
         delegate.sessionDidReceiveChallenge = { session, challenge in
@@ -210,30 +211,34 @@ class APIManager: NSObject, URLSessionDelegate {
         let eventsUrl = self.url + "event"
         var request = URLRequest(url: URL(string: eventsUrl)!)
         request.httpMethod = "GET"
-        print("je ;annceeee")
         self.searchAll([Event].self, request: request) { (res) in
             completion(res)
         }
-        /*URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: request) { (data, response, err) in
+    }
+    
+    func getImgEvent(_ path : String, completion : @escaping (UIImage?) -> ()) {
+        let url = URL(string: self.url + "eventPicture/" + path)
+        URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: url!) { (data, response, err) in
             if err != nil {
-                print("error while requesting")
+                print(err?.localizedDescription)
+                completion(nil)
             }
-            do {
-                let responseJSON = try JSONSerialization.jsonObject(with: data!, options: [])
-                print(responseJSON)
-                if let responseJSON = responseJSON as? [String: Any] {
-                    print(responseJSON)
+            if let res = response as? URLResponse {
+                if let imageData = data {
+                    completion(UIImage(data: imageData))
+                } else {
+                    print("image is nil")
+                    completion(nil)
                 }
+            } else {
+                print("No response from http request")
+                completion(nil)
             }
-            catch (let err){
-                print(err.localizedDescription)
-            }
-            }.resume()*/
+        }.resume()
     }
     
     func postEvent(_ token : String, event : Event, img : UIImage, onCompletion: @escaping ((Bool) -> Void)) {
         do {
-            let jsonEncoder = JSONEncoder()
             let postEventUrl = self.url + "event/"
             let dataBody = try jsonEncoder.encode(event)
             let dataImg = UIImagePNGRepresentation(img)
@@ -263,48 +268,6 @@ class APIManager: NSObject, URLSessionDelegate {
                     onCompletion(false)
                 }
             }
-            
-            
-            /* var body = NSMutableData()
-            body.append("Content-Disposition:form-data; name=\"body\"\r\n\r\n".data(using: String.Encoding.utf8)!)
-            body.append(data)
-            // body.append(("body=\(string)").data(using:String.Encoding.ascii, allowLossyConversion: false)!)
-            body.append("Content-Disposition:form-data; name=\"file\"\r\n\r\n".data(using: String.Encoding.utf8)!)
-            body.append("Content-Type: image/png\r\n\r\n".data(using: String.Encoding.utf8)!)
-            body.append(("").data(using:String.Encoding.ascii, allowLossyConversion: false)!)
-            body.append("\r\n".data(using: String.Encoding.utf8)!)
-            body.append("--\(boundary)--\r\n".data(using: String.Encoding.utf8)!)
-            print(body)
-            request.httpBody = body as Data */
-            /*let boundary = NSString(format: "---------------------------14737809831466499882746641449")
-            var body = Data()
-            body.append(NSString(format: "\r\n--%@\r\n", boundary).data(using: String.Encoding.utf8.rawValue)!)
-            body.append(NSString(format:"Content-Disposition: form-data;name=\"uploaded_file\";filename=\"image.jpg\"\\r\n").data
-                (using:String.Encoding.utf8.rawValue)!) //Here replace your image name and file name
-            body.append(NSString(format: "Content-Type: image/jpeg\r\n\r\n").data(using: String.Encoding.utf8.rawValue)!)
-            body.append(data)
-            body.append(NSString(format: "\r\n--%@\r\n", boundary).data(using: String.Encoding.utf8.rawValue)!)
-            request.httpBody = body*/
-            /*print("j'ai tous set")
-            URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: request) { (data, response, err) in
-                if err != nil {
-                    print("error while requesting")
-                }
-                if let d = data {
-                    do {
-                        print(d, response, err)
-                        let responseJSON = try JSONSerialization.jsonObject(with: d, options: [])
-                        
-                        if let responseJSON = responseJSON as? [String: Any] {
-                            print(responseJSON)
-                        }
-                    }
-                    catch (let err){
-                        print(err.localizedDescription)
-                    }
-                }
-            }.resume()*/
-            
         } catch (let err) {
             print(err.localizedDescription)
         }
@@ -335,14 +298,6 @@ class APIManager: NSObject, URLSessionDelegate {
                 }
             }
         }.resume()
-    }
-}
-
-
-extension NSMutableData {
-    func appendString(_ string: String) {
-        let data = string.data(using: String.Encoding.utf8, allowLossyConversion: false)
-        append(data!)
     }
 }
 

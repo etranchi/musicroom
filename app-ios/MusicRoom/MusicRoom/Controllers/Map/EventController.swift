@@ -83,6 +83,48 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
         return iv
     }()
     
+    
+    func getCenter() {
+        
+        if myPosition == nil {
+            myPosition = locationManager.location?.coordinate
+        }
+        
+        if let pin = selectedPin, let me = myPosition {
+            let sourceCoordinate = me
+            let destCoordinate = pin.coordinate
+            
+            let soucePlaceMark = MKPlacemark(coordinate: sourceCoordinate)
+            let destPlaceMark = MKPlacemark(coordinate: destCoordinate)
+            
+            let sourceItem = MKMapItem(placemark: soucePlaceMark)
+            let destItem = MKMapItem(placemark: destPlaceMark)
+            var directionReq : MKDirectionsRequest = MKDirectionsRequest()
+            directionReq.source = sourceItem
+            directionReq.destination = destItem
+            directionReq.transportType = .automobile
+            
+            let direction = MKDirections(request: directionReq)
+            direction.calculate(completionHandler: { (response, error) in
+                guard let response = response else {
+                    if let error = error {
+                        let noData = UIAlertController(title: "Alert", message: "No roads available \(error.localizedDescription)", preferredStyle: UIAlertControllerStyle.alert)
+                        noData.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
+                        self.present(noData, animated: true, completion: nil)
+                    }
+                    return
+                }
+                let myRoute = response.routes[0]
+                self.mapView.add(myRoute.polyline, level: .aboveRoads)
+                var rekt = myRoute.polyline.boundingMapRect
+                let coord = MKCoordinateRegionForMapRect(rekt)
+                let distance = MKCoordinateRegionMake(coord.center, coord.span)
+                self.mapView.setRegion(distance, animated: true)
+
+            })
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         locationManager.delegate = self
@@ -109,8 +151,11 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
         view.backgroundColor = UIColor(white: 0.1, alpha: 1)
         mapView.delegate = self
         mapView.showsUserLocation = true
+        mapView.isUserInteractionEnabled = false
         mapView.translatesAutoresizingMaskIntoConstraints = false
-        mapView.setCenter(mapView.userLocation.coordinate, animated: true)
+        mapView.addAnnotation(selectedPin!)
+        getCenter()
+        
         let gesture = UILongPressGestureRecognizer(target: self, action: #selector(putPin))
         mapView.addGestureRecognizer(gesture)
         setupView()
@@ -198,7 +243,7 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
             let location = Location(address: address, coord: coord)
             let dataImg = NSData(contentsOf: urlImageToString!)
             apiManager.getMe((myUser?.token)!, completion: { (user) in
-                let event = Event(creator : user, title: self.titleTF.text!, description: self.descriptionTV.text!, location: location, visibility: self.segmentedBar.selectedSegmentIndex, shared: self.segmentedBar.selectedSegmentIndex == 0 ? true : false , creationDate: String(describing: Date()), date: String(describing: Date()), playlist: nil, members: [], adminMembers: [], picture : nil)
+                let event = Event(_id : nil, creator : user, title: self.titleTF.text!, description: self.descriptionTV.text!, location: location, visibility: self.segmentedBar.selectedSegmentIndex, shared: self.segmentedBar.selectedSegmentIndex == 0 ? true : false , creationDate: String(describing: Date()), date: String(describing: Date()), playlist: nil, members: [], adminMembers: [], picture : nil)
                 apiManager.postEvent((myUser?.token)!, event: event, img: self.imageView.image!) { (resp) in
                     if resp {
                         self.navigationController?.popViewController(animated: true)
@@ -307,11 +352,11 @@ extension EventController : CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let location = locations.first {
+/*        if let location = locations.first {
             let span = MKCoordinateSpanMake(0.05, 0.05)
             let region = MKCoordinateRegion(center: location.coordinate, span: span)
             mapView.setRegion(region, animated: true)
-        }
+        }*/
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {

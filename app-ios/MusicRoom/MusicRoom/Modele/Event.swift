@@ -27,6 +27,7 @@ struct Location : Codable {
 }
 
 struct Event : Codable {
+    let _id : String?
     let creator : User?
     let title : String
     let description : String
@@ -43,6 +44,6 @@ struct Event : Codable {
         case shared = "public"
         case creationDate = "creation_date"
         case date = "event_date"
-        case creator, title, description, location, visibility, playlist, members, adminMembers, picture
+        case creator, title, description, location, visibility, playlist, members, adminMembers, picture, _id
     }
 }
