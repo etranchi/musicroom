@@ -80,7 +80,7 @@ class CreateEvent extends Component {
             .then((resp) => { 
                 console.log("Create Event : handleSubmit :/event Success");
                 this.info("Evènement crée")
-                this.props.updateParent({'currentComponent' : "event"})
+                this.props.updateParent({'currentComponent' : "createEvent"})
             })
             .catch((err) => { console.log("Create Event : handleSubmit :/event Error ", err); })  
         })
