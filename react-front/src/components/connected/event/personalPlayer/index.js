@@ -37,7 +37,6 @@ export default class PersonalPlayer extends Component {
     }
 
 	render() {
-<<<<<<< HEAD
         return ( 
             <div className='player' style={{backgroundColor:this.props.color ? this.props.color : 'white'}}>
                 <div className='defaultComponentProperty' style={{float:'left', minWidth:"300px"}}> 
@@ -53,30 +52,6 @@ export default class PersonalPlayer extends Component {
                     <Options strokesColor={this.props.strokesColor} updateParentState={this.updateState} tracks={this.props.tracks}/>  
                 </div>
             </div>
-=======
-        console.log(this.props.tracks)
-        console.log("Playlist : ", this.props.tracks[this.state.currentTracksID])
-        console.log(this.state)
-        return (
-                <Row style={{height:'100px', width:'100%'}} >
-                    <Col span={3} style={{'backgroundColor': 'red', height:'100px'}}></Col>
-                    <Col span={5}>
-                        <TrackInformation  updateParentState={this.updateState} track={this.props.tracks[this.state.currentTracksID]}/>
-                    </Col>
-                    <Col span={1} style={{'backgroundColor': 'red', height:'100px'}}></Col>
-                    <Col span={6}>
-                        <div style={{padding:'5% 0 0 0', 'height':'80px'}}>
-                            <Control updateParentState={this.updateState} tracks={this.props.tracks}/>
-                            <Progress updateParentState={this.updateState} tracks={this.props.tracks}/>
-                        </div>
-                     </Col>
-                    <Col span={1} style={{'backgroundColor': 'red', height:'100px'}}></Col>
-                    <Col span={4}>
-                        <Options updateParentState={this.updateState} tracks={this.props.tracks}/>
-                     </Col>
-                     <Col span={4} style={{'backgroundColor': 'red', height:'100px'}}></Col>
-                </Row>
->>>>>>> 6a8baaa84b8f636cb398d9f6010d8fe39aa2a4c7
         )
     }
 }
