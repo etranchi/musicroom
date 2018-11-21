@@ -27,7 +27,6 @@ export default class Progressor extends Component {
         DZ.Event.subscribe('player_position', e => {
             if (this.elapsed.current && this.duration.current && e[1]) {
                 e[1] && this.setState({percent:e[0]/e[1] * 100}, () => {
-                    console.log('2 ', this.state.percent)
                     this.elapsed.current.textContent = this.convertTime(e[0]);
                     this.duration.current.textContent = this.convertTime(e[1]);
                 })

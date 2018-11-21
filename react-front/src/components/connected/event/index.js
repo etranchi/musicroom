@@ -58,6 +58,7 @@ class Event extends Component {
 				)}
 			</Sticky>
 			);
+			console.log("EVENT  : ",  this.props.state.data.events[0].playlist.tracks.data)
 			return (
 				<Layout>
 					<Content>
@@ -74,7 +75,7 @@ class Event extends Component {
 										<ListCloseEvent state={this.props.state} updateParent={this.props.updateParent}/>
 									</Tabs.TabPane>
 									<Tabs.TabPane tab="Personal Player" key="4">
-										<PersonalPlayer/>
+										<PersonalPlayer tracks={this.props.state.data.events[0].playlist.tracks.data}/>
 									</Tabs.TabPane>
 								</Tabs>
 							</StickyContainer>
