@@ -51,33 +51,51 @@ options.basedir = __dirname
 options.files = ["./routes/**/*.js"]
 expressSwagger(options)
 
+let playlistBlocked = []
 io.on('connection', (socket) => {
-  socket.on('addPlaylist', (playlistId) => {
-    // BROADCAST NEW PLAYLIST io.emit('newPlaylist', () => {})
-    console.log("addPlaylist -> ");
-    console.log(playlistId);
-  });
-  socket.on('delPlaylist', (playlistId) => {
-    console.log("delPlaylist -> ");
-    console.log(playlistId);
-  });
-  socket.on('addMusicInPlaylist', (musicId) => {
-    console.log("addMusicInPlaylist -> ");
-    console.log(musicId);
-  });
-  socket.on('delMusicInPlaylist', (musicId) => {
-    console.log("delMusicInPlaylist -> ");
-    console.log(musicId);
-  });
+  // socket.on('addPlaylist', (playlistId) => {
+  //   console.log("addPlaylist -> ");
+  //   console.log(playlistId);
+  // });
+  // socket.on('delPlaylist', (playlistId) => {
+  //   console.log("delPlaylist -> ");
+  //   console.log(playlistId);
+  // });
+  // socket.on('addMusicInPlaylist', (musicId) => {
+  //   console.log("addMusicInPlaylist -> ");
+  //   console.log(musicId);
+  // });
+  // socket.on('delMusicInPlaylist', (musicId) => {
+  //   console.log("delMusicInPlaylist -> ");
+  //   console.log(musicId);
+  // });
   socket.on('moveMusic', async (playlistId) => {
     console.log("JE SUIS LA ET JE VAIS EMIT UN EVENT")
     let playlist = await ftSocket.sendPlaylist(playlistId)
-    console.log(playlist)
-    io.emit('musicMoved', playlist)
-    // add a hash of plylistId if playlistId in hash block moves
-    console.log("moveMusic -> ");
-    console.log(playlistId);
+    socket.broadcast.emit('musicMoved', playlist)
   });
+  socket.on('blockPlaylist', (playlistId) => {
+    console.log("BLOCK PLAYLIST -> " + playlistId)
+    console.log(playlistBlocked)
+    console.log(playlistBlocked.indexOf(playlistId))
+    if (playlistBlocked.indexOf(playlistId) === -1) {
+      playlistBlocked.push(playlistId)
+      console.log("BLOCK PLAYLIST EVENT")
+      socket.broadcast.emit('blockPlaylist', playlistId)
+    } else {
+      socket.emit('alreadyBlocked', playlistId)
+    }
+  });
+  socket.on('unblockPlaylist', (playlistId) => {
+    console.log("BEFORE SPLICE")
+    console.log(playlistBlocked)
+    playlistBlocked.splice(playlistBlocked.indexOf(playlistId), 1)
+    console.log("AFTER SPLICE")
+    console.log(playlistBlocked)
+    console.log("UNBLOCK PLAYLIST EVENT")
+    socket.broadcast.emit('unblockPlaylist', playlistId)
+  });
+  
 });
 
 httpsServer.listen(config.port, config.host);
