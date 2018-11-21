@@ -10,12 +10,11 @@
     font-size: 36px;
 }
 
-
-.playerLike {
-    display: inline;
-    font-size: 18px;
-}
-
 .inputInline {
     display: inline;
+}
+
+.player {
+    border:1px solid black !important;
+    min-width:1600px !important;
 }
