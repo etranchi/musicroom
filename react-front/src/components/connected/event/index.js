@@ -15,8 +15,7 @@ class Event extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			loading: false,
-			currentComponent: 'createEvent'
+			loading: false
 		}
 
 		if (navigator.geolocation && !this.props.state.data.userCoord) {
@@ -31,60 +30,43 @@ class Event extends Component {
 	}
 
 
-	componentDidMount() {
-		axios.get('https://192.168.99.100:4242/event')
-		.then((resp) => {
-			this.props.state.data.events = resp.data.reverse()
-			this.props.updateParent({'data' : this.props.state.data})
-			this.setState({loading:true});
-		})
-		.catch((err) => {
-			this.setState({events: [],loading:false})
-			console.log('Events error', err);
-		})
-	}
 
 	render() {
 		if (this.props.state.currentComponent === "cardEvent") {
 			return (<CardEvent state={this.props.state} updateParent={this.props.updateParent} />)
 		}
-		if (!this.state.loading)
-			return <p> OUPSI </p>
-		else {
-			const renderTabBar = (props, DefaultTabBar) => (
-			<Sticky bottomOffset={80}>
-				{({ style }) => (
-				<DefaultTabBar {...props} style={{ ...style, zIndex: 1, background: '#fff' }} />
-				)}
-			</Sticky>
-			);
-			console.log("EVENT  : ",  this.props.state.data.events[0].playlist.tracks.data)
-			return (
-				<Layout>
-					<Content>
-						<Row>
-							<StickyContainer style={{'textAlign':'center'}}>
-								<Tabs style={{'textAlign':'center'}} defaultActiveKey="1" renderTabBar={renderTabBar}>
-									<Tabs.TabPane  tab="Créer un Event" key="1">
-										<Create state={this.props.state} updateParent={this.props.updateParent}/>
-									</Tabs.TabPane>
-									<Tabs.TabPane tab="Liste de vos Events" key="2" >
-										<List state={this.props.state} updateParent={this.props.updateParent}/>
-									</Tabs.TabPane>
-									<Tabs.TabPane tab="Liste des évents à proximité" key="3">
-										<ListCloseEvent state={this.props.state} updateParent={this.props.updateParent}/>
-									</Tabs.TabPane>
-									<Tabs.TabPane tab="Personal Player" key="4">
-										<PersonalPlayer tracks={this.props.state.data.events[0].playlist.tracks.data}/>
-									</Tabs.TabPane>
-								</Tabs>
-							</StickyContainer>
-						</Row>
-						
-					</Content>
-				</Layout>
-			);
-		}
+		const renderTabBar = (props, DefaultTabBar) => (
+		<Sticky bottomOffset={80}>
+			{({ style }) => (
+			<DefaultTabBar {...props} style={{ ...style, zIndex: 1, background: '#fff' }} />
+			)}
+		</Sticky>
+		);
+		return (
+			<Layout>
+				<Content>
+					<Row>
+						<StickyContainer style={{'textAlign':'center'}}>
+							<Tabs style={{'textAlign':'center'}} defaultActiveKey="1" renderTabBar={renderTabBar}>
+								<Tabs.TabPane  tab="Liste de vos Events" key="1">
+									{this.props.state.currentComponent === 'event'? <List state={this.props.state} updateParent={this.props.updateParent}/> : null}
+								</Tabs.TabPane>
+								<Tabs.TabPane tab="Créer un Event" key="2">
+									{this.props.state.currentComponent === 'createEvent'? <Create state={this.props.state} updateParent={this.props.updateParent}/> : null}
+								</Tabs.TabPane>
+								<Tabs.TabPane tab="Liste des évents à proximité" key="3">
+									{this.props.state.currentComponent === 'listCloseEvent'? <ListCloseEvent state={this.props.state} updateParent={this.props.updateParent}/> : null}
+								</Tabs.TabPane>
+								<Tabs.TabPane tab="Personal Player" key="4">
+									{this.props.state.currentComponent === 'Player'? <PersonalPlayer/> : null}
+								</Tabs.TabPane>
+							</Tabs>
+						</StickyContainer>
+					</Row>
+					
+				</Content>
+			</Layout>
+		);
 	}
 }
 

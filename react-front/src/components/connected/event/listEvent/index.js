@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './styles.css';
 import PreviewCard from '../previewCardEvent'
 import { Layout} from 'antd';
+import axios from 'axios'
 
 class ListEvent extends Component {
 	constructor(props) {
@@ -10,45 +11,34 @@ class ListEvent extends Component {
 			loading:false,
 			myEvents: [],
 			friendEvents: [],
-			allEvent: []
-
+			allEvents: []
 		}
-		this.onLoad = false;
 	}
 
-	isUser = (tab) => 
-    {
-        for (let i = 0; i < tab.length; i++) {
-            if (tab[i].email === this.props.state.user.email)
-                return true;
-        }
-        return false;
-	}
-
-	sortEvent = (type) => {
-		let ret = [];
-
-		for (let i = 0; i < this.props.state.data.events.length; i++)
-		{
-			if (type === 'myEvents' && (this.props.state.data.events[i].creator.email === this.props.state.user.email))
-				ret.push(this.props.state.data.events[i])
-			if (type === 'friendEvents' && (this.isUser(this.props.state.data.events[i].members) || this.isUser(this.props.state.data.events[i].adminMembers)))
-				ret.push(this.props.state.data.events[i])
-			if (type === 'allEvents' && (!this.isUser(this.props.state.data.events[i].members) && !this.isUser(this.props.state.data.events[i].adminMembers)))
-				ret.push(this.props.state.data.events[i])
-		}
-		return ret;
-	}
-
-	componentWillMount = () => {
-		this.setState({myEvents:this.sortEvent("myEvents")}, () => {
-			this.setState({friendEvents:this.sortEvent("friendEvents")}, () => {
-				this.setState({allEvents:this.sortEvent("allEvents")})
-				this.setState({loading:true})
+	componentDidMount = () => {
+		this.getEvents(ret => {
+			this.setState({
+				myEvents: ret.myEvents, 
+				friendEvents:ret.friendEvents, 
+				allEvents: ret.allEvents, 
+				loading:true
 			})
+		});
+	}
+
+	getEvents = (callback) => {
+		console.log('coucou');
+		axios.get('https://192.168.99.100:4242/event')
+		.then((resp) => {
+			console.log('response get Events');
+			console.log(resp.data);
+			callback(resp.data);
+		})
+		.catch((err) => {
+			console.log('Events error', err);
 		})
 	}
-	
+
 	render() {
 		const {Content } = Layout;
 		if (!this.state.loading) 

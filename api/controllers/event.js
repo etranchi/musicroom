@@ -6,8 +6,13 @@ const ObjectId = require('mongodb').ObjectID;
 module.exports = {
 	getEvents: async (req, res) => {
 		try {
-			res.status(200).json(await modelEvent.find());
+			let myEvents = [] // await modelEvent.find({'creator._id': req.user._id})
+			let friendEvents = [] // await modelEvent.find({'adminMembers._id': req.user._id})
+			let allEvents = await modelEvent.find();
+			console.log("ici");
+			res.status(200).json({myEvents, friendEvents, allEvents});
 		} catch (err) {
+			console.log("Error getEvents: " + err)
 			res.status(400).json(err);
 		}
 	},
