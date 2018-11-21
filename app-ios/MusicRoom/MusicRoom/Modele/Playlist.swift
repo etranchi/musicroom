@@ -10,14 +10,15 @@ import Foundation
 
 
 
-struct Creator: Decodable {
-    let id: Int
-    let name: String
+struct Creator: Codable {
+    var id: Int?
+    var name: String
 }
 
-struct Playlist: Decodable {
-    let creator: Creator
-    let tracks: PlaylistTrackData
-    let title: String
-    let picture_medium: String?
+struct Playlist: Codable {
+    var creator: Creator?
+    var tracks: PlaylistTrackData
+    var title: String
+    var picture_medium: String?
+    var _id: String
 }

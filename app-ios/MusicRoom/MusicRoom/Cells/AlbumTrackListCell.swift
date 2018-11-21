@@ -9,7 +9,7 @@
 import UIKit
 
 class AlbumTrackListCell: UITableViewCell {
-
+    var isInPlaylist = false
     var track: Track? {
         didSet {
             titleLabel.text = track?.title
@@ -17,6 +17,12 @@ class AlbumTrackListCell: UITableViewCell {
             if track?.id == currentTrack?.id {
                 titleLabel.textColor = UIColor(red: 20 / 255, green: 220 / 255, blue: 20 / 255, alpha: 1)
             }
+            var icon = #imageLiteral(resourceName: "plus_icon")
+            if isInPlaylist {
+                icon = #imageLiteral(resourceName: "minus_icon")
+            }
+            let tintedIcon = icon.withRenderingMode(.alwaysTemplate)
+            plusButton.setImage(tintedIcon, for: .normal)
         }
     }
     
@@ -52,9 +58,7 @@ class AlbumTrackListCell: UITableViewCell {
     
     let plusButton: UIButton = {
         let button = UIButton(type: .system)
-        let icon = #imageLiteral(resourceName: "plus_icon")
-        let tintedIcon = icon.withRenderingMode(.alwaysTemplate)
-        button.setImage(tintedIcon, for: .normal)
+        
         button.tintColor = UIColor(white: 1, alpha: 1)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.isUserInteractionEnabled = true
@@ -80,6 +84,10 @@ class AlbumTrackListCell: UITableViewCell {
     }
     
     @objc func handleAddSong() {
+        if isInPlaylist {
+            print("delete song from playlist")
+            return
+        }
         print("add song to playlist")
     }
     

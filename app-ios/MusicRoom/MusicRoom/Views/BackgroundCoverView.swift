@@ -15,8 +15,7 @@ class BackgroundCoverView: UIView {
     let nextTrack: Track?
     
     let offset = UIApplication.shared.keyWindow!.bounds.width
-    let transparencyEffect: CGFloat = 0.5
-    let animationTime = 0.5
+    let animationTime = 0.6
     
     let previousImageView: UIImageView = {
         let iv = UIImageView()
@@ -75,10 +74,9 @@ class BackgroundCoverView: UIView {
     }
     
     fileprivate func handleAnimation(iv: UIImageView) {
+        iv.alpha = 1
         UIView.animate(withDuration: animationTime, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-            iv.alpha = 1
             self.currentImageView.alpha = 0
-            self.currentImageView.alpha = self.transparencyEffect
             self.layoutIfNeeded()
         })
     }
@@ -100,9 +98,10 @@ class BackgroundCoverView: UIView {
     fileprivate func setupView() {
         downLoadImagesIfNeeded()
         
-        addSubview(currentImageView)
+        
         addSubview(previousImageView)
         addSubview(nextImageView)
+        addSubview(currentImageView)
         addSubview(blurEffectView)
         addSubview(darkView)
         
@@ -129,7 +128,7 @@ class BackgroundCoverView: UIView {
             blurEffectView.bottomAnchor.constraint(equalTo: bottomAnchor),
             blurEffectView.leadingAnchor.constraint(equalTo: leadingAnchor),
             blurEffectView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            
+
             darkView.topAnchor.constraint(equalTo: topAnchor),
             darkView.bottomAnchor.constraint(equalTo: bottomAnchor),
             darkView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -139,11 +138,24 @@ class BackgroundCoverView: UIView {
     
     fileprivate func downLoadImagesIfNeeded() {
         if let previous = previousTrack {
-            previousImageView.loadImageUsingCacheWithUrlString(urlString: previous.album!.cover_big!)
+            if let pbig = previous.album!.cover_big {
+                previousImageView.loadImageUsingCacheWithUrlString(urlString: pbig)
+            } else {
+                previousImageView.image = #imageLiteral(resourceName: "album_placeholder")
+            }
         }
-        currentImageView.loadImageUsingCacheWithUrlString(urlString: currentTrack.album!.cover_big!)
+        if let big = currentTrack.album!.cover_big {
+            currentImageView.loadImageUsingCacheWithUrlString(urlString: big)
+        } else {
+            currentImageView.image = #imageLiteral(resourceName: "album_placeholder")
+        }
         if let next = nextTrack {
-            nextImageView.loadImageUsingCacheWithUrlString(urlString: next.album!.cover_big!)
+            if let nbig = next.album!.cover_big {
+                nextImageView.loadImageUsingCacheWithUrlString(urlString: nbig)
+            } else {
+                nextImageView.image = #imageLiteral(resourceName: "album_placeholder")
+            }
+            
         }
     }
 }

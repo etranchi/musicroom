@@ -11,7 +11,7 @@ import UIKit
 class PlaylistController: UIViewController {
     
     var playlistCollectionView: PlaylistCollectionView?
-    
+    var firstLoad = true
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -19,14 +19,36 @@ class PlaylistController: UIViewController {
         title = "Playlists"
     }
     
+    
+    @objc func handleEdit() {
+        if playlistCollectionView!.isEditing {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "edit", style: .done, target: self, action: #selector(handleEdit))
+            playlistCollectionView!.isEditing = false
+            self.playlistCollectionView?.reloadData()
+            return
+        }
+        playlistCollectionView!.isEditing = true
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "done", style: .done, target: self, action: #selector(handleEdit))
+        self.playlistCollectionView?.reloadData()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = UIColor(white: 0.1, alpha: 1)
+        
         setupView()
+        reloadPlaylists()
+    }
+    
+    func reloadPlaylists() {
         apiManager.getUserPlaylists { (playlists) in
             self.playlistCollectionView?.playlists = playlists
             self.playlistCollectionView?.reloadData()
+            if self.firstLoad {
+                self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "edit", style: .done, target: self, action: #selector(self.handleEdit))
+                self.firstLoad = false
+            }
         }
     }
     

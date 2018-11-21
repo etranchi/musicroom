@@ -9,6 +9,7 @@
 import UIKit
 
 class PlaylistCell: UICollectionViewCell {
+    var vc : PlaylistCollectionView?
     var playlist: Playlist! {
         didSet {
             titleLabel.text = playlist.title
@@ -52,6 +53,16 @@ class PlaylistCell: UICollectionViewCell {
         return label
     }()
     
+    let deleteView: UIImageView = {
+        let iv = UIImageView()
+        
+        iv.contentMode = .scaleAspectFit
+        iv.image = #imageLiteral(resourceName: "delete_icon")
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        iv.layer.masksToBounds = true
+        return iv
+    }()
+    
     func setupViews() {
         addSubview(imageView)
         addSubview(titleLabel)
@@ -66,5 +77,13 @@ class PlaylistCell: UICollectionViewCell {
             titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
+        addSubview(deleteView)
+        NSLayoutConstraint.activate([
+            deleteView.centerXAnchor.constraint(equalTo: imageView.centerXAnchor),
+            deleteView.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
+            deleteView.heightAnchor.constraint(equalToConstant: 100),
+            deleteView.widthAnchor.constraint(equalToConstant: 100)
+        ])
+        deleteView.isHidden = true
     }
 }

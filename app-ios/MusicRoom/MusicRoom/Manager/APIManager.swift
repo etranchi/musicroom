@@ -80,6 +80,28 @@ class APIManager: NSObject, URLSessionDelegate {
             completion(playlists)
         })
     }
+    
+    func createPlaylist(_ title: String, _ target: PlaylistController?) {
+        let postString = "title=\(title)"
+        let playlistsUrl = self.url + "playlist"
+        var createPlaylistRequest = URLRequest(url: URL(string: playlistsUrl)!)
+        createPlaylistRequest.httpMethod = "POST"
+        createPlaylistRequest.addValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
+        createPlaylistRequest.httpBody = postString.data(using: .utf8)
+        URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: createPlaylistRequest) { (data, response, error) in
+            target?.reloadPlaylists()
+        }.resume()
+    }
+    
+    func deletePlaylist(_ id: String, _ target: PlaylistController?) {
+        let playlistsUrl = self.url + "playlist/\(id)"
+        var createPlaylistRequest = URLRequest(url: URL(string: playlistsUrl)!)
+        createPlaylistRequest.httpMethod = "DELETE"
+        createPlaylistRequest.addValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
+        URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: createPlaylistRequest) { (data, response, error) in
+            target?.reloadPlaylists()
+        }.resume()
+    }
 
     func searchATA(_ search: String, completion: @escaping ([Track], [Album], [Artist]) -> ()){
         searchAlbums(search) { (albums) in
