@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import './styles.css';
-import { Input, Row, Col, Divider, Button, Icon } from 'antd'
-import defaultTrackImg from '../../../../assets/track.png'
-import moment from 'moment'
+import { Input, Row, Col, Divider, Button } from 'antd'
 import axios from 'axios'
-import SearchBar from '../../searchbar'
 
 class CreatePlaylist extends Component {
 	constructor(props){

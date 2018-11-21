@@ -6,8 +6,7 @@ import axios from 'axios'
 import { Col, Row, Icon } from 'antd'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import PersonalPlayer from '../../event/personalPlayer'
-import { moveMusic } from '../../sockets';
-
+import { moveMusic, socket, blockSocketEvent, unblockSocketEvent } from '../../sockets';
 
 const reorder = (list, startIndex, endIndex) => {
 	const result = Array.from(list);
@@ -23,14 +22,27 @@ class Tracks extends Component {
 		this.state = {
 			playlist: {title:'',tracks:{data:[]}},
 			initLoading: true,
-    		loading: false
+			loading: false,
+			isBlocked: true
 		}
 	}
 	componentDidMount() {
+		socket.on('musicMoved', (playlist) => {
+			if (playlist._id === this.state.playlist._id) {
+				console.log("musicMoved socket event")
+				this.getPlaylist((res) => {
+					this.setState({
+					initLoading: false,
+					playlist: res.data
+					});
+				});
+			}
+		})
 		this.getPlaylist((res) => {
 			this.setState({
 			  initLoading: false,
-			  playlist: res.data
+			  playlist: res.data,
+			  isBlocked: !res.data._id
 			});
 		  });
 		
@@ -61,19 +73,21 @@ class Tracks extends Component {
 	}
 
 	deleteTrack = (index) => {
-		var state = this.state;
-		state.playlist.tracks.data.splice(index,1);
-		axios.put('https://192.168.99.100:4242/playlist/' + this.state.playlist._id, 
-			this.state.playlist,
-			{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}}
-		)
-		.then(resp => {
-			this.setState(state);
-		})
-		.catch(err => {
-			console.log(err);
-		})
-    	
+		console.log("Je suis lock ? " + this.state.isBlocked)
+		if (this.state.isBlocked === false) {
+			var state = this.state;
+			state.playlist.tracks.data.splice(index,1);
+			axios.put('https://192.168.99.100:4242/playlist/' + this.state.playlist._id, 
+				this.state.playlist,
+				{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}}
+			)
+			.then(resp => {
+				this.setState(state);
+			})
+			.catch(err => {
+				console.log(err);
+			})
+		}
 	}
 	
 	addTrack = (item) => {
@@ -81,8 +95,14 @@ class Tracks extends Component {
 		state.playlist.tracks.data.push(item);
 		this.setState(state);
 	}
+
+	onDragStart = () => {
+		console.log("BLOCK SOCKET")
+		blockSocketEvent(this.state.playlist._id)
+	}
 	
 	onDragEnd = (result) => {
+		unblockSocketEvent(this.state.playlist._id)
 		if (!result.destination) {
 		  return;
 		}
@@ -109,6 +129,24 @@ class Tracks extends Component {
 	}
 	render() {
 		console.log('ciyciy');
+		socket.on('blockPlaylist', (playlistId) => {
+			console.log("JE BLOCK LA PLAYLIST POUR TOUS LES AUTRES")
+			if (playlistId === this.state.playlist._id) {
+				this.state.isBlocked = true
+			}
+		})
+		socket.on('alreadyBlocked', (playlistId) => {
+			console.log("LA PLAYLIST EST LOCK")
+			if (playlistId === this.state.playlist._id) {
+				this.state.isBlocked = true
+			}
+		})
+		socket.on('unblockPlaylist', (playlistId) => {
+			console.log("JE DEBLOCK LA PLAYLIST")
+			if (playlistId === this.state.playlist._id) {
+				this.state.isBlocked = !this.state.playlist._id
+			}
+		})
 		return(
 		<div>
 			<Row type="flex" justify="space-between">
@@ -120,8 +158,8 @@ class Tracks extends Component {
 				</Col>
 			</Row>
 				<h3 style={{'textAlign':'center', 'font-size': '20px'}}>{this.state.playlist.title}</h3>
-				<DragDropContext onDragEnd={this.onDragEnd}>
-				<Droppable droppableId="droppable" isDropDisabled={!this.state.playlist._id}>
+				<DragDropContext onDragEnd={this.onDragEnd} onDragStart={this.onDragStart}>
+				<Droppable droppableId="droppable" isDropDisabled={this.state.isBlocked}>
 				{(provided, snapshot) => (
 					<div
 					ref={provided.innerRef}
