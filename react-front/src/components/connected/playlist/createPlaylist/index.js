@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import './styles.css';
-import { Input, Row, Col, Divider, Button, Icon } from 'antd'
-import defaultTrackImg from '../../../../assets/track.png'
-import moment from 'moment'
+import { Input, Row, Col, Divider, Button } from 'antd'
 import axios from 'axios'
-import SearchBar from '../../searchbar'
 
 class CreatePlaylist extends Component {
 	constructor(props){
@@ -55,29 +52,15 @@ class CreatePlaylist extends Component {
                 <Col span={8}></Col>
             </Row>
             <Divider />
-            <SearchBar state={this.props.state} type="tracks" addTrack={this.addTrack}/>
-            {this.state.tracks.map((val, i) => {
-						return (
-						<Row type="flex" justify="space-between" key={val.id}>
-								<Col>
-								<img src={val.album ? val.album.cover_small || defaultTrackImg : defaultTrackImg} alt="" className="circle"/>
-								</Col>
-								<Col>
-								<span className="title">Title: {val.title} - Duration: {moment.utc(val.duration * 1000).format('mm:ss')}</span>
-								</Col>
-								<Col>
-								<p>Album: {val.album ? val.album.title : ""}</p>
-								</Col>
-								<Col onClick={(e) => this.deleteTrack(i)}>
-								<Icon type="close"/>
-								</Col>
-
-						</Row>
-						);
-					})}
-            <Button onClick={this.save.bind(this)}>
-            	Save
-            </Button>
+			<Row>
+                <Col span={8}></Col>
+                <Col span={8}>
+				<Button onClick={this.save.bind(this)}>
+            		Save
+           		</Button>
+                </Col>
+                <Col span={8}></Col>
+            </Row>
 		</div>
 	);
   }
