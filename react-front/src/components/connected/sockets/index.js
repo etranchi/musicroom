@@ -1,6 +1,6 @@
 import openSocket from 'socket.io-client';
 
-const socket = openSocket('https://192.168.99.100:4242');
+const socket = openSocket(process.env.REACT_APP_API_URL + '');
 function moveMusic(playlistId) {
     socket.emit('moveMusic', playlistId);
 }
