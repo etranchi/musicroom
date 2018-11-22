@@ -29,6 +29,16 @@ class cardEvent extends Component {
             'longitude': 0,
             'displayUser' : false
         }
+
+        this.launchButton = {
+            'position': 'fixed',
+            'bottom': '50px',
+            'height': '80px',
+            'right': '140px',
+            'latitude': 0,
+            'longitude': 0,
+            'displayUser' : false
+        }
     }
 
 
@@ -74,6 +84,17 @@ class cardEvent extends Component {
             })
             .catch((err) => { console.log("Create Event : handleSubmit :/event Error ", err); })  
     }
+    isToday = (date) => {
+
+        let classicDate = new Date(date).toLocaleDateString('fr-Fr')
+        let timeEvent = new Date(date).getTime();
+        let curTime = new Date(new Date()).getTime()
+        let timeBeforeEvent = timeEvent - curTime;
+        let dayTimeStamp = (3600 * 1000) * 24;
+        let day = timeBeforeEvent / dayTimeStamp
+
+        return day < 0 ? true : false
+    }
 
     info = (text) => {
         message.info(text);
@@ -87,6 +108,14 @@ class cardEvent extends Component {
                 <CreatorProfil right={this.state} state={this.props.state} updateParent={this.props.updateParent} />
                 <BodyEvent right={this.state} state={this.props.state} updateParent={this.props.updateParent} updateMap={this.updateMap.bind(this)}/>
                 <Button style={this.saveButton} type="primary" onClick={this.saveEvent}> <b> Sauvegarder l'event </b> </Button>
+
+                <Button style={this.launchButton} type="primary" onClick={this.saveEvent}> <b> Sauvegarder l'event </b> </Button>
+                {
+                    this.isToday(this.props.state.data.event.event_date) ?  
+                        <Button style={this.launchButton} type="primary" onClick={this.saveEvent}> <b> Start Event </b> </Button>
+                        : 
+                        null
+                }
            </div>
         );
   }

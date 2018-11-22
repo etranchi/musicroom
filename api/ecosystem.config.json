@@ -3,7 +3,7 @@
         "name"        : "token",
         "script"      : "./app.js",
         "watch"       : true,
-        "ignore_watch" : ["./public/", "public/", "/public/"],
+        "ignore_watch" : ["./public/"],
         "watch_options": {
             "usePolling": true
         },

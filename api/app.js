@@ -53,11 +53,8 @@ expressSwagger(options)
 
 let playlistBlocked = []
 
-let tracksTab = [];
-let liveEvent = {
-    tracks: [],
-    isStart: false
-}
+this.liveEvent = [];
+
 io.on('connection', (socket) => {
   // socket.on('addPlaylist', (playlistId) => {
   //   console.log("addPlaylist -> ");
@@ -106,41 +103,40 @@ io.on('connection', (socket) => {
   /* Socket For LiveEvent */
   /* Store array of track object, store like, unlike in */
 
-  socket.on('createEventLive', async (tracks) => {
-    console.log("[API] -> socket -> liveEvent store tracks")
-    if (liveEvent.isStart === false) {
-      tracks.forEach(track => {
-        track.like = 0;
-        liveEvent.tracks.push(track)
-      });
-      liveEvent.isStart = true
-    }
-    socket.emit('createEventLive', liveEvent.tracks)
+  /* Socket For LiveEvent */
+  /* Store array of track object, store like, unlike in */
+
+  socket.on('getEventLive', async (roomID) => {
+    console.log("[Socket] -> getEventLive")
+    let event = [];
+    event = this.liveEvent.forEach(event => {
+      if (event.roomID === roomID)
+        return event
+    });
+    io.sockets.in(roomID).emit('createRoom', event.tracks)
   });
 
-  socket.on('like', async (trackID) => {
-    console.log("[API] -> socket -> liveEvent someone like track", liveEvent.isStart)
-    if (liveEvent.isStart === true) {
-      liveEvent.tracks.forEach(track => {
-          if (trackID === track._id) {
-            track.like++;
-          }
-      });
-    }
-    socket.emit('dislike', liveEvent.tracks)
+  socket.on('createRoom', async (tracks, roomID) => {
+    console.log("[Socket] -> createRoom")
+    this.liveEvent.push({roomID:roomID,tracks:tracks})
+    io.sockets.in(roomID).emit('createRoom', liveEvent.tracks)
   });
 
-  socket.on('dislike', async (trackID) => {
-    console.log("[API] -> socket -> liveEvent someone unnlike track", liveEvent.isStart)
-    if (liveEvent.isStart === true) {
-      liveEvent.tracks.forEach(track => {
-          if (trackID === track._id) {
-            track.like--;
-          }
-      });
-    }
-    socket.emit('dislike', liveEvent.tracks)
+  socket.on('joinRoom', async (roomID) => {
+    console.log("[Socket] -> joinRoom")
+    io.sockets.in(roomID).join(roomID);
   });
+
+  socket.on('updateScore', async (tracks, trackID, points, roomID) => {
+    console.log("[Socket] -> updateScore")
+    if (tracks && trackID && points) {
+      let tmp = await ftSocket.sortTracksByScore(await ftSocket.updateScore(tracks, trackID, points))
+      io.sockets.in(roomID).emit('updateScore', await ftSocket.sortTracksByScore(tmp))
+    }
+    else
+      io.sockets.in(roomID).emit('updateScore', await ftSocket.sortTracksByScore(tracks))
+  });
+
 });
 
 httpsServer.listen(config.port, config.host);
