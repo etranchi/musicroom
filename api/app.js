@@ -52,6 +52,12 @@ options.files = ["./routes/**/*.js"]
 expressSwagger(options)
 
 let playlistBlocked = []
+
+let tracksTab = [];
+let liveEvent = {
+    tracks: [],
+    isStart: false
+}
 io.on('connection', (socket) => {
   // socket.on('addPlaylist', (playlistId) => {
   //   console.log("addPlaylist -> ");
@@ -95,7 +101,46 @@ io.on('connection', (socket) => {
     console.log("UNBLOCK PLAYLIST EVENT")
     socket.broadcast.emit('unblockPlaylist', playlistId)
   });
-  
+
+
+  /* Socket For LiveEvent */
+  /* Store array of track object, store like, unlike in */
+
+  socket.on('createEventLive', async (tracks) => {
+    console.log("[API] -> socket -> liveEvent store tracks")
+    if (liveEvent.isStart === false) {
+      tracks.forEach(track => {
+        track.like = 0;
+        liveEvent.tracks.push(track)
+      });
+      liveEvent.isStart = true
+    }
+    socket.emit('createEventLive', liveEvent.tracks)
+  });
+
+  socket.on('like', async (trackID) => {
+    console.log("[API] -> socket -> liveEvent someone like track", liveEvent.isStart)
+    if (liveEvent.isStart === true) {
+      liveEvent.tracks.forEach(track => {
+          if (trackID === track._id) {
+            track.like++;
+          }
+      });
+    }
+    socket.emit('dislike', liveEvent.tracks)
+  });
+
+  socket.on('dislike', async (trackID) => {
+    console.log("[API] -> socket -> liveEvent someone unnlike track", liveEvent.isStart)
+    if (liveEvent.isStart === true) {
+      liveEvent.tracks.forEach(track => {
+          if (trackID === track._id) {
+            track.like--;
+          }
+      });
+    }
+    socket.emit('dislike', liveEvent.tracks)
+  });
 });
 
 httpsServer.listen(config.port, config.host);

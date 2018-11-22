@@ -17,6 +17,7 @@
     "react": "^16.6.0",
     "react-beautiful-dnd": "^10.0.1",
     "react-bootstrap": "^0.32.4",
+    "react-dnd": "^6.0.0",
     "react-dom": "^16.6.0",
     "react-facebook-login": "^4.1.1",
     "react-geolocation": "^1.0.4",
