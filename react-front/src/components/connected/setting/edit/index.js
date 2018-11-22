@@ -11,7 +11,7 @@ class EditSetting extends Component {
 			login: props.state.user.login,
 			password: null,
 			cpypassword: null,
-			picture: this.props.state.user.facebookId ?  this.props.state.user.picture : "https://192.168.99.100:4242/userPicture/" +  this.props.state.user.picture,
+			picture: this.props.state.user.facebookId ?  this.props.state.user.picture : process.env.REACT_APP_API_URL + "/userPicture/" +  this.props.state.user.picture,
 			newPicture: '',
 			loading:false,
 			infoFile: '',
@@ -67,7 +67,7 @@ class EditSetting extends Component {
 			if (this.state.infoFile && this.state.infoFile.file && this.state.infoFile.file.originFileObj)
 				data.append('file', this.state.infoFile.file.originFileObj);
 			data.append('body', JSON.stringify(this.currentUser));
-			axios.put('https://192.168.99.100:4242/user/me', data,{'headers' : {'Authorization': 'Bearer '+ localStorage.getItem('token')}})
+			axios.put(process.env.REACT_APP_API_URL + '/user/me', data,{'headers' : {'Authorization': 'Bearer '+ localStorage.getItem('token')}})
 			.then(resp => {
 				this.props.updateParent({currentComponent: 'setting', user:resp.data});
 				console.log(resp);

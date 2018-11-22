@@ -33,7 +33,7 @@ class Body extends Component {
     updateEventPlaylist = (playlist) => {
         if (playlist)
         {
-            axios.get('https://192.168.99.100:4242/playlist/' + playlist.id, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
+            axios.get(process.env.REACT_APP_API_URL + '/playlist/' + playlist.id, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
             .then((resp) => { 
                 playlist = resp.data
                 this.props.state.data.event.playlist = playlist;

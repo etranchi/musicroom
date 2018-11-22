@@ -16,7 +16,7 @@ class List extends Component {
 
 	componentDidMount() {
 		this.setState({isloading: true});
-		axios.get('https://192.168.99.100:4242/playlist', {'headers':{'Authorization': 'Bearer ' + localStorage.getItem('token')}})
+		axios.get(process.env.REACT_APP_API_URL + '/playlist', {'headers':{'Authorization': 'Bearer ' + localStorage.getItem('token')}})
 		.then((resp) => {
 			this.setState({playlist: resp.data, isloading:false})
 		})

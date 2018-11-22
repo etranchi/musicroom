@@ -23,7 +23,7 @@ class Login extends Component {
 	}
 	handleSubmit = event => {
 		event.preventDefault();
-		axios.post('https://192.168.99.100:4242/user/login', {
+		axios.post(process.env.REACT_APP_API_URL + '/user/login', {
 				'email': this.state.email,
 				'password': this.state.password
 		})
