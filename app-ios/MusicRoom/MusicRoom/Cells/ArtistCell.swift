@@ -13,7 +13,7 @@ class ArtistCell: UICollectionViewCell {
         didSet {
             artistLabel.text = artist.name
             fanLabel.text = "\(artist.nb_fan!) fans"
-            imageView.loadImageUsingCacheWithUrlString(urlString: artist.picture_medium)
+            imageView.loadImageUsingCacheWithUrlString(urlString: artist.picture_medium!)
         }
     }
     

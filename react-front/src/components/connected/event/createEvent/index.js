@@ -27,7 +27,7 @@ class CreateEvent extends Component {
         this.handlePicture = this.handlePicture.bind(this);
         this.updateLocation = this.updateLocation.bind(this);
     }
-    updateLocation(val){
+    updateLocation = (val) => {
         let location = {
                 "address" : {
                     "p": val.addressObj.address_components[5]  ? val.addressObj.address_components[5].long_name : "Inconnue",
@@ -45,11 +45,22 @@ class CreateEvent extends Component {
     }
 
     updateEventPlaylist = (playlist) => {
+        if (playlist)
+        {
+            axios.get('https://192.168.99.100:4242/playlist/' + playlist.id, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
+            .then((resp) => { 
+                playlist.tracks = {}
+                playlist.tracks.data = {}
+                playlist.tracks.data= resp.data.data
+                this.setState({playlist:playlist})
+            })
+            .catch((err) => { console.log("Wrong Playlist id.", err); })  
+        }
         this.setState({playlist:playlist})
     }
     info = (text) => {
         message.info(text);
-      };
+    };
 	handleSubmit = event => {
         if (!this.state.description || !this.state.title || !this.state.event_date || !this.state.location.coord)
             this.info("Error input invalid")
@@ -69,7 +80,7 @@ class CreateEvent extends Component {
             .then((resp) => { 
                 console.log("Create Event : handleSubmit :/event Success");
                 this.info("Evènement crée")
-                this.props.updateParent({'currentComponent' : "event"})
+                this.props.updateParent({'currentComponent' : "createEvent"})
             })
             .catch((err) => { console.log("Create Event : handleSubmit :/event Error ", err); })  
         })
@@ -117,7 +128,7 @@ class CreateEvent extends Component {
         console.log("JE SUIS IC ")
         this.setState({infoFile:null, imageUrl: null, loadind:false})
     }
-	render() {
+	render = () => {
         console.log(localStorage.getItem('token'))
         this.uploadButton = (
             <div>
@@ -137,14 +148,7 @@ class CreateEvent extends Component {
                                 <Col span={8}></Col>
                                 <Col span={8}>
                                     <div style={{'margin': '0 0 0 25% '}}>
-                                        <Upload
-                                                name="file"
-                                                listType="picture-card"
-                                                className="avatar-uploader"
-                                                showUploadList={false}
-                                                beforeUpload={this.beforeUpload}
-                                                onChange={this.handlePicture}
-                                            >
+                                        <Upload name="file" listType="picture-card" className="avatar-uploader" showUploadList={false} beforeUpload={this.beforeUpload} onChange={this.handlePicture} >
                                             {this.uploadButton}
                                         </Upload>
                                     </div>
@@ -195,9 +199,7 @@ class CreateEvent extends Component {
                     <Row>
                         <Col span={10}></Col>
                         <Col span={4}>
-                            <div style={{'margin': '0 0 0 12% '}}>
-                                <DatePicker className="datePicker" onChange={this.handleChangeDate} />
-                            </div>
+                            <div style={{'margin': '0 0 0 12% '}}> <DatePicker className="datePicker" onChange={this.handleChangeDate} /> </div>
                             <Divider />
                         </Col>
                     </Row>
@@ -228,9 +230,7 @@ class CreateEvent extends Component {
                     <Row>
                         <Col span={10}></Col>
                         <Col span={4}>
-                            <div style={{'margin': '0 0 0 12% '}}>
-                                <Button  onClick={this.handleSubmit.bind(this)}> Créer l'évènement </Button>
-                            </div>
+                            <div style={{'margin': '0 0 0 12% '}}> <Button  onClick={this.handleSubmit.bind(this)}> Créer l'évènement </Button> </div>
                         </Col>
                     </Row>
 

@@ -8,14 +8,17 @@
 
 import Foundation
 
-struct Playlist : Codable {
-    let id : Int
-    let title : String
-    let picture : String
-    let tracklist : String
-    let tracks : TrackData?
+
+
+struct Creator: Codable {
+    var id: Int?
+    var name: String
 }
 
-struct PlaylistData: Codable {
-    let data : [Playlist]
+struct Playlist: Codable {
+    var creator: Creator?
+    var tracks: PlaylistTrackData
+    var title: String
+    var picture_medium: String?
+    var _id: String
 }

@@ -33,6 +33,11 @@ router.put('/:id',
     middlewares.isConfirmed,
     playlistController.putPlaylistById);
 
+router.put('/:id/track',
+    passport.authenticate('bearer'),
+    middlewares.isConfirmed,
+    playlistController.addTrackToPlaylistById);
+
 router.delete('/:id',
     passport.authenticate('bearer'),
     middlewares.isConfirmed,

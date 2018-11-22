@@ -11,10 +11,10 @@ import Foundation
 struct Album : Codable {
     let id : Int
     let link : String?
-    let cover : String
+    let cover : String?
     let cover_medium : String?
     let cover_big : String?
-    let cover_small : String
+    let cover_small : String?
     let artist : Artist?
     let title : String
     var tracks : AlbumTrackData?

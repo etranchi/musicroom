@@ -9,14 +9,14 @@
 import Foundation
 
 struct Artist : Codable {
-    let id : Int
-    let picture : String
-    let picture_medium : String
-    let name : String
-    let tracklist : String
-    let nb_fan : Int?
+    var id : Int
+    var picture : String?
+    var picture_medium : String?
+    var name : String
+    var tracklist : String
+    var nb_fan : Int?
 }
 
 struct ArtistData: Codable {
-    let data : [Artist]
+    var data : [Artist]
 }

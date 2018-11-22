@@ -1,20 +1,7 @@
 import React, { Component } from 'react';
 import './styles.css';
 import axios from 'axios'
-import defaultTrackImg from '../../../../assets/track.png'
-import moment from 'moment'
-import { Input, Button, Icon } from 'antd'
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import SearchBar from '../../searchbar'
-
-const reorder = (list, startIndex, endIndex) => {
-	const result = Array.from(list);
-	const [removed] = result.splice(startIndex, 1);
-	result.splice(endIndex, 0, removed);
-  
-	return result;
-  };
-  
+import { Input, Button, Col, Row } from 'antd'
 
 class EditPlaylist extends Component {
 	constructor(props){
@@ -73,104 +60,36 @@ class EditPlaylist extends Component {
 		})
 	}
 
-	deleteTrack = (index) => {
-		var state = this.state;
-		state.playlist.tracks.data.splice(index,1);
-    	this.setState(state);
-	}
-	
-	addTrack = (item) => {
-		var state = this.state;
-		state.playlist.tracks.data.push(item);
-		this.setState(state);
-	}
-	
-	onDragEnd = (result) => {
-		// dropped outside the list
-		if (!result.destination) {
-		  return;
-		}
-	
-		var state = this.state;
-		const items = reorder(
-		  this.state.playlist.tracks.data,
-		  result.source.index,
-		  result.destination.index
-		);
-		state.playlist.tracks.data = items;
-		console.log('items');
-		console.log(items);
-		this.setState(items);
-
-	}
-
 	render() {
 		console.log(this.state.playlist);
 		console.log('before render');
+		console.log('geoignroengre');
 		if( this.state.isloading === true ) {
 			return (
 				<div>
-					<a href="#!" className="btn waves-effect waves-teal" onClick={this.props.updateParent.bind(this,{'currentComponent': 'playlist', 'data': []})}>Back</a>
+					<a href="#!" className="btn waves-effect waves-teal" onClick={this.props.updateParent.bind(this,{'currentComponent': 'tracks'})}>Back</a>
 					<div>No tracks</div>
 				</div>
 			);
 		}
 		return (
-			<DragDropContext onDragEnd={this.onDragEnd}>
-        <Droppable droppableId="droppable">
-          {(provided, snapshot) => (
-            <div
-              ref={provided.innerRef}
-            >
-              {this.state.playlist.tracks.data.map((item, index) => (
-                <Draggable key={item.id} draggableId={item.id} index={index}>
-                  {(provided, snapshot) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                    >
-                      <li className="collection-item avatar" key={index} >
-						<img src={item.album ? item.album.cover_small || defaultTrackImg : defaultTrackImg} alt="" className="circle"/>
-						<span className="title">Title: {item.title} - Duration: {moment.utc(item.duration * 1000).format('mm:ss')}</span>
-						<p>Album: {item.album ? item.album.title : ""}</p>
-						<Icon type="close" onClick={() => this.deleteTrack(index)}></Icon>
-					</li>
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        	</Droppable>
-      	</DragDropContext>
+			<div>
+				
+				<Row type="flex" justify="space-between">
+					<Col>
+						<a href="#!" className="btn waves-effect waves-teal" onClick={this.props.updateParent.bind(this,{'currentComponent': 'tracks'})}>Back</a>
+					</Col>
+					<Col>
+						<a href="#!" className="btn waves-effect" style={{'backgroundColor': 'red'}} onClick={this.delete}>Delete</a>
+					</Col>
+				</Row>
+				<Input value={this.state.playlist.title} onChange={(e) => this.handleChange(e)}></Input>
+				<Button onClick={this.save}>
+							Save
+						</Button>
+				</div>
 		);
   }
 }
-
-{/* <div>
-				<a href="#!" className="btn waves-effect waves-teal" onClick={this.props.updateParent.bind(this,{'currentComponent': 'tracks'})}>Back</a>
-				<Button onClick={this.delete}>
-						Delete playlist
-					</Button>
-				<Input value={this.state.playlist.title} onChange={(e) => this.handleChange(e)}></Input>
-				<ul className="collection">
-						{this.state.playlist.tracks && this.state.playlist.tracks.data.map((val, i) => {
-							return (
-								<li className="collection-item avatar" key={i} >
-									<img src={val.album ? val.album.cover_small || defaultTrackImg : defaultTrackImg} alt="" className="circle"/>
-									<span className="title">Title: {val.title} - Duration: {moment.utc(val.duration * 1000).format('mm:ss')}</span>
-									<p>Album: {val.album ? val.album.title : ""}</p>
-									<Icon type="close" onClick={() => this.deleteTrack(i)}></Icon>
-								</li>
-							);
-						})}
-					</ul>
-					<SearchBar state={this.props.state} type="tracks" addTrack={this.addTrack}/>
-					<Button onClick={this.save}>
-						Save
-					</Button>
-			</div> */}
 
 export default EditPlaylist;

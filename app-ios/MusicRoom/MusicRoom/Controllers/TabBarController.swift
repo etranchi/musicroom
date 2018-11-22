@@ -15,13 +15,11 @@ class TabBarController: UITabBarController {
 
     var offsetY: CGFloat = 0.0
     let imageInsets = UIEdgeInsets(top: 10, left: 0, bottom: -10, right: 0)
-    let tabViewController0 = PlaylistController(collectionViewLayout: UICollectionViewFlowLayout())
+    let tabViewController0 = LibraryController()
     let tabViewController1 = SearchController()
-    let tabViewController2 = LibraryController()
-    let tabViewController3 = MapController()
+    let tabViewController2 = MapController()
     let minimizedPlayer = MinimizedPlayerView()
     let playerView = playerController.view!
-    var navi1: CustomNavigationController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,7 +44,6 @@ class TabBarController: UITabBarController {
     
     func showPlayerFromMinimized() {
         animatedShowPlayer()
-        
     }
     
     func showPlayerForSong(_ index: Int, tracks: [Track]) {
@@ -86,26 +83,22 @@ class TabBarController: UITabBarController {
         ])
         
         playerView.transform = CGAffineTransform(translationX: 0, y: view.bounds.height - offsetY - 44)
-        tabViewController0.title = "Playlists"
+        tabViewController0.title = "Your Library"
         tabViewController1.title = "Search"
-        tabViewController2.title = "Library"
-        tabViewController3.title = "Map"
+        tabViewController2.title = "Map"
         
-        tabViewController0.tabBarItem = UITabBarItem(title: "", image: #imageLiteral(resourceName: "playlist_icon"), tag: 1)
+        tabViewController0.tabBarItem = UITabBarItem(title: "", image: #imageLiteral(resourceName: "library_icon"), tag: 1)
         tabViewController1.tabBarItem = UITabBarItem(title: "", image: #imageLiteral(resourceName: "search_icon"), tag: 2)
-        tabViewController2.tabBarItem = UITabBarItem(title: "", image: #imageLiteral(resourceName: "library_icon"), tag: 3)
-        tabViewController3.tabBarItem = UITabBarItem(title: "", image: #imageLiteral(resourceName: "map"), tag: 4)
+        tabViewController2.tabBarItem = UITabBarItem(title: "", image: #imageLiteral(resourceName: "map"), tag: 3)
         tabViewController0.tabBarItem.imageInsets = imageInsets
         tabViewController1.tabBarItem.imageInsets = imageInsets
         tabViewController2.tabBarItem.imageInsets = imageInsets
-        tabViewController3.tabBarItem.imageInsets = imageInsets
         
         let navi0 = CustomNavigationController(rootViewController: tabViewController0)
-        navi1 = CustomNavigationController(rootViewController: tabViewController1)
+        let navi1 = CustomNavigationController(rootViewController: tabViewController1)
         let navi2 = CustomNavigationController(rootViewController: tabViewController2)
-        let navi3 = CustomNavigationController(rootViewController: tabViewController3)
         
-        viewControllers = [navi0, navi1!, navi2, navi3]
+        viewControllers = [navi0, navi1, navi2]
     }
     
     func animatedShowPlayer() {
