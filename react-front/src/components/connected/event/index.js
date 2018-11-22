@@ -74,10 +74,20 @@ class Event extends Component {
 										<ListCloseEvent state={this.props.state} updateParent={this.props.updateParent}/>
 									</Tabs.TabPane>
 									<Tabs.TabPane tab="Personal Player" key="4">
-										<PersonalPlayer strokeColor={'#e0e0e0'} color={'#d84315'} tracks={this.props.state.data.events[0].playlist.tracks.data}/>
+										{
+											this.props.state.data.events.length > 0 ?
+												<PersonalPlayer strokeColor={'#e0e0e0'} color={'#d84315'} tracks={this.props.state.data.events[0].playlist.tracks.data}/>
+											:
+												null
+										}
 									</Tabs.TabPane>
 									<Tabs.TabPane tab="Live Event" key="5">
-										<LiveEvent playlist={this.props.state.data.events[0].playlist}/>
+										{
+											this.props.state.data.events.length > 0 ?
+												<LiveEvent playlist={this.props.state.data.events[0].playlist}/>
+											:
+												null
+										}
 									</Tabs.TabPane>
 								</Tabs>
 							</StickyContainer>

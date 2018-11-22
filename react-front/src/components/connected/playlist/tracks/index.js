@@ -27,6 +27,24 @@ class Tracks extends Component {
 		}
 	}
 	componentDidMount() {
+		socket.on('blockPlaylist', (playlistId) => {
+			console.log("JE BLOCK LA PLAYLIST POUR TOUS LES AUTRES")
+			if (playlistId === this.state.playlist._id) {
+				this.state.isBlocked = true
+			}
+		})
+		socket.on('alreadyBlocked', (playlistId) => {
+			console.log("LA PLAYLIST EST LOCK")
+			if (playlistId === this.state.playlist._id) {
+				this.state.isBlocked = true
+			}
+		})
+		socket.on('unblockPlaylist', (playlistId) => {
+			console.log("JE DEBLOCK LA PLAYLIST")
+			if (playlistId === this.state.playlist._id) {
+				this.state.isBlocked = !this.state.playlist._id
+			}
+		})
 		socket.on('musicMoved', (playlist) => {
 			if (playlist._id === this.state.playlist._id) {
 				console.log("musicMoved socket event")
@@ -129,24 +147,6 @@ class Tracks extends Component {
 	}
 	render() {
 		console.log('ciyciy');
-		socket.on('blockPlaylist', (playlistId) => {
-			console.log("JE BLOCK LA PLAYLIST POUR TOUS LES AUTRES")
-			if (playlistId === this.state.playlist._id) {
-				this.state.isBlocked = true
-			}
-		})
-		socket.on('alreadyBlocked', (playlistId) => {
-			console.log("LA PLAYLIST EST LOCK")
-			if (playlistId === this.state.playlist._id) {
-				this.state.isBlocked = true
-			}
-		})
-		socket.on('unblockPlaylist', (playlistId) => {
-			console.log("JE DEBLOCK LA PLAYLIST")
-			if (playlistId === this.state.playlist._id) {
-				this.state.isBlocked = !this.state.playlist._id
-			}
-		})
 		return(
 		<div>
 			<Row type="flex" justify="space-between">
