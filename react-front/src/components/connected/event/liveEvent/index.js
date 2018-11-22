@@ -26,9 +26,28 @@ const reorder = (list, startIndex, endIndex) => {
 			loading: false,
 			isBlocked: false
         }
-
-
+        
+    }
+    componentDidMount() {
         /* Live Event */
+        socket.on('blockPlaylist', (playlistId) => {
+            console.log("JE BLOCK LA PLAYLIST POUR TOUS LES AUTRES")
+            if (playlistId === this.state.playlist._id) {
+                this.state.isBlocked = true
+            }
+        })
+        socket.on('alreadyBlocked', (playlistId) => {
+            console.log("LA PLAYLIST EST LOCK")
+            if (playlistId === this.state.playlist._id) {
+                this.state.isBlocked = true
+            }
+        })
+        socket.on('unblockPlaylist', (playlistId) => {
+            console.log("JE DEBLOCK LA PLAYLIST")
+            if (playlistId === this.state.playlist._id) {
+                this.state.isBlocked = !this.state.playlist._id
+            }
+        })
         socket.on('createEventLive', (tracks) => {
             this.sortTracks(tracks);
         })
@@ -40,9 +59,7 @@ const reorder = (list, startIndex, endIndex) => {
             console.log("Disliked : ", tracks)
             this.sortTracks(tracks);
         })
-        
-        
-	}
+    }
 	componentWillMount() {
         this.setState({
             initLoading: false,
@@ -74,9 +91,7 @@ const reorder = (list, startIndex, endIndex) => {
         let tmp = tracks
         for (let i = 0; i < tmp.length - 1 ; i++)
         {
-            console.log(tmp[i].like)
             if (tmp[i].like < tmp[i+1].like) {
-                console.log("switch")
                 let obj = tmp[i]
                 tmp[i] = tmp[i+1]
                 tmp[i+1] = obj
@@ -116,25 +131,8 @@ const reorder = (list, startIndex, endIndex) => {
         })
     }
 	render() {
-        socket.on('blockPlaylist', (playlistId) => {
-			console.log("JE BLOCK LA PLAYLIST POUR TOUS LES AUTRES")
-			if (playlistId === this.state.playlist._id) {
-				this.state.isBlocked = true
-			}
-		})
-		socket.on('alreadyBlocked', (playlistId) => {
-			console.log("LA PLAYLIST EST LOCK")
-			if (playlistId === this.state.playlist._id) {
-				this.state.isBlocked = true
-			}
-		})
-		socket.on('unblockPlaylist', (playlistId) => {
-			console.log("JE DEBLOCK LA PLAYLIST")
-			if (playlistId === this.state.playlist._id) {
-				this.state.isBlocked = !this.state.playlist._id
-			}
-        })
-        /* */
+
+
 		return(
             <div>
                 {this.state.playlist.tracks.data.length > 0 && <PersonalPlayer  tracks={this.state.playlist.tracks.data}></PersonalPlayer>}
