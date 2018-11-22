@@ -1,6 +1,7 @@
 import openSocket from 'socket.io-client';
 
 const socket = openSocket('https://192.168.99.100:4242');
+
 function moveMusic(playlistId) {
     socket.emit('moveMusic', playlistId);
 }
@@ -13,4 +14,17 @@ function unblockSocketEvent(playlistId) {
     socket.emit('unblockPlaylist', playlistId);
 }
 
-export { moveMusic, socket, blockSocketEvent, unblockSocketEvent };
+
+function createEventLive (tracks) {
+    socket.emit("createEventLive", tracks)
+}
+
+function like (tracksID) {
+    socket.emit("like", tracksID)
+}
+
+function dislike(tracksID) {
+    socket.emit("dislike", tracksID)
+}
+
+export { moveMusic, socket, blockSocketEvent, unblockSocketEvent, createEventLive, like, dislike};

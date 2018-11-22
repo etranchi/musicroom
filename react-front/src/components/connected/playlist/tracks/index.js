@@ -27,6 +27,24 @@ class Tracks extends Component {
 		}
 	}
 	componentDidMount() {
+		socket.on('blockPlaylist', (playlistId) => {
+			console.log("JE BLOCK LA PLAYLIST POUR TOUS LES AUTRES")
+			if (playlistId === this.state.playlist._id) {
+				this.state.isBlocked = true
+			}
+		})
+		socket.on('alreadyBlocked', (playlistId) => {
+			console.log("LA PLAYLIST EST LOCK")
+			if (playlistId === this.state.playlist._id) {
+				this.state.isBlocked = true
+			}
+		})
+		socket.on('unblockPlaylist', (playlistId) => {
+			console.log("JE DEBLOCK LA PLAYLIST")
+			if (playlistId === this.state.playlist._id) {
+				this.state.isBlocked = !this.state.playlist._id
+			}
+		})
 		socket.on('musicMoved', (playlist) => {
 			if (playlist._id === this.state.playlist._id) {
 				console.log("musicMoved socket event")
@@ -49,7 +67,7 @@ class Tracks extends Component {
 	}
 
 	getPlaylist = (callback) => {
-		axios.get('https://192.168.99.100:4242/playlist/' + this.props.state.id, {'headers':{'Authorization': 'Bearer ' + localStorage.getItem('token')}})
+		axios.get(process.env.REACT_APP_API_URL + '/playlist/' + this.props.state.id, {'headers':{'Authorization': 'Bearer ' + localStorage.getItem('token')}})
 		.then((resp) => {
 			callback(resp);
 		})
@@ -61,7 +79,7 @@ class Tracks extends Component {
 	}
 
 	delete = () => {
-		axios.delete('https://192.168.99.100:4242/playlist/' + this.state.playlist._id,
+		axios.delete(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id,
 			{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}}
 		)
 		.then(resp => {
@@ -77,7 +95,7 @@ class Tracks extends Component {
 		if (this.state.isBlocked === false) {
 			var state = this.state;
 			state.playlist.tracks.data.splice(index,1);
-			axios.put('https://192.168.99.100:4242/playlist/' + this.state.playlist._id, 
+			axios.put(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id, 
 				this.state.playlist,
 				{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}}
 			)
@@ -114,7 +132,7 @@ class Tracks extends Component {
 		  result.destination.index
 		);
 		state.playlist.tracks.data = items;
-		axios.put('https://192.168.99.100:4242/playlist/' + this.state.playlist._id, 
+		axios.put(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id, 
 			this.state.playlist,
 			{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}}
 		)
@@ -129,24 +147,6 @@ class Tracks extends Component {
 	}
 	render() {
 		console.log('ciyciy');
-		socket.on('blockPlaylist', (playlistId) => {
-			console.log("JE BLOCK LA PLAYLIST POUR TOUS LES AUTRES")
-			if (playlistId === this.state.playlist._id) {
-				this.state.isBlocked = true
-			}
-		})
-		socket.on('alreadyBlocked', (playlistId) => {
-			console.log("LA PLAYLIST EST LOCK")
-			if (playlistId === this.state.playlist._id) {
-				this.state.isBlocked = true
-			}
-		})
-		socket.on('unblockPlaylist', (playlistId) => {
-			console.log("JE DEBLOCK LA PLAYLIST")
-			if (playlistId === this.state.playlist._id) {
-				this.state.isBlocked = !this.state.playlist._id
-			}
-		})
 		return(
 		<div>
 			<Row type="flex" justify="space-between">

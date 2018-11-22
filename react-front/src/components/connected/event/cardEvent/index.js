@@ -66,7 +66,7 @@ class cardEvent extends Component {
         console.log("ICI : ", this.props.state.data.event)
         let _id = this.props.state.data.event._id
         delete this.props.state.data.event._id
-        axios.put('https://192.168.99.100:4242/event/' + _id,  this.props.state.data.event)
+        axios.put(process.env.REACT_APP_API_URL + '/event/' + _id,  this.props.state.data.event)
             .then((resp) => { 
                 this.info("Event saved !")
                 this.props.state.data.event._id = _id;

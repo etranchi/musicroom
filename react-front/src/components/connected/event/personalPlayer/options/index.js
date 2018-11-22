@@ -31,7 +31,7 @@ export default class PersonalPlayer extends Component {
         return (
             <Row style={{padding:'20% 0 0 0'}}>
                 <Col span={1}>
-                    <i class="fas fa-bars"></i>
+                    <i className="fas fa-bars"></i>
                 </Col>
                 <Col span={2}></Col>
                 <Col span={1}>

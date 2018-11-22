@@ -40,9 +40,9 @@ class Register extends Component {
         delete this.state.loading
 		delete this.state.infoFile
 		data.append('body', JSON.stringify(this.state));
-		axios.post('https://192.168.99.100:4242/user', data)
+		axios.post(process.env.REACT_APP_API_URL + '/user', data)
 		.then((resp) => {
-			axios.put('https://192.168.99.100:4242/user/confirm', null, {'headers':{'Authorization': 'Bearer '+ resp.data.token}})
+			axios.put(process.env.REACT_APP_API_URL + '/user/confirm', null, {'headers':{'Authorization': 'Bearer '+ resp.data.token}})
 			.then((resp) => {
 				localStorage.setItem('token', resp.data.token);
 				console.log("confirm success");
