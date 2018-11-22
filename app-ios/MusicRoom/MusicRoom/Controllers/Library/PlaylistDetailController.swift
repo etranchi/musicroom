@@ -99,8 +99,15 @@ class PlaylistDetailController: UITableViewController {
         cell.track = tracks[indexPath.row]
         cell.authorLabel.text = tracks[indexPath.row].artist?.name
         cell.selectionStyle = .none
-        
+        cell.rootController = self
+        cell.indexPath = indexPath
         return cell
+    }
+    
+    func deleteTrackFromPlaylist(track: Track, index: IndexPath) {
+        apiManager.deleteTrackFromPlaylist(playlist._id, track, target: self)
+        tracks.remove(at: index.row)
+        tableView.deleteRows(at: [index], with: .fade)
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

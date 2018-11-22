@@ -10,6 +10,8 @@ import UIKit
 
 class AlbumTrackListCell: UITableViewCell {
     var isInPlaylist = false
+    var rootController: UITableViewController?
+    var indexPath: IndexPath?
     var track: Track? {
         didSet {
             titleLabel.text = track?.title
@@ -85,7 +87,8 @@ class AlbumTrackListCell: UITableViewCell {
     
     @objc func handleAddSong() {
         if isInPlaylist {
-            print("delete song from playlist")
+            let root = rootController as? PlaylistDetailController
+            root?.deleteTrackFromPlaylist(track: track!, index: indexPath!)
             return
         }
         print("add song to playlist")

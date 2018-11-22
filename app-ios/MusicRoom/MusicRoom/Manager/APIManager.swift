@@ -102,6 +102,28 @@ class APIManager: NSObject, URLSessionDelegate {
             target?.reloadPlaylists()
         }.resume()
     }
+    
+    func addTrackToPlaylist(_ playListId: String, _ track: Track) {
+        let playlistsUrl = self.url + "playlist/\(playListId)/track"
+        let postString = "id=\(track.id)"
+        var addSongToPlaylistRequest = URLRequest(url: URL(string: playlistsUrl)!)
+        addSongToPlaylistRequest.httpMethod = "PUT"
+        addSongToPlaylistRequest.addValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
+        addSongToPlaylistRequest.httpBody = postString.data(using: .utf8)
+        URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: addSongToPlaylistRequest).resume()
+    }
+    
+    func deleteTrackFromPlaylist(_ playListId: String, _ track: Track, target: PlaylistDetailController?) {
+        let postString = "id=\(track.id)"
+        let playlistsUrl = self.url + "playlist/\(playListId)/track"
+        var createPlaylistRequest = URLRequest(url: URL(string: playlistsUrl)!)
+        createPlaylistRequest.httpMethod = "DELETE"
+        createPlaylistRequest.addValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
+        createPlaylistRequest.httpBody = postString.data(using: .utf8)
+        URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: createPlaylistRequest) { (data, response, error) in
+            target?.tableView.reloadData()
+            }.resume()
+    }
 
     func searchATA(_ search: String, completion: @escaping ([Track], [Album], [Artist]) -> ()){
         searchAlbums(search) { (albums) in

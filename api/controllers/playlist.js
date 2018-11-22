@@ -78,8 +78,6 @@ module.exports = {
 	postPlaylist: async (req, res) => {
 		console.log('posting playlist');
 		try {
-			console.log("Body SWIFT -> ")
-			console.log(req.body)
 			req.body.idUser = req.user._id
 			if (!req.body.creator)
 			{
@@ -156,6 +154,7 @@ module.exports = {
 		}
 	},
 	deleteTrackPlaylistById: async (req, res) => {
+		
 		try {
 			if (!Number(req.params.id)) {
 				await playlistModel.updateOne({_id: req.params.id, idUser: req.user._id},
@@ -175,6 +174,8 @@ module.exports = {
 				if (playlist !== true)
 					throw playlist.error.message
 			}
+			console.log("Body SWIFT -> ")
+			console.log(req.body)
 			res.status(204).json({message: 'Track deleted'});
 		} catch (err) {
 			console.log("Bad Request deletePlaylistById" + err)

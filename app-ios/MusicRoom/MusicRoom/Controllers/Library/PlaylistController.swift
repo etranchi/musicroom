@@ -36,7 +36,7 @@ class PlaylistController: UIViewController {
         super.viewDidLoad()
 
         view.backgroundColor = UIColor(white: 0.1, alpha: 1)
-        
+        print(userManager.currentUser!.token!)
         setupView()
         reloadPlaylists()
     }
