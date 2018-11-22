@@ -120,7 +120,6 @@ class Tracks extends Component {
 	}
 	
 	onDragEnd = (result) => {
-		unblockSocketEvent(this.state.playlist._id)
 		if (!result.destination) {
 		  return;
 		}
@@ -139,6 +138,7 @@ class Tracks extends Component {
 		.then(resp => {
 			this.setState(items);
 			moveMusic(this.state.playlist._id)
+			unblockSocketEvent(this.state.playlist._id)
 		})
 		.catch(err => {
 			console.log(err);
