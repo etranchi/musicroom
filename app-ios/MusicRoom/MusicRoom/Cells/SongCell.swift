@@ -9,6 +9,7 @@
 import UIKit
 
 class SongCell: UICollectionViewCell {
+    var rootVC: UIViewController?
     var track: Track! {
         didSet {
             titleLabel.textColor = .white
@@ -86,10 +87,18 @@ class SongCell: UICollectionViewCell {
         label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "..."
+        label.isUserInteractionEnabled = true
         return label
     }()
     
+    @objc func addTrackToPlaylist() {
+        print("song to had: \(track.title)")
+        let detail = SongDetailView(track)
+        addSubview(detail)
+    }
+    
     func setupViews() {
+        dotsLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(addTrackToPlaylist)))
         addSubview(imageView)
         addSubview(titleLabel)
         addSubview(authorLabel)

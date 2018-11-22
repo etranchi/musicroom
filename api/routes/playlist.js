@@ -7,7 +7,6 @@ const passport = require('passport');
 const middlewares = require('../modules/middlewares');
 const playlistController = require('../controllers/playlist');
 
-
 router.get('/',
     passport.authenticate('bearer'),
     middlewares.isConfirmed,
@@ -43,7 +42,7 @@ router.delete('/:id',
     middlewares.isConfirmed,
     playlistController.deletePlaylistById);
 
-router.delete('/:id/track',
+router.delete('/:id/:trackId',
     passport.authenticate('bearer'),
     middlewares.isConfirmed,
     playlistController.deleteTrackPlaylistById);
