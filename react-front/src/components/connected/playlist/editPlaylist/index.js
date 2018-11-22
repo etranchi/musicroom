@@ -13,7 +13,7 @@ class EditPlaylist extends Component {
 	}
 	componentDidMount() {
 		this.setState({isloading: true});
-		axios.get('https://192.168.99.100:4242/playlist/' + this.props.state.id, {'headers':{'Authorization': 'Bearer ' + localStorage.getItem('token')}})
+		axios.get(process.env.REACT_APP_API_URL + '/playlist/' + this.props.state.id, {'headers':{'Authorization': 'Bearer ' + localStorage.getItem('token')}})
 		.then((resp) => {
 			console.log('ici');
 			console.log(resp.data);
@@ -35,7 +35,7 @@ class EditPlaylist extends Component {
 	save = () =>{
 		console.log('toto');
 		console.log(this.state.playlist);
-		axios.put('https://192.168.99.100:4242/playlist/' + this.state.playlist._id || this.state.playlist.id, 
+		axios.put(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id || this.state.playlist.id, 
 			this.state.playlist,
 			{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}}
 		)
@@ -49,7 +49,7 @@ class EditPlaylist extends Component {
 	}
 
 	delete = () => {
-		axios.delete('https://192.168.99.100:4242/playlist/' + this.state.playlist._id || this.state.playlist.id,
+		axios.delete(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id || this.state.playlist.id,
 			{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}}
 		)
 		.then(resp => {

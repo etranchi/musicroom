@@ -33,7 +33,7 @@ class Event extends Component {
 
 
 	componentDidMount() {
-		axios.get('https://192.168.99.100:4242/event')
+		axios.get(process.env.REACT_APP_API_URL + '/event')
 		.then((resp) => {
 			this.props.state.data.events = resp.data.reverse()
 			this.props.updateParent({'data' : this.props.state.data})

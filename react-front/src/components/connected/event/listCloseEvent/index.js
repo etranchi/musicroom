@@ -22,7 +22,7 @@ class listCloseEvent extends Component {
     componentWillMount() {
 
 		this.setState({loading:true});
-		axios.get('https://192.168.99.100:4242/event')
+		axios.get(process.env.REACT_APP_API_URL + '/event')
 		.then((resp) => {
 			this.setState({events: resp.data.reverse(),loading:false})
 		})
