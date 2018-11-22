@@ -148,6 +148,7 @@ class APIManager: NSObject, URLSessionDelegate {
         createPlaylistRequest.addValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
         createPlaylistRequest.httpBody = postString.data(using: .utf8)
         URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: createPlaylistRequest) { (data, response, error) in
+
             target?.reloadPlaylists()
         }.resume()
     }
@@ -331,7 +332,6 @@ class APIManager: NSObject, URLSessionDelegate {
             if let d = data {
                 do {
                     print("J'ai tous")
-                    print(d)
                     let dic = try JSONDecoder().decode(myType.self, from: d)
                     DispatchQueue.main.async {
                         completion(dic)

@@ -22,7 +22,7 @@ class PlaylistDetailController: UITableViewController {
     init(_ playlist: Playlist, _ playlistCover: UIImage) {
         self.playlist = playlist
         self.playlistCover = playlistCover
-        self.tracks = playlist.tracks.data
+        self.tracks = playlist.tracks!.data
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -105,7 +105,7 @@ class PlaylistDetailController: UITableViewController {
     }
     
     func deleteTrackFromPlaylist(track: Track, index: IndexPath) {
-        apiManager.deleteTrackFromPlaylist(playlist._id, track, target: self)
+        apiManager.deleteTrackFromPlaylist(String(describing: playlist.id), track, target: self)
         tracks.remove(at: index.row)
         tableView.deleteRows(at: [index], with: .fade)
     }

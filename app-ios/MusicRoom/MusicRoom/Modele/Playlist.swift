@@ -8,8 +8,6 @@
 
 import Foundation
 
-
-
 struct Creator: Codable {
     var id: Int?
     var name: String
@@ -17,8 +15,8 @@ struct Creator: Codable {
 
 struct Playlist: Codable {
     var creator: Creator?
-    var tracks: PlaylistTrackData
+    var tracks: PlaylistTrackData?
     var title: String
     var picture_medium: String?
-    var _id: String
+    var id: Int
 }

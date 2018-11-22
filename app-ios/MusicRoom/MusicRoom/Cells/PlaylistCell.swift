@@ -15,8 +15,8 @@ class PlaylistCell: UICollectionViewCell {
             titleLabel.text = playlist.title
             if let pic = playlist.picture_medium {
                 imageView.loadImageUsingCacheWithUrlString(urlString: pic)
-            } else if playlist.tracks.data.count > 0 {
-                imageView.loadImageUsingCacheWithUrlString(urlString: playlist.tracks.data[0].album!.cover_big!)
+            } else if playlist.tracks!.data.count > 0 {
+                imageView.loadImageUsingCacheWithUrlString(urlString: playlist.tracks!.data[0].album!.cover_big!)
             } else {
                 imageView.image = #imageLiteral(resourceName: "album_placeholder")
             }
