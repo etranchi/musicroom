@@ -2,11 +2,8 @@
 
 const playlistModel = require('../models/playlist');
 
+this.rooms = [];
 
-this.sortTracksByScore = (tracks) => {
-    tracks.sort((a, b) => { return a.like < b.like ? 1 : -1 })
-    return tracks
-}
 module.exports = {
     sendPlaylist: async (playlistId) => {
         try {
@@ -15,27 +12,29 @@ module.exports = {
             return err
         }
     },
-    updateScore: async (tracks, id, points) => {
-        tracks.forEach(track => {  if (track._id === id)  track.like += points });
-        return this.sortTracksByScore(tracks)
+    updateScore: async (room, trackID, points) => {
+        room.tracks.forEach(track => {  if (track.id === trackID)  track.like += points });
+        return this.sortTracksByScore(room.tracks)
     },
-    manageRoom: async(rooms, roomID, tracks) => {
-
-        if (rooms) {
-            rooms.forEach((room) => {
+    createRoom: async(roomID, tracks) => {
+        let room = {
+            id: roomID,
+            tracks: this.sortTracksByScore(tracks)
+        };
+        this.rooms.push(room)
+        return room
+    },
+    getRoom: async (roomID) => {
+        if (this.rooms) {
+            this.rooms.forEach((room) => {
                 if (room.id === roomID)
-                return rooms
-            })
-            return {id:roomID, tracks:this.sortTracksByScore(tracks)}
+                    return room
+            });
         }
-        else
-            return null;
-    },  
-    isRoom: async (rooms, roomID) => {
-        rooms.forEach((room) => {
-            if (room.id === roomID)
-                return true;
-        });
-        return false;
+        return null;
+    },
+    sortTracksByScore: async(tracks) => {
+        tracks.sort((a, b) => { return a.like < b.like ? 1 : -1 })
+        return tracks
     }
 };

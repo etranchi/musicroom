@@ -7,7 +7,8 @@ import axios from 'axios'
 import { Col, Row, Icon , Card, Avatar} from 'antd'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import PersonalPlayer from '../../event/personalPlayer'
-import { moveMusic, socket, blockSocketEvent, unblockSocketEvent, getEventLive, updateScore} from '../../sockets';
+import { moveMusic, socket, blockSocketEvent, unblockSocketEvent} from '../../sockets';
+import {getRoomPlaylist, joinRoom, updateScore} from '../../sockets';
 
 const reorder = (list, startIndex, endIndex) => {
 	const result = Array.from(list);
@@ -44,7 +45,11 @@ const reorder = (list, startIndex, endIndex) => {
         })
 
         /*              Live Event              */
-        socket.on('getEventLive', (tracks) => {
+        socket.on('joinRoom', (msg) => {
+            console.log("Live event : ", msg)
+        })
+        socket.on('getRoomPlaylist', (tracks) => {
+            console.log("getRoomPlaylist : ", tracks)
             this.savePlaylist(tracks);
         })
 
@@ -58,8 +63,11 @@ const reorder = (list, startIndex, endIndex) => {
             initLoading: false,
             playlist: this.props.playlist
         }, () => {
-            console.log("CREATE EVENT LIVE", this.state.playlist.tracks.data)
-            getEventLive(this.state.playlist.tracks.data, this.roomID)
+            // getEventLive(this.state.playlist.tracks.data, this.roomID)
+            console.log("Live event : joinRoom : ")
+            joinRoom(this.props.roomID);
+            console.log("Live event : getRoomPlaylist : ")
+            getRoomPlaylist(this.props.roomID);
         });
 	}
 
@@ -73,7 +81,7 @@ const reorder = (list, startIndex, endIndex) => {
         console.log("Je suis ici : ", type, this.state.playlist.tracks.data)
         if (type === 'updateScore') {
             console.log("Enter")
-            updateScore(this.state.playlist.tracks.data, id, value, this.roomID)
+            updateScore(this.roomID, id, value)
         }
     }
 
