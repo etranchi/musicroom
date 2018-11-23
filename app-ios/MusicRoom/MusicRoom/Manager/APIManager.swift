@@ -134,8 +134,19 @@ class APIManager: NSObject, URLSessionDelegate {
         let playlistsUrl = self.url + "playlist"
         var playlistsRequest = URLRequest(url: URL(string: playlistsUrl)!)
         playlistsRequest.httpMethod = "GET"
-        playlistsRequest.addValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
+        print(userManager.currentUser?.token!)
+        playlistsRequest.addValue("Bearer \(userManager.currentUser?.token!)", forHTTPHeaderField: "Authorization")
         self.searchAll([Playlist].self, request: playlistsRequest, completion: { (playlists) in
+            completion(playlists)
+        })
+    }
+    
+    func getDeezerPlaylistById(_ id : Int, completion : @escaping((Playlist) -> ())) {
+        let getPlaylistUrl = self.url + "playlist/\(id)"
+        var playlistDeezerRequest = URLRequest(url : URL(string: getPlaylistUrl)!)
+        playlistDeezerRequest.httpMethod = "GET"
+        playlistDeezerRequest.addValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
+        self.searchAll(Playlist.self, request: playlistDeezerRequest, completion: { (playlists) in
             completion(playlists)
         })
     }
@@ -174,6 +185,9 @@ class APIManager: NSObject, URLSessionDelegate {
     }
     
     func deleteTrackFromPlaylist(_ playListId: String, _ track: Track, target: PlaylistDetailController?) {
+        print("playlistid")
+        print(playListId)
+        print(track)
         let playlistsUrl = self.url + "playlist/\(playListId)/\(track.id)"
         var createPlaylistRequest = URLRequest(url: URL(string: playlistsUrl)!)
         createPlaylistRequest.httpMethod = "DELETE"

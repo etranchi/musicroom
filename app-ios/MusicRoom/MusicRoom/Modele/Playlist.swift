@@ -18,5 +18,6 @@ struct Playlist: Codable {
     var tracks: PlaylistTrackData?
     var title: String
     var picture_medium: String?
-    var id: Int
+    var _id : String?
+    var id: Int?
 }

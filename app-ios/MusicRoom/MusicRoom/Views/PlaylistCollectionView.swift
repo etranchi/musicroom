@@ -75,12 +75,24 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
             selectedCell!.layer.borderWidth = 2
         }
         if isEditing {
-            apiManager.deletePlaylist(String(describing: cell.playlist.id), rootTarget)
+            if cell.playlist._id != nil {
+                apiManager.deletePlaylist(String(describing: cell.playlist._id!), rootTarget)
+            }
             return
         }
         if rootTarget != nil {
-            let vc = PlaylistDetailController(playlists[indexPath.item], cell.imageView.image!)
-            rootTarget?.navigationController?.pushViewController(vc, animated: true)
+            let current = playlists[indexPath.item]
+            if current._id == nil {
+                apiManager.getDeezerPlaylistById(current.id!, completion: { (res) in
+                    let vc = PlaylistDetailController(res, cell.imageView.image!, (self.rootTarget?.view)!)
+                    self.rootTarget?.navigationController?.pushViewController(vc, animated: true)
+                    return
+                })
+            }
+            else {
+                let vc = PlaylistDetailController(playlists[indexPath.item], cell.imageView.image!, (rootTarget?.view)!)
+                rootTarget?.navigationController?.pushViewController(vc, animated: true)
+            }
         }
     }
     

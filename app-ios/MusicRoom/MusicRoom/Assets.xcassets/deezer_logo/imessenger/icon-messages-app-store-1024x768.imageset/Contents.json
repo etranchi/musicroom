@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
+      "filename" : "icon-messages-app-store-1024x768.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "deezer_logo.png",
       "scale" : "2x"
     },
     {
