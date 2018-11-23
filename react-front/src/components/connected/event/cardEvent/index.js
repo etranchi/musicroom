@@ -8,6 +8,7 @@ import SimpleMap from '../simpleMap'
 import LiveEvent from '../liveEvent'
 import axios from 'axios'
 import geolib from 'geolib'
+import {socket, createRoom} from '../../sockets';
 
 class cardEvent extends Component {
 	constructor(props) {
@@ -52,6 +53,9 @@ class cardEvent extends Component {
         return false;
     }
     componentDidMount = () => {
+        socket.on('createRoom', (tracks) => {
+            console.log("Room created : ", tracks)
+        })
         if (this.props.state.data.event.creator.email === this.props.state.user.email)
             this.setState({isCreator:true})
         else  {
@@ -102,9 +106,18 @@ class cardEvent extends Component {
     info = (text) => {
         message.info(text);
       };
+    tryCreateRoom = (id, tracks) => {
+        console.log("Going to create Room")
+        createRoom(id, tracks)
+    }
 	render() {
         return this.isToday(this.props.state.data.event.event_date) ?
+        <div>
+            {
+                this.tryCreateRoom(this.props.roomID, this.props.state.data.event.playlist)
+            }
             <LiveEvent roomID={this.props.state.data.event._id} playlist={this.props.state.data.event.playlist}/>
+        </div>
             // <Button style={this.launchButton} type="primary" onClick={this.openLiveEvent}> <b> Start Event </b> </Button>
             : 
             <div>

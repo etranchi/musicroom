@@ -14,12 +14,17 @@ function unblockSocketEvent(playlistId, roomID) {
     socket.emit('unblockPlaylist', playlistId, roomID);
 }
 
-
-function getEventLive (tracks, roomID) {
-    socket.emit("getEventLive", tracks, roomID)
+function createRoom (roomID, tracks) {
+    socket.emit("createRoom", roomID, tracks)
+}
+function joinRoom (roomID) {
+    socket.emit("joinRoom", roomID)
+}
+function getRoomPlaylist (roomID) {
+    socket.emit("getRoomPlaylist", roomID)
 }
 
-function updateScore (tracks, tracksI, points, roomID) {
-    socket.emit("updateScore", tracks, tracksI, points, roomID)
+function updateScore (roomID, tracksID, pointsD) {
+    socket.emit("updateScore", roomID, tracksID, pointsD)
 }
-export { moveMusic, socket, blockSocketEvent, unblockSocketEvent, getEventLive, updateScore};
+export { moveMusic, socket, blockSocketEvent, unblockSocketEvent, getRoomPlaylist, updateScore, joinRoom, createRoom};
