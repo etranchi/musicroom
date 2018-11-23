@@ -4,6 +4,7 @@ import Event from './event'
 import Playlist from './playlist'
 import Setting from './setting'
 import Player from './player'
+import axios from 'axios'
 import { Layout} from 'antd';
 
 const {Content} = Layout;
@@ -19,6 +20,22 @@ class Connected extends Component {
 		}
 
 		componentWillMount(){
+			if (navigator.geolocation && !this.props.state.data.userCoord) {
+			this.props.state.data.userCoord = {}
+			navigator.geolocation.getCurrentPosition( (position ) => {
+				this.props.state.data.userCoord.lat = position.coords.latitude
+				this.props.state.data.userCoord.lng = position.coords.longitude
+				this.props.updateParent({'data': this.props.state.data})
+			}, (err) => {
+				axios.get('https://geoip-db.com/json/')
+				.then((location) => {
+					this.props.state.data.userCoord.lat = location.data.latitude
+					this.props.state.data.userCoord.lng = location.data.longitude
+					this.props.updateParent({'data': this.props.state.data})
+					console.log("This Location : ", this.props.state.data.userCoord)
+				})
+			});
+		}
 				this.setState({height: window.innerHeight + 'px'});
 		}
 		toggle(){

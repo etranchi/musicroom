@@ -19,22 +19,6 @@ class Event extends Component {
 			loading: false,
 			currentComponent: 'createEvent'
 		}
-		if (navigator.geolocation && !this.props.state.data.userCoord) {
-			this.props.state.data.userCoord = {}
-			navigator.geolocation.getCurrentPosition( (position ) => {
-				this.props.state.data.userCoord.lat = position.coords.latitude
-				this.props.state.data.userCoord.lng = position.coords.longitude
-				this.props.updateParent({'data': this.props.state.data})
-			}, (err) => {
-				axios.get('https://geoip-db.com/json/')
-				.then((location) => {
-					this.props.state.data.userCoord.lat = location.data.latitude
-					this.props.state.data.userCoord.lng = location.data.longitude
-					this.props.updateParent({'data': this.props.state.data})
-					console.log("This Location : ", this.props.state.data.userCoord)
-				})
-			});
-		}
 	}
 
 
@@ -51,6 +35,9 @@ class Event extends Component {
 		})
 	}
 	render() {
+		if (this.props.state.currentComponent === "liveEvent") {
+			return (<LiveEvent state={this.props.state} updateParent={this.props.updateParent} />)
+		}
 		if (this.props.state.currentComponent === "cardEvent") {
 			return (<CardEvent state={this.props.state} updateParent={this.props.updateParent} />)
 		}
