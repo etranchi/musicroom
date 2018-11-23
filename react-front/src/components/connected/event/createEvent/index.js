@@ -26,6 +26,7 @@ class CreateEvent extends Component {
         };
         this.handlePicture = this.handlePicture.bind(this);
         this.updateLocation = this.updateLocation.bind(this);
+        console.log("createEvent component constructor");
     }
     updateLocation = (val) => {
         let location = {
@@ -80,7 +81,7 @@ class CreateEvent extends Component {
             .then((resp) => { 
                 console.log("Create Event : handleSubmit :/event Success");
                 this.info("Evènement crée")
-                this.props.updateParent({'currentComponent' : "createEvent"})
+                this.props.updateParent({'currentComponent' : "event"})
             })
             .catch((err) => { console.log("Create Event : handleSubmit :/event Error ", err); })  
         })
@@ -129,6 +130,7 @@ class CreateEvent extends Component {
         this.setState({infoFile:null, imageUrl: null, loadind:false})
     }
 	render = () => {
+        console.log("createEvent component");
         console.log(localStorage.getItem('token'))
         this.uploadButton = (
             <div>

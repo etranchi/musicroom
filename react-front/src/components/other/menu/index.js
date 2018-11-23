@@ -30,7 +30,7 @@ class App extends Component {
                     <Col span={5}></Col>
                     <Col 
                       className="MenuCard" 
-                      style={ this.props.state.currentComponent === 'event' ? this.selectedMenu : null}
+                      style={ this.props.state.currentComponent === 'event' || this.props.state.currentComponent === 'createEvent' ? this.selectedMenu : null}
                       span={4}
                       onClick={this.props.updateParent.bind(this, {'currentComponent':"event"})}
                     >
