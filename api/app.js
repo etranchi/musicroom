@@ -53,7 +53,7 @@ expressSwagger(options)
 
 let playlistBlocked = []
 
-this.liveEvent = [];
+this.rooms = [];
 
 io.on('connection', (socket) => {
   // socket.on('addPlaylist', (playlistId) => {
@@ -116,25 +116,27 @@ io.on('connection', (socket) => {
     io.sockets.in(roomID).emit('createRoom', event.tracks)
   });
 
-  socket.on('createRoom', async (tracks, roomID) => {
+  socket.on('createRoom', async (roomID, tracks) => {
     console.log("[Socket] -> createRoom")
-    this.liveEvent.push({roomID:roomID,tracks:tracks})
-    io.sockets.in(roomID).emit('createRoom', liveEvent.tracks)
+    let room = ftSocket.manageRoom(this.rooms, roomID, tracks)
+    this.rooms.push(room)
+    io.sockets.in(room.id).emit('createRoom', room.tracks)
   });
 
   socket.on('joinRoom', async (roomID) => {
     console.log("[Socket] -> joinRoom")
+    if (ftSocket.isRoom(this.rooms, roomID))
     io.sockets.in(roomID).join(roomID);
   });
 
   socket.on('updateScore', async (tracks, trackID, points, roomID) => {
     console.log("[Socket] -> updateScore")
     if (tracks && trackID && points) {
-      let tmp = await ftSocket.sortTracksByScore(await ftSocket.updateScore(tracks, trackID, points))
-      io.sockets.in(roomID).emit('updateScore', await ftSocket.sortTracksByScore(tmp))
+      let tmp = await ftSocket.updateScore(tracks, trackID, points)
+      io.sockets.in(roomID).emit('updateScore', tmp)
     }
     else
-      io.sockets.in(roomID).emit('updateScore', await ftSocket.sortTracksByScore(tracks))
+      io.sockets.in(roomID).emit('updateScore', tracks)
   });
 
 });

@@ -5,6 +5,7 @@ import CardHeader from './Header'
 import CreatorProfil from './creatorProfil'
 import BodyEvent from './Body'
 import SimpleMap from '../simpleMap'
+import LiveEvent from '../liveEvent'
 import axios from 'axios'
 import geolib from 'geolib'
 
@@ -73,7 +74,6 @@ class cardEvent extends Component {
     }
 
     saveEvent = () => { 
-        console.log("ICI : ", this.props.state.data.event)
         let _id = this.props.state.data.event._id
         delete this.props.state.data.event._id
         axios.put(process.env.REACT_APP_API_URL + '/event/' + _id,  this.props.state.data.event)
@@ -84,6 +84,9 @@ class cardEvent extends Component {
             })
             .catch((err) => { console.log("Create Event : handleSubmit :/event Error ", err); })  
     }
+    openLiveEvent = () => { 
+        this.props.updateParent({'currentComponent':'liveEvent'}, {'data':this.props.state.data.event})
+    }
     isToday = (date) => {
 
         let classicDate = new Date(date).toLocaleDateString('fr-Fr')
@@ -91,16 +94,19 @@ class cardEvent extends Component {
         let curTime = new Date(new Date()).getTime()
         let timeBeforeEvent = timeEvent - curTime;
         let dayTimeStamp = (3600 * 1000) * 24;
-        let day = timeBeforeEvent / dayTimeStamp
+        let day = Math.round(timeBeforeEvent / dayTimeStamp)
 
-        return day < 0 ? true : false
+        return day == 0
     }
 
     info = (text) => {
         message.info(text);
       };
 	render() {
-        return (
+        return this.isToday(this.props.state.data.event.event_date) ?
+            <LiveEvent roomID={this.props.state.data.event._id} playlist={this.props.state.data.event.playlist}/>
+            // <Button style={this.launchButton} type="primary" onClick={this.openLiveEvent}> <b> Start Event </b> </Button>
+            : 
             <div>
                 <CardHeader state={this.props.state} updateParent={this.props.updateParent} />
                 {this.state.isHidden ? <SimpleMap state={this.props.state} event={this.props.state.data.event}/> : null}
@@ -108,16 +114,14 @@ class cardEvent extends Component {
                 <CreatorProfil right={this.state} state={this.props.state} updateParent={this.props.updateParent} />
                 <BodyEvent right={this.state} state={this.props.state} updateParent={this.props.updateParent} updateMap={this.updateMap.bind(this)}/>
                 <Button style={this.saveButton} type="primary" onClick={this.saveEvent}> <b> Sauvegarder l'event </b> </Button>
-
-                <Button style={this.launchButton} type="primary" onClick={this.saveEvent}> <b> Sauvegarder l'event </b> </Button>
                 {
-                    this.isToday(this.props.state.data.event.event_date) ?  
-                        <Button style={this.launchButton} type="primary" onClick={this.saveEvent}> <b> Start Event </b> </Button>
+                    this.isToday(this.props.state.data.event.event_date) ?
+                        <LiveEvent roomID={this.props.state.data.event._id}playlist={this.props.state.data.event.playlist}/>
+                        // <Button style={this.launchButton} type="primary" onClick={this.openLiveEvent}> <b> Start Event </b> </Button>
                         : 
                         null
                 }
            </div>
-        );
   }
 }
 
