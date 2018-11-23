@@ -4,7 +4,10 @@ const User		= require('../models/user');
 const Playlist 		= require('../models/playlist');
 
 const Event = new Schema({
-	creator: {type: User.schema},
+	creator: {
+		type: User.schema,
+		ref: 'User'
+	},
 	title:{type: String, default: "Aucun"},
 	description:{type: String, default: "à définir"},
 	location: {

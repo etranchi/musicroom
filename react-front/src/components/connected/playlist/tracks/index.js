@@ -161,7 +161,6 @@ class Tracks extends Component {
 	}
 
 	render() {
-		console.log('ciyciy');
 		return(
 		<div>
 			<Row type="flex" justify="space-between">

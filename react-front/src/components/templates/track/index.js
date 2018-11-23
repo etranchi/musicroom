@@ -22,8 +22,8 @@ export default  class liveEvent extends Component {
                         <Col span={24}>
                         <List.Item actions={
                         [
-                            <i onClick={this.props.callSocket.bind(this,"like", this.props.track._id)} style={{fontSize:'28px'}} className="far fa-thumbs-up"></i>,
-                            <i onClick={this.props.callSocket.bind(this,"dislike", this.props.track._id)} style={{fontSize:'28px'}} className="far fa-thumbs-down"></i>
+                            <i onClick={this.props.callSocket.bind(this,"updateScore", this.props.track._id, 1)} style={{fontSize:'28px'}} className="far fa-thumbs-up"></i>,
+                            <i onClick={this.props.callSocket.bind(this,"updateScore", this.props.track._id, -1)} style={{fontSize:'28px'}} className="far fa-thumbs-down"></i>
                         ]}>
                             <Skeleton avatar title={false} loading={false} active>
                                 <List.Item.Meta
@@ -31,7 +31,7 @@ export default  class liveEvent extends Component {
                                     title={<p className="Ffamily" style={{fontSize:'28px', margin:'10% 0 0 0'}}> {title} </p>}
                                     description={artist}
                                 />
-                                <div> { this.props.track.like ? this.props.track.like : 0}</div>
+                                <div> { this.props.track.like? this.props.track.like: 0 }</div>
                             </Skeleton>
                         </List.Item>
                         </Col>

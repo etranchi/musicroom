@@ -7,7 +7,7 @@ import axios from 'axios'
 import { Col, Row, Icon , Card, Avatar} from 'antd'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import PersonalPlayer from '../../event/personalPlayer'
-import { socket, createEventLive, dislike, like } from '../../sockets';
+import {socket, getRoomPlaylist, joinRoom, updateScore} from '../../sockets';
 
 const reorder = (list, startIndex, endIndex) => {
 	const result = Array.from(list);
@@ -16,6 +16,7 @@ const reorder = (list, startIndex, endIndex) => {
   
 	return result;
   };
+
 
   export default class LiveEvent extends Component {
 	constructor(props){
@@ -26,62 +27,54 @@ const reorder = (list, startIndex, endIndex) => {
 			loading: false,
 			isBlocked: false
         }
-        
+        this.roomID = this.props.roomID;
     }
     componentDidMount() {
         /* Live Event */
         socket.on('createEventLive', (tracks) => {
             this.sortTracks(tracks);
         })
-        socket.on('like', (tracks) => {
-            console.log("liked : ", tracks)
-            this.sortTracks(tracks);
+        /*              Live Event              */
+        socket.on('joinRoom', (msg) => {
+            console.log("joinRoom : ", msg)
         })
-        socket.on('dislike', (tracks) => {
-            console.log("Disliked : ", tracks)
-            this.sortTracks(tracks);
+        socket.on('getRoomPlaylist', (tracks) => {
+            console.log("getRoomPlaylist : ", tracks)
+            this.savePlaylist(tracks);
         })
+
+        socket.on('updateScore', (tracks) => {
+            console.log("Update score : ", tracks)
+            this.savePlaylist(tracks);
+        })
+
+        /**************************************/
     }
 	componentWillMount() {
         this.setState({
             initLoading: false,
             playlist: this.props.playlist
         }, () => {
-            console.log("CREATE EVENT LIVE", this.state.playlist.tracks.data)
-            createEventLive(this.state.playlist.tracks.data)
+            joinRoom(this.props.roomID);
+            getRoomPlaylist(this.props.roomID);
         });
 	}
 
-    callSocket = (type, content) => {
-
-        console.log("Call socket : ", type, content)
-        if (type === 'dislike') {
-            console.log('1')
-            dislike(content)
-        }
-        // else if (type === 'dislike') {
-        //     console.log('2')
-        //     like(content)
-        // }
-        // else if (type === 'createEventLive') {
-        //     console.log('3')
-        //     createEventLive(content)
-        // }
+    savePlaylist = (tracks) => {
+        let playlist = this.state.playlist;
+        playlist.tracks.data = tracks;
+        playlist.tracks.data.forEach((music) => {
+            console.log(music.like)
+        })
+        this.setState({playlist:playlist})
     }
-    sortTracks = (tracks) => {
-        let tmpPlay = this.state.playlist
-        let tmp = tracks
-        for (let i = 0; i < tmp.length - 1 ; i++)
-        {
-            if (tmp[i].like < tmp[i+1].like) {
-                let obj = tmp[i]
-                tmp[i] = tmp[i+1]
-                tmp[i+1] = obj
-                i = 0;
-            }
+    callSocket = (type, id, value) => {
+        console.log("Callsocket : ")
+        console.log(type, id, value)
+        if (type === 'updateScore') {
+            console.log("Update score")
+            updateScore(this.roomID, id, value)
         }
-        tmpPlay.tracks.data = tmp
-        this.setState({playlist:tmpPlay})
     }
 	
 	onDragEnd = (result) => {
@@ -125,7 +118,7 @@ const reorder = (list, startIndex, endIndex) => {
                                         <div ref={provided.innerRef} className="collection">
                                             {
                                                 this.state.playlist.tracks.data.map((item, index) =>  (
-                                                    <Col span={24}>
+                                                    <Col span={24} key={index}>
                                                         <Draggable key={item.id} draggableId={item.id} index={index} >
                                                         {
                                                             (provided, snapshot) => (

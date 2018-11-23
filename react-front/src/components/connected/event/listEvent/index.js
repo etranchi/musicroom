@@ -1,62 +1,73 @@
 import React, { Component } from 'react';
 import './styles.css';
 import PreviewCard from '../previewCardEvent'
-import { Layout} from 'antd';
+import { Layout, Row, Col, Button } from 'antd';
+import axios from 'axios'
 
 class ListEvent extends Component {
 	constructor(props) {
         super(props);
         this.state = {
-			loading:false,
+			loading:true,
 			myEvents: [],
 			friendEvents: [],
-			allEvent: []
-
+			allEvents: []
 		}
-		this.onLoad = false;
-	}
-
-	isUser = (tab) => 
-    {
-        for (let i = 0; i < tab.length; i++) {
-            if (tab[i].email === this.props.state.user.email)
-                return true;
-        }
-        return false;
-	}
-
-	sortEvent = (type) => {
-		let ret = [];
-
-		for (let i = 0; i < this.props.state.data.events.length; i++)
-		{
-			if (type === 'myEvents' && (this.props.state.data.events[i].creator.email === this.props.state.user.email))
-				ret.push(this.props.state.data.events[i])
-			if (type === 'friendEvents' && (this.isUser(this.props.state.data.events[i].members) || this.isUser(this.props.state.data.events[i].adminMembers)))
-				ret.push(this.props.state.data.events[i])
-			if (type === 'allEvents' && (!this.isUser(this.props.state.data.events[i].members) && !this.isUser(this.props.state.data.events[i].adminMembers)))
-				ret.push(this.props.state.data.events[i])
-		}
-		return ret;
-	}
-
-	componentWillMount = () => {
-		this.setState({myEvents:this.sortEvent("myEvents")}, () => {
-			this.setState({friendEvents:this.sortEvent("friendEvents")}, () => {
-				this.setState({allEvents:this.sortEvent("allEvents")})
-				this.setState({loading:true})
-			})
-		})
+			
 	}
 	
+
+	componentDidMount = () => {
+		this.getEvents(ret => {
+			this.setState({
+				myEvents: ret.myEvents, 
+				friendEvents:ret.friendEvents, 
+				allEvents: ret.allEvents, 
+				loading:false
+			})
+		});
+	}
+
+	getEvents = (callback) => {
+		console.log('coucou');
+		axios.get('https://192.168.99.100:4242/event')
+		.then((resp) => {
+			console.log('response get Events');
+			console.log(resp.data);
+			callback(resp.data);
+		})
+		.catch((err) => {
+			console.log('Events error', err);
+		})
+	}
+
 	render() {
-		const {Content } = Layout;
-		if (!this.state.loading) 
-			return ( <p> OUPSI </p>)
-		else {
+		if( this.state.loading === true ) {
 			return (
+				<div className="preloader-wrapper active loader">
+					<div className="spinner-layer spinner-red-only">
+					<div className="circle-clipper left">
+						<div className="circle"></div>
+					</div><div className="gap-patch">
+						<div className="circle"></div>
+					</div><div className="circle-clipper right">
+						<div className="circle"></div>
+					</div>
+					</div>
+				</div>
+			);
+		}
+		else{
+		return (
 				<Layout>
-					<Content style={{width:'82%', margin: '0 8% 0 10%'}}>
+					<Row type="flex" justify="space-between">
+						<Col>
+						</Col>
+						<Col>
+							<Button onClick={this.props.updateParent.bind(this, {'currentComponent': 'createEvent'})}>+</Button>
+						</Col>
+					</Row>
+					<Layout.Content style={{width:'82%', margin: '0 8% 0 10%'}}>
 					<div style={{padding:'1% 0 1% 0'}}>
 						{ this.state.myEvents.length > 0 ? <h1 style={{fontSize:'36px'}}> Mes événements : </h1> : null }
 						{
@@ -81,7 +92,7 @@ class ListEvent extends Component {
 								})
 						}
 					</div>
-					</Content>
+					</Layout.Content>
 				</Layout>
 			);
 		}

@@ -53,11 +53,6 @@ expressSwagger(options)
 
 let playlistBlocked = []
 
-let tracksTab = [];
-let liveEvent = {
-    tracks: [],
-    isStart: false
-}
 io.on('connection', (socket) => {
   // socket.on('addPlaylist', (playlistId) => {
   //   console.log("addPlaylist -> ");
@@ -97,41 +92,52 @@ io.on('connection', (socket) => {
   /* Socket For LiveEvent */
   /* Store array of track object, store like, unlike in */
 
-  socket.on('createEventLive', async (tracks) => {
-    console.log("[API] -> socket -> liveEvent store tracks")
-    if (liveEvent.isStart === false) {
-      tracks.forEach(track => {
-        track.like = 0;
-        liveEvent.tracks.push(track)
-      });
-      liveEvent.isStart = true
-    }
-    socket.emit('createEventLive', liveEvent.tracks)
+  /* Socket For LiveEvent */
+  /* Store array of track object, store like, unlike in */
+
+  socket.on('getRoomPlaylist', async (roomID) => {
+    console.log("[Socket] -> getRoomPlaylist")
+    
+    let room = await ftSocket.getRoom(roomID);
+    if (room)
+      io.sockets.in(room.id).emit('getRoomPlaylist', room.tracks)
+    else
+      return ;
   });
 
-  socket.on('like', async (trackID) => {
-    console.log("[API] -> socket -> liveEvent someone like track", liveEvent.isStart)
-    if (liveEvent.isStart === true) {
-      liveEvent.tracks.forEach(track => {
-          if (trackID === track._id) {
-            track.like++;
-          }
-      });
-    }
-    socket.emit('dislike', liveEvent.tracks)
+  socket.on('createRoom', async (roomID, tracks) => {
+    console.log("[Socket] -> createRoom")
+    
+    let room = await ftSocket.getRoom(roomID);
+    if (!room) room = await ftSocket.createRoom(roomID, tracks)
+    io.sockets.in(room.id).emit('createRoom', room.tracks)
   });
 
-  socket.on('dislike', async (trackID) => {
-    console.log("[API] -> socket -> liveEvent someone unnlike track", liveEvent.isStart)
-    if (liveEvent.isStart === true) {
-      liveEvent.tracks.forEach(track => {
-          if (trackID === track._id) {
-            track.like--;
-          }
-      });
+  socket.on('joinRoom', async (roomID) => {
+    console.log("[Socket] -> joinRoom", roomID)
+
+    let room = await ftSocket.getRoom(roomID)
+    if (room) {
+      socket.join(room.id);
+      io.sockets.in(room.id).emit('joinRoom', "Room joined")
     }
-    socket.emit('dislike', liveEvent.tracks)
+    else  sockets.emit('joinRoom', "Wrong ID")
   });
+
+  socket.on('updateScore', async (roomID, trackID, points) => {
+    console.log("[Socket] -> updateScore")
+
+    let room = await ftSocket.getRoom(roomID)
+    if (room)
+    {
+      room = await ftSocket.updateScore(room, trackID, points)
+      room = await ftSocket.updateRoom(room)
+      io.sockets.in(room.id).emit('updateScore', room.tracks)
+    }
+    else
+      return  io.sockets.in(room.id).emit('updateScore', 'fail');
+  });
+
 });
 
 httpsServer.listen(config.port, config.host);
