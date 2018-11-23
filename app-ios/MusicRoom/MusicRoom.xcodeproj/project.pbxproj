@@ -82,8 +82,7 @@
 		8F364B90217E5B9200B57FC8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F364B8E217E5B9200B57FC8 /* LaunchScreen.storyboard */; };
 		8FEFE2972191E2CD0002E966 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FEFE2962191E2CD0002E966 /* LoginController.swift */; };
 		E997985E32780E8DC3179DD4 /* Pods_MusicRoom.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC674AABD535B082079B3A49 /* Pods_MusicRoom.framework */; };
-		FA31603B21A3042800E81766 /* MyUser+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA31603A21A3042700E81766 /* MyUser+CoreDataProperties.swift */; };
-		FA31603D21A3118500E81766 /* UIViewAnchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA31603C21A3118500E81766 /* UIViewAnchor.swift */; };
+		F49E9AE421A83D4D001F6834 /* UIViewAnchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA31603C21A3118500E81766 /* UIViewAnchor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -205,7 +204,6 @@
 		AC674AABD535B082079B3A49 /* Pods_MusicRoom.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MusicRoom.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6FE34DBAE1555D838A7EBD9 /* Pods-MusicRoom.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicRoom.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom.debug.xcconfig"; sourceTree = "<group>"; };
 		C1F4CA7BD395A780F23DCE88 /* Pods-MusicRoom.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicRoom.release.xcconfig"; path = "Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom.release.xcconfig"; sourceTree = "<group>"; };
-		FA31603A21A3042700E81766 /* MyUser+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MyUser+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		FA31603C21A3118500E81766 /* UIViewAnchor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewAnchor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -706,6 +704,7 @@
 				7991484221889F8D00120E2D /* Extensions.swift in Sources */,
 				79CDCF2B218876ED0095CC63 /* CustomNavigationController.swift in Sources */,
 				79DD4A7D219C51B7005578EB /* AlbumCollectionView.swift in Sources */,
+				F49E9AE421A83D4D001F6834 /* UIViewAnchor.swift in Sources */,
 				79FF7D10219D795A001DAE17 /* SeeAllSongsController.swift in Sources */,
 				8F364B8B217E5B9100B57FC8 /* MusicRoom.xcdatamodeld in Sources */,
 				799DA433218D19E900C803E3 /* PlayerController.swift in Sources */,

@@ -242,9 +242,12 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         let coord = titleLabel.text!.size(withAttributes: [.font: UIFont.systemFont(ofSize: 14, weight: .heavy)])
         let count = titleLabel.text!.count
         print(titleLabel.text!.size(withAttributes: [.font: UIFont.systemFont(ofSize: 14, weight: .heavy)]))
+        print(containerTitleLabel.bounds.width)
         
         if coord.width > 297 {
-            let translationX = coord.width - 292
+            let averageCharSize = coord.width / CGFloat(count)
+            let overTheContainer = (coord.width - 334) / averageCharSize
+            let translationX = overTheContainer * averageCharSize
             print(translationX)
             if count >= 60 {
                 UIView.animate(withDuration: 8.0, delay: 2.0, options: [.autoreverse, .repeat], animations: {
@@ -255,8 +258,8 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
                     self.titleLabel.transform = CGAffineTransform(translationX: -translationX, y: 0)
                 })
             }
-        } else if coord.width <= 297 && coord.width >= 295 {
-            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = false
+//        } else if coord.width <= 297 && coord.width >= 295 {
+//            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = false
         } else {
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         }
