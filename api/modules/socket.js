@@ -3,7 +3,7 @@
 const playlistModel = require('../models/playlist');
 
 
-sortTracksByScore = (tracks) => {
+this.sortTracksByScore = (tracks) => {
     tracks.sort((a, b) => { return a.like < b.like ? 1 : -1 })
     return tracks
 }
@@ -17,7 +17,7 @@ module.exports = {
     },
     updateScore: async (tracks, id, points) => {
         tracks.forEach(track => {  if (track._id === id)  track.like += points });
-        return sortTracksByScore(tracks)
+        return this.sortTracksByScore(tracks)
     },
     manageRoom: async(rooms, roomID, tracks) => {
 
@@ -26,7 +26,7 @@ module.exports = {
                 if (room.id === roomID)
                 return rooms
             })
-            return {id:roomID, tracks:sortTracksByScore(tracks)}
+            return {id:roomID, tracks:this.sortTracksByScore(tracks)}
         }
         else
             return null;
