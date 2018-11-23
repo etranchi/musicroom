@@ -88,8 +88,9 @@ class cardEvent extends Component {
             })
             .catch((err) => { console.log("Create Event : handleSubmit :/event Error ", err); })  
     }
-    openLiveEvent = () => { 
-        this.props.updateParent({'currentComponent':'liveEvent'}, {'data':this.props.state.data.event})
+    openLiveEvent = () => {
+        createRoom(this.props.state.data.event._id, this.props.state.data.event.playlist.tracks.data)
+        this.props.updateParent({'currentComponent':'liveEvent'})
     }
     isToday = (date) => {
 
@@ -106,20 +107,8 @@ class cardEvent extends Component {
     info = (text) => {
         message.info(text);
       };
-    tryCreateRoom = (id, tracks) => {
-        console.log("Going to create Room")
-        createRoom(id, tracks)
-    }
 	render() {
-        return this.isToday(this.props.state.data.event.event_date) ?
-        <div>
-            {
-                this.tryCreateRoom(this.props.roomID, this.props.state.data.event.playlist)
-            }
-            <LiveEvent roomID={this.props.state.data.event._id} playlist={this.props.state.data.event.playlist}/>
-        </div>
-            // <Button style={this.launchButton} type="primary" onClick={this.openLiveEvent}> <b> Start Event </b> </Button>
-            : 
+        return  (
             <div>
                 <CardHeader state={this.props.state} updateParent={this.props.updateParent} />
                 {this.state.isHidden ? <SimpleMap state={this.props.state} event={this.props.state.data.event}/> : null}
@@ -129,12 +118,12 @@ class cardEvent extends Component {
                 <Button style={this.saveButton} type="primary" onClick={this.saveEvent}> <b> Sauvegarder l'event </b> </Button>
                 {
                     this.isToday(this.props.state.data.event.event_date) ?
-                        <LiveEvent roomID={this.props.state.data.event._id}playlist={this.props.state.data.event.playlist}/>
-                        // <Button style={this.launchButton} type="primary" onClick={this.openLiveEvent}> <b> Start Event </b> </Button>
+                        <Button style={this.launchButton} type="primary" onClick={this.openLiveEvent}> <b> Start Event </b> </Button>
                         : 
                         null
                 }
            </div>
+        )
   }
 }
 

@@ -31,7 +31,7 @@ export default  class liveEvent extends Component {
                                     title={<p className="Ffamily" style={{fontSize:'28px', margin:'10% 0 0 0'}}> {title} </p>}
                                     description={artist}
                                 />
-                                <div> { this.props.track.like? this.props.track.like: 0}</div>
+                                <div> { this.props.track.like? this.props.track.like: 0 }</div>
                             </Skeleton>
                         </List.Item>
                         </Col>

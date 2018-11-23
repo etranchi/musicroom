@@ -46,7 +46,7 @@ const reorder = (list, startIndex, endIndex) => {
 
         /*              Live Event              */
         socket.on('joinRoom', (msg) => {
-            console.log("Live event : ", msg)
+            console.log("joinRoom : ", msg)
         })
         socket.on('getRoomPlaylist', (tracks) => {
             console.log("getRoomPlaylist : ", tracks)
@@ -54,8 +54,10 @@ const reorder = (list, startIndex, endIndex) => {
         })
 
         socket.on('updateScore', (tracks) => {
+            console.log("Update score : ", tracks)
             this.savePlaylist(tracks);
         })
+
         /**************************************/
     }
 	componentWillMount() {
@@ -63,10 +65,7 @@ const reorder = (list, startIndex, endIndex) => {
             initLoading: false,
             playlist: this.props.playlist
         }, () => {
-            // getEventLive(this.state.playlist.tracks.data, this.roomID)
-            console.log("Live event : joinRoom : ")
             joinRoom(this.props.roomID);
-            console.log("Live event : getRoomPlaylist : ")
             getRoomPlaylist(this.props.roomID);
         });
 	}
@@ -74,23 +73,20 @@ const reorder = (list, startIndex, endIndex) => {
     savePlaylist = (tracks) => {
         let playlist = this.state.playlist;
         playlist.tracks.data = tracks;
+        playlist.tracks.data.forEach((music) => {
+            console.log(music.like)
+        })
         this.setState({playlist:playlist})
     }
     callSocket = (type, id, value) => {
-
-        console.log("Je suis ici : ", type, this.state.playlist.tracks.data)
+        console.log("Callsocket : ")
+        console.log(type, id, value)
         if (type === 'updateScore') {
-            console.log("Enter")
+            console.log("Update score")
             updateScore(this.roomID, id, value)
         }
     }
 
-    sortTracks = (tracks) => {
-        let playlist = this.state.playlist;
-        tracks.sort((a, b) => { return a.like < b.like ? 1 : -1 })
-        playlist.tracks.data = tracks;
-        this.setState({playlist:playlist})
-    }
     onDragStart = () => {
 		blockSocketEvent(this.state.playlist._id, this.roomID)
 	}
@@ -138,7 +134,7 @@ const reorder = (list, startIndex, endIndex) => {
                                         <div ref={provided.innerRef} className="collection">
                                             {
                                                 this.state.playlist.tracks.data.map((item, index) =>  (
-                                                    <Col span={24}>
+                                                    <Col span={24} key={index}>
                                                         <Draggable key={item.id} draggableId={item.id} index={index} >
                                                         {
                                                             (provided, snapshot) => (
