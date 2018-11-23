@@ -1,17 +1,17 @@
 {
-    "apps" : {
-        "name"        : "token",
-        "script"      : "./app.js",
-        "watch"       : true,
-        "ignore_watch" : ["./public/", "public/", "/public/"],
-        "watch_options": {
-            "usePolling": true
-        },
-      "env": {
-        "NODE_ENV": "development"
+  "apps" : {
+      "name"        : "token",
+      "script"      : "./app.js",
+      "watch"       : true,
+      "ignore_watch" : ["./public", "public", "/public"],
+      "watch_options": {
+          "usePolling": true
       },
-      "env_production" : {
-         "NODE_ENV": "production"
-      }
+    "env": {
+      "NODE_ENV": "development"
+    },
+    "env_production" : {
+       "NODE_ENV": "production"
     }
   }
+}

@@ -60,13 +60,13 @@ class PreviewCardEvent extends Component {
         let dayTimeStamp = (3600 * 1000) * 24;
         let weekTimeStamp = dayTimeStamp * 7;
 
-        if (timeBeforeEvent < 0) return "Out dated"
+        if (timeBeforeEvent < 0.0) return "Out dated"
         if (timeBeforeEvent > weekTimeStamp)return "Le : " + classicDate
         else if (timeBeforeEvent === weekTimeStamp) return ("In one week")
         else {
-           let day = timeBeforeEvent / dayTimeStamp
-            if (day > 0) return ('Tomorow')
-            else if (day < 0) return ("Today")
+           let day = Math.round(timeBeforeEvent / dayTimeStamp)
+            if (day == 1) return ('Tomorow')
+            else if (day == 0) return ("Today")
             else return ("In " + day + 'days')
         }
     }

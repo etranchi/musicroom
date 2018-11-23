@@ -7,7 +7,7 @@ import axios from 'axios'
 import { Col, Row, Icon , Card, Avatar} from 'antd'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import PersonalPlayer from '../../event/personalPlayer'
-import { moveMusic, socket, blockSocketEvent, unblockSocketEvent, createEventLive, dislike, like } from '../../sockets';
+import { moveMusic, socket, blockSocketEvent, unblockSocketEvent, getEventLive, updateScore} from '../../sockets';
 
 const reorder = (list, startIndex, endIndex) => {
 	const result = Array.from(list);
@@ -16,6 +16,7 @@ const reorder = (list, startIndex, endIndex) => {
   
 	return result;
   };
+
 
   export default class LiveEvent extends Component {
 	constructor(props){
@@ -26,39 +27,31 @@ const reorder = (list, startIndex, endIndex) => {
 			loading: false,
 			isBlocked: false
         }
-        
+        this.roomID = this.props.roomID;
     }
     componentDidMount() {
-        /* Live Event */
         socket.on('blockPlaylist', (playlistId) => {
-            console.log("JE BLOCK LA PLAYLIST POUR TOUS LES AUTRES")
-            if (playlistId === this.state.playlist._id) {
+            if (playlistId === this.state.playlist._id) 
                 this.state.isBlocked = true
-            }
         })
         socket.on('alreadyBlocked', (playlistId) => {
-            console.log("LA PLAYLIST EST LOCK")
-            if (playlistId === this.state.playlist._id) {
+            if (playlistId === this.state.playlist._id)
                 this.state.isBlocked = true
-            }
         })
         socket.on('unblockPlaylist', (playlistId) => {
-            console.log("JE DEBLOCK LA PLAYLIST")
-            if (playlistId === this.state.playlist._id) {
+            if (playlistId === this.state.playlist._id) 
                 this.state.isBlocked = !this.state.playlist._id
-            }
         })
-        socket.on('createEventLive', (tracks) => {
-            this.sortTracks(tracks);
+
+        /*              Live Event              */
+        socket.on('getEventLive', (tracks) => {
+            this.savePlaylist(tracks);
         })
-        socket.on('like', (tracks) => {
-            console.log("liked : ", tracks)
-            this.sortTracks(tracks);
+
+        socket.on('updateScore', (tracks) => {
+            this.savePlaylist(tracks);
         })
-        socket.on('dislike', (tracks) => {
-            console.log("Disliked : ", tracks)
-            this.sortTracks(tracks);
-        })
+        /**************************************/
     }
 	componentWillMount() {
         this.setState({
@@ -66,47 +59,36 @@ const reorder = (list, startIndex, endIndex) => {
             playlist: this.props.playlist
         }, () => {
             console.log("CREATE EVENT LIVE", this.state.playlist.tracks.data)
-            createEventLive(this.state.playlist.tracks.data)
+            getEventLive(this.state.playlist.tracks.data, this.roomID)
         });
 	}
 
-    callSocket = (type, content) => {
-
-        console.log("Call socket : ", type, content)
-        if (type === 'dislike') {
-            console.log('1')
-            dislike(content)
-        }
-        // else if (type === 'dislike') {
-        //     console.log('2')
-        //     like(content)
-        // }
-        // else if (type === 'createEventLive') {
-        //     console.log('3')
-        //     createEventLive(content)
-        // }
+    savePlaylist = (tracks) => {
+        let playlist = this.state.playlist;
+        playlist.tracks.data = tracks;
+        this.setState({playlist:playlist})
     }
-    sortTracks = (tracks) => {
-        let tmpPlay = this.state.playlist
-        let tmp = tracks
-        for (let i = 0; i < tmp.length - 1 ; i++)
-        {
-            if (tmp[i].like < tmp[i+1].like) {
-                let obj = tmp[i]
-                tmp[i] = tmp[i+1]
-                tmp[i+1] = obj
-                i = 0;
-            }
+    callSocket = (type, id, value) => {
+
+        console.log("Je suis ici : ", type, this.state.playlist.tracks.data)
+        if (type === 'updateScore') {
+            console.log("Enter")
+            updateScore(this.state.playlist.tracks.data, id, value, this.roomID)
         }
-        tmpPlay.tracks.data = tmp
-        this.setState({playlist:tmpPlay})
+    }
+
+    sortTracks = (tracks) => {
+        let playlist = this.state.playlist;
+        tracks.sort((a, b) => { return a.like < b.like ? 1 : -1 })
+        playlist.tracks.data = tracks;
+        this.setState({playlist:playlist})
     }
     onDragStart = () => {
-		blockSocketEvent(this.state.playlist._id)
+		blockSocketEvent(this.state.playlist._id, this.roomID)
 	}
 	
 	onDragEnd = (result) => {
-		unblockSocketEvent(this.state.playlist._id)
+		unblockSocketEvent(this.state.playlist._id, this.roomID)
 		if (!result.destination) {
 		  return;
 		}
