@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import './styles.css';
-import { Input, Row, Col, Divider, Button, Icon } from 'antd'
-import defaultTrackImg from '../../../../assets/track.png'
-import moment from 'moment'
+import { Input, Row, Col, Divider, Button } from 'antd'
 import axios from 'axios'
-import SearchBar from '../../searchbar'
 
 class CreatePlaylist extends Component {
 	constructor(props){
@@ -19,7 +16,7 @@ class CreatePlaylist extends Component {
 		body.tracks.data = this.state.tracks;
 		body.title = this.state.title;
 		console.log(body);
-		axios.post('https://192.168.99.100:4242/playlist', 
+		axios.post(process.env.REACT_APP_API_URL + '/playlist', 
 			body,
 			{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}}
 		)

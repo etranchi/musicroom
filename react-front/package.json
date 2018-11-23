@@ -8,6 +8,7 @@
     "babel-plugin-import": "^1.11.0",
     "cors": "^2.8.5",
     "css-loader": "^1.0.1",
+    "dotenv": "^6.1.0",
     "geolib": "^2.0.24",
     "google-map-react": "^1.0.9",
     "less": "^3.8.1",
@@ -17,6 +18,7 @@
     "react": "^16.6.0",
     "react-beautiful-dnd": "^10.0.1",
     "react-bootstrap": "^0.32.4",
+    "react-dnd": "^6.0.0",
     "react-dom": "^16.6.0",
     "react-facebook-login": "^4.1.1",
     "react-geolocation": "^1.0.4",
@@ -29,6 +31,7 @@
     "react-router": "^4.3.1",
     "react-scripts": "2.0.5",
     "react-sticky": "^6.0.3",
+    "socket.io-client": "^2.1.1",
     "style-loader": "^0.23.1",
     "universal-cookie": "^3.0.4"
   },

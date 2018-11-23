@@ -19,7 +19,7 @@ class Setting extends Component {
 	}
 
 	componentWillMount = () => {
-		axios.get('https://192.168.99.100:4242/user/me', 
+		axios.get(process.env.REACT_APP_API_URL + '/user/me', 
 		{'headers':{'Authorization':'Bearer '+ localStorage.getItem('token')}})
 		.then((resp) => {
 			this.setState({user:resp.data, loading:true});
@@ -37,7 +37,7 @@ class Setting extends Component {
 		  });
         DZ.login(function(response) {
           if (response.authResponse) {
-			axios.get('https://192.168.99.100:4242/user/login/deezer?access_token=' + localStorage.getItem("token") + '&deezerToken=' + response.authResponse.accessToken)
+			axios.get(process.env.REACT_APP_API_URL + '/user/login/deezer?access_token=' + localStorage.getItem("token") + '&deezerToken=' + response.authResponse.accessToken)
 			.then(resp => {
 				that.props.updateParent({ user: resp.data })
 				that.setState({ user: resp.data })
@@ -52,7 +52,7 @@ class Setting extends Component {
     }
 
     logoutDeezer() {
-    	axios.delete('https://192.168.99.100:4242/user/login/deezer', {'headers':{'Authorization' : 'Bearer ' + localStorage.getItem('token')}})
+    	axios.delete(process.env.REACT_APP_API_URL + '/user/login/deezer', {'headers':{'Authorization' : 'Bearer ' + localStorage.getItem('token')}})
     	.then(resp => {
     		this.props.updateParent({ user: resp.data })
     		this.setState({ user: resp.data })
@@ -73,7 +73,7 @@ class Setting extends Component {
 			return (<EditSetting state={this.props.state} updateParent={this.props.updateParent}/>)
 		else
 		{
-			let userPicture = this.props.state.user.facebookId ? this.props.state.user.picture : "https://192.168.99.100:4242/userPicture/" + this.props.state.user.picture
+			let userPicture = this.props.state.user.facebookId ? this.props.state.user.picture : process.env.REACT_APP_API_URL + "/userPicture/" + this.props.state.user.picture
 			return (
 				<Layout>
 					<Header> <h1>Profil : </h1></Header>

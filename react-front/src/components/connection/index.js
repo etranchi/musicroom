@@ -19,7 +19,7 @@ class Connection extends Component {
   responseFacebook(response) {
     if (response.accessToken)
     {
-      axios.get('https://192.168.99.100:4242/user/login/facebook', {'headers':{'Authorization':'Bearer '+ response.accessToken}})
+      axios.get(process.env.REACT_APP_API_URL + '/user/login/facebook', {'headers':{'Authorization':'Bearer '+ response.accessToken}})
       .then((resp) => {
         localStorage.setItem('token', resp.data.token)
         this.props.updateParent({'token':resp.data.token, 'currentComponent': 'event', 'user': resp.data.user});
@@ -35,7 +35,7 @@ class Connection extends Component {
     console.log(response);
     if (response.tokenObj.id_token)
     {
-      axios.get('https://192.168.99.100:4242/user/login/google', {'headers':{'access_token':response.accessToken}})
+      axios.get(process.env.REACT_APP_API_URL + '/user/login/google', {'headers':{'access_token':response.accessToken}})
       .then((resp) => {
         localStorage.setItem('token', resp.data.token)
         this.props.updateParent({'token':resp.data.token, 'currentComponent': 'event', 'user': resp.data.user});

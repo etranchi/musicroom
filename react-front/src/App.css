@@ -1,4 +1,6 @@
-
+.App {
+    min-width:1296px
+}
 .ant-layout-header {
     padding: 0 0 0 0 !important
 }

@@ -29,10 +29,12 @@ class PreviewCardEvent extends Component {
         this.props.updateParent({'currentComponent': 'cardEvent', 'data': this.props.state.data})
     }
 
-    componentWillMount = () => {
+    componentDidMount = () => {
+        console.log("component preview card mount");
         this.distance = this.getDistance(this.props.state.data.userCoord, this.props.event.location.coord).toFixed(0)
         this.date = this.props.event.event_date ? this.formatDateAnnounce(this.props.event.event_date) : "Inconnue"
     }
+
     openMap(val){
         let calc = geolib.getDistanceSimple(
             {latitude: this.props.state.data.userCoord.lat, longitude: this.props.state.data.userCoord.lng},
@@ -60,22 +62,23 @@ class PreviewCardEvent extends Component {
         let dayTimeStamp = (3600 * 1000) * 24;
         let weekTimeStamp = dayTimeStamp * 7;
 
-        if (timeBeforeEvent < 0) return "Out dated"
+        if (timeBeforeEvent < 0.0) return "Out dated"
         if (timeBeforeEvent > weekTimeStamp)return "Le : " + classicDate
         else if (timeBeforeEvent === weekTimeStamp) return ("In one week")
         else {
-           let day = timeBeforeEvent / dayTimeStamp
-            if (day > 0) return ('Tomorow')
-            else if (day < 0) return ("Today")
+           let day = Math.round(timeBeforeEvent / dayTimeStamp)
+            if (day == 1) return ('Tomorow')
+            else if (day == 0) return ("Today")
             else return ("In " + day + 'days')
         }
     }
     delete = () => {
         console.log('couccou');
         console.log(this.props.event);
-        axios.delete('https://192.168.99.100:4242/event/'+ this.props.event._id, {headers:{Authorization: 'Bearer ' + localStorage.getItem('token')}})
+        axios.delete(process.env.REACT_APP_API_URL + '/event/'+ this.props.event._id, {headers:{Authorization: 'Bearer ' + localStorage.getItem('token')}})
         .then(resp => {
             console.log(resp);
+            this.props.updateParent({'currentComponent':'event'});
             console.log('deleted soit disant');
         })
         .catch(err => {
@@ -84,12 +87,12 @@ class PreviewCardEvent extends Component {
         })
     }
 	render() {
-        const userPicture = this.props.event.creator.facebookId ? this.props.event.creator.picture : "https://192.168.99.100:4242/userPicture/" + this.props.event.creator.picture
+        const userPicture = this.props.event.creator.facebookId ? this.props.event.creator.picture : process.env.REACT_APP_API_URL + "/userPicture/" + this.props.event.creator.picture
         return (
             <Card
                 className="zoomCard"
                 style={{ width: 300, display: "inline-block", margin: "1% 2% 0 "}}
-                cover={ <img onClick={this.openCard.bind(this)} alt="eventPicture" src={"https://192.168.99.100:4242/eventPicture/" +  this.props.event.picture} />}
+                cover={ <img onClick={this.openCard.bind(this)} alt="eventPicture" src={process.env.REACT_APP_API_URL + "/eventPicture/" +  this.props.event.picture} />}
                 actions={[<Icon type="setting" theme="outlined"/>, <Icon type="edit" theme="outlined"/>, <i onClick={this.openMap.bind(this)} className="fas fa-map-marker"></i>,<i onClick={this.delete} className="fas fa-trash-alt"></i>]}
             >
                 <Card.Meta

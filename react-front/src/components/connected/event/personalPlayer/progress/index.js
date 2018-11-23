@@ -27,7 +27,6 @@ export default class Progressor extends Component {
         DZ.Event.subscribe('player_position', e => {
             if (this.elapsed.current && this.duration.current && e[1]) {
                 e[1] && this.setState({percent:e[0]/e[1] * 100}, () => {
-                    console.log('2 ', this.state.percent)
                     this.elapsed.current.textContent = this.convertTime(e[0]);
                     this.duration.current.textContent = this.convertTime(e[1]);
                 })
@@ -48,19 +47,17 @@ export default class Progressor extends Component {
 
     render() {
         return (
-            <Content>
-            <Row>
-                <Col span={2}>
+            <Row style={{height:'inherit'}}>
+                <Col span={3}>
                     <b className="elapsed" ref={this.elapsed}>0:00</b>
                 </Col>
-                <Col span={20}>
-                    <Progress  onClick={this.changeSeek.bind(this)} percent={this.state.percent}  showInfo={false}/>
+                <Col span={19}>
+                    <Progress  strokeColor={this.props.stokeColor ? this.props.stokeColor : '#bdbdbd'} onClick={this.changeSeek.bind(this)} percent={this.state.percent}  showInfo={false}/>
                 </Col>
                 <Col span={2}>
                     <b className="duration" ref={this.duration}>0:00</b>
                 </Col>
             </Row>
-        </Content>
         );
     }
 }

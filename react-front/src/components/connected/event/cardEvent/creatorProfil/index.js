@@ -33,7 +33,7 @@ class CreatorProfil extends Component {
     }
 
 	render() {
-        let userPicture = this.props.state.data.event.creator.facebookId ? this.props.state.data.event.creator.picture : "https://192.168.99.100:4242/userPicture/" + this.props.state.data.event.creator.picture
+        let userPicture = this.props.state.data.event.creator.facebookId ? this.props.state.data.event.creator.picture : process.env.REACT_APP_API_URL + "/userPicture/" + this.props.state.data.event.creator.picture
         return (
             <div>
             <Row >
@@ -60,7 +60,7 @@ class CreatorProfil extends Component {
                 <b>  Admin Members ({this.props.state.data.event.adminMembers.length}) : </b>
                 {
                     this.props.state.data.event.adminMembers.map((member, key) => {
-                        let userPicture = member.facebookId ? member.picture : "https://192.168.99.100:4242/userPicture/" + member.picture
+                        let userPicture = member.facebookId ? member.picture : process.env.REACT_APP_API_URL + "/userPicture/" + member.picture
                         return (
                             <div style={{margin: '3% 0 0 0'}} key={key}>
                                 <Card.Meta avatar={<Avatar src={userPicture} />} />
@@ -75,7 +75,7 @@ class CreatorProfil extends Component {
                 <b> Members ({this.props.state.data.event.members.length}) : </b>
                 {
                     this.props.state.data.event.members.map((member, key) => {
-                        let userPicture = member.facebookId ? member.picture : "https://192.168.99.100:4242/userPicture/" + member.picture
+                        let userPicture = member.facebookId ? member.picture : process.env.REACT_APP_API_URL + "/userPicture/" + member.picture
                         return (
                             <div className="previewMember" key={key}>
                                 <Card.Meta avatar={<Avatar src={userPicture} />} />

@@ -11,11 +11,13 @@ class EditSetting extends Component {
 			login: props.state.user.login,
 			password: null,
 			cpypassword: null,
-			picture: props.state.user.picture.facebookId ?  props.state.user.picture : "https://192.168.99.100:4242/userPicture/" +  props.state.user.picture,
+			picture: this.props.state.user.facebookId ?  this.props.state.user.picture : process.env.REACT_APP_API_URL + "/userPicture/" +  this.props.state.user.picture,
 			newPicture: '',
 			loading:false,
 			infoFile: '',
 		}
+		console.log(this.state, this.props)
+		
 		this.currentUser = props.state.user;
 		this.updateChange = this.updateChange.bind(this);
 		this.updateSave = this.updateSave.bind(this);
@@ -65,7 +67,7 @@ class EditSetting extends Component {
 			if (this.state.infoFile && this.state.infoFile.file && this.state.infoFile.file.originFileObj)
 				data.append('file', this.state.infoFile.file.originFileObj);
 			data.append('body', JSON.stringify(this.currentUser));
-			axios.put('https://192.168.99.100:4242/user/me', data,{'headers' : {'Authorization': 'Bearer '+ localStorage.getItem('token')}})
+			axios.put(process.env.REACT_APP_API_URL + '/user/me', data,{'headers' : {'Authorization': 'Bearer '+ localStorage.getItem('token')}})
 			.then(resp => {
 				this.props.updateParent({currentComponent: 'setting', user:resp.data});
 				console.log(resp);
@@ -111,6 +113,7 @@ class EditSetting extends Component {
             </div>
 		  );
 	return (
+		
 			<Layout>
 			<Header> <h1>Modifier le profil : : </h1></Header>
 			<Content>
@@ -127,7 +130,7 @@ class EditSetting extends Component {
 									beforeUpload={this.beforeUpload}
 									onChange={this.handlePicture}
 								>
-								<img src={this.state.newPicture ? this.state.newPicture : this.state.picture} alt="avatar" />
+								<img className="avatar-uploader" src={this.state.newPicture ? this.state.newPicture : this.state.picture} alt="avatar" />
 								{this.state.newPicture ? null : this.uploadButton}
 							</Upload>
                         </div>
