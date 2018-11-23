@@ -9,6 +9,7 @@
 import UIKit
 
 class SongCell: UICollectionViewCell {
+    var rootVC: UIViewController?
     var track: Track! {
         didSet {
             titleLabel.textColor = .white
@@ -23,7 +24,7 @@ class SongCell: UICollectionViewCell {
             } else {
                 timeLabel.text = String(track.duration / 60) + ":" + String(sec)
             }
-            imageView.loadImageUsingCacheWithUrlString(urlString: (track.album!.cover_small!))
+            imageView.loadImageUsingCacheWithUrlString(urlString: (track.album!.cover_big!))
             titleLabel.textColor = .white
             if track.id == currentTrack?.id {
                 titleLabel.textColor = UIColor(red: 20 / 255, green: 220 / 255, blue: 20 / 255, alpha: 1)
@@ -86,10 +87,18 @@ class SongCell: UICollectionViewCell {
         label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "..."
+        label.isUserInteractionEnabled = true
         return label
     }()
     
+    @objc func addTrackToPlaylist() {
+        songDetail.track = track
+        songDetail.imageView.image = imageView.image
+        songDetail.showView()
+    }
+    
     func setupViews() {
+        dotsLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(addTrackToPlaylist)))
         addSubview(imageView)
         addSubview(titleLabel)
         addSubview(authorLabel)

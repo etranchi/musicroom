@@ -78,6 +78,8 @@ module.exports = {
 	postPlaylist: async (req, res) => {
 		console.log('posting playlist');
 		try {
+			console.log("Body SWIFT -> ")
+			console.log(req.body)
 			req.body.idUser = req.user._id
 			if (!req.body.creator)
 			{
@@ -156,9 +158,11 @@ module.exports = {
 	deleteTrackPlaylistById: async (req, res) => {
 		
 		try {
+			console.log("Body SWIFT -> ")
+			console.log(req.body)
 			if (!Number(req.params.id)) {
 				await playlistModel.updateOne({_id: req.params.id, idUser: req.user._id},
-					{$pull: {'tracks.data': {id: req.body.id}}}
+					{$pull: {'tracks.data': {id: req.params.trackId}}}
 				)
 			} else {
 				let options = {
@@ -167,15 +171,13 @@ module.exports = {
 					json: true,
 					qs: {
 						"access_token": req.user.deezerToken,
-						"songs": req.body.id
+						"songs": req.params.trackId
 					}
 				};
 				playlist = await request(options)
 				if (playlist !== true)
 					throw playlist.error.message
 			}
-			console.log("Body SWIFT -> ")
-			console.log(req.body)
 			res.status(204).json({message: 'Track deleted'});
 		} catch (err) {
 			console.log("Bad Request deletePlaylistById" + err)
