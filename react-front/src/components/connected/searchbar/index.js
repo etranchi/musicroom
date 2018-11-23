@@ -28,7 +28,7 @@ class SearchBar extends Component {
 
 	fetchTracks = (value) => {
 		this.setState({value:value}, () => {
-				axios.get('https://192.168.99.100:4242/search/track?q='+ value)
+				axios.get(process.env.REACT_APP_API_URL + '/search/track?q='+ value)
 				.then((resp) => {
 					console.log(resp);
 					this.setState({'list': resp.data.data || []});
@@ -46,7 +46,7 @@ class SearchBar extends Component {
 		else
 		{
 			this.setState({'value': value});
-			axios.get('https://192.168.99.100:4242/search/playlist?q='+ value)
+			axios.get(process.env.REACT_APP_API_URL + '/search/playlist?q='+ value)
 			.then((resp) => {
 				console.log(resp);
 				this.setState({'list': resp.data.data || []});
@@ -62,7 +62,7 @@ class SearchBar extends Component {
 			if (this.state.list.length > 0) 
 				this.searchUser();
 			else {
-				axios.get("https://192.168.99.100:4242/user/", {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
+				axios.get(process.env.REACT_APP_API_URL + "/user/", {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
 				.then((resp) => {
 					this.setState({glbUserList: resp.data || []});
 					this.searchUser();
@@ -132,7 +132,7 @@ class SearchBar extends Component {
 		const { list } = this.state;
 		const children = list.map((item, key) => 
 		{
-			let userPicture = item.facebookId ? item.picture : "https://192.168.99.100:4242/eventPicture/" + item.picture
+			let userPicture = item.facebookId ? item.picture : process.env.REACT_APP_API_URL + "/eventPicture/" + item.picture
 			return (
 				this.props.type === 'member' || this.props.type === 'admin' ? 
 					<AutoComplete.Option  onClick={(e) => this.updateEventMember(item)}  key={key}> <Card.Meta className= "cardMemberList" avatar={<Avatar src={userPicture} />} title= {item.login} /> </AutoComplete.Option>

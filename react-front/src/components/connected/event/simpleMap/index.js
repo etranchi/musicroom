@@ -22,7 +22,7 @@ class SimpleMap extends Component {
  
   render() {
     console.log(this.props.state)
-    let eventPicture = this.props.event.picture ? "https://192.168.99.100:4242/eventPicture/" + this.props.event.picture : "https://192.168.99.100:4242/eventPicture/default.jpeg"
+    let eventPicture = this.props.event.picture ? process.env.REACT_APP_API_URL + "/eventPicture/" + this.props.event.picture : process.env.REACT_APP_API_URL + "/eventPicture/default.jpeg"
     return (
       <div className="mapContent" style={this.mapStyle}>
         <GoogleMapReact

@@ -75,30 +75,28 @@ export default class PersonalPlayer extends Component {
 
 	render() {
         return (
-            <Content>
-                <Row>
-                    <Col span={6}></Col>
-                    <Col span={1}>
-                        <i  onClick={this.updateState.bind(this, 'random')} style={this.state.random ? {color:"#00695c"} : {color:"#424242"}} className="fas fa-random playerSubAction"></i>
+                <Row style={{height:'inherit', margin:'3% 0 0 0'}}>
+                    <Col span={3}></Col>
+                    <Col span={3}>
+                        <i  onClick={this.updateState.bind(this, 'random')} style={this.state.random ? {color:"#4caf50"} : {color:"#424242"}} className="fas fa-random playerSubAction"></i>
                     </Col>
                     <Col span={1}></Col>
-                    <Col span={1}>
-                        <Icon  onClick={this.prevTrack}   className="playerAction" type="step-backward" />
+                    <Col span={3}>
+                        <i  onClick={this.prevTrack}   className="fas fa-backward playerAction"></i>
                     </Col>
                     <Col span={1}></Col>
-                    <Col span={1}>
-                        <Icon  onClick={this.playTrack}   className="playerAction" type={this.state.isPlaying ? "pause" : "caret-right"}/>
+                    <Col span={3}>
+                        <i  onClick={this.playTrack} className={this.state.isPlaying ? "fas fa-pause-circle playerAction" : "fas fa-play-circle playerAction"}></i>  
                     </Col>
                     <Col span={1}></Col>
-                    <Col span={1}>
-                        <Icon  onClick={this.nextTrack}   className="playerAction" type="step-forward" />
+                    <Col span={3}>
+                        <i onClick={this.nextTrack}   className="fas fa-forward playerAction"></i>
                     </Col>
                     <Col span={1}></Col>
-                    <Col span={1}>
-                        <i onClick={this.updateState.bind(this, 'repeat')} style={this.state.repeat ? {color:"#00695c"} : {color:'#424242'}} className="fas fa-redo-alt playerSubAction"></i>
+                    <Col span={3}>
+                        <i onClick={this.updateState.bind(this, 'repeat')} style={this.state.repeat ? {color:"#4caf50"} : {color:'#424242'}} className="fas fa-redo-alt playerSubAction"></i>
                     </Col>
                 </Row>
-            </Content>
         )
     }
 }
