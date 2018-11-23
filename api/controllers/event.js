@@ -21,14 +21,9 @@ module.exports = {
 	postEvent: async (req, res) => {
 		try {
 			req.body = JSON.parse(req.body.body);
-			console.log('1')
-			if (req.file && req.file.filename) {
-				console.log('2', req.file.filename)
-				req.body.picture = req.file.filename
-			}
-			console.log('3')
+			if (req.file && req.file.filename) req.body.picture = req.file.filename
 			let event = await modelEvent.create(req.body)
-			console.log('4')
+			await event.populate('creator', 'User')
 			res.status(200).send(event)
 		} catch (err) {
 			console.log("ERROR POST EVENT -> " + err)
@@ -55,26 +50,3 @@ module.exports = {
 		}
 	}
 };
-
-
-
-// if (req.file && req.file.filename) {
-// 	console.log("Resize Image")
-// 	name = req.file.filename
-
-// 	let smallPicture 	= await sharp( "./public/eventPicture/default/" + name).resize(320)
-// 	let mediumPicture 	= await sharp( "./public/eventPicture/default/" + name).resize(480)
-// 	let largePicture 	= await sharp( "./public/eventPicture/default/" + name).resize(800)
-	
-// 	await fs.writeFile("./public/eventPicture/small/" + name, smallPicture.toBuffer(), (err, res) => {
-
-// 	});
-// 	await fs.writeFile("./public/eventPicture/medium/" + name, mediumPicture.toBuffer(), (err, res) => {
-
-// 	});
-// 	await fs.writeFile("./public/eventPicture/large/" + name, largePicture.toBuffer(), (err, res) => {
-
-// 	});
-
-// 	console.log("Image resized")
-// }
