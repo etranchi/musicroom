@@ -9,6 +9,7 @@
 import UIKit
 
 let playerController = PlayerController([], -2)
+let songDetail = SongDetailView(frame: UIApplication.shared.keyWindow!.screen.bounds)
 var currentTrack: Track?
 
 class TabBarController: UITabBarController {
@@ -68,7 +69,9 @@ class TabBarController: UITabBarController {
         view.addSubview(playerView)
         view.addSubview(minimizedPlayer)
         view.addSubview(tabBar)
+        view.addSubview(songDetail)
         playerView.translatesAutoresizingMaskIntoConstraints = false
+        songDetail.translatesAutoresizingMaskIntoConstraints = false
         minimizedPlayer.backgroundColor = UIColor(white: 0.3, alpha: 0.5)
         NSLayoutConstraint.activate([
             minimizedPlayer.topAnchor.constraint(equalTo: tabBar.topAnchor, constant: -44),
@@ -79,7 +82,12 @@ class TabBarController: UITabBarController {
             playerView.topAnchor.constraint(equalTo: view.topAnchor),
             playerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             playerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            playerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            playerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            songDetail.topAnchor.constraint(equalTo: view.topAnchor),
+            songDetail.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            songDetail.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            songDetail.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
         
         playerView.transform = CGAffineTransform(translationX: 0, y: view.bounds.height - offsetY - 44)

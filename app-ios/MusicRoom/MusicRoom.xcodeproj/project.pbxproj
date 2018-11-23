@@ -323,6 +323,7 @@
 		799C8BFA219029A3003868A2 /* UICustomisation */ = {
 			isa = PBXGroup;
 			children = (
+				79CDCF1E218870F70095CC63 /* LoadingController.swift */,
 				79CDCF2A218876ED0095CC63 /* CustomNavigationController.swift */,
 			);
 			path = UICustomisation;
@@ -331,14 +332,13 @@
 		79CDCF1A21886EE40095CC63 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				77FA6AF2219DDC3500884428 /* Map */,
-				77F54792219320B1001B2901 /* Authentication */,
 				799C8BFA219029A3003868A2 /* UICustomisation */,
-				79CDCF1E218870F70095CC63 /* LoadingController.swift */,
+				77F54792219320B1001B2901 /* Authentication */,
 				79CDCF20218871A20095CC63 /* TabBarController.swift */,
+				799DA432218D19E900C803E3 /* PlayerController.swift */,
 				79DD4A77219C3EC5005578EB /* SearchControllers */,
 				79938C8921A3132F006D7281 /* Library */,
-				799DA432218D19E900C803E3 /* PlayerController.swift */,
+				77FA6AF2219DDC3500884428 /* Map */,
 				79CDCF26218874160095CC63 /* SettingsController.swift */,
 				7991C46B21988DAF0079F831 /* AlbumController.swift */,
 			);

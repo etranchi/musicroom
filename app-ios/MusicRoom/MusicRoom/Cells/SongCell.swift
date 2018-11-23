@@ -24,7 +24,7 @@ class SongCell: UICollectionViewCell {
             } else {
                 timeLabel.text = String(track.duration / 60) + ":" + String(sec)
             }
-            imageView.loadImageUsingCacheWithUrlString(urlString: (track.album!.cover_small!))
+            imageView.loadImageUsingCacheWithUrlString(urlString: (track.album!.cover_big!))
             titleLabel.textColor = .white
             if track.id == currentTrack?.id {
                 titleLabel.textColor = UIColor(red: 20 / 255, green: 220 / 255, blue: 20 / 255, alpha: 1)
@@ -92,9 +92,9 @@ class SongCell: UICollectionViewCell {
     }()
     
     @objc func addTrackToPlaylist() {
-        print("song to had: \(track.title)")
-        let detail = SongDetailView(track)
-        addSubview(detail)
+        songDetail.track = track
+        songDetail.imageView.image = imageView.image
+        songDetail.showView()
     }
     
     func setupViews() {
