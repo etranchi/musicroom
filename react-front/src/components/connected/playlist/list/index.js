@@ -10,18 +10,18 @@ class List extends Component {
 		super(props);
 		this.state = {
 			playlist: [],
-			isloading:false
+			loading:false
 		}
 	}
 
 	componentDidMount() {
-		this.setState({isloading: true});
+		this.setState({loading: true});
 		axios.get(process.env.REACT_APP_API_URL + '/playlist', {'headers':{'Authorization': 'Bearer ' + localStorage.getItem('token')}})
 		.then((resp) => {
-			this.setState({playlist: resp.data, isloading:false})
+			this.setState({playlist: resp.data, loading:false})
 		})
 		.catch((err) => {
-			this.setState({playlist: [], isloading:false})
+			this.setState({playlist: [], loading:false})
 			console.log('Playlist error');
 			console.log(err);
 		})
