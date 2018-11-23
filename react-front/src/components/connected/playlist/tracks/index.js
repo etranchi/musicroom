@@ -126,6 +126,12 @@ class Tracks extends Component {
 	onDragStart = () => {
 		console.log("BLOCK SOCKET")	
 		blockSocketEvent(this.state.playlist._id)
+		console.log(this.state.isBlocked)
+		console.log(this.state.playlist._id)
+		if (this.state.playlist._id) {
+			console.log("Unlock")
+			setTimeout(() => {updatePLaylist(this.state.playlist._id)}, 5000)
+		}
 	}
 	
 	onDragEnd = (result) => {
