@@ -16,7 +16,7 @@ module.exports = {
             return err
         }
     },
-    updateScore: async (room, trackID, points) => {
+    updateScore: (room, trackID, points) => {
         console.log()
         room.tracks.forEach((track) => {
             if (track._id === trackID) 
@@ -32,7 +32,7 @@ module.exports = {
         })
         return room
     },
-    updateRoom: async (tmpRoom) => {
+    updateRoom: (tmpRoom) => {
         let ret;
         this.rooms.forEach((room) => {
             if (room.id === tmpRoom.id) {
@@ -47,7 +47,7 @@ module.exports = {
         })
         return ret
     },
-    createRoom: async(roomID, tracks) => {
+    createRoom: (roomID, tracks) => {
         let room = {
             id: roomID,
             tracks: this.sortTracksByScore(tracks)
@@ -58,7 +58,7 @@ module.exports = {
         this.rooms.push(room)
         return room
     },
-    getRoom: async (roomID) => {
+    getRoom: (roomID) => {
         if (this.rooms) {
            let ret;
            this.rooms.forEach((room) => {
