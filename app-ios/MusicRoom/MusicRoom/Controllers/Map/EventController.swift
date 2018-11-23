@@ -164,9 +164,10 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
         setupView()
         apiManager.getUserPlaylists(completion: { (res) in
             print(res)
-            self.playlistView?.playlists = res
+            self.playlistView?.eventCreation = true
+            self.playlistView!.playlists = res
             print("yp")
-            // self.playlistView?.reloadData()
+            self.playlistView!.reloadData()
         })
         // Do any additional setup after loading the view.
     }
@@ -192,7 +193,6 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
         button.translatesAutoresizingMaskIntoConstraints = false
         playlistView = PlaylistCollectionView([], .horizontal, nil)
         playlistView!.translatesAutoresizingMaskIntoConstraints = false
-        playlistView!.backgroundColor = .red
         scrollView!.addSubview(imageView)
         scrollView!.addSubview(titleTF)
         scrollView!.addSubview(segmentedBar)
@@ -235,6 +235,7 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
             datePicker.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier : 0.6),
             
             playlistView!.topAnchor.constraint(equalTo: datePicker.bottomAnchor, constant: 30),
+            playlistView!.widthAnchor.constraint(equalTo: scrollView!.widthAnchor, multiplier: 0.9),
             playlistView!.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
             playlistView!.heightAnchor.constraint(equalToConstant: 200)
             
@@ -255,7 +256,7 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
     
     @objc func createEvent() {
         // if data is good
-        if titleTF.text != nil && imageView.image != nil {
+        if titleTF.text != nil && imageView.image != nil && playlistView?.selectedPlaylist != nil {
             let myUser = userManager.currentUser
             let coord = Coord(lat: (selectedPin?.coordinate.latitude)!, lng: (selectedPin?.coordinate.longitude)!)
             // pays ville codepostale rue numero
@@ -263,7 +264,7 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
             let location = Location(address: address, coord: coord)
             let dataImg = NSData(contentsOf: urlImageToString!)
             apiManager.getMe((myUser?.token)!, completion: { (user) in
-                let event = Event(_id : nil, creator : user, title: self.titleTF.text!, description: self.descriptionTV.text!, location: location, visibility: self.segmentedBar.selectedSegmentIndex, shared: self.segmentedBar.selectedSegmentIndex == 0 ? true : false , creationDate: String(describing: Date()), date: String(describing: Date()), playlist: nil, members: [], adminMembers: [], picture : nil)
+                let event = Event(_id : nil, creator : user, title: self.titleTF.text!, description: self.descriptionTV.text!, location: location, visibility: self.segmentedBar.selectedSegmentIndex, shared: self.segmentedBar.selectedSegmentIndex == 0 ? true : false , creationDate: String(describing: Date()), date: String(describing: Date()), playlist: self.playlistView?.selectedPlaylist!, members: [], adminMembers: [], picture : nil)
                 apiManager.postEvent((myUser?.token)!, event: event, img: self.imageView.image!) { (resp) in
                     if resp {
                         self.navigationController?.popViewController(animated: true)

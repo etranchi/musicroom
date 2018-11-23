@@ -20,7 +20,7 @@ class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate 
                 print(error)
             case .cancelled:
                 print("User cancelled login.")
-            case .success(let grantedPermissions, let declinedPermissions, let accessToken):
+            case .success(_,_, let accessToken):
                 apiManager.login("facebook", accessToken.authenticationToken, completion: { (data) in
                     print("login")
                     let user = userManager.newUser()
@@ -46,12 +46,12 @@ class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate 
             print("\(error.localizedDescription)")
         } else {
             // Perform any operations on signed in user here.
-            let userId = user.userID                  // For client-side use only!
+            /* let userId = user.userID                  // For client-side use only!
             let idToken = user.authentication.idToken // Safe to send to the server
             let fullName = user.profile.name
             let givenName = user.profile.givenName
             let familyName = user.profile.familyName
-            let email = user.profile.email
+            let email = user.profile.email*/
             apiManager.login("google", user.authentication.accessToken, completion:  { (data) in
                 let user = userManager.newUser()
                 user.token = data.token
