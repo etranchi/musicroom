@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import {Button, Input, Layout, Col, Row, Divider} from 'antd';
 import axios from 'axios'
 import './styles.css';
 
@@ -10,19 +10,17 @@ class Login extends Component {
 		this.state = {
 			email: "",
 			password: ""
-		};
+		}
 	}
 
 	validateForm() {
 		return this.state.email.length > 0 && this.state.password.length > 0;
 	}
-
 	handleChange = event => {
 		this.setState({
-			[event.target.id]: event.target.value
+			[event.target.name]: event.target.value
 		});
 	}
-
 	handleSubmit = event => {
 		event.preventDefault();
 		axios.post('https://192.168.99.100:4242/user/login', {
@@ -30,49 +28,37 @@ class Login extends Component {
 				'password': this.state.password
 		})
 		.then((resp) => {
-			console.log('login success');
-			console.log(resp.data)
+			console.log('login success', resp.data)
 			localStorage.setItem('token', resp.data.token)
 			this.props.updateParent({'token':resp.data.token, 'currentComponent': 'event', 'user': resp.data.user});
 		})
-		.catch((err) => {
-			console.log('login error');
-			console.log(err);
-		})
-		console.log("attemp of login");
+		.catch((err) => { console.log('login error', err); })
 	}
 	render() {
-
+		const {Content} = Layout;
 		return (
-			<div className="Login">
-			<form onSubmit={this.handleSubmit}>
-				<FormGroup controlId="email" bsSize="large">
-				<ControlLabel>Email</ControlLabel>
-				<FormControl
-				autoFocus
-				type="email"
-				value={this.state.email}
-				onChange={this.handleChange}
-				/>
-				</FormGroup>
-				<FormGroup controlId="password" bsSize="large">
-				<ControlLabel>Password</ControlLabel>
-				<FormControl
-				value={this.state.password}
-				onChange={this.handleChange}
-				type="password"
-				/>
-				</FormGroup>
-				<Button
-				block
-				bsSize="large"
-				disabled={!this.validateForm()}
-				type="submit"
-				>
-				Login
-				</Button>
-			</form>
-			</div>
+			<Content>
+			<Divider/>
+			<Row>
+				<Col span={10}></Col>
+				<Col span={4}>
+					<Input placeholder="Email" name= "email" value={this.state.email} onChange={this.handleChange}/>
+				</Col>
+			</Row>
+			<Row>
+				<Col span={10}></Col>
+				<Col span={4}>
+					<Input placeholder="Password" type="password" name= "password" value={this.state.password} onChange={this.handleChange}/>
+				</Col>
+			</Row>
+			<Row>
+				<Col span={11}></Col>
+				<Col span={2}>
+					<Button style={{'width':'100%'}}size="large"  onClick={this.handleSubmit.bind(this)}> Login </Button>
+				</Col>
+			</Row>
+			<Divider />
+			</Content>
 		);
 	}
 }

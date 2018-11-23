@@ -2,15 +2,23 @@ import React, { Component } from 'react';
 import './styles.css';
 import List from './list'
 import Tracks from './tracks'
-import SearchBar from '../searchbar'
+import CreatePlaylist from './createPlaylist'
+import EditPlaylist from './editPlaylist'
+
+// TO DEL
+// import { addInPlaylist } from '../sockets'
 
 class Playlist extends Component {
 	render() {
+		console.log(this.props.state);
+		// TO DEL
+		// addInPlaylist(10)
 	return (
 		<div>
-		<SearchBar updateParent={this.props.updateParent}/>
 		{this.props.state.currentComponent === 'playlist'? <List updateParent={this.props.updateParent}/> : null}
 		{this.props.state.currentComponent === 'tracks'? <Tracks state={this.props.state} updateParent={this.props.updateParent}/> : null}
+		{this.props.state.currentComponent === 'createPlaylist'? <CreatePlaylist state={this.props.state} updateParent={this.props.updateParent}/> : null}
+		{this.props.state.currentComponent === 'editPlaylist'? <EditPlaylist state={this.props.state} updateParent={this.props.updateParent}/> : null}
 		</div>
 	);
   }

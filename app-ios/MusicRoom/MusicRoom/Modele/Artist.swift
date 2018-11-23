@@ -8,15 +8,15 @@
 
 import Foundation
 
-struct Artist : Decodable {
-    let id : Int
-    let picture : String
-    let picture_medium : String
-    let name : String
-    let tracklist : String
-    let nb_fan : Int?
+struct Artist : Codable {
+    var id : Int
+    var picture : String?
+    var picture_medium : String?
+    var name : String
+    var tracklist : String
+    var nb_fan : Int?
 }
 
-struct ArtistData: Decodable {
-    let data : [Artist]
+struct ArtistData: Codable {
+    var data : [Artist]
 }

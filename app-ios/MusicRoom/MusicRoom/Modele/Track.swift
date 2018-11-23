@@ -9,27 +9,31 @@
 import Foundation
 
 
-struct Track : Decodable {
-    var id : Int
-    let readable : Bool
-    let link : String?
-    let album : Album?
-    let artist : Artist?
-    let title : String
-    let duration : Int
+struct Track: Codable {
+    var id: Int
+    var readable: Bool
+    var link: String?
+    var album: Album?
+    var artist: Artist?
+    var title: String
+    var duration: Int
 }
 
-struct AlbumTrack: Decodable {
-    let id : Int
-    let readable : Bool
-    let title : String
-    let duration : Int
+struct AlbumTrack: Codable {
+    var id: Int
+    var readable: Bool
+    var title: String
+    var duration: Int
 }
 
-struct AlbumTrackData: Decodable {
-    let data : [AlbumTrack]
+struct PlaylistTrackData: Codable {
+    var data: [Track]
 }
 
-struct TrackData: Decodable {
-    let data : [Track]
+struct AlbumTrackData: Codable {
+    var data: [AlbumTrack]
+}
+
+struct TrackData: Codable {
+    var data: [Track]
 }

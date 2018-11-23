@@ -19,7 +19,7 @@ class CoverContainerView: UIView {
     
     let zoomingEffect: CGFloat = 40.0
     let transparencyEffect: CGFloat = 0.4
-    let animationTime = 0.4
+    let animationTime = 0.6
     
     init(target: UIViewController, _ underPreviousTrack: Track?, _ previousTrack: Track?, _ currentTrack: Track, _ nextTrack: Track?, _ overNextTrack: Track?) {
         self.playerController = target as! PlayerController
@@ -160,17 +160,38 @@ class CoverContainerView: UIView {
     
     func downLoadImagesIfNeeded() {
         if let underPrevious = underPreviousTrack {
-            underPreviousCoverImageView.loadImageUsingCacheWithUrlString(urlString: underPrevious.album!.cover_big!)
+            if let upb = underPrevious.album!.cover_big {
+                underPreviousCoverImageView.loadImageUsingCacheWithUrlString(urlString: upb)
+            } else {
+                underPreviousCoverImageView.image = #imageLiteral(resourceName: "album_placeholder")
+            }
         }
         if let previous = previousTrack {
-            previousCoverImageView.loadImageUsingCacheWithUrlString(urlString: (previous.album!.cover_big!))
+            if let pb = previous.album!.cover_big {
+                previousCoverImageView.loadImageUsingCacheWithUrlString(urlString: pb)
+            } else {
+                previousCoverImageView.image = #imageLiteral(resourceName: "album_placeholder")
+            }
         }
-        currentCoverImageView.loadImageUsingCacheWithUrlString(urlString: currentTrack.album!.cover_big!)
+        if let cb = currentTrack.album!.cover_big {
+            currentCoverImageView.loadImageUsingCacheWithUrlString(urlString: cb)
+        } else {
+            currentCoverImageView.image = #imageLiteral(resourceName: "album_placeholder")
+        }
         if let next = nextTrack {
-            nextCoverImageView.loadImageUsingCacheWithUrlString(urlString: next.album!.cover_big!)
+            if let nb = next.album!.cover_big {
+                nextCoverImageView.loadImageUsingCacheWithUrlString(urlString: nb)
+            } else {
+                nextCoverImageView.image = #imageLiteral(resourceName: "album_placeholder")
+            }
         }
         if let overNext = overNextTrack {
-            overNextCoverImageView.loadImageUsingCacheWithUrlString(urlString: overNext.album!.cover_big!)
+            if let onb = overNext.album!.cover_big {
+                overNextCoverImageView.loadImageUsingCacheWithUrlString(urlString: onb)
+            } else {
+                overNextCoverImageView.image = #imageLiteral(resourceName: "album_placeholder")
+            }
+            
         }
     }
 }

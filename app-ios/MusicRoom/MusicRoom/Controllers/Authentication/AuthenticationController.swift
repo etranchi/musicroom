@@ -80,7 +80,7 @@ class AuthenticationController: UIViewController {
     func setupView() {
         self.view.addSubview(welcomeTF)
         self.view.addSubview(imageDeezer)
-        imageDeezer.image = #imageLiteral(resourceName: "logo_deezer")
+        imageDeezer.image = #imageLiteral(resourceName: "deezer_logo")
         
         NSLayoutConstraint.activate([
             imageDeezer.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
@@ -92,14 +92,4 @@ class AuthenticationController: UIViewController {
             welcomeTF.centerXAnchor.constraint(equalTo: view.centerXAnchor)
             ])
     }
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
-
 }

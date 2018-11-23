@@ -1,105 +1,127 @@
 import React, { Component } from 'react';
-import { Card, Avatar, Icon } from 'antd';
+import { Card, Avatar, Icon, Divider, Modal, Row, Col, Button } from 'antd';
 import './styles.css';
+import geolib from 'geolib'
+import Map from "../simpleMap"
+import axios from 'axios'
 
 class PreviewCardEvent extends Component {
 	constructor(props) {
         super(props);
-		this.card = {
-            textAlign: 'center',
-			minHeight:"300px",
-			margin: "5% 0 0 0"
-		}
-		this.gridStyleProfile = {
-			minHeight:"300px",
-			width: '25%',
-            textAlign: 'center',
-            padding: "0 0 0 0"
-        };
-        this.profileStyle = {
-            minHeight: "50px",
-            margin: "8% 0 0 8%",
-        }
-        this.iconEditionBlockStyle = {
-            width: '25%',
-        }
-        this.descritpionBlockStyle = {
-		}
-        this.gridStyleInfo = {
-			minHeight:"300px",
-			width: '25%',
-            textAlign: 'center',
-		};
-		this.gridStylePicture = {
-            width: '50%',
-           minHeight:"300px",
-			padding: "0 0 0 0"
-		};
-		this.eventPicture = {
-			height:"300px",
-			width: '100%'
-        };
-		this.iconStyle = {
-			fontSize: '18px',
-			float: "left"
-		}
-		this.iconEditionStyle = {
-			padding: "0 7% 0 7% ",
-			fontSize: '18px',
-		}
-		this.iconEditionBlockStyle = {
-            position: 'absolute',
-            bottom: '0',
-            width:"220px"
-        }
-        this.iconBlockStyle = {
-            padding : "20% 0 0 0 "
-        }
+
+    this.state = {
+        visible: false,
+        
+    }
+
+    }
+
+    getDistance(coordA, coordB){
+        const calc = geolib.getDistanceSimple(
+            {latitude: coordA.lat, longitude: coordA.lng},
+            {latitude: coordB.lat, longitude:coordB.lng}
+        );
+        return (calc/1000)
     }
     
     openCard = (e) => {
-        this.props.updateParent({'currentComponent': 'cardEvent', 'data': this.props.event})
+        this.props.state.data.event = this.props.event;
+        this.props.updateParent({'currentComponent': 'cardEvent', 'data': this.props.state.data})
+    }
+
+    componentWillMount = () => {
+        this.distance = this.getDistance(this.props.state.data.userCoord, this.props.event.location.coord).toFixed(0)
+        this.date = this.props.event.event_date ? this.formatDateAnnounce(this.props.event.event_date) : "Inconnue"
+    }
+    openMap(val){
+        let calc = geolib.getDistanceSimple(
+            {latitude: this.props.state.data.userCoord.lat, longitude: this.props.state.data.userCoord.lng},
+            {latitude: this.props.event.location.coord.lat, longitude:this.props.event.location.coord.lng}
+        );
+        this.setState({'distance':calc/1000});
+        this.showModal();
+    }
+    showModal = () => {
+        this.setState({visible: true});
+    }
+    handleOk = (e) => {
+        this.setState({visible: false});
+    }
+    
+    handleCancel = (e) => {
+        this.setState({visible: false});
+    }
+    formatDateAnnounce = (date) => {
+
+        let classicDate = new Date(date).toLocaleDateString('fr-Fr')
+        let timeEvent = new Date(date).getTime();
+        let curTime = new Date(new Date()).getTime()
+        let timeBeforeEvent = timeEvent - curTime;
+        let dayTimeStamp = (3600 * 1000) * 24;
+        let weekTimeStamp = dayTimeStamp * 7;
+
+        if (timeBeforeEvent < 0) return "Out dated"
+        if (timeBeforeEvent > weekTimeStamp)return "Le : " + classicDate
+        else if (timeBeforeEvent === weekTimeStamp) return ("In one week")
+        else {
+           let day = timeBeforeEvent / dayTimeStamp
+            if (day > 0) return ('Tomorow')
+            else if (day < 0) return ("Today")
+            else return ("In " + day + 'days')
+        }
+    }
+    delete = () => {
+        console.log('couccou');
+        console.log(this.props.event);
+        axios.delete('https://192.168.99.100:4242/event/'+ this.props.event._id, {headers:{Authorization: 'Bearer ' + localStorage.getItem('token')}})
+        .then(resp => {
+            console.log(resp);
+            console.log('deleted soit disant');
+        })
+        .catch(err => {
+            console.log(err);
+            console.log('not deleted');
+        })
     }
 	render() {
-        let userPicture = this.props.event.creator.facebookId ? this.props.event.creator.picture : "https://192.168.99.100:4242/eventPicture/" + this.props.event.creator.picture
+        const userPicture = this.props.event.creator.facebookId ? this.props.event.creator.picture : "https://192.168.99.100:4242/userPicture/" + this.props.event.creator.picture
         return (
-            <Card title={this.props.event.title} style={this.card}>
-                <Card.Grid style={this.gridStyleProfile}>
-                    <Card.Meta
-                        style= {this.profileStyle}
-                        avatar={<Avatar src={userPicture} />}
-                        title= {this.props.event.creator && this.props.event.creator.login ? this.props.event.creator.login : "Aucun" }
-                    />
-                    <div style={this.descritpionBlockStyle}>
-                        <b> { this.props.event.description ? this.props.event.description.substring(0, 190) :  " Aucune descritpion ... " }</b>
-                    </div>
-                    <div style={this.iconEditionBlockStyle}>
-                    <Icon style={this.iconEditionStyle} onClick={this.openCard.bind(this)} type="setting" theme="outlined" />
-                    <Icon style={this.iconEditionStyle} type="edit" theme="outlined" />
-                    <Icon style={this.iconEditionStyle} type="delete" theme="outlined" />
-                    </div>
-                </Card.Grid>
-                <Card.Grid style={this.gridStyleInfo}>
-                <div style={this.iconBlockStyle}>
-                    <Icon  style={this.iconStyle} type="pushpin" theme="outlined" />
-                    <b style={this.iconNameStyle}> {this.props.event.location.address.v ? this.props.event.location.address.v : "Paris"}</b>
-                </div>
-                <div style={this.iconBlockStyle}>
-                    <Icon  style={this.iconStyle} type="clock-circle" theme="outlined" />
-                    <b style={this.iconNameStyle}> { this.props.event.date_creation ? this.props.event.date_creation : " à définir .." }</b>
-                </div>
-                <div style={this.iconBlockStyle}>
-                    <Icon  style={this.iconStyle} type={ this.props.event.public ? "unlock" : "lock" } theme="outlined" />
-                    <b style={this.iconNameStyle}> { this.props.event.public ? " Public" : " Privé" }</b>
-                </div>
-                <div style={this.iconBlockStyle}>
-                    <Icon style={this.iconStyle} type="user" theme="outlined" />
-                    <b style={this.iconNameStyle}> { this.props.event.members.length || this.props.event.adminMembers.length  ? this.props.event.members.length +  this.props.event.adminMembers.length + " participants" : "0 participant" }</b>
-                </div>
-                </Card.Grid>
-                <Card.Grid style={this.gridStylePicture}>
-                    <img style={ this.eventPicture} alt="example" src={"https://192.168.99.100:4242/eventPicture/" +  this.props.event.picture} />
-                </Card.Grid>
+            <Card
+                className="zoomCard"
+                style={{ width: 300, display: "inline-block", margin: "1% 2% 0 "}}
+                cover={ <img onClick={this.openCard.bind(this)} alt="eventPicture" src={"https://192.168.99.100:4242/eventPicture/" +  this.props.event.picture} />}
+                actions={[<Icon type="setting" theme="outlined"/>, <Icon type="edit" theme="outlined"/>, <i onClick={this.openMap.bind(this)} className="fas fa-map-marker"></i>,<i onClick={this.delete} className="fas fa-trash-alt"></i>]}
+            >
+                <Card.Meta
+                    onClick={this.openCard.bind(this)}
+                    avatar={<Avatar size={116} src={userPicture} />}
+                    title= {this.props.event.creator && this.props.event.creator.login ? this.props.event.creator.login : "Aucun" }
+                    description=
+                    {
+                        <div>
+                            <p style={{textAlign:'center'}}>{this.date}</p>
+                            <Divider />
+                            <p style={{textAlign:'center'}}>À {this.distance} km</p>
+                        </div>
+                    }
+                />
+                
+                <Modal
+                    title={"Vous êtes à " + this.state.distance + "km"}
+                    visible={this.state.visible}
+                    onOk={this.handleOk}
+                    onCancel={this.handleCancel}
+                >
+                
+                    <Map state={this.props.state} openCard={this.openCard} event={this.props.event}/>
+                    <Row>
+					<Col span={11}></Col>
+					<Col span={4}>
+						<Button  onClick={this.openCard.bind(this)}> Voir l'évent </Button>
+					</Col>
+				</Row>
+                
+            </Modal>
             </Card>
         )
 	}

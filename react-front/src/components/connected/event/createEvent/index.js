@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import LocationSearchInput from '../locationSearchInput'
 import './styles.css';
 import axios from 'axios'
-import { Icon, Button, Input, DatePicker, Select, Upload, message, Divider} from 'antd';
-
-const Search = Input.Search;
+import SearchBar from '../../searchbar'
+import { Avatar, Card, Icon, Button, Input, DatePicker, Select, Upload, message, Divider, Layout, Col, Row} from 'antd';
 
 class CreateEvent extends Component {
 	constructor(props) {
@@ -17,19 +16,18 @@ class CreateEvent extends Component {
             "description": "",
             "picture": '',
             "playlist": null,
-            "date_creation": new Date(),
+            "event_date": new Date(),
             "date": "",
             "public": true,
-            "location": { "address" : {"p": "","v": "","cp": "","r": "","n": 0}, "coord": {"lat": 0,"lng": 0}},
+            "location": { "address" : {"p": "","v": "","cp": "","r": "","n": 0}, "coord": {}},
             'imageUrl': '',
             'infoFile': '',
-            'loading' : false
+            'loading' : false,
         };
         this.handlePicture = this.handlePicture.bind(this);
         this.updateLocation = this.updateLocation.bind(this);
     }
-    updateLocation(val){
-        console.log("Update : ", val)
+    updateLocation = (val) => {
         let location = {
                 "address" : {
                     "p": val.addressObj.address_components[5]  ? val.addressObj.address_components[5].long_name : "Inconnue",
@@ -46,10 +44,30 @@ class CreateEvent extends Component {
         this.setState({'location':location})
     }
 
+    updateEventPlaylist = (playlist) => {
+        if (playlist)
+        {
+            axios.get('https://192.168.99.100:4242/playlist/' + playlist.id, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
+            .then((resp) => { 
+                playlist.tracks = {}
+                playlist.tracks.data = {}
+                playlist.tracks.data= resp.data.data
+                this.setState({playlist:playlist})
+            })
+            .catch((err) => { console.log("Wrong Playlist id.", err); })  
+        }
+        this.setState({playlist:playlist})
+    }
+    info = (text) => {
+        message.info(text);
+    };
 	handleSubmit = event => {
+        if (!this.state.description || !this.state.title || !this.state.event_date || !this.state.location.coord)
+            this.info("Error input invalid")
         event.preventDefault();
         let data = new FormData();
-        data.append('file', this.state.infoFile.file.originFileObj);
+        if (this.state.infoFile && this.state.infoFile.file && this.state.infoFile.file.originFileObj)
+         data.append('file', this.state.infoFile.file.originFileObj);
         delete this.state.imageUrl
         delete this.state.loading
         delete this.state.infoFile
@@ -61,7 +79,8 @@ class CreateEvent extends Component {
             axios.post('https://192.168.99.100:4242/event/',  data)
             .then((resp) => { 
                 console.log("Create Event : handleSubmit :/event Success");
-                this.props.updateParent({'currentComponent' : "event"})
+                this.info("Evènement crée")
+                this.props.updateParent({'currentComponent' : "createEvent"})
             })
             .catch((err) => { console.log("Create Event : handleSubmit :/event Error ", err); })  
         })
@@ -69,13 +88,18 @@ class CreateEvent extends Component {
     }
     
     handleChange = event => {
-        if (event.target.name && event.target.name === "public") this.setState({"public":!this.state[event.target.name]})   
+        if (event.target.name && event.target.name === "public")
+         this.setState({"public":!this.state[event.target.name]})   
         else this.setState({[event.target.name]: event.target.value});
     }
 
     handleChangeDate = (date, dateString) => {
-        this.setState({'date_creation': dateString})
+        this.setState({'event_date': dateString})
     }
+
+    info = (text) => {
+        message.info(text);
+      };
 
     handlePicture = (info) => {
         this.setState({infoFile: info})
@@ -100,7 +124,11 @@ class CreateEvent extends Component {
         return isJPG && isLt2M;
       }
 
-	render() {
+    resetPicture = () => {
+        console.log("JE SUIS IC ")
+        this.setState({infoFile:null, imageUrl: null, loadind:false})
+    }
+	render = () => {
         console.log(localStorage.getItem('token'))
         this.uploadButton = (
             <div>
@@ -108,43 +136,109 @@ class CreateEvent extends Component {
               <div className="ant-upload-text">Upload</div>
             </div>
           );
+        const {Footer,Content } = Layout;
         return (
-            <div className="formEvent">
-                <Upload
-                    name="file"
-                    listType="picture-card"
-                    className="avatar-uploader"
-                    showUploadList={false}
-                    beforeUpload={this.beforeUpload}
-                    onChange={this.handlePicture}
-                >
-                    {this.state.imageUrl ? <img src={this.state.imageUrl} alt="avatar" /> : this.uploadButton}
-                </Upload>
-                <Divider />
-                <div className="textContent">
-                    <Input placeHolder="Titre de l'évènement : " name= "title" value={this.state.title} onChange={this.handleChange}/>
-                    <Input.TextArea  placeHolder="Descriptif de l'évènement : " name= "description" value={this.state.description} onChange={this.handleChange}/> 
-                </div>
-                <Divider />
-                <div className="inputContent">
-                    <Select placeHolder="Visibilité de l'événement : " name= "public" value={this.state.public ? "true" : "false"} onChange={this.handleChange}>
-                      <Select.Option value='true' >Public</Select.Option>
-                      <Select.Option value='false'>Privé</Select.Option>
-                    </Select>
-                    <DatePicker  style={{'padding': '0 0 0 3% '}} placeHolder="Quand ? "  onChange={this.handleChangeDate} />
-                </div>
-                <Divider />
-                    <LocationSearchInput state={this.props.state} updateLocation={this.updateLocation} />
-                <Divider />
-                <div className="textContent">
-                 <Input.Search
-                        placeholder="Ajouter une playlist"
-                        onSearch={value => console.log(value)}
-                 />
-                </div>
-                <Divider />
-                <Button onClick={this.handleSubmit.bind(this)} className="formButton" > Créer l'évènement </Button>
-            </div>
+            <Layout >
+                <Content>
+                    {
+                        this.state.imageUrl ?
+                            null
+                            :
+                            <Row>
+                                <Col span={8}></Col>
+                                <Col span={8}>
+                                    <div style={{'margin': '0 0 0 25% '}}>
+                                        <Upload name="file" listType="picture-card" className="avatar-uploader" showUploadList={false} beforeUpload={this.beforeUpload} onChange={this.handlePicture} >
+                                            {this.uploadButton}
+                                        </Upload>
+                                    </div>
+                                    <Divider />
+                                </Col>
+                            </Row>
+                    }
+                    {
+                        this.state.imageUrl ?
+                            <Row>
+                                <Col span={8}></Col>
+                                <Col span={8}>
+                                    <div style={{'textAlign': 'center', 'margin': '0 0 0 12% '}}>
+                                        <Card.Meta avatar={ <Avatar  size={448}src={this.state.imageUrl} alt="avatar" />}/>
+                                        <i onClick={() => this.resetPicture()} className="zoomCard fas fa-sync-alt"></i>
+                                    </div>
+                                    <Divider />
+                                </Col>
+                            </Row>
+                            :
+                            null
+                    }
+                    <Row>
+                        <Col span={8}></Col>
+                        <Col span={8}>
+                            <Input placeholder="Titre de l'évènement : " name= "title" value={this.state.title} onChange={this.handleChange}/>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={5}></Col>
+                        <Col span={14}>
+                            <Input.TextArea  placeholder="Descriptif de l'évènement : " name= "description" value={this.state.description} onChange={this.handleChange}/> 
+                            <Divider />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={11}></Col>
+                        <Col span={2}>
+                            <div style={{'margin': '0 0 0 12% '}}>
+                                <Select name= "public" value={this.state.public ? "true" : "false"} onChange={this.handleChange}>
+                                    <Select.Option value='true' >Public</Select.Option>
+                                    <Select.Option value='false'>Privé</Select.Option>
+                                </Select>
+                            </div>
+                            <Divider />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={10}></Col>
+                        <Col span={4}>
+                            <div style={{'margin': '0 0 0 12% '}}> <DatePicker className="datePicker" onChange={this.handleChangeDate} /> </div>
+                            <Divider />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={5}></Col>
+                        <Col span={14}>
+                            <LocationSearchInput state={this.props.state} updateLocation={this.updateLocation} />
+                            <Divider />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={10}></Col>
+                        <Col span={4}>
+                            <SearchBar state={this.props.state} type="playlist" updateEventPlaylist={this.updateEventPlaylist}/>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={6}></Col>
+                        <Col span={13}>
+                        {
+                            this.state.playlist && this.state.playlist.id ? <iframe title="deezerplayer" scrolling="no" frameBorder="0" allowtransparency="true" src={"https://www.deezer.com/plugins/player?format=classic&autoplay=false&playlist=true&width=700&height=350&color=007FEB&layout=dark&size=medium&type=playlist&id="
+                            + this.state.playlist.id
+                            + "&app_id=1"} width="700" height="350"></iframe> : null
+                        }
+                        <Divider />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={10}></Col>
+                        <Col span={4}>
+                            <div style={{'margin': '0 0 0 12% '}}> <Button  onClick={this.handleSubmit.bind(this)}> Créer l'évènement </Button> </div>
+                        </Col>
+                    </Row>
+
+                </Content>
+                <Footer>
+
+                </Footer>
+        </Layout>
         );
   }
 }

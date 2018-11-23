@@ -25,7 +25,6 @@ router.post('/login',
 // 192.....4242/user/login
 // object user dans body mail,mdp
 
-
 router.get('/login/facebook',
 		passport.authenticate('facebook-token', { session: false } ), userController.connect
 	);
@@ -38,7 +37,7 @@ router.get('/login/google',
 	);
 
 
-router.get('/login/deezer',
+router.put('/login/deezer',
 		passport.authenticate('bearer'),
 		middlewares.isConfirmed,
 		userController.bindDeezerToken
@@ -117,6 +116,7 @@ router.get('/me',
 router.put('/me',
 		passport.authenticate('bearer'),
 		middlewares.isConfirmed,
+		upload.single('file'),
 		userController.modifyUserById
 	);
 

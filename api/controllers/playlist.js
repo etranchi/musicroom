@@ -76,7 +76,10 @@ module.exports = {
 		}
 	},
 	postPlaylist: async (req, res) => {
+		console.log('posting playlist');
 		try {
+			console.log("Body SWIFT -> ")
+			console.log(req.body)
 			req.body.idUser = req.user._id
 			if (!req.body.creator)
 			{
@@ -87,13 +90,24 @@ module.exports = {
 					type: 'user'
 				}
 			}
-			res.status(201).json(await playlistModel.create(req.body));
+			console.log(req.body)
+			let playlist = await playlistModel.create(req.body);
+			res.status(201).json(playlist);
 		} catch (err) {
 			console.log(err)
 			res.status(400).json(err);
 		}
 	},
 	putPlaylistById: async (req, res) => {
+		try {
+			playlist = await playlistModel.findOneAndUpdate({_id: req.params.id, idUser: req.user._id}, req.body, {new: true})
+			res.status(200).json(playlist);
+		} catch (err) {
+			console.log("Bad Request putPlaylistById" + err)
+			res.status(400).send(err);
+		}
+	},
+	addTrackToPlaylistById: async (req, res) => {
 		try {
 			if (!Number(req.params.id)) {
 				let options = {
@@ -103,13 +117,13 @@ module.exports = {
 				};
 				let track = await request(options)
 				if (!track.id)
-					throw 'No track found'
+					throw Error('No track found')
 				if (!await playlistModel.findOne({_id: req.params.id, idUser: req.user._id, 'tracks.data': {$elemMatch: {id: track.id}}})) {
 					await playlistModel.updateOne({_id: req.params.id, idUser: req.user._id},
 						{$push: {'tracks.data': track}}
 					)
 				} else {
-					throw 'This song already exists in this playlist'
+					throw Error('This song already exists in this playlist')
 				}
 			}
 			else {
@@ -126,9 +140,9 @@ module.exports = {
 				if (playlist !== true)
 					throw playlist.error.message
 			}
-			res.status(200).json({message: 'Track added'});
+			res.status(200).send({message: 'Track added'});
 		} catch (err) {
-			console.log("Bad Request putPlaylistById" + err)
+			console.log("Bad Request addTrackToPlaylistById" + err)
 			res.status(400).send(err);
 		}
 	},
@@ -142,10 +156,13 @@ module.exports = {
 		}
 	},
 	deleteTrackPlaylistById: async (req, res) => {
+		
 		try {
+			console.log("Body SWIFT -> ")
+			console.log(req.body)
 			if (!Number(req.params.id)) {
 				await playlistModel.updateOne({_id: req.params.id, idUser: req.user._id},
-					{$pull: {'tracks.data': {id: req.body.id}}}
+					{$pull: {'tracks.data': {id: req.params.trackId}}}
 				)
 			} else {
 				let options = {
@@ -154,7 +171,7 @@ module.exports = {
 					json: true,
 					qs: {
 						"access_token": req.user.deezerToken,
-						"songs": req.body.id
+						"songs": req.params.trackId
 					}
 				};
 				playlist = await request(options)

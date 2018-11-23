@@ -32,7 +32,7 @@ exports.connect = (req, res) => {
 
 exports.bindDeezerToken = async (req, res) => {
 	try {
-		let user = await model.findByIdAndUpdate(
+		let user = await model.findOneAndUpdate(
 			{_id: req.user._id}, 
 			{deezerToken: req.query.deezerToken}, 
 			{new: true}
@@ -46,7 +46,7 @@ exports.bindDeezerToken = async (req, res) => {
 
 exports.deleteDeezerToken = async (req, res) => {
 	try {
-		let user = await model.findByIdAndUpdate(
+		let user = await model.findOneAndUpdate(
 			{_id: req.user._id}, 
 			{deezerToken: null}, 
 			{new: true}
@@ -74,10 +74,11 @@ exports.getUsers = async (req, res) => {
 
 exports.postUser = async (req, res) => {
 	try {
-		const { error } = validateUser(req.body);
 		// TODO ? A VOIR ? ADD PICTURE IN PUT?
 		if (req.body.body)
 			req.body = JSON.parse(req.body.body)
+		console.log("BODY : ", req.body)
+		const { error } = validateUser(req.body);
 		if (req.file && req.file.filename) {
 			req.body.picture = req.file.filename
 		}
@@ -148,20 +149,22 @@ exports.deleteUserById = async (req, res) => {
 }
 
 exports.modifyUserById = async (req, res) => {
+	req.body = JSON.parse(req.body.body);
 	try {
 		console.log(req.body)
 		if (!req.body)
 			return res.status(204);
-		let { error } = validateUpdateUser(req.body);
-		if (error) {
-			console.error("Error modifyUserById : invalid user format.");
-			throw new Error('Bad request' + error.details[0].message);
-		}
+		if (req.file && req.file.filename) req.body.picture = req.file.filename
+		// let { error } = validateUpdateUser(req.body);
+		// if (error) {
+		// 	console.error("Error modifyUserById : invalid user format.");
+		// 	throw new Error('Bad request' + error.details[0].message);
+		// }
 		let user = req.body
 		user = Utils.filter(model.schema.obj, user, 1)
 		if (user.password)
 			user.password = await argon.hash(user.password);
-		user = await model.findByIdAndUpdate({"_id": req.user._id}, user,{new: true});
+		user = await model.findOneAndUpdate({"_id": req.user._id}, user,{new: true});
 		return res.status(200).send(Utils.filter(model.schema.obj, user, 0));
 	} catch (err) {
 		console.error("Error modifyUserById: %s", err);

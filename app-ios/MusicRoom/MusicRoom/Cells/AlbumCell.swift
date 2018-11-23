@@ -13,7 +13,12 @@ class AlbumCell: UICollectionViewCell {
         didSet {
             authorLabel.text = album.artist!.name
             titleLabel.text = album.title
-            imageView.loadImageUsingCacheWithUrlString(urlString: album.cover_medium!)
+            if let cover = album.cover_medium {
+                imageView.loadImageUsingCacheWithUrlString(urlString: cover)
+            } else {
+                imageView.image = #imageLiteral(resourceName: "album_placeholder")
+            }
+            
         }
     }
 

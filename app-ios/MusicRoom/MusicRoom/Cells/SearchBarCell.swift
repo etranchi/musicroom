@@ -22,6 +22,7 @@ class SearchBarCell: UITableViewCell, UITextFieldDelegate {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     var placeholder : String? {
         didSet {
             if let p = placeholder {
@@ -61,7 +62,7 @@ class SearchBarCell: UITableViewCell, UITextFieldDelegate {
         if let vc = vc as? SearchController {
             vc.handleSearch(text)
         }
-//        if let vc = vc as? PlaylistController {
+//        if let vc = vc as? HomeController {
 //            vc.handleSearch(text)
 //        }
     }

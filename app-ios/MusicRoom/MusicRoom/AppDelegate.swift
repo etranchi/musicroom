@@ -11,6 +11,7 @@ import CoreData
 
 import FacebookLogin
 import FacebookCore
+import FirebaseCore
 import GoogleSignIn
 import Google
 import GoogleToolboxForMac
@@ -35,8 +36,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return self.orientationLock
     }
     
+    
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         //get the token if loggedin -> go home else go loginPage
+        //userManager.deleteAllData("MyUser")
+        //userManager.save()
         window = UIWindow()
         window?.makeKeyAndVisible()
         deezerManager.startDeezer()
