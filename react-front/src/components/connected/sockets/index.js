@@ -2,16 +2,12 @@ import openSocket from 'socket.io-client';
 
 const socket = openSocket(process.env.REACT_APP_API_URL);
 
-function moveMusic(playlistId) {
-    socket.emit('moveMusic', playlistId);
+function updatePLaylist(playlistId) {
+    socket.emit('updatePLaylist', playlistId);
 }
 
 function blockSocketEvent(playlistId) {
     socket.emit('blockPlaylist', playlistId);
-}
-
-function unblockSocketEvent(playlistId) {
-    socket.emit('unblockPlaylist', playlistId);
 }
 
 
@@ -27,4 +23,4 @@ function dislike(tracksID) {
     socket.emit("dislike", tracksID)
 }
 
-export { moveMusic, socket, blockSocketEvent, unblockSocketEvent, createEventLive, like, dislike};
+export { updatePLaylist, socket, blockSocketEvent, createEventLive, like, dislike};

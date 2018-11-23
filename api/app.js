@@ -75,10 +75,11 @@ io.on('connection', (socket) => {
   //   console.log("delMusicInPlaylist -> ");
   //   console.log(musicId);
   // });
-  socket.on('moveMusic', async (playlistId) => {
-    console.log("JE SUIS LA ET JE VAIS EMIT UN EVENT")
+  socket.on('updatePLaylist', async (playlistId) => {
+    console.log("JE SUIS LA ET JE VAIS updatePLaylist")
     let playlist = await ftSocket.sendPlaylist(playlistId)
-    socket.broadcast.emit('musicMoved', playlist)
+    playlistBlocked.splice(playlistBlocked.indexOf(playlistId), 1)
+    socket.broadcast.emit('playlistUpdated', playlist)
   });
   socket.on('blockPlaylist', (playlistId) => {
     console.log("BLOCK PLAYLIST -> " + playlistId)
@@ -92,16 +93,6 @@ io.on('connection', (socket) => {
       socket.emit('alreadyBlocked', playlistId)
     }
   });
-  socket.on('unblockPlaylist', (playlistId) => {
-    console.log("BEFORE SPLICE")
-    console.log(playlistBlocked)
-    playlistBlocked.splice(playlistBlocked.indexOf(playlistId), 1)
-    console.log("AFTER SPLICE")
-    console.log(playlistBlocked)
-    console.log("UNBLOCK PLAYLIST EVENT")
-    socket.broadcast.emit('unblockPlaylist', playlistId)
-  });
-
 
   /* Socket For LiveEvent */
   /* Store array of track object, store like, unlike in */

@@ -7,7 +7,7 @@ import axios from 'axios'
 import { Col, Row, Icon , Card, Avatar} from 'antd'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import PersonalPlayer from '../../event/personalPlayer'
-import { moveMusic, socket, blockSocketEvent, unblockSocketEvent, createEventLive, dislike, like } from '../../sockets';
+import { socket, createEventLive, dislike, like } from '../../sockets';
 
 const reorder = (list, startIndex, endIndex) => {
 	const result = Array.from(list);
@@ -30,24 +30,6 @@ const reorder = (list, startIndex, endIndex) => {
     }
     componentDidMount() {
         /* Live Event */
-        socket.on('blockPlaylist', (playlistId) => {
-            console.log("JE BLOCK LA PLAYLIST POUR TOUS LES AUTRES")
-            if (playlistId === this.state.playlist._id) {
-                this.state.isBlocked = true
-            }
-        })
-        socket.on('alreadyBlocked', (playlistId) => {
-            console.log("LA PLAYLIST EST LOCK")
-            if (playlistId === this.state.playlist._id) {
-                this.state.isBlocked = true
-            }
-        })
-        socket.on('unblockPlaylist', (playlistId) => {
-            console.log("JE DEBLOCK LA PLAYLIST")
-            if (playlistId === this.state.playlist._id) {
-                this.state.isBlocked = !this.state.playlist._id
-            }
-        })
         socket.on('createEventLive', (tracks) => {
             this.sortTracks(tracks);
         })
@@ -101,12 +83,8 @@ const reorder = (list, startIndex, endIndex) => {
         tmpPlay.tracks.data = tmp
         this.setState({playlist:tmpPlay})
     }
-    onDragStart = () => {
-		blockSocketEvent(this.state.playlist._id)
-	}
 	
 	onDragEnd = (result) => {
-		unblockSocketEvent(this.state.playlist._id)
 		if (!result.destination) {
 		  return;
 		}
@@ -124,7 +102,6 @@ const reorder = (list, startIndex, endIndex) => {
 		)
 		.then(resp => {
 			this.setState(items);
-			moveMusic(this.state.playlist._id)
 		})
 		.catch(err => {
 			console.log(err);
@@ -140,7 +117,7 @@ const reorder = (list, startIndex, endIndex) => {
                     <Col span={6}>
                     </Col>
                     <Col span={12}>
-                        <DragDropContext onDragEnd={this.onDragEnd} onDragStart={this.onDragStart}>
+                        <DragDropContext onDragEnd={this.onDragEnd}>
                             <Droppable droppableId="droppable" isDropDisabled={this.state.isBlocked}>
                             {
                                 (provided, snapshot) =>  (
