@@ -15,7 +15,7 @@ class Connected extends Component {
 			super(props);
 			this.state = {
 				collapsed: true,
-				height: props.height
+				height: props.height,
 			};
 		}
 
