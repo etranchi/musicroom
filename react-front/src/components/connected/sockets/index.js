@@ -6,7 +6,6 @@ function updatePLaylist(playlistId) {
     socket.emit('updatePLaylist', playlistId);
 }
 
-
 function blockSocketEvent(playlistId, roomID) {
     socket.emit('blockPlaylist', playlistId, roomID);
 }

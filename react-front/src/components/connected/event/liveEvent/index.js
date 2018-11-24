@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import './styles.css';
-import defaultTrackImg from '../../../../assets/track.png'
 import Track from '../../../templates/track'
-import moment from 'moment'
 import axios from 'axios'
-import { Col, Row, Icon , Card, Avatar} from 'antd'
+import { Col, Row } from 'antd'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import PersonalPlayer from '../../event/personalPlayer'
 import {socket, getRoomPlaylist, joinRoom, updateScore} from '../../sockets';

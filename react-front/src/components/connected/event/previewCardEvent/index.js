@@ -11,7 +11,6 @@ class PreviewCardEvent extends Component {
 
     this.state = {
         visible: false,
-        
     }
 
     }
@@ -67,8 +66,8 @@ class PreviewCardEvent extends Component {
         else if (timeBeforeEvent === weekTimeStamp) return ("In one week")
         else {
            let day = Math.round(timeBeforeEvent / dayTimeStamp)
-            if (day == 1) return ('Tomorow')
-            else if (day == 0) return ("Today")
+            if (day === 1) return ('Tomorow')
+            else if (day === 0) return ("Today")
             else return ("In " + day + 'days')
         }
     }
@@ -78,7 +77,7 @@ class PreviewCardEvent extends Component {
         axios.delete(process.env.REACT_APP_API_URL + '/event/'+ this.props.event._id, {headers:{Authorization: 'Bearer ' + localStorage.getItem('token')}})
         .then(resp => {
             console.log(resp);
-            this.props.updateParent({'currentComponent':'event'});
+            this.props.getEvents();
             console.log('deleted soit disant');
         })
         .catch(err => {

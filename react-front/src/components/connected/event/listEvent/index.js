@@ -13,11 +13,12 @@ class ListEvent extends Component {
 			friendEvents: [],
 			allEvents: []
 		}
-			
+		console.log("list event constructor");		
 	}
 	
 
 	componentDidMount = () => {
+		console.log("list event did mount");
 		this.getEvents(ret => {
 			this.setState({
 				myEvents: ret.myEvents, 
@@ -34,14 +35,27 @@ class ListEvent extends Component {
 		.then((resp) => {
 			console.log('response get Events');
 			console.log(resp.data);
-			callback(resp.data);
+			if (callback)
+				callback(resp.data);
+			else
+			{
+				this.setState({
+					myEvents: resp.data.myEvents, 
+					friendEvents:resp.data.friendEvents, 
+					allEvents: resp.data.allEvents, 
+					loading:false
+				})
+			}
 		})
 		.catch((err) => {
 			console.log('Events error', err);
 		})
 	}
 
+	
+
 	render() {
+		console.log("list event render");
 		if( this.state.loading === true ) {
 			return (
 				<div className="preloader-wrapper active loader">
@@ -72,7 +86,7 @@ class ListEvent extends Component {
 						{ this.state.myEvents.length > 0 ? <h1 style={{fontSize:'36px'}}> Mes événements : </h1> : null }
 						{
 							this.state.myEvents.map((event, key) => {
-									return ( <PreviewCard key={key} event={event} state={this.props.state} updateParent={this.props.updateParent}/> )
+									return ( <PreviewCard key={key} event={event} state={this.props.state} updateParent={this.props.updateParent} getEvents={this.getEvents}/> )
 							})
 						}
 					</div>
@@ -80,7 +94,7 @@ class ListEvent extends Component {
 						{ this.state.friendEvents.length > 0 ? <h1 style={{fontSize:'36px'}}>  Evénement ou je participe : </h1> : null }
 						{
 							this.state.friendEvents.map((event, key) => {
-									return ( <PreviewCard key={key} event={event} state={this.props.state} updateParent={this.props.updateParent}/> )
+									return ( <PreviewCard key={key} event={event} state={this.props.state} updateParent={this.props.updateParent} getEvents={this.getEvents}/> )
 							})
 						}
 					</div>
@@ -88,7 +102,7 @@ class ListEvent extends Component {
 						{ this.state.allEvents.length > 0 ? <h1 style={{fontSize:'36px'}}> Tous les évenements : </h1> : null }
 						{
 							this.state.allEvents.map((event, key) => {
-									return ( <PreviewCard key={key} event={event} state={this.props.state} updateParent={this.props.updateParent}/> )
+									return ( <PreviewCard key={key} event={event} state={this.props.state} updateParent={this.props.updateParent} getEvents={this.getEvents}/> )
 								})
 						}
 					</div>
