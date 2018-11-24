@@ -5,31 +5,11 @@ import ListCloseEvent from './listCloseEvent';
 import PersonalPlayer from './personalPlayer';
 import CardEvent from './cardEvent';
 import LiveEvent from './liveEvent';
-import axios from 'axios'
 import './styles.css';
 
 class Event extends Component {
-
-	constructor(props) {
-		super(props);
-		this.state = {
-			loading: true
-		}
-		console.log('event component constructor');
-	}
-
 	componentDidMount() {
-		axios.get(process.env.REACT_APP_API_URL + '/event')
-		.then((resp) => {
-			this.props.state.data.events = (resp.data.length > 0) ? resp.data.reverse() : resp.data ;
-			this.props.updateParent({'data' : this.props.state.data})
-			console.log("ici");
-			this.setState({loading:false});
-		})
-		.catch((err) => {
-			this.setState({events: [],loading:false})
-			console.log('Events error', err);
-		})
+	
 	}
 	render() {
 		return (

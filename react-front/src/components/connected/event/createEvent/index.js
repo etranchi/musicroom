@@ -141,6 +141,11 @@ class CreateEvent extends Component {
         const {Footer,Content } = Layout;
         return (
             <Layout >
+                <Row>
+                    <Col span={8}>
+                        <a href="#!" className="btn waves-effect waves-teal" onClick={() => this.props.updateParent({'currentComponent': 'event'})}>Back</a>
+                    </Col>
+			    </Row>
                 <Content>
                     {
                         this.state.imageUrl ?
