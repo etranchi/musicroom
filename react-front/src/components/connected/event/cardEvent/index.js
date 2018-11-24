@@ -5,7 +5,6 @@ import CardHeader from './Header'
 import CreatorProfil from './creatorProfil'
 import BodyEvent from './Body'
 import SimpleMap from '../simpleMap'
-import LiveEvent from '../liveEvent'
 import axios from 'axios'
 import geolib from 'geolib'
 import {socket, createRoom} from '../../sockets';
@@ -22,15 +21,15 @@ class cardEvent extends Component {
             isViewer: true,
         }
 
-        this.saveButton = {
-            'position': 'fixed',
-            'bottom': '50px',
-            'height': '80px',
-            'left': '140px',
-            'latitude': 0,
-            'longitude': 0,
-            'displayUser' : false
-        }
+        // this.saveButton = {
+        //     'position': 'fixed',
+        //     'bottom': '50px',
+        //     'height': '80px',
+        //     'left': '140px',
+        //     'latitude': 0,
+        //     'longitude': 0,
+        //     'displayUser' : false
+        // }
 
         this.launchButton = {
             'position': 'fixed',
@@ -40,7 +39,9 @@ class cardEvent extends Component {
             'latitude': 0,
             'longitude': 0,
             'displayUser' : false
+        
         }
+        console.log('card event constructor');
     }
 
 
@@ -53,6 +54,7 @@ class cardEvent extends Component {
         return false;
     }
     componentDidMount = () => {
+        console.log('card event did mount');
         socket.on('createRoom', (tracks) => {
             console.log("Room created : ", tracks)
         })
@@ -93,21 +95,21 @@ class cardEvent extends Component {
         this.props.updateParent({'currentComponent':'liveEvent'})
     }
     isToday = (date) => {
-
-        let classicDate = new Date(date).toLocaleDateString('fr-Fr')
+        // let classicDate = new Date(date).toLocaleDateString('fr-Fr')
         let timeEvent = new Date(date).getTime();
         let curTime = new Date(new Date()).getTime()
         let timeBeforeEvent = timeEvent - curTime;
         let dayTimeStamp = (3600 * 1000) * 24;
         let day = Math.round(timeBeforeEvent / dayTimeStamp)
 
-        return day == 0
+        return day === 0
     }
 
     info = (text) => {
         message.info(text);
       };
 	render() {
+        console.log('render card event');
         return  (
             <div>
                 <CardHeader state={this.props.state} updateParent={this.props.updateParent} />
@@ -115,7 +117,7 @@ class cardEvent extends Component {
                 <Divider />
                 <CreatorProfil right={this.state} state={this.props.state} updateParent={this.props.updateParent} />
                 <BodyEvent right={this.state} state={this.props.state} updateParent={this.props.updateParent} updateMap={this.updateMap.bind(this)}/>
-                <Button style={this.saveButton} type="primary" onClick={this.saveEvent}> <b> Sauvegarder l'event </b> </Button>
+                <Button type="primary" onClick={this.saveEvent}> <b> Sauvegarder l'event </b> </Button>
                 {
                     this.isToday(this.props.state.data.event.event_date) ?
                         <Button style={this.launchButton} type="primary" onClick={this.openLiveEvent}> <b> Start Event </b> </Button>

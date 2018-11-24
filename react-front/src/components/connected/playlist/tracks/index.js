@@ -3,7 +3,7 @@ import './styles.css';
 import defaultTrackImg from '../../../../assets/track.png'
 import moment from 'moment'
 import axios from 'axios'
-import { Col, Row, Icon } from 'antd'
+import { Col, Row, Icon, Layout } from 'antd'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import PersonalPlayer from '../../event/personalPlayer'
 import { updatePLaylist, socket, blockSocketEvent } from '../../sockets';
@@ -163,6 +163,7 @@ class Tracks extends Component {
 	render() {
 		return(
 		<div>
+			
 			<Row type="flex" justify="space-between">
 				<Col>
 					<a href="#!" className="btn waves-effect waves-teal" onClick={() => this.props.updateParent({'currentComponent': 'playlist'})}>Back</a>
@@ -171,6 +172,7 @@ class Tracks extends Component {
 					{this.state.playlist._id && <a href="#!" className="btn waves-effect" style={{'backgroundColor':'orange'}} onClick={() => this.props.updateParent({'currentComponent': 'editPlaylist'})}>Edit</a>}
 				</Col>
 			</Row>
+			<Layout.Content>
 				<h3 style={{'textAlign':'center', 'font-size': '20px'}}>{this.state.playlist.title}</h3>
 				<DragDropContext onDragEnd={this.onDragEnd} onDragStart={this.onDragStart}>
 				<Droppable droppableId="droppable" isDragDisabled={this.state.isBlocked} isDropDisabled={this.state.isBlocked}>
@@ -210,6 +212,7 @@ class Tracks extends Component {
         		</Droppable>
       			</DragDropContext>
 				{this.state.playlist.tracks.data.length > 0 && <PersonalPlayer  tracks={this.state.playlist.tracks.data}></PersonalPlayer>}
+				</Layout.Content>
 		</div>
 		)
   }
