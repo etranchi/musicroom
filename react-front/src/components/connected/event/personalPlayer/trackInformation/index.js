@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import './styles.css';
-import { Tabs, Layout, Row, Col, Icon} from 'antd';
+import { Row, Col, Icon} from 'antd';
 
 
-const {Content } = Layout;
 
 export default class TrackInformation extends Component {
 

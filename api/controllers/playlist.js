@@ -157,7 +157,7 @@ module.exports = {
 		try {
 			if (!Number(req.params.id)) {
 				await playlistModel.updateOne({_id: req.params.id, idUser: req.user._id},
-					{$pull: {'tracks.data': {id: req.body.id}}}
+					{$pull: {'tracks.data': {id: req.params.trackId}}}
 				)
 			} else {
 				let options = {
@@ -166,7 +166,7 @@ module.exports = {
 					json: true,
 					qs: {
 						"access_token": req.user.deezerToken,
-						"songs": req.body.id
+						"songs": req.params.trackId
 					}
 				};
 				playlist = await request(options)

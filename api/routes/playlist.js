@@ -43,7 +43,7 @@ router.delete('/:id',
     middlewares.isConfirmed,
     playlistController.deletePlaylistById);
 
-router.delete('/:id/track',
+router.delete('/:id/:trackId',
     passport.authenticate('bearer'),
     middlewares.isConfirmed,
     playlistController.deleteTrackPlaylistById);
