@@ -4,10 +4,6 @@ import Control from "./control"
 import Options from "./options"
 import TrackInformation from "./trackInformation"
 import './styles.css';
-import { Tabs, Layout, Row, Col, Icon} from 'antd';
-
-
-const {Content } = Layout;
 
 /* Deezer Schema Playlist :  
 
