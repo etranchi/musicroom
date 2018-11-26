@@ -3,7 +3,7 @@ import LocationSearchInput from '../locationSearchInput'
 import './styles.css';
 import axios from 'axios'
 import SearchBar from '../../searchbar'
-import { Avatar, Card, Icon, Button, Input, DatePicker, Select, Upload, message, Divider, Layout, Col, Row} from 'antd';
+import { Avatar, Card, Icon, Button, Input, DatePicker, Select, Upload, message, Divider, Layout, Col, Row, InputNumber, Checkbox} from 'antd';
 
 class CreateEvent extends Component {
 	constructor(props) {
@@ -18,6 +18,7 @@ class CreateEvent extends Component {
             "playlist": null,
             "event_date": new Date(),
             "date": "",
+            "format_date": '',
             "public": true,
             "location": { "address" : {"p": "","v": "","cp": "","r": "","n": 0}, "coord": {}},
             'imageUrl': '',
@@ -62,24 +63,29 @@ class CreateEvent extends Component {
     info = (text) => {
         message.info(text);
     };
-	handleSubmit = event => {
+    handleSubmit = event => {
+        event.preventDefault();
         if (!this.state.description || !this.state.title || !this.state.event_date || !this.state.location.coord)
             this.info("Error input invalid")
-        event.preventDefault();
-        let data = new FormData();
+        let data = new FormData();    
         if (this.state.infoFile && this.state.infoFile.file && this.state.infoFile.file.originFileObj)
-         data.append('file', this.state.infoFile.file.originFileObj);
-        delete this.state.imageUrl
-        delete this.state.loading
-        delete this.state.infoFile
-
+            data.append('file', this.state.infoFile.file.originFileObj);
+        
         axios.get(process.env.REACT_APP_API_URL + '/user/me', {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
         .then((resp) => {
-            this.setState({creator: resp.data});
-            data.append('body', JSON.stringify(this.state));
+            this.event = {
+                "creator"       : resp.data,
+                "title"         : this.state.title,
+                "description"   : this.state.description,
+                "playlist"      : this.state.playlist,
+                "event_date"    : this.state.event_date,
+                "date"          : new Date(),
+                "public"        : this.state.public,
+                "location"      : this.state.location
+            }
+            data.append('body', JSON.stringify(this.event));
             axios.post(process.env.REACT_APP_API_URL + '/event/',  data)
             .then((resp) => { 
-                console.log("Create Event : handleSubmit :/event Success");
                 this.info("Evènement crée")
                 this.props.updateParent({'currentComponent' : "event"})
             })
@@ -87,22 +93,21 @@ class CreateEvent extends Component {
         })
         .catch((err) => { console.log("Create Event : handleSubmit : /user/me Error : ", err); })  
     }
-    
-    handleChange = event => {
-        if (event.target.name && event.target.name === "public")
-         this.setState({"public":!this.state[event.target.name]})   
-        else this.setState({[event.target.name]: event.target.value});
+    handleChange = event => { 
+        this.setState({[event.target.name]: event.target.value});
     }
 
-    handleChangeDate = (date, dateString) => {
-        this.setState({'event_date': dateString})
+    handleChangeDate = (value, dateString) => {
+        console.log("Value : ", value, dateString)
+        this.setState({'event_date':  dateString})
+        this.setState({'format_date':  this.formatDateAnnounce(dateString)})
     }
 
-    info = (text) => {
+    info = text => {
         message.info(text);
       };
 
-    handlePicture = (info) => {
+    handlePicture = info => {
         this.setState({infoFile: info})
         if (info.file.status === 'uploading') {
           this.setState({loading:true});
@@ -117,7 +122,7 @@ class CreateEvent extends Component {
         reader.readAsDataURL(img);
       }
       
-    beforeUpload = (file) => {
+    beforeUpload = file => {
         const isJPG = file.type === 'image/jpeg';
         if (!isJPG) message.error('You can only upload JPG file!');
         const isLt2M = file.size / 1024 / 1024 < 2;
@@ -126,8 +131,12 @@ class CreateEvent extends Component {
       }
 
     resetPicture = () => {
-        console.log("JE SUIS IC ")
         this.setState({infoFile:null, imageUrl: null, loadind:false})
+    }
+    formatDateAnnounce = (date) => {
+        let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        let ret = "Le : " + new Date(date).toLocaleDateString('fr-Fr', options) + ' à ' + date.split(" ")[1];
+        return (ret)
     }
 	render = () => {
         console.log("createEvent component");
@@ -142,17 +151,13 @@ class CreateEvent extends Component {
         return (
             <Layout >
                 <Row>
-                    <Col span={8}>
-                        <a href="#!" className="btn waves-effect waves-teal" onClick={() => this.props.updateParent({'currentComponent': 'event'})}>Back</a>
-                    </Col>
+                    <Col span={8}> <a href="#!" className="btn waves-effect waves-teal" onClick={() => this.props.updateParent({'currentComponent': 'event'})}>Back</a> </Col>
 			    </Row>
                 <Content>
                     {
-                        this.state.imageUrl ?
-                            null
-                            :
+                        this.state.imageUrl ? null :
                             <Row>
-                                <Col span={8}></Col>
+                                <Col span={8}/>
                                 <Col span={8}>
                                     <div style={{'margin': '0 0 0 25% '}}>
                                         <Upload name="file" listType="picture-card" className="avatar-uploader" showUploadList={false} beforeUpload={this.beforeUpload} onChange={this.handlePicture} >
@@ -166,7 +171,7 @@ class CreateEvent extends Component {
                     {
                         this.state.imageUrl ?
                             <Row>
-                                <Col span={8}></Col>
+                                <Col span={8}/>
                                 <Col span={8}>
                                     <div style={{'textAlign': 'center', 'margin': '0 0 0 12% '}}>
                                         <Card.Meta avatar={ <Avatar  size={448}src={this.state.imageUrl} alt="avatar" />}/>
@@ -195,18 +200,28 @@ class CreateEvent extends Component {
                         <Col span={11}></Col>
                         <Col span={2}>
                             <div style={{'margin': '0 0 0 12% '}}>
-                                <Select name= "public" value={this.state.public ? "true" : "false"} onChange={this.handleChange}>
-                                    <Select.Option value='true' >Public</Select.Option>
-                                    <Select.Option value='false'>Privé</Select.Option>
-                                </Select>
+                                <Checkbox onChange={this.handleChange}>Public</Checkbox>
                             </div>
                             <Divider />
                         </Col>
                     </Row>
                     <Row>
-                        <Col span={10}></Col>
-                        <Col span={4}>
-                            <div style={{'margin': '0 0 0 12% '}}> <DatePicker className="datePicker" onChange={this.handleChangeDate} /> </div>
+                        <Col span={8}></Col>
+                        <Col span={10}>
+                        <Row>
+                            <Col span={10} >
+                            <DatePicker
+                                    name="event_date"
+                                    showTime
+                                    format="YYYY-MM-DD HH:mm:ss"
+                                    placeholder="Select Time"
+                                    onChange={this.handleChangeDate}
+                                />
+                            </Col>
+                            <Col span={12} style={{margin: '3% 0 0 0'}}>
+                               <b> {this.state.format_date} </b>
+                            </Col>
+                        </Row>
                             <Divider />
                         </Col>
                     </Row>
