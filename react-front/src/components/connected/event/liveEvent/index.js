@@ -121,7 +121,15 @@ const reorder = (list, startIndex, endIndex) => {
 
 		return(
             <div>
-                {this.state.playlist.tracks.data.length > 0 && <PersonalPlayer  tracks={this.state.playlist.tracks.data}></PersonalPlayer>}
+                <Row>
+                    <Col span={24}>
+                        {this.state.playlist.tracks.data.length > 0 && <PersonalPlayer  tracks={this.state.playlist.tracks.data}></PersonalPlayer>}
+                    </Col>
+                </Row>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
                 <Row>
                     <Col span={6}>
                     </Col>
