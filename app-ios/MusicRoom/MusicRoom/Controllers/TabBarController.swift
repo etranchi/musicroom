@@ -61,6 +61,7 @@ class TabBarController: UITabBarController {
     }
     
     fileprivate func setupTabBarController() {
+        songDetail.root = self
         playerController.rootViewController = self
         playerController.minimizedPlayer = minimizedPlayer
         //addChild(playerController)

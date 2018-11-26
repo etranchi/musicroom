@@ -104,9 +104,11 @@ class APIManager: NSObject, URLSessionDelegate {
     }
     
     func addTrackToPlaylist(_ playListId: String, _ track: Track) {
-        let playlistsUrl = self.url + "playlist/\(playListId)/track"
+        let playlistsUrl = self.url + "playlist/\(playListId)/\(track.id)"
         let postString = "id=\(track.id)"
+        print(postString)
         var addSongToPlaylistRequest = URLRequest(url: URL(string: playlistsUrl)!)
+        print(playlistsUrl)
         addSongToPlaylistRequest.httpMethod = "PUT"
         addSongToPlaylistRequest.addValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
         addSongToPlaylistRequest.httpBody = postString.data(using: .utf8)

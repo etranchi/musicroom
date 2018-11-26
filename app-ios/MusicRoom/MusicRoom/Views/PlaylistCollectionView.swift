@@ -10,6 +10,7 @@ import UIKit
 
 class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     var isEditing = false
+    var isAddingSong = false
     var playlists: [Playlist]
     let rootTarget: PlaylistController?
     private let playlistCellId = "playlistCellId"
@@ -61,6 +62,9 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
         if isEditing {
             apiManager.deletePlaylist(cell.playlist._id, rootTarget)
             return
+        }
+        if isAddingSong {
+            rootTarget?.addSongToPlaylist(cell.playlist)
         }
         let vc = PlaylistDetailController(playlists[indexPath.item], cell.imageView.image!)
         rootTarget?.navigationController?.pushViewController(vc, animated: true)

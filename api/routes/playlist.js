@@ -12,7 +12,6 @@ router.get('/',
     middlewares.isConfirmed,
     playlistController.getPlaylistsByUser);
 
-
 router.get('/:id',
     passport.authenticate('bearer'),
     middlewares.isConfirmed,
@@ -33,7 +32,7 @@ router.put('/:id',
     middlewares.isConfirmed,
     playlistController.putPlaylistById);
 
-router.put('/:id/track',
+router.put('/:id/:trackId',
     passport.authenticate('bearer'),
     middlewares.isConfirmed,
     playlistController.addTrackToPlaylistById);
