@@ -8,5 +8,5 @@
 	* to launch the react-front `cd react-front && npm install && npm start` (dont forget to install globally react-scripts `npm install -g react-scripts`)
 
 * ACCESS THE CONTAINER:
-	* docker exec -it <container-id> /bin/bash
+	* docker exec -it c79bf5491c08 /bin/bash
 

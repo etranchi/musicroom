@@ -7,7 +7,6 @@ const passport = require('passport');
 const middlewares = require('../modules/middlewares');
 const playlistController = require('../controllers/playlist');
 
-
 router.get('/',
     passport.authenticate('bearer'),
     middlewares.isConfirmed,

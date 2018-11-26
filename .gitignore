@@ -19,3 +19,5 @@ react-front/.env.production.local
 react-front/npm-debug.log*
 react-front/yarn-debug.log*
 react-front/yarn-error.log*
+
+app-ios/MusicRoom/MusicRoom.xcodeproj/project.xcworkspace/xcuserdata/
