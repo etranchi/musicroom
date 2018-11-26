@@ -88,6 +88,7 @@ class MapController: UIViewController {
     
     @objc func createEvent() {
         let dest = EventController()
+        dest.locationManager = locationManager
         dest.selectedPin = selectedPin
         self.navigationController?.pushViewController(dest, animated: true)
         

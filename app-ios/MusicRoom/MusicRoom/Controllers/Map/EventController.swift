@@ -16,7 +16,7 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
     var resultSearchController:UISearchController? = nil
     var searchBar : UISearchBar?
     var urlImageToString : URL?
-    var locationManager = CLLocationManager()
+    var locationManager : CLLocationManager?
     var selectedPin:MKPlacemark? = nil
     var scrollView : UIScrollView? = nil
     var myPosition: CLLocationCoordinate2D?
@@ -89,7 +89,7 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
     func getCenter() {
         
         if myPosition == nil {
-            myPosition = locationManager.location?.coordinate
+            myPosition = locationManager!.location?.coordinate
         }
         
         if let pin = selectedPin, let me = myPosition {
@@ -129,21 +129,12 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.requestAlwaysAuthorization()
-        locationManager.requestLocation()
-        locationManager.startUpdatingLocation()
-        
-        
-        
         titleTF.delegate = self
         descriptionTV.delegate = self
         scrollView = UIScrollView(frame: self.view.frame)
         scrollView!.delegate = self
-        scrollView!.bounces = false
-        scrollView!.contentSize.height = self.view.frame.size.height * 2
+        scrollView!.alwaysBounceVertical = true
+        scrollView?.contentInset = UIEdgeInsets(top: 14, left: 0, bottom: 1130, right: 0)
         self.view.addSubview(scrollView!)
         imagePicker.delegate = self
         let button = UIButton()
@@ -267,9 +258,14 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
                 let event = Event(_id : nil, creator : user, title: self.titleTF.text!, description: self.descriptionTV.text!, location: location, visibility: self.segmentedBar.selectedSegmentIndex, shared: self.segmentedBar.selectedSegmentIndex == 0 ? true : false , creationDate: String(describing: Date()), date: String(describing: Date()), playlist: self.playlistView?.selectedPlaylist!, members: [], adminMembers: [], picture : nil)
                 apiManager.postEvent((myUser?.token)!, event: event, img: self.imageView.image!) { (resp) in
                     if resp {
-                        self.navigationController?.popViewController(animated: true)
                         let vc = self.navigationController?.viewControllers[0] as! MapController
+                        vc.mapView.removeAnnotations(vc.mapView.annotations)
+                        vc.selectedPin = nil
                         vc.printToastMsg()
+                        vc.getAllEvents()
+                        self.navigationController?.popViewController(animated: true)
+                        
+                        
                     } else {
                         ToastView.shared.short(self.view, txt_msg: "Error while creating your event", color : UIColor.red)
                     }
@@ -362,26 +358,4 @@ extension EventController : MKMapViewDelegate {
     }
 }
 
-extension EventController : CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        if status == .authorizedWhenInUse {
-            locationManager.requestLocation()
-        }
-        if status == .authorizedAlways {
-            locationManager.requestLocation()
-        }
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-/*        if let location = locations.first {
-            let span = MKCoordinateSpanMake(0.05, 0.05)
-            let region = MKCoordinateRegion(center: location.coordinate, span: span)
-            mapView.setRegion(region, animated: true)
-        }*/
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("error:: \(error)")
-        print(error.localizedDescription)
-    }
-}
+

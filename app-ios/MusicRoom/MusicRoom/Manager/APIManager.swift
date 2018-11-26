@@ -134,8 +134,8 @@ class APIManager: NSObject, URLSessionDelegate {
         let playlistsUrl = self.url + "playlist"
         var playlistsRequest = URLRequest(url: URL(string: playlistsUrl)!)
         playlistsRequest.httpMethod = "GET"
-        print(userManager.currentUser?.token!)
-        playlistsRequest.addValue("Bearer \(userManager.currentUser?.token!)", forHTTPHeaderField: "Authorization")
+        print((userManager.currentUser?.token)!)
+        playlistsRequest.addValue("Bearer \((userManager.currentUser?.token)!)", forHTTPHeaderField: "Authorization")
         self.searchAll([Playlist].self, request: playlistsRequest, completion: { (playlists) in
             completion(playlists)
         })
@@ -327,7 +327,6 @@ class APIManager: NSObject, URLSessionDelegate {
         } catch (let err) {
             print(err.localizedDescription)
         }
-        
     }
     
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
