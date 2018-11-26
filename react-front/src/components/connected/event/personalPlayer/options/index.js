@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import './styles.css';
-import {Layout, Row, Col, Icon, Progress} from 'antd';
+import {Row, Col,Progress} from 'antd';
 
 
-const {Content } = Layout;
 const { DZ } = window
 export default class PersonalPlayer extends Component {
 

@@ -12,10 +12,13 @@ class PlaylistController: UIViewController {
     
     var playlistCollectionView: PlaylistCollectionView?
     var firstLoad = true
+    var isAddingSong = false
+    var track: Track?
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         navigationController?.navigationBar.topItem?.title = ""
+        reloadPlaylists()
         title = "Playlists"
     }
     
@@ -32,14 +35,21 @@ class PlaylistController: UIViewController {
         self.playlistCollectionView?.reloadData()
     }
     
+    let cancelButton: UIButton = {
+        let button = UIButton()
+        button.setAttributedTitle(NSAttributedString(string: "Cancel", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white, .font: UIFont.systemFont(ofSize: 14, weight: .medium)]), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = UIColor(white: 0.1, alpha: 1)
         print(userManager.currentUser!.token!)
         setupView()
-        reloadPlaylists()
     }
+    
     
     func reloadPlaylists() {
         apiManager.getUserPlaylists { (playlists) in
@@ -52,15 +62,38 @@ class PlaylistController: UIViewController {
         }
     }
     
+    func addSongToPlaylist(_ playlist: Playlist) {
+        if let song = track {
+            apiManager.addTrackToPlaylist(playlist._id!, song)
+        }
+        handleCancel()
+    }
+    
+    @objc func handleCancel() {
+        dismiss(animated: true, completion: nil)
+    }
+    
     func setupView() {
+        cancelButton.addTarget(self, action: #selector(handleCancel), for: .touchUpInside)
         playlistCollectionView = PlaylistCollectionView([], .vertical, self)
         playlistCollectionView?.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(playlistCollectionView!)
+        view.addSubview(cancelButton)
         NSLayoutConstraint.activate([
             playlistCollectionView!.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             playlistCollectionView!.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             playlistCollectionView!.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            playlistCollectionView!.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -45)
+            playlistCollectionView!.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -45),
+            
+            cancelButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            cancelButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            cancelButton.widthAnchor.constraint(equalToConstant: 300),
+            cancelButton.heightAnchor.constraint(equalToConstant: 30),
         ])
+        if isAddingSong == false {
+            cancelButton.isHidden = true
+        } else {
+            playlistCollectionView?.isAddingSong = true
+        }
     }
 }

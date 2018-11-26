@@ -12,6 +12,7 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
     var isEditing = false
     var selectedPlaylist : Playlist?
     var eventCreation : Bool = false
+    var isAddingSong = false
     var playlists: [Playlist]
     let rootTarget: PlaylistController?
     var selectedCell : PlaylistCell?
@@ -79,21 +80,12 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
                 apiManager.deletePlaylist(String(describing: cell.playlist._id!), rootTarget)
             }
             return
+        } else if isAddingSong {
+            rootTarget?.addSongToPlaylist(cell.playlist)
+            return
         }
-        if rootTarget != nil {
-            let current = playlists[indexPath.item]
-            if current._id == nil {
-                apiManager.getDeezerPlaylistById(current.id!, completion: { (res) in
-                    let vc = PlaylistDetailController(res, cell.imageView.image!, (self.rootTarget?.view)!)
-                    self.rootTarget?.navigationController?.pushViewController(vc, animated: true)
-                    return
-                })
-            }
-            else {
-                let vc = PlaylistDetailController(playlists[indexPath.item], cell.imageView.image!, (rootTarget?.view)!)
-                rootTarget?.navigationController?.pushViewController(vc, animated: true)
-            }
-        }
+        let vc = PlaylistDetailController(playlists[indexPath.item], cell.imageView.image!, collectionView)
+        rootTarget?.navigationController?.pushViewController(vc, animated: true)
     }
     
 

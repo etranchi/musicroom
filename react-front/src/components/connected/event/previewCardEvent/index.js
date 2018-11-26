@@ -11,7 +11,6 @@ class PreviewCardEvent extends Component {
 
     this.state = {
         visible: false,
-        
     }
 
     }
@@ -29,10 +28,12 @@ class PreviewCardEvent extends Component {
         this.props.updateParent({'currentComponent': 'cardEvent', 'data': this.props.state.data})
     }
 
-    componentWillMount = () => {
+    componentDidMount = () => {
+        console.log("component preview card mount");
         this.distance = this.getDistance(this.props.state.data.userCoord, this.props.event.location.coord).toFixed(0)
         this.date = this.props.event.event_date ? this.formatDateAnnounce(this.props.event.event_date) : "Inconnue"
     }
+
     openMap(val){
         let calc = geolib.getDistanceSimple(
             {latitude: this.props.state.data.userCoord.lat, longitude: this.props.state.data.userCoord.lng},
@@ -65,8 +66,8 @@ class PreviewCardEvent extends Component {
         else if (timeBeforeEvent === weekTimeStamp) return ("In one week")
         else {
            let day = Math.round(timeBeforeEvent / dayTimeStamp)
-            if (day == 1) return ('Tomorow')
-            else if (day == 0) return ("Today")
+            if (day === 1) return ('Tomorow')
+            else if (day === 0) return ("Today")
             else return ("In " + day + 'days')
         }
     }
@@ -76,6 +77,7 @@ class PreviewCardEvent extends Component {
         axios.delete(process.env.REACT_APP_API_URL + '/event/'+ this.props.event._id, {headers:{Authorization: 'Bearer ' + localStorage.getItem('token')}})
         .then(resp => {
             console.log(resp);
+            this.props.getEvents();
             console.log('deleted soit disant');
         })
         .catch(err => {

@@ -1,16 +1,11 @@
 import React, { Component } from 'react';
 import './styles.css';
-import { Layout, Row, Col, Icon, List, Skeleton, Avatar} from 'antd';
+import { Layout, Row, Col, List, Skeleton, Avatar} from 'antd';
 
 
 const {Content}  = Layout
 
 export default  class liveEvent extends Component {
-	constructor(props) {
-        super(props);
-    }
-
-
 	render() {
         const picture   = this.props.track.album.cover_medium
         const title     = this.props.track.title_short
@@ -31,7 +26,7 @@ export default  class liveEvent extends Component {
                                     title={<p className="Ffamily" style={{fontSize:'28px', margin:'10% 0 0 0'}}> {title} </p>}
                                     description={artist}
                                 />
-                                <div> { this.props.track.like? this.props.track.like: 0}</div>
+                                <div> { this.props.track.like? this.props.track.like: 0 }</div>
                             </Skeleton>
                         </List.Item>
                         </Col>

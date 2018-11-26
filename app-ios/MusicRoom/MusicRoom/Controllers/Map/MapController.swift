@@ -167,17 +167,12 @@ extension MapController : MKMapViewDelegate {
             UIApplication.shared.isNetworkActivityIndicatorVisible = true
             queue.async {
                 if let a = annotation as? MyAnnotation {
-                    apiManager.getImgEvent(a.imagePath!) { img in
-                        if img != nil {
-                            DispatchQueue.main.async {
-                                button.setImage(img, for: .normal)
-                                button.addTarget(self, action: #selector(self.goToEventDescription), for: .touchUpInside)
-                                activityView.stopAnimating()
-                                UIApplication.shared.isNetworkActivityIndicatorVisible = false
-                                
-                            }
-                        }
-                    }
+                    let imageView = UIImageView()
+                    imageView.loadImageUsingCacheWithUrlString(urlString: a.imagePath!)
+                    button.setImage(imageView.image, for: .normal)
+                    button.addTarget(self, action: #selector(self.goToEventDescription), for: .touchUpInside)
+                    activityView.stopAnimating()
+                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
                 }
             }
         }

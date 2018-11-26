@@ -9,8 +9,8 @@
 import UIKit
 
 class SongDetailView: UIView {
-    
-    var playlistView : PlaylistCollectionView?
+    var root: UIViewController?
+    var playlistView: PlaylistCollectionView?
     var track: Track? {
         didSet {
             titleLabel.text = track!.title
@@ -119,8 +119,13 @@ class SongDetailView: UIView {
     }()
     
     @objc func handleAddToPlaylist() {
-        playlistView?.isHidden = (playlistView?.isHidden)!
-        print("track to add to a playlist")
+        let vc = PlaylistController()
+        hideView()
+        vc.isAddingSong = true
+        vc.track = track
+        if let r = root {
+            r.present(vc, animated: true, completion: nil)
+        }
     }
     
     @objc func handleAddToSongs() {
@@ -261,19 +266,19 @@ class SongDetailView: UIView {
             imageView.heightAnchor.constraint(equalToConstant: size),
             
             titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 20),
-            titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            titleLabel.widthAnchor.constraint(equalToConstant: size),
+            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
             titleLabel.heightAnchor.constraint(lessThanOrEqualToConstant: 40),
             
             authorLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
-            authorLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            authorLabel.widthAnchor.constraint(equalToConstant: size),
+            authorLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+            authorLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
             authorLabel.heightAnchor.constraint(equalToConstant: 15),
             
-            containerView.topAnchor.constraint(equalTo: authorLabel.bottomAnchor, constant: 40),
-            containerView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            containerView.widthAnchor.constraint(equalToConstant: size),
-            containerView.heightAnchor.constraint(equalToConstant: 88)
+            containerView.topAnchor.constraint(equalTo: authorLabel.bottomAnchor, constant: 60),
+            containerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+            containerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            containerView.heightAnchor.constraint(equalToConstant: 64)
         ])
         addButtons()
         self.detailView.transform = CGAffineTransform(translationX: 0, y: self.bounds.height)

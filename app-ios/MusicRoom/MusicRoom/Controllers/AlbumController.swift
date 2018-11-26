@@ -93,6 +93,12 @@ class AlbumController: UITableViewController {
         updateHeaderView()
     }
     
+    func handleSongDetail(_ track: Track) {
+        songDetail.track = track
+        songDetail.imageView.image = albumCover
+        songDetail.showView()
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: songCellId, for: indexPath) as! AlbumTrackListCell
     
@@ -100,6 +106,7 @@ class AlbumController: UITableViewController {
         cell.track = tracks?[indexPath.row]
         cell.authorLabel.text = album.artist?.name
         cell.selectionStyle = .none
+        cell.rootController = self
         return cell
     }
     

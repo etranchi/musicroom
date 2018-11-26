@@ -2,6 +2,7 @@
 
 const playlistModel = require('../models/playlist');
 
+this.rooms = [];
 
 this.sortTracksByScore = (tracks) => {
     tracks.sort((a, b) => { return a.like < b.like ? 1 : -1 })
@@ -15,27 +16,59 @@ module.exports = {
             return err
         }
     },
-    updateScore: async (tracks, id, points) => {
-        tracks.forEach(track => {  if (track._id === id)  track.like += points });
-        return this.sortTracksByScore(tracks)
-    },
-    manageRoom: async(rooms, roomID, tracks) => {
+    updateScore: (room, trackID, points) => {
+        console.log()
+        room.tracks.forEach((track) => {
+            if (track._id === trackID) 
+            {
+                console.log("Like ")
+                track.like += points 
+            }
+        })
 
-        if (rooms) {
-            rooms.forEach((room) => {
-                if (room.id === roomID)
-                return rooms
-            })
-            return {id:roomID, tracks:this.sortTracksByScore(tracks)}
+        room.tracks.forEach((track) => {
+            console.log('update Score : ', track.like)
+
+        })
+        return room
+    },
+    updateRoom: (tmpRoom) => {
+        let ret;
+        this.rooms.forEach((room) => {
+            if (room.id === tmpRoom.id) {
+                room.tracks = this.sortTracksByScore(tmpRoom.tracks)
+                ret = room;
+            }
+        })
+
+        ret.tracks.forEach((track) => {
+            console.log('update Room : ',track.like)
+
+        })
+        return ret
+    },
+    createRoom: (roomID, tracks) => {
+        let room = {
+            id: roomID,
+            tracks: this.sortTracksByScore(tracks)
+        };
+        room.tracks.forEach((track) => {
+            track.like = 0;
+        })
+        this.rooms.push(room)
+        return room
+    },
+    getRoom: (roomID) => {
+        if (this.rooms) {
+           let ret;
+           this.rooms.forEach((room) => {
+                if (room.id === roomID) {
+                    ret = room
+                }
+            });
+            return ret
         }
-        else
-            return null;
-    },  
-    isRoom: async (rooms, roomID) => {
-        rooms.forEach((room) => {
-            if (room.id === roomID)
-                return true;
-        });
-        return false;
+        console.log("get room return null")
+        return null;
     }
 };

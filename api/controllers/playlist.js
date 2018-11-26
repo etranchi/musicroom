@@ -78,8 +78,6 @@ module.exports = {
 	postPlaylist: async (req, res) => {
 		console.log('posting playlist');
 		try {
-			console.log("Body SWIFT -> ")
-			console.log(req.body)
 			req.body.idUser = req.user._id
 			if (!req.body.creator)
 			{
