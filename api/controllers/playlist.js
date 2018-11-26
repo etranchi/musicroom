@@ -154,7 +154,10 @@ module.exports = {
 		}
 	},
 	deleteTrackPlaylistById: async (req, res) => {
+		
 		try {
+			console.log("Body SWIFT -> ")
+			console.log(req.body)
 			if (!Number(req.params.id)) {
 				await playlistModel.updateOne({_id: req.params.id, idUser: req.user._id},
 					{$pull: {'tracks.data': {id: req.params.trackId}}}
