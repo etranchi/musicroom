@@ -80,8 +80,11 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
                 apiManager.deletePlaylist(String(describing: cell.playlist._id!), rootTarget)
             }
             return
+        } else if isAddingSong {
+            rootTarget?.addSongToPlaylist(cell.playlist)
+            return
         }
-        let vc = PlaylistDetailController(playlists[indexPath.item], cell.imageView.image!)
+        let vc = PlaylistDetailController(playlists[indexPath.item], cell.imageView.image!, collectionView)
         rootTarget?.navigationController?.pushViewController(vc, animated: true)
     }
     

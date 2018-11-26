@@ -134,8 +134,8 @@ class APIManager: NSObject, URLSessionDelegate {
         let playlistsUrl = self.url + "playlist"
         var playlistsRequest = URLRequest(url: URL(string: playlistsUrl)!)
         playlistsRequest.httpMethod = "GET"
-        print(userManager.currentUser?.token!)
-        playlistsRequest.addValue("Bearer \(userManager.currentUser?.token!)", forHTTPHeaderField: "Authorization")
+        print(userManager.currentUser!.token!)
+        playlistsRequest.addValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
         self.searchAll([Playlist].self, request: playlistsRequest, completion: { (playlists) in
             completion(playlists)
         })
@@ -175,15 +175,10 @@ class APIManager: NSObject, URLSessionDelegate {
     }
     
     func addTrackToPlaylist(_ playListId: String, _ track: Track) {
-        let playlistsUrl = self.url + "playlist/\(playListId)/\(track.id)"
-        let postString = "id=\(track.id)"
-        print(postString)
-        var addSongToPlaylistRequest = URLRequest(url: URL(string: playlistsUrl)!)
-        print(playlistsUrl)
-        addSongToPlaylistRequest.httpMethod = "PUT"
-        addSongToPlaylistRequest.addValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
-        addSongToPlaylistRequest.httpBody = postString.data(using: .utf8)
-        URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: addSongToPlaylistRequest).resume()
+        let postEventUrl = self.url + "playlist/\(playListId)/track"
+        let parameter : Parameters = ["id" : "\(track.id)"]
+        let headers : HTTPHeaders = ["Authorization": "Bearer \(userManager.currentUser!.token!)"]
+        APIManager.Manager.request(postEventUrl, method: .put, parameters: parameter, encoding: URLEncoding.default, headers: headers)
     }
     
     func deleteTrackFromPlaylist(_ playListId: String, _ track: Track, target: PlaylistDetailController?) {
@@ -313,7 +308,7 @@ class APIManager: NSObject, URLSessionDelegate {
                 switch result{
                 case .success(let upload, _, _):
                     upload.responseJSON { response in
-                        if let err = response.error {
+                        if response.error != nil {
                             onCompletion(false)
                             return
                         }
@@ -345,7 +340,6 @@ class APIManager: NSObject, URLSessionDelegate {
             }
             if let d = data {
                 do {
-                    print("J'ai tous")
                     let dic = try JSONDecoder().decode(myType.self, from: d)
                     DispatchQueue.main.async {
                         completion(dic)

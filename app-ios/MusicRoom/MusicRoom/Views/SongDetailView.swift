@@ -10,6 +10,7 @@ import UIKit
 
 class SongDetailView: UIView {
     var root: UIViewController?
+    var playlistView: PlaylistCollectionView?
     var track: Track? {
         didSet {
             titleLabel.text = track!.title

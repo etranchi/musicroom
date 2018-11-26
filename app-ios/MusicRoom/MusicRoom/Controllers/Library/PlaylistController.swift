@@ -64,7 +64,7 @@ class PlaylistController: UIViewController {
     
     func addSongToPlaylist(_ playlist: Playlist) {
         if let song = track {
-            apiManager.addTrackToPlaylist(playlist._id, song)
+            apiManager.addTrackToPlaylist(playlist._id!, song)
         }
         handleCancel()
     }

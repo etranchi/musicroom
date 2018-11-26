@@ -107,12 +107,10 @@ module.exports = {
 	},
 	addTrackToPlaylistById: async (req, res) => {
 		try {
-			console.log("Body SWIFT -> ")
-			console.log(req.body)
 			if (!Number(req.params.id)) {
 				let options = {
 					method: 'GET',
-					uri: config.deezer.apiUrl + '/track/' + req.params.trackId,
+					uri: config.deezer.apiUrl + '/track/' + req.body.id,
 					json: true
 				};
 				let track = await request(options)
@@ -133,7 +131,7 @@ module.exports = {
 					json: true,
 					qs: {
 						"access_token": req.user.deezerToken,
-						"songs": req.params.trackId
+						"songs": req.body.id
 					}
 				};
 				playlist = await request(options)
