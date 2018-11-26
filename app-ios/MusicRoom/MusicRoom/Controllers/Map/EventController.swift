@@ -253,16 +253,17 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
             // pays ville codepostale rue numero
             let address = Address(p: (selectedPin?.administrativeArea)!, v: (selectedPin?.locality)!, cp: (selectedPin?.isoCountryCode)!, r: (selectedPin?.thoroughfare)!, n: (selectedPin?.subThoroughfare)!)
             let location = Location(address: address, coord: coord)
-            let dataImg = NSData(contentsOf: urlImageToString!)
+
             apiManager.getMe((myUser?.token)!, completion: { (user) in
                 let event = Event(_id : nil, creator : user, title: self.titleTF.text!, description: self.descriptionTV.text!, location: location, visibility: self.segmentedBar.selectedSegmentIndex, shared: self.segmentedBar.selectedSegmentIndex == 0 ? true : false , creationDate: String(describing: Date()), date: String(describing: Date()), playlist: self.playlistView?.selectedPlaylist!, members: [], adminMembers: [], picture : nil)
                 apiManager.postEvent((myUser?.token)!, event: event, img: self.imageView.image!) { (resp) in
                     if resp {
                         let vc = self.navigationController?.viewControllers[0] as! MapController
-                        vc.mapView.removeAnnotations(vc.mapView.annotations)
                         vc.selectedPin = nil
+                        vc.mapView.removeAnnotations(vc.mapView.annotations)
                         vc.printToastMsg()
                         vc.getAllEvents()
+                        
                         self.navigationController?.popViewController(animated: true)
                         
                         

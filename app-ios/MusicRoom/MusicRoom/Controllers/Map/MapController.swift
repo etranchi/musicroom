@@ -15,15 +15,12 @@ class MapController: UIViewController {
     var resultSearchController:UISearchController? = nil
     var selectedPin:MKPlacemark? = nil
     var events : [Event]?
-    var queue : DispatchQueue {
-        let qos = DispatchQoS.background.qosClass
-        return DispatchQueue.global(qos: qos)
-    }
     
     let mapView : MKMapView = {
         let mk = MKMapView()
         return mk
     }()
+    
     func getAllEvents() {
         apiManager.getEvents(completion: { res in
             if res.count > 0 {
@@ -34,7 +31,7 @@ class MapController: UIViewController {
                         annotation.coordinate = CLLocationCoordinate2DMake(ev.location.coord.lat, ev.location.coord.lng)
                         annotation.title = ev.title
                         annotation.identifier = ev._id
-                        annotation.imagePath = ev.picture
+                        annotation.imagePath = ev.picture!
                         let city = ev.location.address.p
                         let state = ev.location.address.v
                         annotation.subtitle = "\(city) \(state)"
@@ -165,16 +162,25 @@ extension MapController : MKMapViewDelegate {
         } else {
             pinView?.pinTintColor = UIColor.red
             UIApplication.shared.isNetworkActivityIndicatorVisible = true
-            queue.async {
-                if let a = annotation as? MyAnnotation {
-                    let imageView = UIImageView()
-                    imageView.loadImageUsingCacheWithUrlString(urlString: a.imagePath!)
-                    button.setImage(imageView.image, for: .normal)
-                    button.addTarget(self, action: #selector(self.goToEventDescription), for: .touchUpInside)
-                    activityView.stopAnimating()
-                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
-                }
+            
+            if let a = annotation as? MyAnnotation {
+                apiManager.getImgEvent(a.imagePath!, completion: { (image) in
+                    print("je suis la")
+                    print(image)
+                    if image != nil {
+                        DispatchQueue.main.async {
+                            button.setImage(image, for: .normal)
+                            button.addTarget(self, action: #selector(self.goToEventDescription), for: .touchUpInside)
+                            activityView.stopAnimating()
+                            activityView.removeFromSuperview()
+                            UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                        }
+                        
+                    }
+                })
+                
             }
+        
         }
         pinView?.canShowCallout = true
         pinView?.leftCalloutAccessoryView = button
@@ -187,19 +193,8 @@ extension MapController: HandleMapSearch {
     func dropPinZoomIn(placemark:MKPlacemark){
         // cache the pin
         for annotation in mapView.selectedAnnotations {
+            mapView.removeAnnotation(annotation)
             mapView.deselectAnnotation(annotation, animated: true)
-        }
-        if selectedPin != nil {
-            let remove = mapView.annotations.first { (annotation) -> Bool in
-                if annotation.title! == selectedPin!.name && annotation.coordinate.latitude == selectedPin!.coordinate.latitude && annotation.coordinate.longitude == selectedPin!.coordinate.longitude {
-                    return true
-                } else {
-                    return false
-                }
-            }
-            if remove != nil {
-                mapView.removeAnnotation(remove!)
-            }
         }
         selectedPin = placemark
         let annotation = MKPointAnnotation()

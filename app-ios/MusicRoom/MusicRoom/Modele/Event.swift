@@ -47,3 +47,9 @@ struct Event : Codable {
         case creator, title, description, location, visibility, playlist, members, adminMembers, picture, _id
     }
 }
+
+struct DataEvent : Codable {
+    let myEvents : [Event]
+    let friendEvents : [Event]
+    let allEvents : [Event]
+}

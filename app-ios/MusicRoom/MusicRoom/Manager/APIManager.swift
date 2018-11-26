@@ -264,8 +264,8 @@ class APIManager: NSObject, URLSessionDelegate {
         let eventsUrl = self.url + "event"
         var request = URLRequest(url: URL(string: eventsUrl)!)
         request.httpMethod = "GET"
-        self.searchAll([Event].self, request: request) { (res) in
-            completion(res)
+        self.searchAll(DataEvent.self, request: request) { (res) in
+            completion(res.allEvents)
         }
     }
     
@@ -332,7 +332,6 @@ class APIManager: NSObject, URLSessionDelegate {
     
     func searchAll<T: Decodable>(_ myType: T.Type, request: URLRequest, completion: @escaping (T) -> ())
     {
-        let config = URLSessionConfiguration()
         URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: request) { (data, response, err) in
             if err != nil {
                 print("error while requesting")
