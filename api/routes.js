@@ -17,6 +17,7 @@ router.use('/playlist', playlist);
 
 router.use('/search', search);
 
+
 router.use('/album', album);
 
 module.exports = router;
