@@ -19,10 +19,10 @@ class PlaylistDetailController: UITableViewController {
     
     private let headerHeight: CGFloat = 200
     
-    init(_ playlist: Playlist, _ playlistCover: UIImage) {
+    init(_ playlist: Playlist, _ playlistCover: UIImage, _ root : UIView) {
         self.playlist = playlist
         self.playlistCover = playlistCover
-        self.tracks = playlist.tracks.data
+        self.tracks = playlist.tracks != nil ? playlist.tracks!.data : []
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -105,9 +105,13 @@ class PlaylistDetailController: UITableViewController {
     }
     
     func deleteTrackFromPlaylist(track: Track, index: IndexPath) {
-        apiManager.deleteTrackFromPlaylist(playlist._id, track, target: self)
-        tracks.remove(at: index.row)
-        tableView.deleteRows(at: [index], with: .fade)
+        if playlist._id != nil {
+            apiManager.deleteTrackFromPlaylist(String(describing: playlist._id!), track, target: self)
+            tracks.remove(at: index.row)
+            tableView.deleteRows(at: [index], with: .fade)
+        } else {
+            ToastView.shared.short(self.view, txt_msg: "Can't modify deezer playlsit", color: UIColor.red)
+        }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

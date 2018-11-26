@@ -15,11 +15,14 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
     let imagePicker = UIImagePickerController()
     var resultSearchController:UISearchController? = nil
     var searchBar : UISearchBar?
+    var urlImageToString : URL?
     var locationManager = CLLocationManager()
     var selectedPin:MKPlacemark? = nil
     var scrollView : UIScrollView? = nil
     var myPosition: CLLocationCoordinate2D?
     var myAnnotation: MKPointAnnotation = MKPointAnnotation()
+    
+    var playlistView : PlaylistCollectionView?
     
     let titleTF : UITextField = {
         let tf = UITextField()
@@ -82,6 +85,48 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
         return iv
     }()
     
+    
+    func getCenter() {
+        
+        if myPosition == nil {
+            myPosition = locationManager.location?.coordinate
+        }
+        
+        if let pin = selectedPin, let me = myPosition {
+            let sourceCoordinate = me
+            let destCoordinate = pin.coordinate
+            
+            let soucePlaceMark = MKPlacemark(coordinate: sourceCoordinate)
+            let destPlaceMark = MKPlacemark(coordinate: destCoordinate)
+            
+            let sourceItem = MKMapItem(placemark: soucePlaceMark)
+            let destItem = MKMapItem(placemark: destPlaceMark)
+            var directionReq : MKDirectionsRequest = MKDirectionsRequest()
+            directionReq.source = sourceItem
+            directionReq.destination = destItem
+            directionReq.transportType = .automobile
+            
+            let direction = MKDirections(request: directionReq)
+            direction.calculate(completionHandler: { (response, error) in
+                guard let response = response else {
+                    if let error = error {
+                        let noData = UIAlertController(title: "Alert", message: "No roads available \(error.localizedDescription)", preferredStyle: UIAlertControllerStyle.alert)
+                        noData.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
+                        self.present(noData, animated: true, completion: nil)
+                    }
+                    return
+                }
+                let myRoute = response.routes[0]
+                self.mapView.add(myRoute.polyline, level: .aboveRoads)
+                var rekt = myRoute.polyline.boundingMapRect
+                let coord = MKCoordinateRegionForMapRect(rekt)
+                let distance = MKCoordinateRegionMake(coord.center, coord.span)
+                self.mapView.setRegion(distance, animated: true)
+
+            })
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         locationManager.delegate = self
@@ -90,15 +135,16 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
         locationManager.requestAlwaysAuthorization()
         locationManager.requestLocation()
         locationManager.startUpdatingLocation()
-
+        
+        
+        
         titleTF.delegate = self
         descriptionTV.delegate = self
         scrollView = UIScrollView(frame: self.view.frame)
         scrollView!.delegate = self
         scrollView!.bounces = false
-        scrollView!.alwaysBounceVertical = true
-        scrollView!.contentSize.height = view.frame.height * 1.5
-        self.view = scrollView!
+        scrollView!.contentSize.height = self.view.frame.size.height * 2
+        self.view.addSubview(scrollView!)
         imagePicker.delegate = self
         let button = UIButton()
         button.setAttributedTitle(NSAttributedString(string: "Create", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
@@ -108,11 +154,21 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
         view.backgroundColor = UIColor(white: 0.1, alpha: 1)
         mapView.delegate = self
         mapView.showsUserLocation = true
+        mapView.isUserInteractionEnabled = false
         mapView.translatesAutoresizingMaskIntoConstraints = false
-        mapView.setCenter(mapView.userLocation.coordinate, animated: true)
+        mapView.addAnnotation(selectedPin!)
+        getCenter()
+        
         let gesture = UILongPressGestureRecognizer(target: self, action: #selector(putPin))
         mapView.addGestureRecognizer(gesture)
         setupView()
+        apiManager.getUserPlaylists(completion: { (res) in
+            print(res)
+            self.playlistView?.eventCreation = true
+            self.playlistView!.playlists = res
+            print("yp")
+            self.playlistView!.reloadData()
+        })
         // Do any additional setup after loading the view.
     }
     
@@ -124,6 +180,8 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
         myAnnotation.coordinate = myPosition!
         mapView.addAnnotation(myAnnotation)
     }
+    
+
     func setupView() {
         let button = UIButton(type: .roundedRect)
         button.titleEdgeInsets = UIEdgeInsets(top: -10,left: -10,bottom: -10,right: -10)
@@ -133,45 +191,54 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
         button.addTarget(self, action: #selector(imagePick), for: .touchUpInside)
         
         button.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(imageView)
-        view.addSubview(titleTF)
-        view.addSubview(segmentedBar)
-        view.addSubview(button)
-        view.addSubview(datePicker)
-        view.addSubview(descriptionTV)
-        view.addSubview(mapView)
+        playlistView = PlaylistCollectionView([], .horizontal, nil)
+        playlistView!.translatesAutoresizingMaskIntoConstraints = false
+        scrollView!.addSubview(imageView)
+        scrollView!.addSubview(titleTF)
+        scrollView!.addSubview(segmentedBar)
+        scrollView!.addSubview(button)
+        scrollView!.addSubview(datePicker)
+        scrollView!.addSubview(descriptionTV)
+        scrollView!.addSubview(mapView)
+        scrollView!.addSubview(playlistView!)
         NSLayoutConstraint.activate([
-            mapView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
-            mapView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            mapView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
+            mapView.widthAnchor.constraint(equalTo: scrollView!.widthAnchor, multiplier: 0.9),
+            mapView.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
+            mapView.topAnchor.constraint(equalTo: scrollView!.topAnchor, constant: 20),
             mapView.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier : 0.6),
             
             titleTF.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: 20),
-            titleTF.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
-            titleTF.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            titleTF.widthAnchor.constraint(equalTo: scrollView!.widthAnchor, multiplier: 0.9),
+            titleTF.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
             
             button.topAnchor.constraint(equalTo: titleTF.bottomAnchor, constant: 20),
-            button.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
-            button.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            button.widthAnchor.constraint(equalTo: scrollView!.widthAnchor, multiplier: 0.9),
+            button.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
             
-            imageView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
-            imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            imageView.widthAnchor.constraint(equalTo: scrollView!.widthAnchor, multiplier: 0.9),
+            imageView.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
             imageView.topAnchor.constraint(equalTo: button.bottomAnchor, constant: 20),
             
             
-            segmentedBar.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
-            segmentedBar.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            segmentedBar.widthAnchor.constraint(equalTo: scrollView!.widthAnchor, multiplier: 0.9),
+            segmentedBar.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
             segmentedBar.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 20),
             
-            descriptionTV.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
-            descriptionTV.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            descriptionTV.widthAnchor.constraint(equalTo: scrollView!.widthAnchor, multiplier: 0.9),
+            descriptionTV.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
             descriptionTV.topAnchor.constraint(equalTo: segmentedBar.bottomAnchor, constant: 20),
             descriptionTV.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.6),
             
-            datePicker.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
-            datePicker.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            datePicker.widthAnchor.constraint(equalTo: scrollView!.widthAnchor, multiplier: 0.9),
+            datePicker.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
             datePicker.topAnchor.constraint(equalTo: descriptionTV.bottomAnchor, constant: 20),
             datePicker.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier : 0.6),
+            
+            playlistView!.topAnchor.constraint(equalTo: datePicker.bottomAnchor, constant: 30),
+            playlistView!.widthAnchor.constraint(equalTo: scrollView!.widthAnchor, multiplier: 0.9),
+            playlistView!.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
+            playlistView!.heightAnchor.constraint(equalToConstant: 200)
+            
             ])
     }
     
@@ -188,12 +255,27 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
     }
     
     @objc func createEvent() {
-        print("create")
         // if data is good
-        if titleTF.text != nil && myPosition != nil && imageView.image != nil {
-            self.navigationController?.popViewController(animated: true)
-            let vc = self.navigationController?.viewControllers[0] as! MapController
-            vc.printToastMsg()
+        if titleTF.text != nil && imageView.image != nil && playlistView?.selectedPlaylist != nil {
+            let myUser = userManager.currentUser
+            let coord = Coord(lat: (selectedPin?.coordinate.latitude)!, lng: (selectedPin?.coordinate.longitude)!)
+            // pays ville codepostale rue numero
+            let address = Address(p: (selectedPin?.administrativeArea)!, v: (selectedPin?.locality)!, cp: (selectedPin?.isoCountryCode)!, r: (selectedPin?.thoroughfare)!, n: (selectedPin?.subThoroughfare)!)
+            let location = Location(address: address, coord: coord)
+            let dataImg = NSData(contentsOf: urlImageToString!)
+            apiManager.getMe((myUser?.token)!, completion: { (user) in
+                let event = Event(_id : nil, creator : user, title: self.titleTF.text!, description: self.descriptionTV.text!, location: location, visibility: self.segmentedBar.selectedSegmentIndex, shared: self.segmentedBar.selectedSegmentIndex == 0 ? true : false , creationDate: String(describing: Date()), date: String(describing: Date()), playlist: self.playlistView?.selectedPlaylist!, members: [], adminMembers: [], picture : nil)
+                apiManager.postEvent((myUser?.token)!, event: event, img: self.imageView.image!) { (resp) in
+                    if resp {
+                        self.navigationController?.popViewController(animated: true)
+                        let vc = self.navigationController?.viewControllers[0] as! MapController
+                        vc.printToastMsg()
+                    } else {
+                        ToastView.shared.short(self.view, txt_msg: "Error while creating your event", color : UIColor.red)
+                    }
+                }
+            })
+    
         }
         else {
             ToastView.shared.short(self.view, txt_msg: "Check twice your information", color : UIColor.red)
@@ -223,7 +305,8 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
 extension EventController : UIImagePickerControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         print(info)
-        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage , let urlImage = info[UIImagePickerControllerImageURL] as? URL{
+            urlImageToString = urlImage
             imageView.image = pickedImage
             NSLayoutConstraint.activate([
                 imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.6)
@@ -290,11 +373,11 @@ extension EventController : CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let location = locations.first {
+/*        if let location = locations.first {
             let span = MKCoordinateSpanMake(0.05, 0.05)
             let region = MKCoordinateRegion(center: location.coordinate, span: span)
             mapView.setRegion(region, animated: true)
-        }
+        }*/
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {

@@ -32,6 +32,7 @@ class SettingsController: UIViewController, DeezerSessionDelegate {
             print(deezerManager.deezerConnect?.accessToken)
             user!.deezer_token = deezerManager.deezerConnect?.accessToken
             userManager.save()
+            apiManager.giveDeezerToken(user!)
             updateButton()
             
         }

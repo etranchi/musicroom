@@ -8,11 +8,11 @@
 
 import Foundation
 
-enum Status : String, Decodable {
+enum Status : String, Codable {
     case Active, Suspended, Created;
 }
 
-struct User : Decodable {
+struct User : Codable {
     let login : String
     let email : String
     let password : String?
@@ -26,7 +26,7 @@ struct User : Decodable {
     }
 }
 
-struct DataUser : Decodable {
+struct DataUser : Codable {
     let token : String
     let user : User
 }

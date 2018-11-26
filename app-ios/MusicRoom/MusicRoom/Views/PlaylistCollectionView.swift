@@ -10,9 +10,13 @@ import UIKit
 
 class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     var isEditing = false
+    var selectedPlaylist : Playlist?
+    var eventCreation : Bool = false
     var isAddingSong = false
     var playlists: [Playlist]
     let rootTarget: PlaylistController?
+    var selectedCell : PlaylistCell?
+    
     private let playlistCellId = "playlistCellId"
     private let buttonCellId = "buttonCellId"
     
@@ -32,25 +36,27 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
     }
     
     func createPlaylistPopUp() {
-        let alert = UIAlertController(title: "Playlist creation", message: "What's your playlist's name?", preferredStyle: .alert)
-        alert.addTextField { (textField) in
-            textField.placeholder = "playlist's name"
-        }
-        
-        alert.addAction(UIAlertAction(title: "Create", style: .default, handler: { [weak alert] (_) in
-            let textField = alert!.textFields![0]
-            if let text = textField.text, text != "" {
-                apiManager.createPlaylist(text, self.rootTarget)
+        if !eventCreation {
+            let alert = UIAlertController(title: "Playlist creation", message: "What's your playlist's name?", preferredStyle: .alert)
+            alert.addTextField { (textField) in
+                textField.placeholder = "playlist's name"
             }
-        }))
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        rootTarget?.present(alert, animated: true, completion: nil)
+            
+            alert.addAction(UIAlertAction(title: "Create", style: .default, handler: { [weak alert] (_) in
+                let textField = alert!.textFields![0]
+                if let text = textField.text, text != "" {
+                    apiManager.createPlaylist(text, self.rootTarget)
+                }
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            rootTarget?.present(alert, animated: true, completion: nil)
+        }
     }
     
     func setupView() {
         delegate = self
         dataSource = self
-        alwaysBounceVertical = true
+        // alwaysBounceVertical = true
         register(PlaylistCell.self, forCellWithReuseIdentifier: playlistCellId)
         register(CreatePlaylistButtonCell.self, forCellWithReuseIdentifier: buttonCellId)
         contentInset = UIEdgeInsets(top: 14, left: 14, bottom: 14, right: 14)
@@ -59,30 +65,40 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = cellForItem(at: indexPath) as! PlaylistCell
-        if isEditing {
-            apiManager.deletePlaylist(cell.playlist._id, rootTarget)
-            return
+        if eventCreation {
+            if selectedCell != nil {
+                selectedCell!.layer.borderColor = nil
+                selectedCell!.layer.borderWidth = 0
+            }
+            selectedPlaylist = playlists[indexPath.row]
+            selectedCell = cell
+            selectedCell!.layer.borderColor = UIColor.gray.cgColor
+            selectedCell!.layer.borderWidth = 2
         }
-        if isAddingSong {
-            rootTarget?.addSongToPlaylist(cell.playlist)
+        if isEditing {
+            if cell.playlist._id != nil {
+                apiManager.deletePlaylist(String(describing: cell.playlist._id!), rootTarget)
+            }
+            return
         }
         let vc = PlaylistDetailController(playlists[indexPath.item], cell.imageView.image!)
         rootTarget?.navigationController?.pushViewController(vc, animated: true)
     }
     
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return playlists.count + 1
+        return rootTarget != nil ? playlists.count + 1 : playlists.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if indexPath.item == playlists.count {
+        if indexPath.item == playlists.count  && rootTarget != nil {
             let cell = dequeueReusableCell(withReuseIdentifier: buttonCellId, for: indexPath) as! CreatePlaylistButtonCell
             cell.vc = self
             return cell
         }
         let cell = dequeueReusableCell(withReuseIdentifier: playlistCellId, for: indexPath) as! PlaylistCell
         cell.playlist = playlists[indexPath.item]
-        if isEditing {
+        if isEditing && !eventCreation {
             cell.deleteView.isHidden = false
         } else {
             cell.deleteView.isHidden = true

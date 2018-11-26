@@ -20,6 +20,14 @@ class SongDetailView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
+        print("yo")
+        /*apiManager.getUserPlaylists(completion: { (res) in
+            print(res)
+            self.playlistView!.eventCreation = true
+            self.playlistView!.playlists = res
+            print("yp")
+            self.playlistView!.reloadData()
+        })*/
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -171,10 +179,16 @@ class SongDetailView: UIView {
         addtoPlayListView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleAddToPlaylist)))
         addtoSongsView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleAddToSongs)))
         
+        
+        playlistView = PlaylistCollectionView([], .horizontal, nil)
+        playlistView!.translatesAutoresizingMaskIntoConstraints = false
+        
         containerView.addSubview(addtoSongsView)
         containerView.addSubview(addtoPlayListView)
         addtoPlayListView.addSubview(playListImageView)
         addtoPlayListView.addSubview(playlistLabel)
+        addtoPlayListView.addSubview(playlistView!)
+        playlistView?.isHidden = true
         addtoSongsView.addSubview(songsImageView)
         addtoSongsView.addSubview(songsLabel)
         NSLayoutConstraint.activate([
@@ -207,6 +221,11 @@ class SongDetailView: UIView {
             songsLabel.leadingAnchor.constraint(equalTo: songsImageView.trailingAnchor, constant: 14),
             songsLabel.heightAnchor.constraint(equalToConstant: 30),
             songsLabel.trailingAnchor.constraint(equalTo: addtoSongsView.trailingAnchor, constant: -5),
+            
+            playlistView!.topAnchor.constraint(equalTo: playListImageView.bottomAnchor, constant: 5),
+            playlistView!.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: 0.9),
+            playlistView!.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+            playlistView!.heightAnchor.constraint(equalToConstant: 200)
         ])
     }
     
