@@ -18,6 +18,7 @@ class PlaylistController: UIViewController {
         super.viewWillAppear(animated)
         
         navigationController?.navigationBar.topItem?.title = ""
+        reloadPlaylists()
         title = "Playlists"
     }
     
@@ -47,8 +48,8 @@ class PlaylistController: UIViewController {
         view.backgroundColor = UIColor(white: 0.1, alpha: 1)
         print(userManager.currentUser!.token!)
         setupView()
-        reloadPlaylists()
     }
+    
     
     func reloadPlaylists() {
         apiManager.getUserPlaylists { (playlists) in

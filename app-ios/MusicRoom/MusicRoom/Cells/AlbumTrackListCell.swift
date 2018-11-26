@@ -91,7 +91,8 @@ class AlbumTrackListCell: UITableViewCell {
             root?.deleteTrackFromPlaylist(track: track!, index: indexPath!)
             return
         }
-        print("add song to playlist")
+        let root = rootController as? AlbumController
+        root?.handleSongDetail(track!)
     }
     
     func setupView() {
