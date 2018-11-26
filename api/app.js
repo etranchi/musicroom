@@ -70,10 +70,11 @@ io.on('connection', (socket) => {
   //   console.log("delMusicInPlaylist -> ");
   //   console.log(musicId);
   // });
-  socket.on('moveMusic', async (playlistId) => {
-    console.log("JE SUIS LA ET JE VAIS EMIT UN EVENT")
+  socket.on('updatePLaylist', async (playlistId) => {
+    console.log("JE SUIS LA ET JE VAIS updatePLaylist")
     let playlist = await ftSocket.sendPlaylist(playlistId)
-    socket.broadcast.emit('musicMoved', playlist)
+    playlistBlocked.splice(playlistBlocked.indexOf(playlistId), 1)
+    socket.broadcast.emit('playlistUpdated', playlist)
   });
   socket.on('blockPlaylist', (playlistId) => {
     console.log("BLOCK PLAYLIST -> " + playlistId)
@@ -87,16 +88,6 @@ io.on('connection', (socket) => {
       socket.emit('alreadyBlocked', playlistId)
     }
   });
-  socket.on('unblockPlaylist', (playlistId) => {
-    console.log("BEFORE SPLICE")
-    console.log(playlistBlocked)
-    playlistBlocked.splice(playlistBlocked.indexOf(playlistId), 1)
-    console.log("AFTER SPLICE")
-    console.log(playlistBlocked)
-    console.log("UNBLOCK PLAYLIST EVENT")
-    socket.broadcast.emit('unblockPlaylist', playlistId)
-  });
-
 
   /* Socket For LiveEvent */
   /* Store array of track object, store like, unlike in */
@@ -104,28 +95,28 @@ io.on('connection', (socket) => {
   /* Socket For LiveEvent */
   /* Store array of track object, store like, unlike in */
 
-  socket.on('getRoomPlaylist', async (roomID) => {
+  socket.on('getRoomPlaylist', (roomID) => {
     console.log("[Socket] -> getRoomPlaylist")
     
-    let room = await ftSocket.getRoom(roomID);
+    let room = ftSocket.getRoom(roomID);
     if (room)
       io.sockets.in(room.id).emit('getRoomPlaylist', room.tracks)
     else
       return ;
   });
 
-  socket.on('createRoom', async (roomID, tracks) => {
+  socket.on('createRoom', (roomID, tracks) => {
     console.log("[Socket] -> createRoom")
     
-    let room = await ftSocket.getRoom(roomID);
-    if (!room) room = await ftSocket.createRoom(roomID, tracks)
+    let room = ftSocket.getRoom(roomID);
+    if (!room) room = ftSocket.createRoom(roomID, tracks)
     io.sockets.in(room.id).emit('createRoom', room.tracks)
   });
 
-  socket.on('joinRoom', async (roomID) => {
+  socket.on('joinRoom', (roomID) => {
     console.log("[Socket] -> joinRoom", roomID)
 
-    let room = await ftSocket.getRoom(roomID)
+    let room = ftSocket.getRoom(roomID)
     if (room) {
       socket.join(room.id);
       io.sockets.in(room.id).emit('joinRoom', "Room joined")
@@ -133,14 +124,14 @@ io.on('connection', (socket) => {
     else  sockets.emit('joinRoom', "Wrong ID")
   });
 
-  socket.on('updateScore', async (roomID, trackID, points) => {
+  socket.on('updateScore', (roomID, trackID, points) => {
     console.log("[Socket] -> updateScore")
 
-    let room = await ftSocket.getRoom(roomID)
+    let room = ftSocket.getRoom(roomID)
     if (room)
     {
-      room = await ftSocket.updateScore(room, trackID, points)
-      room = await ftSocket.updateRoom(room)
+      room = ftSocket.updateScore(room, trackID, points)
+      room = ftSocket.updateRoom(room)
       io.sockets.in(room.id).emit('updateScore', room.tracks)
     }
     else

@@ -37,7 +37,7 @@ class Setting extends Component {
 		  });
         DZ.login(function(response) {
           if (response.authResponse) {
-			axios.get(process.env.REACT_APP_API_URL + '/user/login/deezer?access_token=' + localStorage.getItem("token") + '&deezerToken=' + response.authResponse.accessToken)
+			axios.put(process.env.REACT_APP_API_URL + '/user/login/deezer?access_token=' + localStorage.getItem("token") + '&deezerToken=' + response.authResponse.accessToken)
 			.then(resp => {
 				that.props.updateParent({ user: resp.data })
 				that.setState({ user: resp.data })

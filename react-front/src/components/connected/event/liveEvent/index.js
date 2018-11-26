@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import './styles.css';
-import defaultTrackImg from '../../../../assets/track.png'
 import Track from '../../../templates/track'
-import moment from 'moment'
 import axios from 'axios'
-import { Col, Row, Icon , Card, Avatar} from 'antd'
+import { Col, Row } from 'antd'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import PersonalPlayer from '../../event/personalPlayer'
-import { moveMusic, socket, blockSocketEvent, unblockSocketEvent} from '../../sockets';
-import {getRoomPlaylist, joinRoom, updateScore} from '../../sockets';
+import {socket, getRoomPlaylist, joinRoom, updateScore} from '../../sockets';
 
 const reorder = (list, startIndex, endIndex) => {
 	const result = Array.from(list);
@@ -31,19 +28,10 @@ const reorder = (list, startIndex, endIndex) => {
         this.roomID = this.props.roomID;
     }
     componentDidMount() {
-        socket.on('blockPlaylist', (playlistId) => {
-            if (playlistId === this.state.playlist._id) 
-                this.state.isBlocked = true
+        /* Live Event */
+        socket.on('createEventLive', (tracks) => {
+            this.sortTracks(tracks);
         })
-        socket.on('alreadyBlocked', (playlistId) => {
-            if (playlistId === this.state.playlist._id)
-                this.state.isBlocked = true
-        })
-        socket.on('unblockPlaylist', (playlistId) => {
-            if (playlistId === this.state.playlist._id) 
-                this.state.isBlocked = !this.state.playlist._id
-        })
-
         /*              Live Event              */
         socket.on('joinRoom', (msg) => {
             console.log("joinRoom : ", msg)
@@ -86,13 +74,8 @@ const reorder = (list, startIndex, endIndex) => {
             updateScore(this.roomID, id, value)
         }
     }
-
-    onDragStart = () => {
-		blockSocketEvent(this.state.playlist._id, this.roomID)
-	}
 	
 	onDragEnd = (result) => {
-		unblockSocketEvent(this.state.playlist._id, this.roomID)
 		if (!result.destination) {
 		  return;
 		}
@@ -110,7 +93,6 @@ const reorder = (list, startIndex, endIndex) => {
 		)
 		.then(resp => {
 			this.setState(items);
-			moveMusic(this.state.playlist._id)
 		})
 		.catch(err => {
 			console.log(err);
@@ -134,7 +116,7 @@ const reorder = (list, startIndex, endIndex) => {
                     <Col span={6}>
                     </Col>
                     <Col span={12}>
-                        <DragDropContext onDragEnd={this.onDragEnd} onDragStart={this.onDragStart}>
+                        <DragDropContext onDragEnd={this.onDragEnd}>
                             <Droppable droppableId="droppable" isDropDisabled={this.state.isBlocked}>
                             {
                                 (provided, snapshot) =>  (

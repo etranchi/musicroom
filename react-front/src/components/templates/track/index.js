@@ -1,16 +1,11 @@
 import React, { Component } from 'react';
 import './styles.css';
-import { Layout, Row, Col, Icon, List, Skeleton, Avatar} from 'antd';
+import { Layout, Row, Col, List, Skeleton, Avatar} from 'antd';
 
 
 const {Content}  = Layout
 
 export default  class liveEvent extends Component {
-	constructor(props) {
-        super(props);
-    }
-
-
 	render() {
         const picture   = this.props.track.album.cover_medium ? this.props.track.album.cover_medium : this.props.track.album.cover_large ? this.props.track.album.cover_large : this.props.track.album.cover_small
         const title     = this.props.track.title_short
