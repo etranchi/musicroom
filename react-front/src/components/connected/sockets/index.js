@@ -1,16 +1,30 @@
 import openSocket from 'socket.io-client';
 
 const socket = openSocket('https://192.168.99.100:4242');
-function moveMusic(playlistId) {
-    socket.emit('moveMusic', playlistId);
+
+function updatePLaylist(playlistId) {
+    socket.emit('updatePLaylist', playlistId);
 }
 
-function blockSocketEvent(playlistId) {
-    socket.emit('blockPlaylist', playlistId);
+function blockSocketEvent(playlistId, roomID) {
+    socket.emit('blockPlaylist', playlistId, roomID);
 }
 
-function unblockSocketEvent(playlistId) {
-    socket.emit('unblockPlaylist', playlistId);
+function createEventLive (tracks) {
+    socket.emit("createEventLive", tracks)
 }
 
-export { moveMusic, socket, blockSocketEvent, unblockSocketEvent };
+function createRoom (roomID, tracks) {
+    socket.emit("createRoom", roomID, tracks)
+}
+function joinRoom (roomID) {
+    socket.emit("joinRoom", roomID)
+}
+function getRoomPlaylist (roomID) {
+    socket.emit("getRoomPlaylist", roomID)
+}
+
+function updateScore (roomID, tracksID, pointsD) {
+    socket.emit("updateScore", roomID, tracksID, pointsD)
+}
+export { updatePLaylist, socket, blockSocketEvent, getRoomPlaylist, updateScore, joinRoom, createRoom, createEventLive };

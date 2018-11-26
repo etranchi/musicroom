@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import {Layout, Row, Col, Progress } from 'antd';
+import {Row, Col, Progress } from 'antd';
 
 
-const {Content } = Layout;
 const { DZ } = window;
 
 export default class Progressor extends Component {

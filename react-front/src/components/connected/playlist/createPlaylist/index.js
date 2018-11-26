@@ -16,7 +16,7 @@ class CreatePlaylist extends Component {
 		body.tracks.data = this.state.tracks;
 		body.title = this.state.title;
 		console.log(body);
-		axios.post('https://192.168.99.100:4242/playlist', 
+		axios.post(process.env.REACT_APP_API_URL + '/playlist', 
 			body,
 			{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}}
 		)
@@ -45,12 +45,16 @@ class CreatePlaylist extends Component {
 	return (
 		<div>
 			<Row>
-                <Col span={8}></Col>
+                <Col span={8}>
+					<a href="#!" className="btn waves-effect waves-teal" onClick={() => this.props.updateParent({'currentComponent': 'playlist'})}>Back</a>
+				</Col>
+			</Row>
+			<Row>
+				<Col span={8}></Col>
                 <Col span={8}>
                     <Input placeholder="title" value={this.state.title} name="title" onChange={this.handleChange}/>
                 </Col>
-                <Col span={8}></Col>
-            </Row>
+			</Row>
             <Divider />
 			<Row>
                 <Col span={8}></Col>

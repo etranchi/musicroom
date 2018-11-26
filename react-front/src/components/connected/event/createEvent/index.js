@@ -26,6 +26,7 @@ class CreateEvent extends Component {
         };
         this.handlePicture = this.handlePicture.bind(this);
         this.updateLocation = this.updateLocation.bind(this);
+        console.log("createEvent component constructor");
     }
     updateLocation = (val) => {
         let location = {
@@ -47,7 +48,7 @@ class CreateEvent extends Component {
     updateEventPlaylist = (playlist) => {
         if (playlist)
         {
-            axios.get('https://192.168.99.100:4242/playlist/' + playlist.id, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
+            axios.get(process.env.REACT_APP_API_URL + '/playlist/' + playlist.id, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
             .then((resp) => { 
                 playlist.tracks = {}
                 playlist.tracks.data = {}
@@ -72,15 +73,15 @@ class CreateEvent extends Component {
         delete this.state.loading
         delete this.state.infoFile
 
-        axios.get('https://192.168.99.100:4242/user/me', {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
+        axios.get(process.env.REACT_APP_API_URL + '/user/me', {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
         .then((resp) => {
             this.setState({creator: resp.data});
             data.append('body', JSON.stringify(this.state));
-            axios.post('https://192.168.99.100:4242/event/',  data)
+            axios.post(process.env.REACT_APP_API_URL + '/event/',  data)
             .then((resp) => { 
                 console.log("Create Event : handleSubmit :/event Success");
                 this.info("Evènement crée")
-                this.props.updateParent({'currentComponent' : "createEvent"})
+                this.props.updateParent({'currentComponent' : "event"})
             })
             .catch((err) => { console.log("Create Event : handleSubmit :/event Error ", err); })  
         })
@@ -129,6 +130,7 @@ class CreateEvent extends Component {
         this.setState({infoFile:null, imageUrl: null, loadind:false})
     }
 	render = () => {
+        console.log("createEvent component");
         console.log(localStorage.getItem('token'))
         this.uploadButton = (
             <div>
@@ -139,6 +141,11 @@ class CreateEvent extends Component {
         const {Footer,Content } = Layout;
         return (
             <Layout >
+                <Row>
+                    <Col span={8}>
+                        <a href="#!" className="btn waves-effect waves-teal" onClick={() => this.props.updateParent({'currentComponent': 'event'})}>Back</a>
+                    </Col>
+			    </Row>
                 <Content>
                     {
                         this.state.imageUrl ?

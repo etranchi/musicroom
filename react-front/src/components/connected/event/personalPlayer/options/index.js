@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import './styles.css';
-import {Layout, Row, Col, Icon, Progress} from 'antd';
+import {Row, Col,Progress} from 'antd';
 
 
-const {Content } = Layout;
 const { DZ } = window
 export default class PersonalPlayer extends Component {
 
@@ -31,7 +30,7 @@ export default class PersonalPlayer extends Component {
         return (
             <Row style={{padding:'20% 0 0 0'}}>
                 <Col span={1}>
-                    <i class="fas fa-bars"></i>
+                    <i className="fas fa-bars"></i>
                 </Col>
                 <Col span={2}></Col>
                 <Col span={1}>

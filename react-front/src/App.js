@@ -32,6 +32,7 @@ class App extends Component {
     console.log(this.state);
     console.log("new state ->");
     console.log(val);
+    console.log('end update parent');
     this.setState(val);
   }
   componentDidUpdate= () => {
@@ -42,7 +43,7 @@ class App extends Component {
     const token = localStorage.getItem('token');
     if (token)
     {
-      axios.get('https://192.168.99.100:4242/user/me', 
+      axios.get(process.env.REACT_APP_API_URL + '/user/me', 
       {'headers':{'Authorization':'Bearer '+ localStorage.getItem('token')}})
       .then((resp) => {
         this.setState({user:resp.data, token:localStorage.getItem('token')});

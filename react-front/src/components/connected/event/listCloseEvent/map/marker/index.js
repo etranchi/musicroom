@@ -8,7 +8,7 @@ class Marker extends Component {
         this.props.updateParent({'currentComponent': 'cardEvent', 'data': this.props.state.data})
     }
     render() {
-        let eventPicture = this.props.event.picture ? "https://192.168.99.100:4242/eventPicture/" + this.props.event.picture : "https://192.168.99.100:4242/eventPicture/default.jpeg"
+        let eventPicture = this.props.event.picture ? process.env.REACT_APP_API_URL + "/eventPicture/" + this.props.event.picture : process.env.REACT_APP_API_URL + "/eventPicture/default.jpeg"
         return (
             <Avatar className="zoomCardMap" onClick={this.openCard} size={48} src={eventPicture} />
         )
