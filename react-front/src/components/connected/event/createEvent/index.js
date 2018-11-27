@@ -113,7 +113,8 @@ class CreateEvent extends Component {
           this.setState({loading:true});
           return;
         }
-        this.getBase64(info.file.originFileObj, imageUrl => this.setState({ imageUrl, loading: false}));
+        if (info.file.originFileObj)
+            this.getBase64(info.file.originFileObj, imageUrl => this.setState({ imageUrl, loading: false}));
       }
       
     getBase64 = (img, callback) => {
