@@ -110,7 +110,7 @@ class PlaylistDetailController: UITableViewController {
             tracks.remove(at: index.row)
             tableView.deleteRows(at: [index], with: .fade)
         } else {
-            ToastView.shared.short(self.view, txt_msg: "Can't modify deezer playlsit", color: UIColor.red)
+            ToastView.shared.short(self.view, txt_msg: "Can't modify deezer playlist", color: UIColor.red)
         }
     }
     

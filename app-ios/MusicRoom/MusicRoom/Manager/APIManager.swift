@@ -260,12 +260,12 @@ class APIManager: NSObject, URLSessionDelegate {
     }
     
     
-    func getEvents(completion : @escaping (([Event]) -> ())){
+    func getEvents(completion : @escaping ((DataEvent) -> ())){
         let eventsUrl = self.url + "event"
         var request = URLRequest(url: URL(string: eventsUrl)!)
         request.httpMethod = "GET"
         self.searchAll(DataEvent.self, request: request) { (res) in
-            completion(res.allEvents)
+            completion(res)
         }
     }
     
@@ -334,6 +334,7 @@ class APIManager: NSObject, URLSessionDelegate {
     {
         URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: request) { (data, response, err) in
             if err != nil {
+                print(err?.localizedDescription)
                 print("error while requesting")
             }
             if let d = data {

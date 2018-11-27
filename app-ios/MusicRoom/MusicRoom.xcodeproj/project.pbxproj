@@ -8,9 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		7701FE6B21998D8400B721EB /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7701FE6A21998D8300B721EB /* GLKit.framework */; };
+		7708F19721AD7E5E00C6BECA /* EventDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7708F19621AD7E5E00C6BECA /* EventDetailView.swift */; };
+		7708F19921AD8E9200C6BECA /* EventsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7708F19821AD8E9200C6BECA /* EventsController.swift */; };
+		7708F19B21AD8FED00C6BECA /* SearchEventsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7708F19A21AD8FED00C6BECA /* SearchEventsCell.swift */; };
 		772E7702219DC78C0005AE33 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 772E7701219DC78C0005AE33 /* MapKit.framework */; };
 		772E7704219DC7CB0005AE33 /* MapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772E7703219DC7CB0005AE33 /* MapController.swift */; };
 		772E7706219DCB4C0005AE33 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 772E7705219DCB4C0005AE33 /* CoreLocation.framework */; };
+		773EBDA621AD95160073393F /* EventCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773EBDA521AD95160073393F /* EventCollectionView.swift */; };
+		773EBDA821AD96400073393F /* EventCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773EBDA721AD96400073393F /* EventCell.swift */; };
 		7743C23B2190587E002CC508 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7743C23A2190587E002CC508 /* Playlist.swift */; };
 		7743C2472190A03A002CC508 /* MyUser+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7743C2452190A03A002CC508 /* MyUser+CoreDataClass.swift */; };
 		7743C24A2190A23C002CC508 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7743C2492190A23C002CC508 /* UserManager.swift */; };
@@ -88,10 +93,15 @@
 /* Begin PBXFileReference section */
 		7701FE6A21998D8300B721EB /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		77064F8321AC1950009E638E /* MusicRoom.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MusicRoom.entitlements; sourceTree = "<group>"; };
+		7708F19621AD7E5E00C6BECA /* EventDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailView.swift; sourceTree = "<group>"; };
+		7708F19821AD8E9200C6BECA /* EventsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsController.swift; sourceTree = "<group>"; };
+		7708F19A21AD8FED00C6BECA /* SearchEventsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEventsCell.swift; sourceTree = "<group>"; };
 		77140AC2219C63B800270002 /* MusicRoom 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MusicRoom 2.xcdatamodel"; sourceTree = "<group>"; };
 		772E7701219DC78C0005AE33 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		772E7703219DC7CB0005AE33 /* MapController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapController.swift; sourceTree = "<group>"; };
 		772E7705219DCB4C0005AE33 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		773EBDA521AD95160073393F /* EventCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCollectionView.swift; sourceTree = "<group>"; };
+		773EBDA721AD96400073393F /* EventCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCell.swift; sourceTree = "<group>"; };
 		7743C23A2190587E002CC508 /* Playlist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
 		7743C2452190A03A002CC508 /* MyUser+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MyUser+CoreDataClass.swift"; sourceTree = "<group>"; };
 		7743C2492190A23C002CC508 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
@@ -299,6 +309,8 @@
 				791C770E21A6FF26006FCBDF /* SongDetailView.swift */,
 				79FF7D13219D9BCC001DAE17 /* ArtistsCollectionView.swift */,
 				79938C8C21A314CD006D7281 /* PlaylistCollectionView.swift */,
+				7708F19621AD7E5E00C6BECA /* EventDetailView.swift */,
+				773EBDA521AD95160073393F /* EventCollectionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -320,6 +332,7 @@
 				79CDCF282188746D0095CC63 /* LibraryController.swift */,
 				79938C8A21A3144A006D7281 /* PlaylistController.swift */,
 				79E6E06621A577B900165832 /* PlaylistDetailController.swift */,
+				7708F19821AD8E9200C6BECA /* EventsController.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -363,6 +376,8 @@
 				79938C8721A2FED6006D7281 /* LibraryCell.swift */,
 				7932724F21A44439008D4D87 /* CreatePlaylistButtonCell.swift */,
 				7932725121A453D9008D4D87 /* PlaylistCell.swift */,
+				7708F19A21AD8FED00C6BECA /* SearchEventsCell.swift */,
+				773EBDA721AD96400073393F /* EventCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -665,6 +680,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7708F19721AD7E5E00C6BECA /* EventDetailView.swift in Sources */,
 				79938C8821A2FED6006D7281 /* LibraryCell.swift in Sources */,
 				79CDCF27218874160095CC63 /* SettingsController.swift in Sources */,
 				7743C23B2190587E002CC508 /* Playlist.swift in Sources */,
@@ -676,6 +692,7 @@
 				778BF9A921832CB800448FE6 /* Track.swift in Sources */,
 				7743C2472190A03A002CC508 /* MyUser+CoreDataClass.swift in Sources */,
 				79DD4A79219C3F04005578EB /* SearchController.swift in Sources */,
+				773EBDA821AD96400073393F /* EventCell.swift in Sources */,
 				79CDCF1F218870F70095CC63 /* LoadingController.swift in Sources */,
 				77F2F50C219F431800CC9E8D /* ToastMsg.swift in Sources */,
 				7743C24A2190A23C002CC508 /* UserManager.swift in Sources */,
@@ -694,6 +711,7 @@
 				77F5157E21A2FA9300A12148 /* Event.swift in Sources */,
 				77FA6AF4219DDC6200884428 /* EventController.swift in Sources */,
 				79B4DE73218B4637001031D2 /* SearchBarCell.swift in Sources */,
+				773EBDA621AD95160073393F /* EventCollectionView.swift in Sources */,
 				791C770F21A6FF27006FCBDF /* SongDetailView.swift in Sources */,
 				79A3F9A92193E602007CEB86 /* PlayerManager.swift in Sources */,
 				799DA43B218D3E7F00C803E3 /* SongCell.swift in Sources */,
@@ -715,9 +733,11 @@
 				79CDCF2B218876ED0095CC63 /* CustomNavigationController.swift in Sources */,
 				79DD4A7D219C51B7005578EB /* AlbumCollectionView.swift in Sources */,
 				79FF7D10219D795A001DAE17 /* SeeAllSongsController.swift in Sources */,
+				7708F19921AD8E9200C6BECA /* EventsController.swift in Sources */,
 				8F364B8B217E5B9100B57FC8 /* MusicRoom.xcdatamodeld in Sources */,
 				799DA433218D19E900C803E3 /* PlayerController.swift in Sources */,
 				77F5479A21932CB2001B2901 /* User.swift in Sources */,
+				7708F19B21AD8FED00C6BECA /* SearchEventsCell.swift in Sources */,
 				799DA439218D3D8500C803E3 /* ArtistCell.swift in Sources */,
 				791358A3219D605500F30BF9 /* SongsCollectionView.swift in Sources */,
 				772E7704219DC7CB0005AE33 /* MapController.swift in Sources */,
@@ -795,11 +815,11 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				VALID_ARCHS = "armv7 armv7s x86_64";
+				VALID_ARCHS = "armv7 armv7s x86_64 arm64";
 			};
 			name = Debug;
 		};
@@ -853,10 +873,11 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VALIDATE_PRODUCT = YES;
-				VALID_ARCHS = "armv7 armv7s x86_64";
+				VALID_ARCHS = "armv7 armv7s x86_64 arm64";
 			};
 			name = Release;
 		};
@@ -864,7 +885,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B6FE34DBAE1555D838A7EBD9 /* Pods-MusicRoom.debug.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
+				ARCHS = (
+					"$(ARCHS_STANDARD)",
+					arm64,
+				);
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MusicRoom/MusicRoom.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -905,7 +929,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = MusicRoom/bridge.h;
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "i386 x86_64";
+				VALID_ARCHS = "i386 x86_64 arm64";
 			};
 			name = Debug;
 		};
@@ -913,7 +937,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C1F4CA7BD395A780F23DCE88 /* Pods-MusicRoom.release.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
+				ARCHS = (
+					"$(ARCHS_STANDARD)",
+					arm64,
+				);
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MusicRoom/MusicRoom.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -936,7 +963,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = MusicRoom/bridge.h;
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "i386 x86_64";
+				VALID_ARCHS = "i386 x86_64 arm64";
 			};
 			name = Release;
 		};

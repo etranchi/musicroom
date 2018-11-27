@@ -19,9 +19,6 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
     var locationManager : CLLocationManager?
     var selectedPin:MKPlacemark? = nil
     var scrollView : UIScrollView? = nil
-    var myPosition: CLLocationCoordinate2D?
-    var myAnnotation: MKPointAnnotation = MKPointAnnotation()
-    
     var playlistView : PlaylistCollectionView?
     
     let titleTF : UITextField = {
@@ -86,47 +83,6 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
     }()
     
     
-    func getCenter() {
-        
-        if myPosition == nil {
-            myPosition = locationManager!.location?.coordinate
-        }
-        
-        if let pin = selectedPin, let me = myPosition {
-            let sourceCoordinate = me
-            let destCoordinate = pin.coordinate
-            
-            let soucePlaceMark = MKPlacemark(coordinate: sourceCoordinate)
-            let destPlaceMark = MKPlacemark(coordinate: destCoordinate)
-            
-            let sourceItem = MKMapItem(placemark: soucePlaceMark)
-            let destItem = MKMapItem(placemark: destPlaceMark)
-            var directionReq : MKDirectionsRequest = MKDirectionsRequest()
-            directionReq.source = sourceItem
-            directionReq.destination = destItem
-            directionReq.transportType = .automobile
-            
-            let direction = MKDirections(request: directionReq)
-            direction.calculate(completionHandler: { (response, error) in
-                guard let response = response else {
-                    if let error = error {
-                        let noData = UIAlertController(title: "Alert", message: "No roads available \(error.localizedDescription)", preferredStyle: UIAlertControllerStyle.alert)
-                        noData.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: nil))
-                        self.present(noData, animated: true, completion: nil)
-                    }
-                    return
-                }
-                let myRoute = response.routes[0]
-                self.mapView.add(myRoute.polyline, level: .aboveRoads)
-                var rekt = myRoute.polyline.boundingMapRect
-                let coord = MKCoordinateRegionForMapRect(rekt)
-                let distance = MKCoordinateRegionMake(coord.center, coord.span)
-                self.mapView.setRegion(distance, animated: true)
-
-            })
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         titleTF.delegate = self
@@ -143,33 +99,13 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
         button.addTarget(self, action: #selector(createEvent), for: .touchUpInside)
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
         view.backgroundColor = UIColor(white: 0.1, alpha: 1)
-        mapView.delegate = self
-        mapView.showsUserLocation = true
-        mapView.isUserInteractionEnabled = false
-        mapView.translatesAutoresizingMaskIntoConstraints = false
-        mapView.addAnnotation(selectedPin!)
-        getCenter()
-        
-        let gesture = UILongPressGestureRecognizer(target: self, action: #selector(putPin))
-        mapView.addGestureRecognizer(gesture)
         setupView()
         apiManager.getUserPlaylists(completion: { (res) in
-            print(res)
             self.playlistView?.eventCreation = true
             self.playlistView!.playlists = res
-            print("yp")
             self.playlistView!.reloadData()
         })
         // Do any additional setup after loading the view.
-    }
-    
-    @objc func putPin(_ sender : UILongPressGestureRecognizer) {
-        if sender.state != UIGestureRecognizerState.began { return }
-        let touchLocation = sender.location(in: mapView)
-        let locationCoordinate = mapView.convert(touchLocation, toCoordinateFrom: mapView)
-        myPosition = locationCoordinate
-        myAnnotation.coordinate = myPosition!
-        mapView.addAnnotation(myAnnotation)
     }
     
 
@@ -190,15 +126,10 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
         scrollView!.addSubview(button)
         scrollView!.addSubview(datePicker)
         scrollView!.addSubview(descriptionTV)
-        scrollView!.addSubview(mapView)
         scrollView!.addSubview(playlistView!)
         NSLayoutConstraint.activate([
-            mapView.widthAnchor.constraint(equalTo: scrollView!.widthAnchor, multiplier: 0.9),
-            mapView.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
-            mapView.topAnchor.constraint(equalTo: scrollView!.topAnchor, constant: 20),
-            mapView.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier : 0.6),
             
-            titleTF.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: 20),
+            titleTF.topAnchor.constraint(equalTo: scrollView!.topAnchor, constant: 20),
             titleTF.widthAnchor.constraint(equalTo: scrollView!.widthAnchor, multiplier: 0.9),
             titleTF.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
             
@@ -247,6 +178,10 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
     
     @objc func createEvent() {
         // if data is good
+        if selectedPin == nil || selectedPin?.coordinate == nil || selectedPin?.coordinate.latitude == nil || selectedPin?.coordinate.longitude == nil {
+            ToastView.shared.short(self.view, txt_msg: "Can't create event at this position", color : UIColor.red)
+            return
+        }
         if titleTF.text != nil && imageView.image != nil && playlistView?.selectedPlaylist != nil {
             let myUser = userManager.currentUser
             let coord = Coord(lat: (selectedPin?.coordinate.latitude)!, lng: (selectedPin?.coordinate.longitude)!)
@@ -333,30 +268,3 @@ extension EventController : UITextViewDelegate {
         return true
     }
 }
-
-extension EventController : MKMapViewDelegate {
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        if annotation is MKUserLocation {
-            //return nil so map view draws "blue dot" for standard user location
-            return nil
-        }
-        let reuseId = "pin"
-        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
-        pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
-        pinView?.pinTintColor = UIColor.orange
-        pinView?.canShowCallout = true
-        let smallSquare = CGSize(width: 30, height: 30)
-        let button = UIButton(frame: CGRect(origin: CGPoint(), size: smallSquare))
-        pinView?.leftCalloutAccessoryView = button
-        return pinView
-    }
-    
-    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-        let renderer = MKPolylineRenderer(overlay: overlay)
-        renderer.strokeColor = UIColor(red: 17.0/255.0, green: 147.0/255.0, blue: 255.0/255.0, alpha: 1)
-        renderer.lineWidth = 5.0
-        return renderer
-    }
-}
-
-

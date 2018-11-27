@@ -40,10 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
-        //get the token if loggedin -> go home else go loginPage
-        //userManager.deleteAllData("MyUser")
-        //userManager.save()
-        print(launchOptions)
+        
         UNUserNotificationCenter.current().delegate = self
         registerForPushNotifications()
         window = UIWindow()
