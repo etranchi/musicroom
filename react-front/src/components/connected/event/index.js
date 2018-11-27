@@ -20,16 +20,9 @@ class Event extends Component {
 			'backgroundColor':'#00897b',
 			'opacity':1,
 			'color':'white'
-		  }
-
-		// if (this.props.state.currentComponent === 'cardEvent')
-		// 	this.setState({currentSubView:''})
-		
-			console.log("Event INDEX : ", this.props, this.state)
-		
+		  }	
 	}
 	componentDidMount() {
-	
 	}
 
 	changeView = (value) => {
@@ -39,6 +32,8 @@ class Event extends Component {
 
 	
 	render() {
+		if (this.props.state.currentComponent === 'cardEvent' && this.state.currentSubView)
+			this.setState({currentSubView:''})
 		return (
 			<div>
 				{
