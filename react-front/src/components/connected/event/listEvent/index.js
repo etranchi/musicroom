@@ -30,7 +30,6 @@ class ListEvent extends Component {
 	}
 
 	getEvents = (callback) => {
-		console.log('coucou');
 		axios.get(process.env.REACT_APP_API_URL + '/event')
 		.then(resp => {
 			console.log('response get Events');

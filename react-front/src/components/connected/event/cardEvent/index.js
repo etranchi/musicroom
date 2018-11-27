@@ -45,7 +45,7 @@ class cardEvent extends Component {
     }
 
 
-    isUser = (tab) => 
+    isUser = tab => 
     {
         for (let i = 0; i < tab.length; i++) {
             if (tab[i].email === this.props.state.user.email)
@@ -92,22 +92,24 @@ class cardEvent extends Component {
     openLiveEvent = () => {
         createRoom(this.props.state.data.event._id, this.props.state.data.event.playlist.tracks.data)
         this.props.updateParent({'currentComponent':'liveEvent'})
-    }
-    isToday = (date) => {
-        let timeEvent = new Date(date).getTime();
-        let curTime = new Date(new Date()).getTime()
-        let timeBeforeEvent = timeEvent - curTime;
-        let dayTimeStamp = (3600 * 1000) * 24;
-        let day = Math.round(timeBeforeEvent / dayTimeStamp)
+    }    
+    isToday = date => {
 
-        return day === 0
-    }
+        let timeEvent           = new Date(date).getTime();
+        let curTime             = new Date(new Date()).getTime()
+        let timeBeforeEvent     = timeEvent - curTime;
+        let dayTimeStamp        = (3600 * 1000) * 24;
+        let day                 = timeBeforeEvent / dayTimeStamp
 
-    info = (text) => {
+        if (timeBeforeEvent < 0 && day < 1 && day > -1)
+            return true;
+        else
+            return false;
+    }
+    info = text => {
         message.info(text);
-      };
+    }
 	render() {
-        console.log('render card event');
         return  (
             <div>
                 <CardHeader state={this.props.state} updateParent={this.props.updateParent} />
@@ -119,10 +121,10 @@ class cardEvent extends Component {
                 <Divider />
                 <CreatorProfil right={this.state} state={this.props.state} updateParent={this.props.updateParent} />
                 <BodyEvent right={this.state} state={this.props.state} updateParent={this.props.updateParent} updateMap={this.updateMap.bind(this)}/>
-                <Button type="primary" onClick={this.saveEvent}> <b> Sauvegarder l'event </b> </Button>
+                <Button type="primary" style={this.saveButton} onClick={this.saveEvent}> <b> Sauvegarder l'event </b> </Button>
                 {
                     this.isToday(this.props.state.data.event.event_date) ?
-                        <Button  type="primary" onClick={this.openLiveEvent}> <b> Start Event </b> </Button>
+                        <Button   style={this.launchButton} type="primary" onClick={this.openLiveEvent}> <b> Start Event </b> </Button>
                         : 
                         null
                 }
