@@ -34,6 +34,8 @@ class Event extends Component {
 	render() {
 		if (this.props.state.currentComponent === 'cardEvent' && this.state.currentSubView)
 			this.setState({currentSubView:''})
+		if (this.props.state.currentComponent === 'event' && !this.state.currentSubView)
+			this.setState({currentSubView: 'listEvent'})
 		return (
 			<div>
 				{
