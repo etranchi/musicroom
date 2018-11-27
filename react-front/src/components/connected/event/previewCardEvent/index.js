@@ -11,16 +11,26 @@ class PreviewCardEvent extends Component {
 
     this.state = {
         visible: false,
+        distance: 0
     }
 
     }
 
-    getDistance(coordA, coordB){
-        const calc = geolib.getDistanceSimple(
-            {latitude: coordA.lat, longitude: coordA.lng},
-            {latitude: coordB.lat, longitude:coordB.lng}
-        );
-        return (calc/1000)
+    getDistance = (coordA, coordB) =>  {
+        let R     = 6371; // km
+        let dLat  = this.toRad(coordB.lat - coordA.lat);
+        let dLon  = this.toRad(coordB.lng - coordA.lng);
+        let lat1  = this.toRad(coordA.lng);
+        let lat2  = this.toRad(coordB.lng);
+
+        let a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+        let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+        let d = R * c;
+        return d.toFixed(0);
+    }
+   toRad = (Value) => {
+        return Value * Math.PI / 180;
     }
     
     openCard = (e) => {
@@ -29,17 +39,12 @@ class PreviewCardEvent extends Component {
     }
 
     componentDidMount = () => {
-        console.log("component preview card mount");
-        this.distance = this.getDistance(this.props.state.data.userCoord, this.props.event.location.coord).toFixed(0)
+        let distance = this.getDistance(this.props.event.location.coord, this.props.state.data.userCoord);
+        this.setState({distance:distance})
         this.date = this.props.event.event_date ? this.formatDateAnnounce(this.props.event.event_date) : "Inconnue"
     }
 
     openMap(val){
-        let calc = geolib.getDistanceSimple(
-            {latitude: this.props.state.data.userCoord.lat, longitude: this.props.state.data.userCoord.lng},
-            {latitude: this.props.event.location.coord.lat, longitude:this.props.event.location.coord.lng}
-        );
-        this.setState({'distance':calc/1000});
         this.showModal();
     }
     showModal = () => {
@@ -53,13 +58,12 @@ class PreviewCardEvent extends Component {
         this.setState({visible: false});
     }
     formatDateAnnounce = (date) => {
-
-        let classicDate = new Date(date).toLocaleDateString('fr-Fr')
-        let timeEvent = new Date(date).getTime();
-        let curTime = new Date(new Date()).getTime()
-        let timeBeforeEvent = timeEvent - curTime;
-        let dayTimeStamp = (3600 * 1000) * 24;
-        let weekTimeStamp = dayTimeStamp * 7;
+        let classicDate         = new Date(date).toLocaleDateString('fr-Fr')
+        let timeEvent           = new Date(date).getTime();
+        let curTime             = new Date(new Date()).getTime()
+        let timeBeforeEvent     = timeEvent - curTime;
+        let dayTimeStamp        = (3600 * 1000) * 24;
+        let weekTimeStamp       = dayTimeStamp * 7;
 
         if (timeBeforeEvent < 0.0) return "Out dated"
         if (timeBeforeEvent > weekTimeStamp)return "Le : " + classicDate
@@ -86,6 +90,7 @@ class PreviewCardEvent extends Component {
         })
     }
 	render() {
+        
         const userPicture = this.props.event.creator.facebookId ? this.props.event.creator.picture : process.env.REACT_APP_API_URL + "/userPicture/" + this.props.event.creator.picture
         return (
             <Card
@@ -103,7 +108,7 @@ class PreviewCardEvent extends Component {
                         <div>
                             <p style={{textAlign:'center'}}>{this.date}</p>
                             <Divider />
-                            <p style={{textAlign:'center'}}>À {this.distance} km</p>
+                            <p style={{textAlign:'center'}}>À {this.state.distance} km</p>
                         </div>
                     }
                 />

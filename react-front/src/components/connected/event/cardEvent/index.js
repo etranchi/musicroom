@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import './styles.css';
-import { message, Button, Divider } from 'antd';
+import { message, Button, Divider, Row, Col} from 'antd';
 import CardHeader from './Header'
 import CreatorProfil from './creatorProfil'
 import BodyEvent from './Body'
-import SimpleMap from '../simpleMap'
+import SimpleMap from './map'
 import axios from 'axios'
 import geolib from 'geolib'
 import {socket, createRoom} from '../../sockets';
@@ -21,15 +21,15 @@ class cardEvent extends Component {
             isViewer: true,
         }
 
-        // this.saveButton = {
-        //     'position': 'fixed',
-        //     'bottom': '50px',
-        //     'height': '80px',
-        //     'left': '140px',
-        //     'latitude': 0,
-        //     'longitude': 0,
-        //     'displayUser' : false
-        // }
+        this.saveButton = {
+            'position': 'fixed',
+            'bottom': '50px',
+            'height': '80px',
+            'left': '140px',
+            'latitude': 0,
+            'longitude': 0,
+            'displayUser' : false
+        }
 
         this.launchButton = {
             'position': 'fixed',
@@ -95,7 +95,6 @@ class cardEvent extends Component {
         this.props.updateParent({'currentComponent':'liveEvent'})
     }
     isToday = (date) => {
-        // let classicDate = new Date(date).toLocaleDateString('fr-Fr')
         let timeEvent = new Date(date).getTime();
         let curTime = new Date(new Date()).getTime()
         let timeBeforeEvent = timeEvent - curTime;
@@ -113,7 +112,11 @@ class cardEvent extends Component {
         return  (
             <div>
                 <CardHeader state={this.props.state} updateParent={this.props.updateParent} />
-                {this.state.isHidden ? <SimpleMap state={this.props.state} event={this.props.state.data.event}/> : null}
+                <Row>
+                    <Col>
+                        {this.state.isHidden ? <div style={{height:'500px'}}><SimpleMap state={this.props.state} event={this.props.state.data.event}/></div> : null}
+                    </Col>
+                </Row>
                 <Divider />
                 <CreatorProfil right={this.state} state={this.props.state} updateParent={this.props.updateParent} />
                 <BodyEvent right={this.state} state={this.props.state} updateParent={this.props.updateParent} updateMap={this.updateMap.bind(this)}/>
