@@ -5,86 +5,49 @@ import React, { Component } from 'react';
 const {google} = window 
 
 export default class MapContainer extends Component {
-//     constructor(props) {
-//         super(props)
-//         this.state = {
-//             showingInfoWindow: false,
-//             activeMarker: {},
-//             selectedPlace: {},
-//         }
-
-//         this.eventPicture = this.props.event.picture ? process.env.REACT_APP_API_URL + "/eventPicture/" + this.props.event.picture : process.env.REACT_APP_API_URL + "/eventPicture/default.jpeg"
-//     }
-
-//     onMarkerClick = (props, marker, e) => {
-//         this.setState({
-//         selectedPlace: props,
-//         activeMarker: marker,
-//         showingInfoWindow: true
-//         });
-//     } 
-
-//   render() {
-//       console.log(this.state)
-//     return (
-//       <Map
-//         style={{width: '100%', height: '100%', position: 'relative'}}
-//         initialCenter={this.props.center ? this.props.center : this.props.state.data.userCoord}
-//         google={google}
-//         zoom={14}>
-//          <Marker
-//             onClick={this.onMarkerClick}
-//             title={'The marker`s title will appear as a tooltip.'}
-//             name={'Current location'}
-//             position={this.props.state.data.userCoord} />
-//         <Marker
-//             icon={{
-//                 url: this.eventPicture,
-//                 anchor: new google.maps.Point(32,32),
-//                 scaledSize: new google.maps.Size(64,64)
-//             }} 
-//             onClick={this.onMarkerClick}
-//             title={this.props.event.title}
-//             name={'AMOS'}
-//             position={this.props.event.location.coord} />
-//         <InfoWindow onClose={this.onInfoWindowClose}>
-//             <h1> BIMBIMBIM </h1>
-//             <div>
-//               <h1>{this.state.selectedPlace.name}</h1>
-//             </div>
-//         </InfoWindow>
-//       </Map>
-//     );
-//   }
-    state = {
-        showingInfoWindow: false,
-        activeMarker: {},
-        selectedPlace: {},
-    };
+    constructor(props) {
+            super(props)
+            this.state = {
+                showingInfoWindow: false,
+                activeMarker: {},
+                selectedPlace: {},
+            }
+        }
 
     onMarkerClick = (props, marker, e) =>
         this.setState({
-        selectedPlace: props,
-        activeMarker: marker,
-        showingInfoWindow: true
+            selectedPlace: props,
+            activeMarker: marker,
+            showingInfoWindow: true
         });
 
     onMapClicked = (props) => {
         if (this.state.showingInfoWindow) {
-        this.setState({
-            showingInfoWindow: false,
-            activeMarker: null
-        })
+            this.setState({
+                showingInfoWindow: false,
+                activeMarker: null
+            });
         }
     };
 
     render() {
         const eventPicture = this.props.event.picture ? process.env.REACT_APP_API_URL + "/eventPicture/" + this.props.event.picture : process.env.REACT_APP_API_URL + "/eventPicture/default.jpeg";
+        // let points = [
+        //     { lat: 42.02, lng: -77.01 },
+        //     { lat: 42.03, lng: -77.02 },
+        //     { lat: 41.03, lng: -77.04 },
+        //     { lat: 42.05, lng: -77.02 }
+        // ]
+        // let bounds = new this.props.google.maps.LatLngBounds();
+        // for (let i = 0; i < points.length; i++) {
+        //   bounds.extend(points[i]);
+        // }
         return (
         <Map 
             google={google}
             initialCenter={this.props.center ? this.props.center : this.props.state.data.userCoord}
-            onClick={this.onMapClicked}>
+            onClick={this.onMapClicked}
+            zoom={7}>
             <Marker
                 onClick={this.onMarkerClick}
                 title={'The marker`s title will appear as a tooltip.'}
