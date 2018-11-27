@@ -87,7 +87,7 @@ const reorder = (list, startIndex, endIndex) => {
 		  result.destination.index
 		);
 		state.playlist.tracks.data = items;
-		axios.put('https://192.168.99.100:4242/playlist/' + this.state.playlist._id, 
+		axios.put('https://192.168.99.101:4242/playlist/' + this.state.playlist._id, 
 			this.state.playlist,
 			{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}}
 		)
@@ -103,7 +103,15 @@ const reorder = (list, startIndex, endIndex) => {
 
 		return(
             <div>
-                {this.state.playlist.tracks.data.length > 0 && <PersonalPlayer  tracks={this.state.playlist.tracks.data}></PersonalPlayer>}
+                <Row>
+                    <Col span={24}>
+                        {this.state.playlist.tracks.data.length > 0 && <PersonalPlayer  tracks={this.state.playlist.tracks.data}></PersonalPlayer>}
+                    </Col>
+                </Row>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
                 <Row>
                     <Col span={6}>
                     </Col>

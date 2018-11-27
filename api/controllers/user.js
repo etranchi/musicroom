@@ -151,6 +151,7 @@ exports.deleteUserById = async (req, res) => {
 exports.modifyUserById = async (req, res) => {
 	req.body = JSON.parse(req.body.body);
 	try {
+		console.log(req.body)
 		if (!req.body)
 			return res.status(204);
 		if (req.file && req.file.filename) req.body.picture = req.file.filename

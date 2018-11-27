@@ -110,16 +110,6 @@ class Body extends Component {
                         <SearchBar state={this.props.state} type="playlist" updateEventPlaylist={this.updateEventPlaylist}/>
                     </Col>
                 </Row>
-                {/* <Row style={{height:'130px'}}>
-                    <Col span={5}></Col>
-                    <Col span={12}>
-                    {
-                        this.state.playlistId ? <iframe title="deezerplayer" scrolling="no" frameBorder="0" allowtransparency="true" src={"https://www.deezer.com/plugins/player?format=classic&autoplay=false&playlist=true&width=700&height=350&color=007FEB&layout=dark&size=medium&type=playlist&id="
-                        + this.state.playlistId
-                        + "&app_id=1"} width="700" height="350"></iframe> : null
-                    }
-                    </Col>
-                </Row> */}
                 { this.state.playlistId  && this.props.state.data.event.playlist.tracks.data.length > 0 ?    <PersonalPlayer  tracks={this.props.state.data.event.playlist.tracks.data}/> : null} 
             </div>
         );

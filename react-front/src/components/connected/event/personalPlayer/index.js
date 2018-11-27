@@ -35,15 +35,22 @@ export default class PersonalPlayer extends Component {
 	render() {
         return ( 
             <div className='player' style={{backgroundColor:this.props.color ? this.props.color : 'white'}}>
+
                 <div className='defaultComponentProperty' style={{float:'left', minWidth:"300px"}}> 
                     <TrackInformation  updateParentState={this.updateState} track={this.props.tracks[this.state.currentTracksID]}/>
                 </div>
-                <div className='defaultComponentProperty'></div>
+
+                <div className='defaultComponentProperty'>
+                </div>
+
                 <div className='defaultComponentProperty' style={{minWidth:"600px"}}>
                     <div style={{height:'50px'}}><Control updateParentState={this.updateState} tracks={this.props.tracks}/></div>
                     <div style={{height:'30px'}}><Progress strokesColor={this.props.strokesColor} updateParentState={this.updateState} tracks={this.props.tracks}/></div>
                 </div>
-                <div className='defaultComponentProperty'></div>
+                
+                <div className='defaultComponentProperty'>
+                </div>
+
                 <div className='defaultComponentProperty' style={{float:'right', minWidth:"300px"}}> 
                     <Options strokesColor={this.props.strokesColor} updateParentState={this.updateState} tracks={this.props.tracks}/>  
                 </div>
