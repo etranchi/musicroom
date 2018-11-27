@@ -31,8 +31,8 @@ class ListEvent extends Component {
 
 	getEvents = (callback) => {
 		console.log('coucou');
-		axios.get('https://192.168.99.100:4242/event')
-		.then((resp) => {
+		axios.get(process.env.REACT_APP_API_URL + '/event')
+		.then(resp => {
 			console.log('response get Events');
 			console.log(resp.data);
 			if (callback)
@@ -47,8 +47,13 @@ class ListEvent extends Component {
 				})
 			}
 		})
-		.catch((err) => {
-			console.log('Events error', err);
+		.catch(err => {
+				this.setState({
+					myEvents: [], 
+					friendEvents:[], 
+					allEvents: [], 
+					loading:false
+				})
 		})
 	}
 

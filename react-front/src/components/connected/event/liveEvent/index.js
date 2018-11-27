@@ -87,7 +87,7 @@ const reorder = (list, startIndex, endIndex) => {
 		  result.destination.index
 		);
 		state.playlist.tracks.data = items;
-		axios.put('https://192.168.99.100:4242/playlist/' + this.state.playlist._id, 
+		axios.put(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id, 
 			this.state.playlist,
 			{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}}
 		)
