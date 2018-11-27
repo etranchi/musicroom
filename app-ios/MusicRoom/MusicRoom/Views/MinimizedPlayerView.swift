@@ -70,7 +70,7 @@ class MinimizedPlayerView: UIView {
         let icon = #imageLiteral(resourceName: "like_icon")
         let tintedIcon = icon.withRenderingMode(.alwaysTemplate)
         button.setImage(tintedIcon, for: .normal)
-        button.tintColor = UIColor(white: 1, alpha: 1)
+        button.tintColor = UIColor(white: 0.6, alpha: 0.8)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.isUserInteractionEnabled = true
         return button
@@ -133,6 +133,18 @@ class MinimizedPlayerView: UIView {
         }
         titleLabel.text = playerController.titleLabel.text
         authorLabel.text = playerController.authorLabel.text
+        
+        
+        guard playerController.index >= 0 else { return }
+        var liked = false
+        let track = playerController.tracks[playerController.index]
+        lovedTracksId.forEach { (trackId) in
+            if track.id == trackId { liked = true }
+        }
+        let icon = liked ? #imageLiteral(resourceName: "liked_icon") : #imageLiteral(resourceName: "like_icon")
+        let tintedIcon = icon.withRenderingMode(.alwaysTemplate)
+        likeButton.setImage(tintedIcon, for: .normal)
+        likeButton.tintColor = liked ? UIColor(red: 40 / 255, green: 210 / 255, blue: 40 / 255, alpha: 1) : UIColor(white: 1, alpha: 1)
     }
     
     @objc func pushPlayer() {
@@ -143,7 +155,13 @@ class MinimizedPlayerView: UIView {
     }
     
     @objc func handleLike() {
-        
+        guard playerController.index >= 0 else { return }
+        let track = playerController.tracks[playerController.index]
+        apiManager.addTrackToLibrary(String(track.id))
+        let icon = #imageLiteral(resourceName: "liked_icon")
+        let tintedIcon = icon.withRenderingMode(.alwaysTemplate)
+        likeButton.setImage(tintedIcon, for: .normal)
+        likeButton.tintColor = UIColor(red: 40 / 255, green: 240 / 255, blue: 40 / 255, alpha: 1)
     }
     
     fileprivate func setupPlayerContainerBackground() {

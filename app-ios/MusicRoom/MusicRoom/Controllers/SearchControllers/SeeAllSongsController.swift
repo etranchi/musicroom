@@ -14,12 +14,10 @@ class SeeAllSongsController: UICollectionViewController, UICollectionViewDelegat
 
     let tracks: [Track]
     let searchText: String
-    let searchController: SearchController
 
-    init(_ tracks: [Track], _ searchText: String, _ traget: SearchController, layout: UICollectionViewFlowLayout) {
+    init(_ tracks: [Track], _ searchText: String, layout: UICollectionViewFlowLayout) {
         self.tracks = tracks
         self.searchText = searchText
-        self.searchController = traget
         super.init(collectionViewLayout: layout)
     }
     
@@ -37,7 +35,7 @@ class SeeAllSongsController: UICollectionViewController, UICollectionViewDelegat
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        title = "\"\(searchText)\" in Songs"
+        title = "\(searchText)"
         navigationController?.navigationBar.topItem?.title = ""
     }
     
@@ -55,7 +53,7 @@ class SeeAllSongsController: UICollectionViewController, UICollectionViewDelegat
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        searchController.showPlayerForSong(indexPath.item)
+        (tabBarController as? TabBarController)?.showPlayerForSong(indexPath.row, tracks: tracks)
         currentTrack = tracks[indexPath.item]
     }
 

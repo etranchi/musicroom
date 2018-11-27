@@ -11,6 +11,7 @@ import UIKit
 let playerController = PlayerController([], -2)
 let songDetail = SongDetailView(frame: UIApplication.shared.keyWindow!.screen.bounds)
 var currentTrack: Track?
+var lovedTracksId: [Int] = []
 
 class TabBarController: UITabBarController {
 
@@ -61,6 +62,7 @@ class TabBarController: UITabBarController {
     }
     
     fileprivate func setupTabBarController() {
+        updateLovedTrackList()
         songDetail.root = self
         playerController.rootViewController = self
         playerController.minimizedPlayer = minimizedPlayer
@@ -108,6 +110,15 @@ class TabBarController: UITabBarController {
         let navi2 = CustomNavigationController(rootViewController: tabViewController2)
         
         viewControllers = [navi0, navi1, navi2]
+    }
+    
+    func updateLovedTrackList() {
+        apiManager.getLibraryTracks { (tracks) in
+            lovedTracksId.removeAll()
+            tracks.forEach({ (track) in
+                lovedTracksId.append(track.id)
+            })
+        }
     }
     
     func animatedShowPlayer() {

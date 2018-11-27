@@ -51,10 +51,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             window?.rootViewController = nav
         }
         else {
-            print(user[0])
-            print(user[0].token)
-            let nav = TabBarController()
             userManager.currentUser = user[0]
+            let nav = TabBarController()
             window?.rootViewController = nav
         }
         return true

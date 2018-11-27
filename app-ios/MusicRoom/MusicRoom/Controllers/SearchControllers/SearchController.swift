@@ -88,7 +88,7 @@ class SearchController: UITableViewController {
         layout.scrollDirection = .vertical
         layout.minimumInteritemSpacing = 0
         layout.minimumLineSpacing = 0
-        let vc = SeeAllSongsController(tracks, initialSearch, self, layout: layout)
+        let vc = SeeAllSongsController(tracks, "\"\(initialSearch)\" in Songs", layout: layout)
         navigationController?.pushViewController(vc, animated: true)
     }
     

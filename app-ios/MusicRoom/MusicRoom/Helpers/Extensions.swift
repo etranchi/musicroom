@@ -17,12 +17,12 @@ extension           UIImageView
         URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
     }
     
-    func            loadImageUsingCacheWithUrlString(urlString: String)
+    func            getImageUsingCacheWithUrlString(urlString: String, completion: @escaping (UIImage) -> ())
     {
         self.image = nil
         guard urlString != "" else { return }
         if let cachedImage = imageCache.object(forKey: urlString as NSString) {
-            self.image = cachedImage
+            completion(cachedImage)
             return
         }
         let url = URL(string: urlString)
@@ -36,9 +36,16 @@ extension           UIImageView
             DispatchQueue.main.async() {
                 if let image = UIImage(data: data) {
                     imageCache.setObject(image, forKey: String(describing: url!) as NSString)
-                    self.image = image
+                    completion(image)
                 }
             }
         })
+    }
+    
+    func            loadImageUsingCacheWithUrlString(urlString: String)
+    {
+        getImageUsingCacheWithUrlString(urlString: urlString) { (image) in
+            self.image = image
+        }
     }
 }
