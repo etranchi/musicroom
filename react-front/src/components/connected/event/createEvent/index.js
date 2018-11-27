@@ -107,9 +107,10 @@ class CreateEvent extends Component {
         if (info.file.status === 'uploading') {
           this.setState({loading:true});
           return;
+        }  if (info.file.originFileObj) {
+            this.getBase64(info.file.originFileObj, imageUrl => this.setState({ imageUrl, loading: false}));
         }
-        this.getBase64(info.file.originFileObj, imageUrl => this.setState({ imageUrl, loading: false}));
-      }
+    }
       
     getBase64 = (img, callback) => {
         const reader = new FileReader();

@@ -85,9 +85,10 @@ class EditSetting extends Component {
         if (info.file.status === 'uploading') {
           this.setState({loading:true});
           return;
-        }
-        this.getBase64(info.file.originFileObj, newPicture => this.setState({ newPicture, loading: false}));
-      }
+		} if (info.file.originFileObj) {
+        	this.getBase64(info.file.originFileObj, newPicture => this.setState({ newPicture, loading: false}));
+		}
+	}
       
     getBase64 = (img, callback) => {
         const reader = new FileReader();
