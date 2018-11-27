@@ -4,7 +4,7 @@ import { message, Button, Divider, Row, Col} from 'antd';
 import CardHeader from './Header'
 import CreatorProfil from './creatorProfil'
 import BodyEvent from './Body'
-import SimpleMap from './map'
+import Map from '../map'
 import axios from 'axios'
 import geolib from 'geolib'
 import {socket, createRoom} from '../../sockets';
@@ -54,7 +54,6 @@ class cardEvent extends Component {
         return false;
     }
     componentDidMount = () => {
-        console.log('card event did mount');
         socket.on('createRoom', (tracks) => {
             console.log("Room created : ", tracks)
         })
@@ -68,7 +67,7 @@ class cardEvent extends Component {
         if (this.state.isCreator || this.state.isMember || this.state.isAdmin)
             this.setState({isViewer:false})
     }
-    updateMap(val){
+    updateMap = () => {
         let calc = geolib.getDistanceSimple(
             {latitude: this.props.state.data.userCoord.lat, longitude: this.props.state.data.userCoord.lng},
             {latitude: this.props.state.data.event.location.coord.lat, longitude:this.props.state.data.event.location.coord.lng}
@@ -114,7 +113,7 @@ class cardEvent extends Component {
                 <CardHeader state={this.props.state} updateParent={this.props.updateParent} />
                 <Row>
                     <Col>
-                        {this.state.isHidden ? <div style={{height:'500px'}}><SimpleMap state={this.props.state} event={this.props.state.data.event}/></div> : null}
+                        {this.state.isHidden ? <div style={{height:'500px'}}><Map state={this.props.state} events={[this.props.state.data.event]}/></div> : null}
                     </Col>
                 </Row>
                 <Divider />
@@ -123,7 +122,7 @@ class cardEvent extends Component {
                 <Button type="primary" onClick={this.saveEvent}> <b> Sauvegarder l'event </b> </Button>
                 {
                     this.isToday(this.props.state.data.event.event_date) ?
-                        <Button style={this.launchButton} type="primary" onClick={this.openLiveEvent}> <b> Start Event </b> </Button>
+                        <Button  type="primary" onClick={this.openLiveEvent}> <b> Start Event </b> </Button>
                         : 
                         null
                 }

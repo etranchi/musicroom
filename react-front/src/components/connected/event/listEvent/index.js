@@ -79,13 +79,6 @@ class ListEvent extends Component {
 		else{
 		return (
 				<Layout>
-					<Row type="flex" justify="space-between">
-						<Col>
-						</Col>
-						<Col>
-							<Button onClick={this.props.updateParent.bind(this, {'currentComponent': 'createEvent'})}>+</Button>
-						</Col>
-					</Row>
 					<Layout.Content style={{width:'82%', margin: '0 8% 0 10%'}}>
 					<div style={{padding:'1% 0 1% 0'}}>
 						{ this.state.myEvents.length > 0 ? <h1 style={{fontSize:'36px'}}> Mes événements : </h1> : null }
