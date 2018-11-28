@@ -29,7 +29,7 @@ export default class PersonalPlayer extends Component {
     }
 
     updateState = (value) =>  {
-        this.setState({value})
+        this.setState(value)
     }
 
 	render() {

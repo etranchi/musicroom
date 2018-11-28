@@ -43,6 +43,11 @@ class cardEvent extends Component {
         return false;
     }
     componentDidMount = () => {
+        socket.on('updateEvent', (newEvent) => {
+            console.log('Receive SOCKET UPDATE')
+            this.props.state.data.event = newEvent
+            this.setState({'data': this.props.state.data})
+        })
         socket.on('createRoom', (tracks, msg) => {
             if (msg === 'err')
             {
@@ -96,8 +101,8 @@ class cardEvent extends Component {
         let dayTimeStamp        = (3600 * 1000) * 24;
         let day                 = timeBeforeEvent / dayTimeStamp
 
-        console.log("cououc cles loulous" + timeBeforeEvent)
-        if (timeBeforeEvent < 0 && day < 1 && day > -1)
+        console.log("Console.log", timeBeforeEvent, dayTimeStamp)
+        if (timeBeforeEvent <= dayTimeStamp/24 && day < 1 && day > -1)
             return true;
         else
             return false;

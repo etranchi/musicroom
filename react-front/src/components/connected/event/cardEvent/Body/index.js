@@ -6,7 +6,7 @@ import MemberList  from './MemberList';
 import {Divider, Icon, Col, Row, Modal, Input, DatePicker } from 'antd';
 import PersonalPlayer from '../../personalPlayer'
 import axios from 'axios'
-import {socket, updateEvent} from '../../../sockets';
+import {updateEvent} from '../../../sockets';
 
 
 class Body extends Component {
@@ -21,11 +21,6 @@ class Body extends Component {
     }
 
     componentDidMount = () => {
-        socket.on('updateEvent', (newEvent) => {
-            console.log('Receive SOCKET UPDATE')
-            this.props.state.data.event = newEvent
-            this.setState({'data': this.props.state.data})
-        })
         this.setState({formatDate: this.formatDateAnnounce(this.props.state.data.event.event_date)})
     }
     updateLocation = (val) => {
@@ -81,19 +76,23 @@ class Body extends Component {
     updateEventPlaylist = playlist => {
         if (playlist)
         {
+            console.log("Playlist : ", playlist)
             axios.get(process.env.REACT_APP_API_URL + '/playlist/' + playlist.id, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
             .then((resp) => { 
                 playlist = resp.data
                 this.props.state.data.event.playlist = playlist;
-                this.props.updateParent({'data' : this.props.state.data, 'playlistId':playlist.id}, () => {
-                    console.log("Playlist change, socket update Event")
-                    updateEvent(this.roomID, this.props.state.data.event)
-                })
+                this.props.updateParent({'data' : this.props.state.data, 'playlistId':playlist.id})
+                console.log("Playlist change, socket update Event")
+                updateEvent(this.roomID, this.props.state.data.event)
                 this.setState({playlistId:playlist.id})
 
                 
             })
             .catch((err) => { console.log("Wrong Playlist id.", err); })  
+        }
+        else
+        {
+            console.log("Plaasdasylist : ", playlist)
         }
     }
     removeMember = (type, item) => {
@@ -224,7 +223,6 @@ class Body extends Component {
                     :
                     null
                 }
-                { this.state.playlistId  && this.props.state.data.event.playlist.tracks.data.length > 0 ?    <PersonalPlayer  tracks={this.props.state.data.event.playlist.tracks.data}/> : null} 
                 {/* Modal for description modification  */}
                 <Modal title="Description : " visible={this.state.modDesc} onOk={this.handleOk.bind(this, "modDesc")} onCancel={this.handleCancel.bind(this, "modDesc")} >
                     <Input.TextArea  placeholder="Descriptif de l'évènement : " name= "description" value={this.props.state.data.event.description} onChange={this.handleChangeModal}/> 

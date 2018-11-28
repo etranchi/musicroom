@@ -58,7 +58,7 @@ export default class PersonalPlayer extends Component {
                 case "prev":
                     this.prevTrack();
                     break;
-                case "play" || "pause":
+                case "play":
                     this.playTrack();
                     break;
                 default:
@@ -73,8 +73,6 @@ export default class PersonalPlayer extends Component {
             this.state.isPlaying ?  DZ.player.play() :  DZ.player.pause()     
         });
         console.log("play/pause");
-        if (this.props.roomID)
-            updatePlayer(this.props.roomID, this.state.isPlaying ?  "play" :  "pause");
     }
 
     nextTrack = () => {
@@ -84,9 +82,8 @@ export default class PersonalPlayer extends Component {
         this.setState({currentTracksID:index})
         this.props.updateParentState({currentTracksID:index})
         DZ.player.next()
+        console.log("currentIndex : " + index);
         console.log("next");
-        if (this.props.roomID)
-            updatePlayer(this.props.roomID, "next");
     }
 
     prevTrack = () => {
@@ -98,8 +95,10 @@ export default class PersonalPlayer extends Component {
         DZ.player.prev()
         console.log("prev");
         console.log(this.props);
-        if (this.props.roomID)
-            updatePlayer(this.props.roomID, "prev");
+    }
+
+    playerUpdate = (event) => {
+        updatePlayer(this.props.roomID, event);
     }
 
 	render() {
@@ -111,15 +110,15 @@ export default class PersonalPlayer extends Component {
                     </Col>
                     <Col span={1}></Col>
                     <Col span={3}>
-                        <i  onClick={this.prevTrack}   className="fas fa-backward playerAction"></i>
+                        <i  onClick={() => {this.playerUpdate("prev")}}   className="fas fa-backward playerAction"></i>
                     </Col>
                     <Col span={1}></Col>
                     <Col span={3}>
-                        <i  onClick={this.playTrack} className={this.state.isPlaying ? "fas fa-pause-circle playerAction" : "fas fa-play-circle playerAction"}></i>  
+                        <i  onClick={() => {this.playerUpdate("play")}} className={this.state.isPlaying ? "fas fa-pause-circle playerAction" : "fas fa-play-circle playerAction"}></i>  
                     </Col>
                     <Col span={1}></Col>
                     <Col span={3}>
-                        <i onClick={this.nextTrack}   className="fas fa-forward playerAction"></i>
+                        <i onClick={() => {this.playerUpdate("next")}}   className="fas fa-forward playerAction"></i>
                     </Col>
                     <Col span={1}></Col>
                     <Col span={3}>
