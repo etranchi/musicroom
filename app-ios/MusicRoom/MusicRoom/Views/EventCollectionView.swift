@@ -41,6 +41,7 @@ class EventCollectionView: UICollectionView, UICollectionViewDataSource, UIColle
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let root = rootTarget as? EventsController {
+            let cell = collectionView.cellForItem(at: indexPath)
             root.presentSelectedEvent(events[indexPath.row])
         }
     }

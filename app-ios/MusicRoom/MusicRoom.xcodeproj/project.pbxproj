@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		7701FE6B21998D8400B721EB /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7701FE6A21998D8300B721EB /* GLKit.framework */; };
-		7708F19721AD7E5E00C6BECA /* EventDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7708F19621AD7E5E00C6BECA /* EventDetailView.swift */; };
 		7708F19921AD8E9200C6BECA /* EventsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7708F19821AD8E9200C6BECA /* EventsController.swift */; };
 		7708F19B21AD8FED00C6BECA /* SearchEventsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7708F19A21AD8FED00C6BECA /* SearchEventsCell.swift */; };
 		772E7702219DC78C0005AE33 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 772E7701219DC78C0005AE33 /* MapKit.framework */; };
@@ -25,6 +24,7 @@
 		778BF9A921832CB800448FE6 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778BF9A821832CB800448FE6 /* Track.swift */; };
 		77AF56C22199ACF300E5FBB9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 77AF56C12199ACF200E5FBB9 /* GoogleService-Info.plist */; };
 		77B444762181CD0200B3F536 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B444752181CD0200B3F536 /* APIManager.swift */; };
+		77DAE48C21AEAD1000427173 /* EventDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DAE48B21AEAD1000427173 /* EventDetailController.swift */; };
 		77F2F50A219F101100CC9E8D /* LocationSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F2F509219F101100CC9E8D /* LocationSearchController.swift */; };
 		77F2F50C219F431800CC9E8D /* ToastMsg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F2F50B219F431700CC9E8D /* ToastMsg.swift */; };
 		77F5157E21A2FA9300A12148 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F5157D21A2FA9300A12148 /* Event.swift */; };
@@ -93,7 +93,6 @@
 /* Begin PBXFileReference section */
 		7701FE6A21998D8300B721EB /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		77064F8321AC1950009E638E /* MusicRoom.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MusicRoom.entitlements; sourceTree = "<group>"; };
-		7708F19621AD7E5E00C6BECA /* EventDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailView.swift; sourceTree = "<group>"; };
 		7708F19821AD8E9200C6BECA /* EventsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsController.swift; sourceTree = "<group>"; };
 		7708F19A21AD8FED00C6BECA /* SearchEventsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEventsCell.swift; sourceTree = "<group>"; };
 		77140AC2219C63B800270002 /* MusicRoom 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MusicRoom 2.xcdatamodel"; sourceTree = "<group>"; };
@@ -116,6 +115,7 @@
 		778BF9A821832CB800448FE6 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		77AF56C12199ACF200E5FBB9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		77B444752181CD0200B3F536 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
+		77DAE48B21AEAD1000427173 /* EventDetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailController.swift; sourceTree = "<group>"; };
 		77F2F509219F101100CC9E8D /* LocationSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchController.swift; sourceTree = "<group>"; };
 		77F2F50B219F431700CC9E8D /* ToastMsg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastMsg.swift; sourceTree = "<group>"; };
 		77F5157D21A2FA9300A12148 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
@@ -309,7 +309,6 @@
 				791C770E21A6FF26006FCBDF /* SongDetailView.swift */,
 				79FF7D13219D9BCC001DAE17 /* ArtistsCollectionView.swift */,
 				79938C8C21A314CD006D7281 /* PlaylistCollectionView.swift */,
-				7708F19621AD7E5E00C6BECA /* EventDetailView.swift */,
 				773EBDA521AD95160073393F /* EventCollectionView.swift */,
 			);
 			path = Views;
@@ -358,6 +357,7 @@
 				77FA6AF2219DDC3500884428 /* Map */,
 				79CDCF26218874160095CC63 /* SettingsController.swift */,
 				7991C46B21988DAF0079F831 /* AlbumController.swift */,
+				77DAE48B21AEAD1000427173 /* EventDetailController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -680,7 +680,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7708F19721AD7E5E00C6BECA /* EventDetailView.swift in Sources */,
 				79938C8821A2FED6006D7281 /* LibraryCell.swift in Sources */,
 				79CDCF27218874160095CC63 /* SettingsController.swift in Sources */,
 				7743C23B2190587E002CC508 /* Playlist.swift in Sources */,
@@ -694,6 +693,7 @@
 				79DD4A79219C3F04005578EB /* SearchController.swift in Sources */,
 				773EBDA821AD96400073393F /* EventCell.swift in Sources */,
 				79CDCF1F218870F70095CC63 /* LoadingController.swift in Sources */,
+				77DAE48C21AEAD1000427173 /* EventDetailController.swift in Sources */,
 				77F2F50C219F431800CC9E8D /* ToastMsg.swift in Sources */,
 				7743C24A2190A23C002CC508 /* UserManager.swift in Sources */,
 				77F2F50A219F101100CC9E8D /* LocationSearchController.swift in Sources */,

@@ -45,8 +45,8 @@ class EventsController: UITableViewController {
     }
 
     func presentSelectedEvent(_ event : Event) {
-        print("go TO event")
-        print(event)
+        let vc = EventDetailController(event)
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
