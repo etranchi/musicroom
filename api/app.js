@@ -39,8 +39,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use('/', routes);
 app.use(function(err, req, res, next) {
     console.log("Je suis dans le gestionnaire d'erreur -> ")
-    console.log(err.message)
-    res.status(err.status || 500).send({error: err.message})
+    if (err.message)
+      return res.status(err.status || 500).send({error: err.message})
+    return res.status(500).send({error: "Le serveur a mal"})
 });
 
 app.get('/', ( req, res) =>  {
