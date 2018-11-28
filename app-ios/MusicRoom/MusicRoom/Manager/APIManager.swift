@@ -290,6 +290,16 @@ class APIManager: NSObject, URLSessionDelegate {
         }.resume()
     }
     
+    func getAllUsers(_ token : String, completion : @escaping (([User]) -> ())) {
+        let allUserUrl = self.url + "user"
+        var request = URLRequest(url: URL(string: allUserUrl)!)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        searchAll([User].self, request: request) { (me) in
+            completion(me)
+        }
+    }
+    
     func postEvent(_ token : String, event : Event, img : UIImage, onCompletion: @escaping ((Bool) -> Void)) {
         do {
             let postEventUrl = self.url + "event/"
