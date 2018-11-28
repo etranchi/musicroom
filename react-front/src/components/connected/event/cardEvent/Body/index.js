@@ -56,20 +56,11 @@ class Body extends Component {
     }
     updateEventMember = (value, type) => {
         if (value && type === 'member')
-        {
             this.props.state.data.event.members.push(value)
-            console.log(  this.props.state.data.event.members[0])
-            this.props.updateParent({'data': this.props.state.data}, () => {
-                console.log("Member change, socket update Event")
-                updateEvent(this.roomID, this.roomID, this.props.state.data.event)
-            })
-        }
         else if  (value && type === 'admin')
-        {
             this.props.state.data.event.adminMembers.push(value)
-            this.props.updateParent({'data': this.props.state.data})
-            updateEvent(this.roomID, this.props.state.data.event)
-        }
+        this.props.updateParent({'data': this.props.state.data})
+        updateEvent(this.roomID, this.props.state.data.event)
     }
     updateEventPlaylist = playlist => {
         if (playlist)
@@ -94,7 +85,6 @@ class Body extends Component {
         }
     }
     removeMember = (type, item) => {
-
         let tab = [];
         if (type === 'admin') tab = this.props.state.data.event.adminMembers
         else  tab = this.props.state.data.event.members
@@ -219,7 +209,7 @@ class Body extends Component {
                     :
                     null
                 }
-                { this.state.playlistId  && this.props.state.data.event.playlist.tracks.data.length > 0 ?    <PersonalPlayer  tracks={this.props.state.data.event.playlist.tracks.data}/> : null} 
+                { this.state.playlistId  && this.props.state.data.event.playlist.tracks.data.length > 0 ? <PersonalPlayer  tracks={this.props.state.data.event.playlist.tracks.data}/> : null} 
                 {/* Modal for description modification  */}
                 <Modal title="Description : " visible={this.state.modDesc} onOk={this.handleOk.bind(this, "modDesc")} onCancel={this.handleCancel.bind(this, "modDesc")} >
                     <Input.TextArea  placeholder="Descriptif de l'évènement : " name= "description" value={this.props.state.data.event.description} onChange={this.handleChangeModal}/> 

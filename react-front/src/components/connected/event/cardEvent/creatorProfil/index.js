@@ -33,6 +33,7 @@ class CreatorProfil extends Component {
     }
 
 	render() {
+        console.log("CREATOR PROFIL : ", this.props.state.data.event)
         let userPicture = this.props.state.data.event.creator.facebookId ? this.props.state.data.event.creator.picture : process.env.REACT_APP_API_URL + "/userPicture/" + this.props.state.data.event.creator.picture
         return (
             <div>
