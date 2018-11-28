@@ -75,7 +75,8 @@ class cardEvent extends Component {
         this.checkRight()
     }
     componentWillUnmount = () => {
-        leaveRoom(this.props.state.data.event._id)
+
+        //     leaveRoom(this.props.state.data.event._id)
     }
     updateMap = () => {
         let calc = geolib.getDistanceSimple(
@@ -88,7 +89,6 @@ class cardEvent extends Component {
         this.setState({'isHidden': !this.state.isHidden})
     }
     openLiveEvent = () => {
-        updateTracks(this.props.state.data.event._id, this.props.state.data.event.playlist.tracks.data)
         this.props.updateParent({'currentComponent':'liveEvent'})
     }    
     isToday = date => {
@@ -120,7 +120,7 @@ class cardEvent extends Component {
                 <CreatorProfil right={this.state} state={this.props.state} updateParent={this.props.updateParent} />
                 <BodyEvent right={this.state} state={this.props.state} updateParent={this.props.updateParent} updateMap={this.updateMap.bind(this)}/>
                 {
-                    this.isToday(this.props.state.data.event.event_date) ?
+                    this.isToday(this.props.state.data.event.event_date) &&  this.props.state.data.event.playlist.tracks ?
                         <Button   style={this.launchButton} type="primary" onClick={this.openLiveEvent}> <b> Start Event </b> </Button>
                         : 
                         null

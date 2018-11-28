@@ -65,7 +65,6 @@ class Body extends Component {
     updateEventPlaylist = playlist => {
         if (playlist)
         {
-            console.log("Playlist : ", playlist)
             axios.get(process.env.REACT_APP_API_URL + '/playlist/' + playlist.id, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
             .then((resp) => { 
                 playlist = resp.data
@@ -73,15 +72,9 @@ class Body extends Component {
                 this.props.updateParent({'data' : this.props.state.data, 'playlistId':playlist.id})
                 console.log("Playlist change, socket update Event")
                 updateEvent(this.roomID, this.props.state.data.event)
-                this.setState({playlistId:playlist.id})
-
-                
+                this.setState({playlistId:playlist.id})         
             })
             .catch((err) => { console.log("Wrong Playlist id.", err); })  
-        }
-        else
-        {
-            console.log("Plaasdasylist : ", playlist)
         }
     }
     removeMember = (type, item) => {
