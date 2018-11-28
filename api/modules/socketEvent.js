@@ -22,6 +22,12 @@ module.exports = function(io){
           if (playlistBlocked.indexOf(playlistId) === -1) {
             playlistBlocked.push(playlistId)
             console.log("BLOCK PLAYLIST EVENT")
+            setTimeout(() => {
+                if (playlistBlocked.indexOf(playlistId) !== -1) {
+                    socket.to(playlistId).emit('playlistUpdated');
+                    console.log("UNLOCK")
+                }
+            }, 5000)
             socket.to(playlistId).emit('blockPlaylist')
           } else {
             socket.to(playlistId).emit('alreadyBlocked')
