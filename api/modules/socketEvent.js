@@ -26,17 +26,17 @@ module.exports = function(io){
           } else {
             socket.to(playlistId).emit('alreadyBlocked')
           }
+        });
 
-
-          socket.on('joinPlaylist', (playlistId) => {
+        socket.on('joinPlaylist', (playlistId) => {
             console.log("[Socket] -> joinPlaylist", playlistId)
             socket.join(playlistId);
-          });
-          socket.on('leavePlaylist', (playlistId) => {
+        });
+        socket.on('leavePlaylist', (playlistId) => {
             console.log("[Socket] -> leavePlaylist")
             socket.leave(playlistId);
-          });
         });
+        
       
         /* Socket For LiveEvent */
         /* Store array of track object, store like, unlike in */
