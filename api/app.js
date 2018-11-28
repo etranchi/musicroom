@@ -138,6 +138,10 @@ io.on('connection', (socket) => {
       return  io.sockets.in(room.id).emit('updateScore', 'fail');
   });
 
+  socket.on('updatePlayer', (roomID, event) => {
+    console.log('event ->' + roomID + 'event -> ' + event);
+  })
+
 });
 
 httpsServer.listen(config.port, config.host);

@@ -8,9 +8,6 @@ import LiveEvent from './liveEvent';
 import './styles.css';
 
 class Event extends Component {
-	componentDidMount() {
-	
-	}
 	render() {
 		return (
 			<div>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './styles.css';
 import {Row, Col} from 'antd';
+import {updatePlayer} from '../../../sockets'
 
 
 const { DZ } = window
@@ -49,9 +50,10 @@ export default class PersonalPlayer extends Component {
     }
     playTrack = () => {
         this.setState({isPlaying:!this.state.isPlaying}, () => {
-            this.state.isPlaying ?  DZ.player.play() :  DZ.player.pause()
-            
+            this.state.isPlaying ?  DZ.player.play() :  DZ.player.pause()     
         });
+        // if (this.props.roomId)
+        //     updatePlayer(this.props.roomId, this.state.isPlaying ?  "play" :  "pause");
     }
 
     nextTrack = () => {
@@ -61,6 +63,8 @@ export default class PersonalPlayer extends Component {
         this.setState({currentTracksID:index})
         this.props.updateParentState({currentTracksID:index})
         DZ.player.next()
+        if (this.props.roomId)
+            updatePlayer(this.props.roomId, "next");
     }
 
     prevTrack = () => {
@@ -70,6 +74,8 @@ export default class PersonalPlayer extends Component {
         this.setState({currentTracksID:index})
         this.props.updateParentState({currentTracksID:index})
         DZ.player.prev()
+        if (this.props.roomId)
+            updatePlayer(this.props.roomId, "prev");
     }
 
 	render() {

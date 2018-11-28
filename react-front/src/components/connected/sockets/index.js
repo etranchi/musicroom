@@ -27,4 +27,8 @@ function getRoomPlaylist (roomID) {
 function updateScore (roomID, tracksID, pointsD) {
     socket.emit("updateScore", roomID, tracksID, pointsD)
 }
-export { updatePLaylist, socket, blockSocketEvent, getRoomPlaylist, updateScore, joinRoom, createRoom, createEventLive };
+
+function updatePlayer (roomID, event) {
+    socket.emit("updatePlayer", roomID, event)
+}
+export { updatePlayer, updatePLaylist, socket, blockSocketEvent, getRoomPlaylist, updateScore, joinRoom, createRoom, createEventLive };

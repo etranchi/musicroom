@@ -20,8 +20,6 @@ class Connected extends Component {
 		}
 
 		componentWillMount(){
-			console.log("ici");
-			console.log("toto");
 			this.getGeolocalisation();
 			this.getEvents();
 		}

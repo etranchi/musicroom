@@ -105,7 +105,7 @@ const reorder = (list, startIndex, endIndex) => {
             <div>
                 <Row>
                     <Col span={24}>
-                        {this.state.playlist.tracks.data.length > 0 && <PersonalPlayer  tracks={this.state.playlist.tracks.data}></PersonalPlayer>}
+                        {this.state.playlist.tracks.data.length > 0 && <PersonalPlayer  tracks={this.state.playlist.tracks.data} roomID={this.roomID}></PersonalPlayer>}
                     </Col>
                 </Row>
                 <br/>
