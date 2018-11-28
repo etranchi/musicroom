@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './styles.css';
 import { Divider, Card, Avatar, Modal, Icon, Col, Row, Input} from 'antd';
-import {socket, updateEvent} from '../../../sockets';
+import {updateEvent} from '../../../sockets';
 
 class CreatorProfil extends Component {
     
@@ -12,16 +12,8 @@ class CreatorProfil extends Component {
         }
     
     }
-    componentDidMount = () => {
-        socket.on('updateEvent', (newEvent) => {
-            console.log('Receive SOCKET UPDATE')
-            this.props.state.data.event = newEvent
-            this.setState({'data': this.props.state.data})
-            this.setState({iconPrivacy: this.props.state.data.event.public ? 'unlock' : 'lock'})
-        })
-    }
     handleChangePrivacy = event => {
-        if (!this.props.right.isCreator || this.props.right.isAdmin)
+        if (!this.props.right.isCreator || !this.props.right.isAdmin)
             return ;
         this.props.state.data.event.public = !this.props.state.data.event.public
         this.setState({iconPrivacy: this.props.state.data.event.public ? 'unlock' : 'lock'})
@@ -29,11 +21,10 @@ class CreatorProfil extends Component {
     }
 
     showModal = () => {
-        updateEvent(this.roomID, this.props.state.data.event)
         this.setState({visible: true});
     }
     handleOk = (e) => {
-
+        updateEvent(this.roomID, this.props.state.data.event)
         this.setState({visible: false});
     }
     
@@ -42,6 +33,7 @@ class CreatorProfil extends Component {
     }
 
 	render() {
+        console.log("CREATOR PROFIL : ", this.props.state.data.event)
         let userPicture = this.props.state.data.event.creator.facebookId ? this.props.state.data.event.creator.picture : process.env.REACT_APP_API_URL + "/userPicture/" + this.props.state.data.event.creator.picture
         return (
             <div>

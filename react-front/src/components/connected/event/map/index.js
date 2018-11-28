@@ -13,12 +13,9 @@ export default class MapContainer extends Component {
             selectedPlace: {},
             bounds: {},
             eventsMarkers: []
-        }
-        console.log("Map : constructor")
+        };
     }
-
     componentDidMount = () => {
-        console.log("Map : componentDidMount")
         const eventsMarkers = [];
         const points        = [];
         this.props.events.map((event, key) => {
@@ -45,29 +42,25 @@ export default class MapContainer extends Component {
         for (var i = 0; i < points.length; i++) {
           bounds.extend(points[i]);
         }
-        this.setState({bounds:bounds, eventsMarkers:eventsMarkers})
+        this.setState({bounds:bounds, eventsMarkers:eventsMarkers});
     }
-
     onMarkerClick = (props, marker, e) => {
         this.setState({
             selectedPlace: props,
             activeMarker: marker,
             showingInfoWindow: !this.state.showingInfoWindow
         }, () => {
-            this.props.updateCurrentEvent(this.state.selectedPlace.data)
+            this.props.updateCurrentEvent(this.state.selectedPlace.data);
         });
     }
-    
-
     onMapClicked = (props) => {
         if (this.state.showingInfoWindow) {
             this.setState({
                 showingInfoWindow: false,
                 activeMarker: null
-            })
+            });
         }
-    };
-
+    }
     render() {
         return (
         <Map 

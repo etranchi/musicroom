@@ -4,17 +4,14 @@ import './styles.css';
 import Map from "../map"
 import axios from 'axios'
 
-class PreviewCardEvent extends Component {
+export default class PreviewCardEvent extends Component {
 	constructor(props) {
         super(props);
-
-    this.state = {
-        visible: false,
-        distance: 0
+        this.state = {
+            visible: false,
+            distance: 0
+        };
     }
-
-    }
-
     getDistance = (coordA, coordB) =>  {
         let R     = 6371; // km
         let dLat  = this.toRad(coordB.lat - coordA.lat);
@@ -31,25 +28,22 @@ class PreviewCardEvent extends Component {
    toRad = (Value) => {
         return Value * Math.PI / 180;
     }
-    
     openCard = (e) => {
-        window.scrollTo(600, 600)
+        window.scrollTo(600, 600);
         this.props.state.data.event = this.props.event;
-        this.props.updateParent({'currentComponent': 'cardEvent', 'data': this.props.state.data})
+        this.props.updateParent({'currentComponent': 'cardEvent', 'data': this.props.state.data});
     }
-
     componentDidMount = () => {
         if (!this.props.event.location.coord) {
             this.props.event.location.coord = {
                 lat: 0,
                 lng:0
-            }
+            };
         }
         let distance = this.getDistance(this.props.event.location.coord, this.props.state.data.userCoord);
-        this.setState({distance:distance})
-        this.date = this.props.event.event_date ? this.formatDateAnnounce(this.props.event.event_date) : "Inconnue"
+        this.setState({distance:distance});
+        this.date = this.props.event.event_date ? this.formatDateAnnounce(this.props.event.event_date) : "Inconnue";
     }
-
     openMap(val){
         this.showModal();
     }
@@ -59,19 +53,15 @@ class PreviewCardEvent extends Component {
     handleOk = (e) => {
         this.setState({visible: false});
     }
-    
     handleCancel = (e) => {
         this.setState({visible: false});
     }
     formatDateAnnounce = (date) => {
         let hours = date.split("Z")[0];
-
         if (hours) {
             hours = hours.split("T")[1];
             hours = hours.split(".")[0];
         }
-
-        let classicDate         = new Date(date).toLocaleDateString('fr-Fr')
         let timeEvent           = new Date(date).getTime();
         let curTime             = new Date(new Date()).getTime()
         let timeBeforeEvent     = timeEvent - curTime;
@@ -109,7 +99,6 @@ class PreviewCardEvent extends Component {
         })
     }
 	render() {
-        
         const userPicture = this.props.event.creator.facebookId ? this.props.event.creator.picture : process.env.REACT_APP_API_URL + "/userPicture/" + this.props.event.creator.picture
         return (
             <Card
@@ -130,28 +119,22 @@ class PreviewCardEvent extends Component {
                             <p style={{textAlign:'center'}}>À {this.state.distance} km</p>
                         </div>
                     }
-                />
-                
+                />  
                 <Modal
                     title={"Vous êtes à " + this.state.distance + "km"}
                     visible={this.state.visible}
                     onOk={this.handleOk}
                     onCancel={this.handleCancel}
-                >
-                
+                >  
                     <Map state={this.props.state} openCard={this.openCard} events={[this.props.event]}/>
                     <Row>
-					<Col span={11}></Col>
+					<Col span={11}/>
 					<Col span={4}>
 						<Button  onClick={this.openCard.bind(this)}> Voir l'évent </Button>
 					</Col>
-				</Row>
-                
+				</Row>       
             </Modal>
             </Card>
         )
 	}
 }
-
-export default PreviewCardEvent;
-
