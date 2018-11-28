@@ -15,43 +15,34 @@ const reorder = (list, startIndex, endIndex) => {
 	return result;
   };
 
-
-  export default class LiveEvent extends Component {
-	constructor(props){
-		super(props);
-		this.state = {
-			playlist: [],
-			initLoading: true,
-			loading: false,
-			isBlocked: false
-        }
+export default class LiveEvent extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            playlist: [],
+            initLoading: true,
+            loading: false,
+            isBlocked: false
+        };
         this.roomID = this.props.roomID;
         console.log("live event constructor");
     }
-    componentDidMount() {
-        console.log("live event did mount");
-        /* Live Event */
+    componentDidMount = () => {
         socket.on('createEventLive', (tracks) => {
             this.sortTracks(tracks);
-        })
-        /*              Live Event              */
+        });
         socket.on('joinRoom', (msg) => {
-            console.log("joinRoom : ", msg)
-        })
+        });
         socket.on('getRoomPlaylist', (tracks) => {
-            console.log("getRoomPlaylist : ", tracks)
             this.savePlaylist(tracks);
-        })
-
+        });
         socket.on('updateScore', (tracks) => {
-            console.log("Update score : ", tracks)
             this.savePlaylist(tracks);
-        })
+        });
 
         /**************************************/
     }
-	componentWillMount() {
-        console.log("live event will mount");
+    componentWillMount = () => {
         this.setState({
             initLoading: false,
             playlist: this.props.playlist
@@ -59,49 +50,39 @@ const reorder = (list, startIndex, endIndex) => {
             joinRoom(this.props.roomID);
             getRoomPlaylist(this.props.roomID);
         });
-	}
-
-    savePlaylist = (tracks) => {
+    }
+    savePlaylist = tracks => {
         let playlist = this.state.playlist;
         playlist.tracks.data = tracks;
-        playlist.tracks.data.forEach((music) => {
-            console.log(music.like)
-        })
-        this.setState({playlist:playlist})
+        this.setState({playlist:playlist});
     }
     callSocket = (type, id, value) => {
         if (type === 'updateScore') {
             updateScore(this.roomID, id, value)
         }
     }
-	
-	onDragEnd = (result) => {
-		if (!result.destination) {
-		  return;
-		}
-	
-		var state = this.state;
-		const items = reorder(
-		  this.state.playlist.tracks.data,
-		  result.source.index,
-		  result.destination.index
-		);
-		state.playlist.tracks.data = items;
-		axios.put(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id, 
-			this.state.playlist,
-			{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}}
-		)
-		.then(resp => {
-			this.setState(items);
-		})
-		.catch(err => {
-			console.log(err);
+    onDragEnd = (result) => {
+        if (!result.destination) return;
+        let state = this.state;
+        const items = reorder(
+            this.state.playlist.tracks.data,
+            result.source.index,
+            result.destination.index
+        );
+        state.playlist.tracks.data = items;
+        axios.put(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id, 
+            this.state.playlist,
+            {'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}}
+        )
+        .then(resp => {
+            this.setState(items);
+        })
+        .catch(err => {
+            console.log(err);
         })
     }
-	render() {
-        console.log("live event render");
-        console.log(this.props);
-		return(
+    render() {
+        return (
             <div>
                 <Row>
                     <Col span={24}>
@@ -113,8 +94,7 @@ const reorder = (list, startIndex, endIndex) => {
                 <br/>
                 <br/>
                 <Row>
-                    <Col span={6}>
-                    </Col>
+                    <Col span={6}/>
                     <Col span={12}>
                         <DragDropContext onDragEnd={this.onDragEnd}>
                             <Droppable droppableId="droppable" isDropDisabled={this.state.isBlocked}>
@@ -147,9 +127,8 @@ const reorder = (list, startIndex, endIndex) => {
                             </Droppable>
                         </DragDropContext>
                     </Col>
-                    <Col span={6}></Col>
                 </Row>
             </div>
-		)
-  }
+        )
+    }
 }

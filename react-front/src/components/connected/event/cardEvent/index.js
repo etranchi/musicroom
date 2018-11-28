@@ -89,7 +89,6 @@ class cardEvent extends Component {
         this.setState({'isHidden': !this.state.isHidden})
     }
     openLiveEvent = () => {
-        // createRoom(this.props.state.data.event._id, this.props.state.data.event.playlist.tracks.data, this.props.state.data.event)
         updateTracks(this.props.state.data.event._id, this.props.state.data.event.playlist.tracks.data)
         this.props.updateParent({'currentComponent':'liveEvent'})
     }    
