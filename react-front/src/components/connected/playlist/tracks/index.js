@@ -65,7 +65,7 @@ class Tracks extends Component {
 			  playlist: res.data,
 			  isBlocked: !res.data._id
 			});
-		  });
+		});
 		
 	}
 
