@@ -12,8 +12,8 @@ function leavePlaylist (playlistId) {
     socket.emit("leavePlaylist", playlistId)
 }
 
-function updatePLaylist(playlistId) {
-    socket.emit('updatePLaylist', playlistId);
+function updatePlaylist(playlistId) {
+    socket.emit('updatePlaylist', playlistId);
 }
 
 function blockSocketEvent(playlistId, roomID) {
@@ -46,4 +46,4 @@ function updateScore (roomID, tracksID, pointsD) {
 function leaveRoom (roomID) {
     socket.emit("leaveRoom", roomID)
 }
-export { joinPlaylist, leavePlaylist, updatePLaylist, socket, blockSocketEvent, getRoomPlaylist, updateScore, joinRoom, createRoom, createEventLive, updateEvent, updateTracks, leaveRoom};
+export { joinPlaylist, leavePlaylist, updatePlaylist, socket, blockSocketEvent, getRoomPlaylist, updateScore, joinRoom, createRoom, createEventLive, updateEvent, updateTracks, leaveRoom};

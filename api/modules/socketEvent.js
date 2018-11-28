@@ -9,29 +9,29 @@ module.exports = function(io){
 
         /* Socket For Playlist */
 
-        socket.on('updatePLaylist', async (playlistId) => {
-          console.log("JE SUIS LA ET JE VAIS updatePLaylist")
-          let playlist = await ftSocket.sendPlaylist(playlistId)
-          playlistBlocked.splice(playlistBlocked.indexOf(playlistId), 1)
-          socket.to(playlistId).emit('playlistUpdated', playlist)
+        socket.on('updatePlaylist', async (playlistId) => {
+            console.log("JE SUIS LA ET JE VAIS updatePLaylist")
+            let playlist = await ftSocket.sendPlaylist(playlistId)
+            playlistBlocked.splice(playlistBlocked.indexOf(playlistId), 1)
+            socket.to(playlistId).emit('playlistUpdated', playlist)
         });
         socket.on('blockPlaylist', (playlistId) => {
-          console.log("BLOCK PLAYLIST -> " + playlistId)
-          console.log(playlistBlocked)
-          console.log(playlistBlocked.indexOf(playlistId))
-          if (playlistBlocked.indexOf(playlistId) === -1) {
-            playlistBlocked.push(playlistId)
-            console.log("BLOCK PLAYLIST EVENT")
-            setTimeout(() => {
-                if (playlistBlocked.indexOf(playlistId) !== -1) {
-                    socket.to(playlistId).emit('playlistUpdated');
-                    console.log("UNLOCK")
-                }
-            }, 5000)
-            socket.to(playlistId).emit('blockPlaylist')
-          } else {
-            socket.to(playlistId).emit('alreadyBlocked')
-          }
+            console.log("BLOCK PLAYLIST -> " + playlistId)
+            console.log(playlistBlocked)
+            console.log(playlistBlocked.indexOf(playlistId))
+            if (playlistBlocked.indexOf(playlistId) === -1) {
+                playlistBlocked.push(playlistId)
+                console.log("BLOCK PLAYLIST EVENT")
+                setTimeout(() => {
+                    if (playlistBlocked.indexOf(playlistId) !== -1) {
+                        socket.to(playlistId).emit('playlistUpdated');
+                        console.log("UNLOCK")
+                    }
+                }, 5000)
+                socket.to(playlistId).emit('blockPlaylist')
+            } else {
+                socket.to(playlistId).emit('alreadyBlocked')
+            }
         });
 
         socket.on('joinPlaylist', (playlistId) => {
