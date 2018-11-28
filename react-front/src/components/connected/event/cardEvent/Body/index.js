@@ -6,6 +6,7 @@ import MemberList  from './MemberList';
 import {Divider, Icon, Col, Row, Modal, Input, DatePicker } from 'antd';
 import PersonalPlayer from '../../personalPlayer'
 import axios from 'axios'
+import {socket, updateEvent} from '../../../sockets';
 
 
 class Body extends Component {
@@ -15,10 +16,16 @@ class Body extends Component {
         this.state = {
             playlistId : this.props.state.data.event.playlist && this.props.state.data.event.playlist.id ? this.props.state.data.event.playlist.id : null
         }
+        this.roomID =  this.props.state.data.event._id
 
     }
 
     componentDidMount = () => {
+        socket.on('updateEvent', (newEvent) => {
+            console.log('Receive SOCKET UPDATE')
+            this.props.state.data.event = newEvent
+            this.setState({'data': this.props.state.data})
+        })
         this.setState({formatDate: this.formatDateAnnounce(this.props.state.data.event.event_date)})
     }
     updateLocation = (val) => {
@@ -35,16 +42,14 @@ class Body extends Component {
                     "lng": val.location.coord ? val.location.coord.lng: 0,
                 }
         }
-        console.log("LOCATION : ", location)
         this.props.state.data.event.location = location
-        this.props.updateParent({'data':this.props.state.data}, () => {
-            console.log('LOCATION UPDATE ', this.props.state.data.event.location)
-        })
+        this.props.updateParent({'data':this.props.state.data})
     }
 
     handleChangeDateModal = (value, dateString) => {
         let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        let ret = "Le : " + new Date(dateString).toLocaleDateString('fr-Fr', options) + ' à ' + dateString.split(" ")[1];
+        let ret     = "Le : " + new Date(dateString).toLocaleDateString('fr-Fr', options) + ' à ' + dateString.split(" ")[1];
+        
         this.props.state.data.event.event_date = new Date(dateString)
         this.props.updateParent({'data':this.props.state.data})
         this.setState({formatDate:ret})
@@ -59,12 +64,18 @@ class Body extends Component {
         {
             this.props.state.data.event.members.push(value)
             console.log(  this.props.state.data.event.members[0])
-            this.props.updateParent({'data': this.props.state.data})
+            this.props.updateParent({'data': this.props.state.data}, () => {
+                console.log("Member change, socket update Event")
+                updateEvent(this.roomID, this.roomID, this.props.state.data.event)
+            })
         }
         else if  (value && type === 'admin')
         {
             this.props.state.data.event.adminMembers.push(value)
-            this.props.updateParent({'data': this.props.state.data})
+            this.props.updateParent({'data': this.props.state.data}, () => {
+                console.log("Member Admin change, socket update Event")
+                updateEvent(this.roomID, this.props.state.data.event)
+            })
         }
     }
     updateEventPlaylist = playlist => {
@@ -74,7 +85,10 @@ class Body extends Component {
             .then((resp) => { 
                 playlist = resp.data
                 this.props.state.data.event.playlist = playlist;
-                this.props.updateParent({'data' : this.props.state.data, 'playlistId':playlist.id})
+                this.props.updateParent({'data' : this.props.state.data, 'playlistId':playlist.id}, () => {
+                    console.log("Playlist change, socket update Event")
+                    updateEvent(this.roomID, this.props.state.data.event)
+                })
                 this.setState({playlistId:playlist.id})
 
                 
@@ -97,26 +111,26 @@ class Body extends Component {
         }
         if (type === 'admin') this.props.state.data.event.adminMembers = tab
         else  this.props.state.data.event.members = tab
-        this.props.updateParent({'data': this.props.state.data})
+        this.props.updateParent({'data': this.props.state.data}, () => {
+            console.log("Remove Member change, socket update Event")
+            updateEvent(this.roomID, this.props.state.data.event)
+        });
 
     }
-    showModal = (value) => {
-
-        console.log("SHOW MODAL", value)
+    showModal = value => {
         if (this.props.right.isCreator || this.props.right.isAdmin)
-        {
-            console.log("ENTR")
             this.setState({[value]: true});
-        }
     }
-    handleOk = (value) => {
+    handleOk = value => {
+        console.log("GOING TO UPDATE EVENT")
+        updateEvent(this.roomID, this.props.state.data.event)
         this.setState({[value]: false});
     }
-    handleCancel = (value) => {
+    handleCancel = value => {
         this.setState({[value]: false});
     }
     formatDateAnnounce = date => {
-        date = date.toString()
+        date                    = date.toString()
         let hours               = '';
         let timeEvent           = new Date(date).getTime();
         let curTime             = new Date(new Date()).getTime()

@@ -1,30 +1,39 @@
 import React, { Component } from 'react';
 import './styles.css';
 import { Divider, Card, Avatar, Modal, Icon, Col, Row, Input} from 'antd';
+import {socket, updateEvent} from '../../../sockets';
 
 class CreatorProfil extends Component {
     
     constructor(props) {
         super(props);
         this.state = {
-            iconPrivacy: this.props.state.data.event.public ? "unlock" : "lock"
+            iconPrivacy: this.props.state.data.event.public ? 'unlock' : 'lock'
         }
     
     }
+    componentDidMount = () => {
+        socket.on('updateEvent', (newEvent) => {
+            console.log('Receive SOCKET UPDATE')
+            this.props.state.data.event = newEvent
+            this.setState({'data': this.props.state.data})
+            this.setState({iconPrivacy: this.props.state.data.event.public ? 'unlock' : 'lock'})
+        })
+    }
     handleChangePrivacy = event => {
-        if (!this.props.right.isCreator)
+        if (!this.props.right.isCreator || this.props.right.isAdmin)
             return ;
         this.props.state.data.event.public = !this.props.state.data.event.public
-        if ( this.props.state.data.event.public) 
-            this.setState({iconPrivacy: "unlock"})
-        else 
-            this.setState({iconPrivacy: "lock"})
+        this.setState({iconPrivacy: this.props.state.data.event.public ? 'unlock' : 'lock'})
+        updateEvent(this.roomID, this.props.state.data.event)
     }
 
     showModal = () => {
+        updateEvent(this.roomID, this.props.state.data.event)
         this.setState({visible: true});
     }
     handleOk = (e) => {
+
         this.setState({visible: false});
     }
     
