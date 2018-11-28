@@ -6,7 +6,7 @@ import axios from 'axios'
 import { Col, Row, Icon, Layout } from 'antd'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import PersonalPlayer from '../../event/personalPlayer'
-import { updatePLaylist, socket, blockSocketEvent } from '../../sockets';
+import { leavePlaylist, joinPlaylist, updatePlaylist, socket, blockSocketEvent } from '../../sockets';
 
 const reorder = (list, startIndex, endIndex) => {
 	console.log("IN REORDER")
@@ -28,50 +28,49 @@ class Tracks extends Component {
 		}
 	}
 	componentDidMount() {
-		socket.on('blockPlaylist', (playlistId) => {
+		socket.on('blockPlaylist', () => {
 			console.log("JE BLOCK LA PLAYLIST POUR TOUS LES AUTRES")
-			if (playlistId === this.state.playlist._id) {
-				this.getPlaylist((res) => {
-					this.setState({
-					initLoading: false,
-					playlist: res.data,
-					isBlocked: true
-					});
+			this.getPlaylist((res) => {
+				this.setState({
+				initLoading: false,
+				playlist: res.data,
+				isBlocked: true
 				});
-			}
+			});
 		})
-		socket.on('alreadyBlocked', (playlistId) => {
+		socket.on('alreadyBlocked', () => {
 			console.log("LA PLAYLIST EST LOCK")
-			if (playlistId === this.state.playlist._id) {
-				this.getPlaylist((res) => {
-					this.setState({
-					initLoading: false,
-					playlist: res.data,
-					isBlocked: true
-					});
+			this.getPlaylist((res) => {
+				this.setState({
+				initLoading: false,
+				playlist: res.data,
+				isBlocked: true
 				});
-			}
+			});
 		})
-		socket.on('playlistUpdated', (playlist) => {
-			if (playlist._id === this.state.playlist._id) {
-				console.log("playlistUpdated socket event")
-				this.getPlaylist((res) => {
-					this.setState({
+		socket.on('playlistUpdated', () => {
+			console.log("playlistUpdated socket event")
+			this.getPlaylist((res) => {
+				this.setState({
 					initLoading: false,
 					playlist: res.data,
 					isBlocked: !res.data._id
-					});
 				});
-			}
+			});
 		})
 		this.getPlaylist((res) => {
+			res.data._id && joinPlaylist(res.data._id)
 			this.setState({
 			  initLoading: false,
 			  playlist: res.data,
 			  isBlocked: !res.data._id
 			});
-		  });
+		});
 		
+	}
+
+	componentWillUnmount() {
+		leavePlaylist(this.state.playlist._id)
 	}
 
 	getPlaylist = (callback) => {
@@ -109,7 +108,7 @@ class Tracks extends Component {
 			)
 			.then(resp => {
 				this.setState(state);
-				updatePLaylist(this.state.playlist._id)
+				updatePlaylist(this.state.playlist._id)
 			})
 			.catch(err => {
 				console.log(err);
@@ -126,12 +125,6 @@ class Tracks extends Component {
 	onDragStart = () => {
 		console.log("BLOCK SOCKET")	
 		blockSocketEvent(this.state.playlist._id)
-		console.log(this.state.isBlocked)
-		console.log(this.state.playlist._id)
-		if (this.state.playlist._id) {
-			console.log("Unlock")
-			setTimeout(() => {updatePLaylist(this.state.playlist._id)}, 5000)
-		}
 	}
 	
 	onDragEnd = (result) => {
@@ -157,7 +150,7 @@ class Tracks extends Component {
 		.catch(err => {
 			console.log(err);
 		})
-		updatePLaylist(this.state.playlist._id)
+		updatePlaylist(this.state.playlist._id)
 	}
 
 	render() {

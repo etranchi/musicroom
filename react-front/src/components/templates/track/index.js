@@ -7,19 +7,20 @@ const {Content}  = Layout
 
 export default  class liveEvent extends Component {
 	render() {
-        const picture   = this.props.track.album.cover_medium
+        const picture   = this.props.track.album.cover_medium ? this.props.track.album.cover_medium : this.props.track.album.cover_large ? this.props.track.album.cover_large : this.props.track.album.cover_small
         const title     = this.props.track.title_short
         const artist    = this.props.track.artist.name
+        console.log(this.props.track.album, this.props.track)
         return (
             <Layout>
                 <Content>
                     <Row>
                         <Col span={24}>
-                        <List.Item actions={
-                        [
-                            <i onClick={this.props.callSocket.bind(this,"updateScore", this.props.track._id, 1)} style={{fontSize:'28px'}} className="far fa-thumbs-up"></i>,
-                            <i onClick={this.props.callSocket.bind(this,"updateScore", this.props.track._id, -1)} style={{fontSize:'28px'}} className="far fa-thumbs-down"></i>
-                        ]}>
+                            <List.Item actions={
+                            [
+                                <i onClick={this.props.callSocket.bind(this,"updateScore", this.props.track._id, 1)} style={{fontSize:'28px'}} className="far fa-thumbs-up"></i>,
+                                <i onClick={this.props.callSocket.bind(this,"updateScore", this.props.track._id, -1)} style={{fontSize:'28px'}} className="far fa-thumbs-down"></i>
+                            ]}>
                             <Skeleton avatar title={false} loading={false} active>
                                 <List.Item.Meta
                                     avatar={<Avatar size={118} src={picture} />}
@@ -28,7 +29,7 @@ export default  class liveEvent extends Component {
                                 />
                                 <div> { this.props.track.like? this.props.track.like: 0 }</div>
                             </Skeleton>
-                        </List.Item>
+                            </List.Item>
                         </Col>
 
                     </Row>
