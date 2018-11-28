@@ -67,10 +67,7 @@ const reorder = (list, startIndex, endIndex) => {
         this.setState({playlist:playlist})
     }
     callSocket = (type, id, value) => {
-        console.log("Callsocket : ")
-        console.log(type, id, value)
         if (type === 'updateScore') {
-            console.log("Update score")
             updateScore(this.roomID, id, value)
         }
     }
