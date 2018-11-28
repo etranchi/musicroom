@@ -6,7 +6,7 @@ import axios from 'axios'
 import { Col, Row, Icon, Layout } from 'antd'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import PersonalPlayer from '../../event/personalPlayer'
-import { updatePLaylist, socket, blockSocketEvent } from '../../sockets';
+import { leavePlaylist, joinPlaylist, updatePLaylist, socket, blockSocketEvent } from '../../sockets';
 
 const reorder = (list, startIndex, endIndex) => {
 	console.log("IN REORDER")
@@ -28,43 +28,38 @@ class Tracks extends Component {
 		}
 	}
 	componentDidMount() {
-		socket.on('blockPlaylist', (playlistId) => {
+		socket.on('blockPlaylist', () => {
 			console.log("JE BLOCK LA PLAYLIST POUR TOUS LES AUTRES")
-			if (playlistId === this.state.playlist._id) {
-				this.getPlaylist((res) => {
-					this.setState({
-					initLoading: false,
-					playlist: res.data,
-					isBlocked: true
-					});
+			this.getPlaylist((res) => {
+				this.setState({
+				initLoading: false,
+				playlist: res.data,
+				isBlocked: true
 				});
-			}
+			});
 		})
-		socket.on('alreadyBlocked', (playlistId) => {
+		socket.on('alreadyBlocked', () => {
 			console.log("LA PLAYLIST EST LOCK")
-			if (playlistId === this.state.playlist._id) {
-				this.getPlaylist((res) => {
-					this.setState({
-					initLoading: false,
-					playlist: res.data,
-					isBlocked: true
-					});
+			this.getPlaylist((res) => {
+				this.setState({
+				initLoading: false,
+				playlist: res.data,
+				isBlocked: true
 				});
-			}
+			});
 		})
-		socket.on('playlistUpdated', (playlist) => {
-			if (playlist._id === this.state.playlist._id) {
-				console.log("playlistUpdated socket event")
-				this.getPlaylist((res) => {
-					this.setState({
-					initLoading: false,
-					playlist: res.data,
-					isBlocked: !res.data._id
-					});
+		socket.on('playlistUpdated', () => {
+			console.log("playlistUpdated socket event")
+			this.getPlaylist((res) => {
+				this.setState({
+				initLoading: false,
+				playlist: res.data,
+				isBlocked: !res.data._id
 				});
-			}
+			});
 		})
 		this.getPlaylist((res) => {
+			res.data._id && joinPlaylist(res.data._id)
 			this.setState({
 			  initLoading: false,
 			  playlist: res.data,
@@ -72,6 +67,10 @@ class Tracks extends Component {
 			});
 		  });
 		
+	}
+
+	componentWillUnmount() {
+		leavePlaylist(this.state.playlist._id)
 	}
 
 	getPlaylist = (callback) => {
