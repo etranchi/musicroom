@@ -13,7 +13,7 @@ module.exports = function(io){
           console.log("JE SUIS LA ET JE VAIS updatePLaylist")
           let playlist = await ftSocket.sendPlaylist(playlistId)
           playlistBlocked.splice(playlistBlocked.indexOf(playlistId), 1)
-          socket.broadcast.emit('playlistUpdated', playlist)
+          socket.to(playlistId).emit('playlistUpdated', playlist)
         });
         socket.on('blockPlaylist', (playlistId) => {
           console.log("BLOCK PLAYLIST -> " + playlistId)
@@ -22,10 +22,20 @@ module.exports = function(io){
           if (playlistBlocked.indexOf(playlistId) === -1) {
             playlistBlocked.push(playlistId)
             console.log("BLOCK PLAYLIST EVENT")
-            socket.broadcast.emit('blockPlaylist', playlistId)
+            socket.to(playlistId).emit('blockPlaylist')
           } else {
-            socket.emit('alreadyBlocked', playlistId)
+            socket.to(playlistId).emit('alreadyBlocked')
           }
+
+
+          socket.on('joinPlaylist', (playlistId) => {
+            console.log("[Socket] -> joinPlaylist", playlistId)
+            socket.join(playlistId);
+          });
+          socket.on('leavePlaylist', (playlistId) => {
+            console.log("[Socket] -> leavePlaylist")
+            socket.leave(playlistId);
+          });
         });
       
         /* Socket For LiveEvent */
