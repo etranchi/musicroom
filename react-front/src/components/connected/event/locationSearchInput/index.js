@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import './styles.css';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng} from 'react-places-autocomplete';
-import SimpleMap from '../simpleMap'
+import Map from '../map'
 
 
 
@@ -84,7 +84,7 @@ class LocationSearchInput extends Component {
             </div>
           )}
         </PlacesAutocomplete>
-          {this.state.key === 1 ? <SimpleMap event={this.props.state} state={this.props.state} center={this.state.location.coord}/> : null}
+          {this.props.displayMap  ? <Map state={this.props.state} events={this.props.state.data.event ? [this.props.state.data.event] : []} center={this.state.location.coord}/> : null }
         </div>
 			);
 		}

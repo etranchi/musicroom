@@ -21,11 +21,6 @@ class Body extends Component {
     }
 
     componentDidMount = () => {
-        socket.on('updateEvent', (newEvent) => {
-            console.log('Receive SOCKET UPDATE')
-            this.props.state.data.event = newEvent
-            this.setState({'data': this.props.state.data})
-        })
         this.setState({formatDate: this.formatDateAnnounce(this.props.state.data.event.event_date)})
     }
     updateLocation = (val) => {
@@ -81,19 +76,23 @@ class Body extends Component {
     updateEventPlaylist = playlist => {
         if (playlist)
         {
+            console.log("Playlist : ", playlist)
             axios.get(process.env.REACT_APP_API_URL + '/playlist/' + playlist.id, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
             .then((resp) => { 
                 playlist = resp.data
                 this.props.state.data.event.playlist = playlist;
-                this.props.updateParent({'data' : this.props.state.data, 'playlistId':playlist.id}, () => {
-                    console.log("Playlist change, socket update Event")
-                    updateEvent(this.roomID, this.props.state.data.event)
-                })
+                this.props.updateParent({'data' : this.props.state.data, 'playlistId':playlist.id})
+                console.log("Playlist change, socket update Event")
+                updateEvent(this.roomID, this.props.state.data.event)
                 this.setState({playlistId:playlist.id})
 
                 
             })
             .catch((err) => { console.log("Wrong Playlist id.", err); })  
+        }
+        else
+        {
+            console.log("Plaasdasylist : ", playlist)
         }
     }
     removeMember = (type, item) => {
