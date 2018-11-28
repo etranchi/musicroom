@@ -41,7 +41,8 @@ const User = new Schema({
 	email:{
 		type: String,
 		unique:true,
-		allowNull: false
+		allowNull: false,
+		required: true
 	},
 	creationDate: {
 		type: Date,
