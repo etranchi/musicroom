@@ -6,7 +6,7 @@ import MemberList  from './MemberList';
 import {Divider, Icon, Col, Row, Modal, Input, DatePicker } from 'antd';
 import PersonalPlayer from '../../personalPlayer'
 import axios from 'axios'
-import {socket, updateEvent} from '../../../sockets';
+import {updateEvent} from '../../../sockets';
 
 
 class Body extends Component {

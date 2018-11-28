@@ -7,7 +7,7 @@ import BodyEvent from './Body'
 import Map from '../map'
 import axios from 'axios'
 import geolib from 'geolib'
-import {socket, createRoom, joinRoom, updateTracks, leaveRoom, updateEvent} from '../../sockets';
+import {socket, createRoom, joinRoom, updateTracks, leaveRoom} from '../../sockets';
 
 class cardEvent extends Component {
 	constructor(props) {
@@ -107,6 +107,7 @@ class cardEvent extends Component {
         message.info(text);
     }
 	render() {
+        console.log(this.props);
         return  (
             <div>
                 <CardHeader state={this.props.state} updateParent={this.props.updateParent} />
