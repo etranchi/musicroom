@@ -1,6 +1,7 @@
 'use strict';
 
 const playlistModel = require('../models/playlist');
+const eventModel = require('../models/event');
 
 this.rooms = [];
 
@@ -47,10 +48,11 @@ module.exports = {
         })
         return ret
     },
-    createRoom: (roomID, tracks) => {
+    createRoom: (roomID, tracks, event) => {
         let room = {
             id: roomID,
-            tracks: this.sortTracksByScore(tracks)
+            tracks: this.sortTracksByScore(tracks),
+            data: event
         };
         room.tracks.forEach((track) => {
             track.like = 0;
@@ -70,5 +72,13 @@ module.exports = {
         }
         console.log("get room return null")
         return null;
-    }
+    },
+    saveNewEvent: async (newEvent) => {
+
+        if (newEvent._id)
+        {
+            return await eventModel.updateOne({_id: newEvent._id}, newEvent, {new: true})
+        }
+
+    },
 };

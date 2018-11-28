@@ -24,8 +24,8 @@ function createEventLive (tracks) {
     socket.emit("createEventLive", tracks)
 }
 
-function createRoom (roomID, tracks) {
-    socket.emit("createRoom", roomID, tracks)
+function createRoom (roomID, tracks, event) {
+    socket.emit("createRoom", roomID, tracks, event)
 }
 function joinRoom (roomID) {
     socket.emit("joinRoom", roomID)
@@ -34,7 +34,16 @@ function getRoomPlaylist (roomID) {
     socket.emit("getRoomPlaylist", roomID)
 }
 
+function updateEvent (roomID, newEvent) {
+    socket.emit("updateEvent", roomID, newEvent)
+}
+function updateTracks (roomID, tracks) {
+    socket.emit("updateTracks", roomID, tracks)
+}
 function updateScore (roomID, tracksID, pointsD) {
     socket.emit("updateScore", roomID, tracksID, pointsD)
 }
-export { joinPlaylist, leavePlaylist, updatePLaylist, socket, blockSocketEvent, getRoomPlaylist, updateScore, joinRoom, createRoom, createEventLive };
+function leaveRoom (roomID) {
+    socket.emit("leaveRoom", roomID)
+}
+export { joinPlaylist, leavePlaylist, updatePLaylist, socket, blockSocketEvent, getRoomPlaylist, updateScore, joinRoom, createRoom, createEventLive, updateEvent, updateTracks, leaveRoom};

@@ -7,7 +7,7 @@ import BodyEvent from './Body'
 import Map from '../map'
 import axios from 'axios'
 import geolib from 'geolib'
-import {socket, createRoom} from '../../sockets';
+import {socket, createRoom, joinRoom, updateTracks, leaveRoom} from '../../sockets';
 
 class cardEvent extends Component {
 	constructor(props) {
@@ -20,17 +20,6 @@ class cardEvent extends Component {
             isMember: false,
             isViewer: true,
         }
-
-        this.saveButton = {
-            'position': 'fixed',
-            'bottom': '50px',
-            'height': '80px',
-            'left': '140px',
-            'latitude': 0,
-            'longitude': 0,
-            'displayUser' : false
-        }
-
         this.launchButton = {
             'position': 'fixed',
             'bottom': '50px',
@@ -54,9 +43,22 @@ class cardEvent extends Component {
         return false;
     }
     componentDidMount = () => {
-        socket.on('createRoom', (tracks) => {
-            console.log("Room created : ", tracks)
+        socket.on('createRoom', (tracks, msg) => {
+            if (msg === 'err')
+            {
+                console.log("Room joined")
+                joinRoom(this.props.state.data.event._id)
+            }
+            else
+             console.log("Room created : ", tracks, "Message : ", msg)
         })
+        socket.on('joinRoom', (msg) => {
+            console.log("joinRoom : ", msg)
+        })
+        socket.on('leaveRoom', (msg) => {
+            console.log("Leaving Room ", msg)
+        })
+        createRoom(this.props.state.data.event._id, [], this.props.state.data.event)
         if (this.props.state.data.event.creator.email === this.props.state.user.email)
             this.setState({isCreator:true})
         else  {
@@ -66,6 +68,10 @@ class cardEvent extends Component {
 
         if (this.state.isCreator || this.state.isMember || this.state.isAdmin)
             this.setState({isViewer:false})
+    }
+    componentWillUnmount = () => {
+        console.log("UNMOUNTING")
+        leaveRoom(this.props.state.data.event._id)
     }
     updateMap = () => {
         let calc = geolib.getDistanceSimple(
@@ -77,20 +83,9 @@ class cardEvent extends Component {
         this.props.state.data.mapMargin = '0 0 0 0'
         this.setState({'isHidden': !this.state.isHidden})
     }
-
-    saveEvent = () => { 
-        let _id = this.props.state.data.event._id
-        delete this.props.state.data.event._id
-        axios.put(process.env.REACT_APP_API_URL + '/event/' + _id,  this.props.state.data.event)
-            .then((resp) => { 
-                this.info("Event saved !")
-                this.props.state.data.event._id = _id;
-                this.props.updateParent({"currentComponent":'event'}, {'data':this.props.state.data})
-            })
-            .catch((err) => { console.log("Create Event : handleSubmit :/event Error ", err); })  
-    }
     openLiveEvent = () => {
-        createRoom(this.props.state.data.event._id, this.props.state.data.event.playlist.tracks.data)
+        // createRoom(this.props.state.data.event._id, this.props.state.data.event.playlist.tracks.data, this.props.state.data.event)
+        updateTracks(this.props.state.data.event._id, this.props.state.data.event.playlist.tracks.data)
         this.props.updateParent({'currentComponent':'liveEvent'})
     }    
     isToday = date => {
@@ -121,7 +116,6 @@ class cardEvent extends Component {
                 <Divider />
                 <CreatorProfil right={this.state} state={this.props.state} updateParent={this.props.updateParent} />
                 <BodyEvent right={this.state} state={this.props.state} updateParent={this.props.updateParent} updateMap={this.updateMap.bind(this)}/>
-                <Button type="primary" style={this.saveButton} onClick={this.saveEvent}> <b> Sauvegarder l'event </b> </Button>
                 {
                     this.isToday(this.props.state.data.event.event_date) ?
                         <Button   style={this.launchButton} type="primary" onClick={this.openLiveEvent}> <b> Start Event </b> </Button>
