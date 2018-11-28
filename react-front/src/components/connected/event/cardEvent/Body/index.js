@@ -67,10 +67,8 @@ class Body extends Component {
         else if  (value && type === 'admin')
         {
             this.props.state.data.event.adminMembers.push(value)
-            this.props.updateParent({'data': this.props.state.data}, () => {
-                console.log("Member Admin change, socket update Event")
-                updateEvent(this.roomID, this.props.state.data.event)
-            })
+            this.props.updateParent({'data': this.props.state.data})
+            updateEvent(this.roomID, this.props.state.data.event)
         }
     }
     updateEventPlaylist = playlist => {
@@ -110,10 +108,8 @@ class Body extends Component {
         }
         if (type === 'admin') this.props.state.data.event.adminMembers = tab
         else  this.props.state.data.event.members = tab
-        this.props.updateParent({'data': this.props.state.data}, () => {
-            console.log("Remove Member change, socket update Event")
-            updateEvent(this.roomID, this.props.state.data.event)
-        });
+        this.props.updateParent({'data': this.props.state.data});
+        updateEvent(this.roomID, this.props.state.data.event)
 
     }
     showModal = value => {
