@@ -6,7 +6,7 @@ import axios from 'axios'
 import { Col, Row, Icon, Layout } from 'antd'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import PersonalPlayer from '../../event/personalPlayer'
-import { leavePlaylist, joinPlaylist, updatePLaylist, socket, blockSocketEvent } from '../../sockets';
+import { leavePlaylist, joinPlaylist, updatePlaylist, socket, blockSocketEvent } from '../../sockets';
 
 const reorder = (list, startIndex, endIndex) => {
 	console.log("IN REORDER")
@@ -52,9 +52,9 @@ class Tracks extends Component {
 			console.log("playlistUpdated socket event")
 			this.getPlaylist((res) => {
 				this.setState({
-				initLoading: false,
-				playlist: res.data,
-				isBlocked: !res.data._id
+					initLoading: false,
+					playlist: res.data,
+					isBlocked: !res.data._id
 				});
 			});
 		})
@@ -108,7 +108,7 @@ class Tracks extends Component {
 			)
 			.then(resp => {
 				this.setState(state);
-				updatePLaylist(this.state.playlist._id)
+				updatePlaylist(this.state.playlist._id)
 			})
 			.catch(err => {
 				console.log(err);
@@ -125,12 +125,6 @@ class Tracks extends Component {
 	onDragStart = () => {
 		console.log("BLOCK SOCKET")	
 		blockSocketEvent(this.state.playlist._id)
-		console.log(this.state.isBlocked)
-		console.log(this.state.playlist._id)
-		if (this.state.playlist._id) {
-			console.log("Unlock")
-			setTimeout(() => {updatePLaylist(this.state.playlist._id)}, 5000)
-		}
 	}
 	
 	onDragEnd = (result) => {
@@ -156,7 +150,7 @@ class Tracks extends Component {
 		.catch(err => {
 			console.log(err);
 		})
-		updatePLaylist(this.state.playlist._id)
+		updatePlaylist(this.state.playlist._id)
 	}
 
 	render() {
