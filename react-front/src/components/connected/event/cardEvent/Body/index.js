@@ -6,7 +6,7 @@ import MemberList  from './MemberList';
 import {Divider, Icon, Col, Row, Modal, Input, DatePicker } from 'antd';
 import PersonalPlayer from '../../personalPlayer'
 import axios from 'axios'
-import {socket, updateEvent} from '../../../sockets';
+import {updateEvent} from '../../../sockets';
 
 
 class Body extends Component {
@@ -219,7 +219,6 @@ class Body extends Component {
                     :
                     null
                 }
-                { this.state.playlistId  && this.props.state.data.event.playlist.tracks.data.length > 0 ?    <PersonalPlayer  tracks={this.props.state.data.event.playlist.tracks.data}/> : null} 
                 {/* Modal for description modification  */}
                 <Modal title="Description : " visible={this.state.modDesc} onOk={this.handleOk.bind(this, "modDesc")} onCancel={this.handleCancel.bind(this, "modDesc")} >
                     <Input.TextArea  placeholder="Descriptif de l'évènement : " name= "description" value={this.props.state.data.event.description} onChange={this.handleChangeModal}/> 

@@ -25,6 +25,7 @@ export default class LiveEvent extends Component {
             isBlocked: false
         };
         this.roomID = this.props.roomID;
+        console.log("live event constructor");
     }
     componentDidMount = () => {
         socket.on('createEventLive', (tracks) => {
@@ -85,7 +86,7 @@ export default class LiveEvent extends Component {
             <div>
                 <Row>
                     <Col span={24}>
-                        {this.state.playlist.tracks.data.length > 0 && <PersonalPlayer  tracks={this.state.playlist.tracks.data}></PersonalPlayer>}
+                        {this.state.playlist.tracks.data.length > 0 && <PersonalPlayer  tracks={this.state.playlist.tracks.data} roomID={this.props.roomID}></PersonalPlayer>}
                     </Col>
                 </Row>
                 <br/>
