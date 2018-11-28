@@ -96,6 +96,7 @@ class cardEvent extends Component {
         let dayTimeStamp        = (3600 * 1000) * 24;
         let day                 = timeBeforeEvent / dayTimeStamp
 
+        console.log("cououc cles loulous" + timeBeforeEvent)
         if (timeBeforeEvent < 0 && day < 1 && day > -1)
             return true;
         else
@@ -105,6 +106,7 @@ class cardEvent extends Component {
         message.info(text);
     }
 	render() {
+        console.log(this.props);
         return  (
             <div>
                 <CardHeader state={this.props.state} updateParent={this.props.updateParent} />

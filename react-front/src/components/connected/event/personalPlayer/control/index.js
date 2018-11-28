@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './styles.css';
 import {Row, Col} from 'antd';
-import {updatePlayer} from '../../../sockets'
+import {socket, updatePlayer} from '../../../sockets'
 
 
 const { DZ } = window
@@ -48,12 +48,33 @@ export default class PersonalPlayer extends Component {
             DZ.player.setVolume(50)     
         })    
     }
+
+    componentDidMount = () => {
+        socket.on('updatePlayer', (event) => {
+            switch (event){
+                case "next":
+                    this.nextTrack();
+                    break;
+                case "prev":
+                    this.prevTrack();
+                    break;
+                case "play" || "pause":
+                    this.playTrack();
+                    break;
+                default:
+                    break;
+            }
+            
+        })
+    }
+
     playTrack = () => {
         this.setState({isPlaying:!this.state.isPlaying}, () => {
             this.state.isPlaying ?  DZ.player.play() :  DZ.player.pause()     
         });
-        // if (this.props.roomId)
-        //     updatePlayer(this.props.roomId, this.state.isPlaying ?  "play" :  "pause");
+        console.log("play/pause");
+        if (this.props.roomID)
+            updatePlayer(this.props.roomID, this.state.isPlaying ?  "play" :  "pause");
     }
 
     nextTrack = () => {
@@ -63,8 +84,9 @@ export default class PersonalPlayer extends Component {
         this.setState({currentTracksID:index})
         this.props.updateParentState({currentTracksID:index})
         DZ.player.next()
-        if (this.props.roomId)
-            updatePlayer(this.props.roomId, "next");
+        console.log("next");
+        if (this.props.roomID)
+            updatePlayer(this.props.roomID, "next");
     }
 
     prevTrack = () => {
@@ -74,8 +96,10 @@ export default class PersonalPlayer extends Component {
         this.setState({currentTracksID:index})
         this.props.updateParentState({currentTracksID:index})
         DZ.player.prev()
-        if (this.props.roomId)
-            updatePlayer(this.props.roomId, "prev");
+        console.log("prev");
+        console.log(this.props);
+        if (this.props.roomID)
+            updatePlayer(this.props.roomID, "prev");
     }
 
 	render() {

@@ -44,7 +44,7 @@ export default class PersonalPlayer extends Component {
                 </div>
 
                 <div className='defaultComponentProperty' style={{minWidth:"600px"}}>
-                    <div style={{height:'50px'}}><Control updateParentState={this.updateState} tracks={this.props.tracks}/></div>
+                    <div style={{height:'50px'}}><Control updateParentState={this.updateState} tracks={this.props.tracks} roomID={this.props.roomID}/></div>
                     <div style={{height:'30px'}}><Progress strokesColor={this.props.strokesColor} updateParentState={this.updateState} tracks={this.props.tracks}/></div>
                 </div>
                 

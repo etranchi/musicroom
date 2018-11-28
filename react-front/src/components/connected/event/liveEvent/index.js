@@ -26,8 +26,10 @@ const reorder = (list, startIndex, endIndex) => {
 			isBlocked: false
         }
         this.roomID = this.props.roomID;
+        console.log("live event constructor");
     }
     componentDidMount() {
+        console.log("live event did mount");
         /* Live Event */
         socket.on('createEventLive', (tracks) => {
             this.sortTracks(tracks);
@@ -49,6 +51,7 @@ const reorder = (list, startIndex, endIndex) => {
         /**************************************/
     }
 	componentWillMount() {
+        console.log("live event will mount");
         this.setState({
             initLoading: false,
             playlist: this.props.playlist
@@ -96,13 +99,13 @@ const reorder = (list, startIndex, endIndex) => {
         })
     }
 	render() {
-
-
+        console.log("live event render");
+        console.log(this.props);
 		return(
             <div>
                 <Row>
                     <Col span={24}>
-                        {this.state.playlist.tracks.data.length > 0 && <PersonalPlayer  tracks={this.state.playlist.tracks.data} roomID={this.roomID}></PersonalPlayer>}
+                        {this.state.playlist.tracks.data.length > 0 && <PersonalPlayer  tracks={this.state.playlist.tracks.data} roomID={this.props.roomID}></PersonalPlayer>}
                     </Col>
                 </Row>
                 <br/>
