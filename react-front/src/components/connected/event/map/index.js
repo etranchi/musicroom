@@ -1,5 +1,5 @@
-import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
-import { Avatar, Row, Col, Divider, Card, Button} from 'antd';
+import {Map, InfoWindow, Marker} from 'google-maps-react';
+import { Avatar, Card} from 'antd';
 import React, { Component } from 'react';
 
 const {google} = window 
@@ -13,15 +13,12 @@ export default class MapContainer extends Component {
             selectedPlace: {},
             bounds: {},
             eventsMarkers: []
-        }
-        console.log("Map : constructor")
+        };
     }
-
     componentDidMount = () => {
-        console.log("Map : componentDidMount")
         const eventsMarkers = [];
         const points        = [];
-        this.props.events.map((event, key) => {
+        this.props.events.forEach((event, key) => {
             const options             = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             const date                 = "Le : " + new Date(event.event_date).toLocaleDateString('fr-Fr', options);
             if (event.location.coord) {
@@ -45,29 +42,25 @@ export default class MapContainer extends Component {
         for (var i = 0; i < points.length; i++) {
           bounds.extend(points[i]);
         }
-        this.setState({bounds:bounds, eventsMarkers:eventsMarkers})
+        this.setState({bounds:bounds, eventsMarkers:eventsMarkers});
     }
-
     onMarkerClick = (props, marker, e) => {
         this.setState({
             selectedPlace: props,
             activeMarker: marker,
             showingInfoWindow: !this.state.showingInfoWindow
         }, () => {
-            this.props.updateCurrentEvent(this.state.selectedPlace.data)
+            this.props.updateCurrentEvent(this.state.selectedPlace.data);
         });
     }
-    
-
     onMapClicked = (props) => {
         if (this.state.showingInfoWindow) {
             this.setState({
                 showingInfoWindow: false,
                 activeMarker: null
-            })
+            });
         }
-    };
-
+    }
     render() {
         return (
         <Map 

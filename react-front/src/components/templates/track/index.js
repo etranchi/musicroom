@@ -10,7 +10,6 @@ export default  class liveEvent extends Component {
         const picture   = this.props.track.album.cover_medium ? this.props.track.album.cover_medium : this.props.track.album.cover_large ? this.props.track.album.cover_large : this.props.track.album.cover_small
         const title     = this.props.track.title_short
         const artist    = this.props.track.artist.name
-        console.log(this.props.track.album, this.props.track)
         return (
             <Layout>
                 <Content>

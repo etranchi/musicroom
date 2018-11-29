@@ -3,11 +3,9 @@ import LocationSearchInput from '../locationSearchInput'
 import './styles.css';
 import axios from 'axios'
 import SearchBar from '../../searchbar'
-import { Avatar, Card, Icon, Button, Input, DatePicker, Select, Upload, message, Divider, Layout, Col, Row, InputNumber, Checkbox} from 'antd';
+import { Avatar, Card, Icon, Button, Input, DatePicker, Upload, message, Divider, Layout, Col, Row, Checkbox} from 'antd';
 
-const {Footer,Content } = Layout;
-
-class CreateEvent extends Component {
+export default class CreateEvent extends Component {
 	constructor(props) {
         super(props);
         this.state = {
@@ -27,7 +25,6 @@ class CreateEvent extends Component {
             'infoFile': '',
             'loading' : false,
         };
-
     }
     updateLocation = val => {
         let location = {
@@ -83,7 +80,7 @@ class CreateEvent extends Component {
             axios.post(process.env.REACT_APP_API_URL + '/event/',  data)
             .then((resp) => { 
                 this.info("Evènement crée")
-                this.props.updateParent({'currentComponent' : "event"})
+                this.props.updateParent({'currentComponent' : "listEvent"})
             })
             .catch((err) => { console.log("Create Event : handleSubmit :/event Error ", err); })  
         })
@@ -122,70 +119,61 @@ class CreateEvent extends Component {
       }
 
     resetPicture = () => {
-        this.setState({infoFile:null, imageUrl: null, loadind:false})
+        this.setState({infoFile:null, imageUrl: null, loadind:false});
     }
     /* ******************************************** */
     formatDateAnnounce = (date) => {
         let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         let ret = "Le : " + new Date(date).toLocaleDateString('fr-Fr', options) + ' à ' + date.split(" ")[1];
-        return (ret)
+        return ret;
     }
     info = text => {
         message.info(text);
     }
 	render = () => {
         this.uploadButton = ( <div> <Icon type={this.state.loading ? 'loading' : 'plus'} /> <div className="ant-upload-text">Upload</div> </div> );
-        const {Footer,Content } = Layout;
         return (
             <Layout >
-                <Row>
-                    <Col span={8}> <a href="#!" className="btn waves-effect waves-teal" onClick={() => this.props.updateParent({'currentComponent': 'event'})}>Back</a> </Col>
-			    </Row>
-                <Content>
-                    {
-                        this.state.imageUrl ? null :
-                            <Row>
-                                <Col span={8}/>
-                                <Col span={8}>
+                <Layout.Content>
+                    <Row> 
+                        <Col span={8}> 
+                            <a href="#!" className="btn waves-effect waves-teal" onClick={() => this.props.updateParent({'currentComponent': 'event'})}>Back</a> 
+                        </Col> 
+                    </Row>
+                    <Row>
+                        <Col span={8}/>
+                        <Col span={8}>
+                            {
+                                this.state.imageUrl ? 
+                                    <div style={{'textAlign': 'center', 'margin': '0 0 0 12% '}}>
+                                        <Card.Meta avatar={ <Avatar  size={448}src={this.state.imageUrl} alt="avatar" />}/>
+                                        <i onClick={() => this.resetPicture()} className="zoomCard fas fa-sync-alt"></i>
+                                    </div>
+                                    :
                                     <div style={{'margin': '0 0 0 25% '}}>
                                         <Upload name="file" listType="picture-card" className="avatar-uploader" showUploadList={false} beforeUpload={this.beforeUpload} onChange={this.handlePicture.bind(this)} >
                                             {this.uploadButton}
                                         </Upload>
                                     </div>
-                                    <Divider />
-                                </Col>
-                            </Row>
-                    }
-                    {
-                        this.state.imageUrl ?
-                            <Row>
-                                <Col span={8}/>
-                                <Col span={8}>
-                                    <div style={{'textAlign': 'center', 'margin': '0 0 0 12% '}}>
-                                        <Card.Meta avatar={ <Avatar  size={448}src={this.state.imageUrl} alt="avatar" />}/>
-                                        <i onClick={() => this.resetPicture()} className="zoomCard fas fa-sync-alt"></i>
-                                    </div>
-                                    <Divider />
-                                </Col>
-                            </Row>
-                            :
-                            null
-                    }
+                            }
+                            <Divider />
+                        </Col>
+                    </Row>
                     <Row>
-                        <Col span={8}></Col>
+                        <Col span={8}/>
                         <Col span={8}>
                             <Input placeholder="Titre de l'évènement : " name= "title" value={this.state.title} onChange={this.handleChange}/>
                         </Col>
                     </Row>
                     <Row>
-                        <Col span={5}></Col>
+                        <Col span={5}/>
                         <Col span={14}>
                             <Input.TextArea  placeholder="Descriptif de l'évènement : " name= "description" value={this.state.description} onChange={this.handleChange}/> 
                             <Divider />
                         </Col>
                     </Row>
                     <Row>
-                        <Col span={11}></Col>
+                        <Col span={11}/>
                         <Col span={2}>
                             <div style={{'margin': '0 0 0 12% '}}>
                                 <Checkbox onChange={this.handleChange}>Public</Checkbox>
@@ -194,40 +182,40 @@ class CreateEvent extends Component {
                         </Col>
                     </Row>
                     <Row>
-                        <Col span={8}></Col>
+                        <Col span={8}/>
                         <Col span={10}>
-                        <Row>
-                            <Col span={10} >
-                            <DatePicker
-                                    name="event_date"
-                                    showTime
-                                    format="YYYY-MM-DD HH:mm:ss"
-                                    placeholder="Select Time"
-                                    onChange={this.handleChangeDate}
-                                />
-                            </Col>
-                            <Col span={12} style={{margin: '3% 0 0 0'}}>
-                               <b> {this.state.format_date} </b>
-                            </Col>
-                        </Row>
+                            <Row>
+                                <Col span={10} >
+                                    <DatePicker
+                                            name="event_date"
+                                            showTime
+                                            format="YYYY-MM-DD HH:mm:ss"
+                                            placeholder="Select Time"
+                                            onChange={this.handleChangeDate}
+                                        />
+                                </Col>
+                                <Col span={12} style={{margin: '3% 0 0 0'}}>
+                                    <b> {this.state.format_date} </b>
+                                </Col>
+                            </Row>
                             <Divider />
                         </Col>
                     </Row>
                     <Row>
-                        <Col span={5}></Col>
+                        <Col span={5}/>
                         <Col span={14}>
                             <LocationSearchInput displayMap={false} state={this.props.state} updateLocation={this.updateLocation} />
                             <Divider />
                         </Col>
                     </Row>
                     <Row>
-                        <Col span={10}></Col>
+                        <Col span={10}/>
                         <Col span={4}>
                             <SearchBar state={this.props.state} type="playlist" updateEventPlaylist={this.updateEventPlaylist}/>
                         </Col>
                     </Row>
                     <Row>
-                        <Col span={6}></Col>
+                        <Col span={6}/>
                         <Col span={13}>
                         {
                             this.state.playlist && this.state.playlist.id ? <iframe title="deezerplayer" scrolling="no" frameBorder="0" allowtransparency="true" src={"https://www.deezer.com/plugins/player?format=classic&autoplay=false&playlist=true&width=700&height=350&color=007FEB&layout=dark&size=medium&type=playlist&id="
@@ -238,19 +226,14 @@ class CreateEvent extends Component {
                         </Col>
                     </Row>
                     <Row>
-                        <Col span={10}></Col>
+                        <Col span={10}/>
                         <Col span={4}>
                             <div style={{'margin': '0 0 0 12% '}}> <Button  onClick={this.handleSubmit.bind(this)}> Créer l'évènement </Button> </div>
                         </Col>
                     </Row>
-
-                </Content>
-                <Footer>
-
-                </Footer>
+                </Layout.Content>
         </Layout>
-        );
+    );
   }
 }
 
-export default CreateEvent;

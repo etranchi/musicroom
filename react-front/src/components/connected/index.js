@@ -3,7 +3,6 @@ import './styles.css';
 import Event from './event'
 import Playlist from './playlist'
 import Setting from './setting'
-import Player from './player'
 import axios from 'axios'
 import { Layout} from 'antd';
 
@@ -22,6 +21,18 @@ class Connected extends Component {
 		componentWillMount(){
 			this.getGeolocalisation();
 			this.getEvents();
+			this.getUser();
+		}
+
+		getUser = () => {
+			axios.get(process.env.REACT_APP_API_URL + '/user/me', 
+			{'headers':{'Authorization':'Bearer '+ localStorage.getItem('token')}})
+			.then((resp) => {
+				this.props.updateParent({user:resp.data});
+			})
+			.catch((err) => {
+				console.log("error user");
+			})
 		}
 
 		getGeolocalisation = () => {
@@ -31,10 +42,7 @@ class Connected extends Component {
 				navigator.geolocation.getCurrentPosition( (position ) => {
 					this.props.state.data.userCoord.lat = position.coords.latitude
 					this.props.state.data.userCoord.lng = position.coords.longitude
-					console.log("ICI 1")
 					this.props.updateParent({'data': this.props.state.data})
-					console.log("ICI 2")
-					console.log(this.props.state.data.userCoord)
 
 
 
@@ -46,7 +54,6 @@ class Connected extends Component {
 						this.props.state.data.userCoord.lat = location.data.latitude
 						this.props.state.data.userCoord.lng = location.data.longitude
 						this.props.updateParent({'data': this.props.state.data})
-						console.log("This Location : ", this.props.state.data.userCoord)
 					})
 					.catch(err => {
 						console.log('error 2 ' + err);
@@ -68,7 +75,6 @@ class Connected extends Component {
 			})
 			.catch((err) => {
 				this.setState({events: []})
-				console.log('Events error', err);
 			})
 		}
 
@@ -93,7 +99,6 @@ class Connected extends Component {
 					{this.props.state.data.userCoord.lat && this.props.state.data.userCoord.lng && (this.props.state.currentComponent === 'event' || this.props.state.currentComponent === 'createEvent' || this.props.state.currentComponent === 'liveEvent' || this.props.state.currentComponent === 'cardEvent')? <Event state={this.props.state} updateParent={this.props.updateParent}/> : null}
 					{this.props.state.currentComponent === 'playlist' || this.props.state.currentComponent === 'createPlaylist' || this.props.state.currentComponent === 'tracks' || this.props.state.currentComponent === 'editPlaylist' ? <Playlist state={this.props.state} updateParent={this.props.updateParent}/> : null}
 					{this.props.state.currentComponent === 'setting' || this.props.state.currentComponent === 'editSetting'? <Setting state={this.props.state} updateParent={this.props.updateParent}/> : null}
-					{this.props.state.playlistId ? <Player state={this.props.state} /> : null }
 				</Content>
 			</Layout>
 			

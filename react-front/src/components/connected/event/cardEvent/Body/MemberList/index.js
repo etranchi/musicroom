@@ -6,39 +6,26 @@ import { List, Card, Avatar, Icon, Col, Row, Layout } from 'antd';
 const { Content } = Layout
 
 class MemberList extends Component {
-        constructor(props) {
-            super(props);
-       
-            this.state = {
-                memberList: []
-
-        }
-    }
-    
-    componentDidMount = () => {
-        this.setState({"memberList":this.props.members})
-    }
-
 	render() {
         return (
             <Content>
                 <Row style={{height:'80px'}}>
                     <Col span={5}></Col>
                     <Col span={3} >
-                        <b style={{display:'inline-block'}} > ({this.state.memberList.length}) </b>
+                        <b style={{display:'inline-block'}} > ({this.props.members.length}) </b>
                         <p style={{display:'inline-block'}} > {this.props.name} </p>
                     </Col>
                     <Col span={3}>
                         { this.props.right.isCreator || this.props.right.isAdmin ?  <SearchBar state={this.props.state} type={this.props.type} updateEventMember={this.props.updateEventMember}/> : null }
                     </Col>
                 </Row>
-                { this.state.memberList.length > 0 ?
+                { this.props.members.length > 0 ?
                     <Row style={{height:'130px'}}>
                         <Col span={5}></Col>
                         <Col span={16}>
                             <List
                                 grid={{ gutter: 16, column: 3 }}
-                                dataSource={this.state.memberList}
+                                dataSource={this.props.members}
                                 renderItem={item => (
                                     <List.Item>
                                         <Card.Meta
