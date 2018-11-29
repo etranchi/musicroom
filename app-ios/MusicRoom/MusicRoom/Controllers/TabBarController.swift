@@ -130,7 +130,7 @@ class TabBarController: UITabBarController {
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             
             self.playerView.transform = .identity
-            self.minimizedPlayer.transform = CGAffineTransform(translationX: 0, y: -self.view.bounds.height + self.offsetY + 44)
+            self.minimizedPlayer.transform = CGAffineTransform(translationX: 0, y: -self.view.bounds.height + self.offsetY)
             
         })
     }
@@ -142,7 +142,7 @@ class TabBarController: UITabBarController {
         })
         animatedShowTabBar()
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-            self.playerView.transform = CGAffineTransform(translationX: 0, y: self.view.bounds.height - self.offsetY - 44)
+            self.playerView.transform = CGAffineTransform(translationX: 0, y: self.view.bounds.height - self.offsetY)
             self.minimizedPlayer.transform = .identity
         })
     }
