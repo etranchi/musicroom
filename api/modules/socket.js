@@ -35,6 +35,10 @@ module.exports = {
     },
     updateRoom: (tmpRoom) => {
         let ret;
+        tmpRoom.tracks.forEach((track) => {
+            if (!track.like)
+                track.like = 0;
+        })
         this.rooms.forEach((room) => {
             if (room.id === tmpRoom.id) {
                 room.tracks = this.sortTracksByScore(tmpRoom.tracks)
@@ -70,7 +74,6 @@ module.exports = {
             });
             return ret
         }
-        console.log("get room return null")
         return null;
     },
     saveNewEvent: async (newEvent) => {

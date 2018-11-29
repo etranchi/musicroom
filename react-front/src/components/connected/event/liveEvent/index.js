@@ -5,7 +5,7 @@ import axios from 'axios'
 import { Col, Row } from 'antd'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import PersonalPlayer from '../../event/personalPlayer'
-import {socket, getRoomPlaylist, joinRoom, updateScore} from '../../sockets';
+import {socket, getRoomPlaylist, updateScore} from '../../sockets';
 
 const reorder = (list, startIndex, endIndex) => {
 	const result = Array.from(list);
@@ -31,9 +31,8 @@ export default class LiveEvent extends Component {
         socket.on('createEventLive', (tracks) => {
             this.sortTracks(tracks);
         });
-        socket.on('joinRoom', (msg) => {
-        });
         socket.on('getRoomPlaylist', (tracks) => {
+            console.log("getRoomPlaylist -> ", tracks)
             this.savePlaylist(tracks);
         });
         socket.on('updateScore', (tracks) => {
@@ -47,7 +46,6 @@ export default class LiveEvent extends Component {
             initLoading: false,
             playlist: this.props.playlist
         }, () => {
-            joinRoom(this.props.roomID);
             getRoomPlaylist(this.props.roomID);
         });
     }

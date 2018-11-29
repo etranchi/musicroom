@@ -41,7 +41,7 @@ class App extends Component {
   
   componentWillMount() {
     const token = localStorage.getItem('token');
-    if (token)
+    if (token && !this.state.user)
     {
       axios.get(process.env.REACT_APP_API_URL + '/user/me', 
       {'headers':{'Authorization':'Bearer '+ localStorage.getItem('token')}})
@@ -60,6 +60,8 @@ class App extends Component {
   }
   render() {
     const token = localStorage.getItem('token')
+    console.log("app render state -> ");
+    console.log(this.state);
     return (
         <Layout className="App">
           <Header className="HeaderApp">
