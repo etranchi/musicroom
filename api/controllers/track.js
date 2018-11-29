@@ -4,14 +4,14 @@ const request = require('request-promise');
 const customError = require('../modules/customError');
 
 module.exports = {
-	getTracks: async (req, res) => {
+	getTracks: async (req, res, next) => {
 		try {
 			res.status(200).json(await trackModel.find())
 		} catch (err) {
 			next(new customError(err.message, err.code))
 		}
 	},
-	getTrackById: async (req, res) => {
+	getTrackById: async (req, res, next) => {
 		try {
 			let track = await trackModel.findOne({'id': req.params.id})
 			if (!track) {
@@ -30,7 +30,7 @@ module.exports = {
 			next(new customError(err.message, err.code))
 		}
 	},
-	// putTrackVote: async (req, res) => {
+	// putTrackVote: async (req, res, next) => {
 	// 	try {
 	// 		let add = (req.body.vote > 0) ? 1 : -1
 	// 		await trackModel.updateOne({id: req.params.id}, {$inc: {vote: add}})
@@ -40,7 +40,7 @@ module.exports = {
 	// 	}
 
 	// },
-	deleteTrackById: async (req, res) => {
+	deleteTrackById: async (req, res, next) => {
 		try {
 			await trackModel.deleteOne({'id': req.params.id})
 			res.status(204).send();

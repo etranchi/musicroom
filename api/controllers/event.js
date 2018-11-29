@@ -5,7 +5,7 @@ const modelEvent = require('../models/event');
 const ObjectId = require('mongodb').ObjectID;
 // geolib pour le calcul de radius
 module.exports = {
-	getEvents: async (req, res) => {
+	getEvents: async (req, res, next) => {
 		try {
 			let myEvents = [] // await modelEvent.find({'creator._id': req.user._id})
 			let friendEvents = [] // await modelEvent.find({'adminMembers._id': req.user._id})
@@ -17,14 +17,14 @@ module.exports = {
 			next(new customError(err.message, 400))
 		}
 	},
-	getEventById: async (req, res) => {
+	getEventById: async (req, res, next) => {
 		try {
 			res.status(200).json(await modelEvent.findOne({'_id':req.params.id}));
 		} catch (err) {
 			next(new customError(err.message, 400))
 		}
 	},
-	postEvent: async (req, res) => {
+	postEvent: async (req, res, next) => {
 		try {
 			req.body = JSON.parse(req.body.body);
 			if (req.file && req.file.filename) req.body.picture = req.file.filename
@@ -36,7 +36,7 @@ module.exports = {
 			next(new customError(err.message, 400))
 		}
 	},
-	putEventById: async (req, res) => {
+	putEventById: async (req, res, next) => {
 		console.log("Je suis ici", req.params)
 		try {
 			// ADD JOI.VALIDATION
@@ -46,7 +46,7 @@ module.exports = {
 			next(new customError(err.message, 400))
 		}
 	},
-	deleteEventById: async (req, res) => {
+	deleteEventById: async (req, res, next) => {
 		try {
 			await modelEvent.deleteOne({'_id': req.params.id})
 			res.status(204).send();

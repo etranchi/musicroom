@@ -5,7 +5,7 @@ const customError = require('../modules/customError');
 const moduleUrl = '/search';
 
 module.exports = {
-	search: (req, res) => {
+	search: (req, res, next) => {
 		if (Object.keys(req.query).length === 0)
 			res.status(400).json("error");
 		console.log(req.query);
@@ -18,7 +18,7 @@ module.exports = {
 				res.json(JSON.parse(body));
 			})
 	},
-	searchAlbum: (req, res) => {
+	searchAlbum: (req, res, next) => {
 		if (Object.keys(req.query).length === 0)
 			res.status(400).json("error");
 		console.log(req.query);
@@ -31,7 +31,7 @@ module.exports = {
 				res.json(JSON.parse(body));
 			})
 	},
-	searchTrack: (req, res) => {
+	searchTrack: (req, res, next) => {
 		if (Object.keys(req.query).length === 0)
 			res.status(400).json("error");
 		console.log(req.query);
@@ -44,7 +44,7 @@ module.exports = {
 				res.json(JSON.parse(body));
 			})
 	},
-	searchPlaylist: (req, res) => {
+	searchPlaylist: (req, res, next) => {
 		if (Object.keys(req.query).length === 0)
 			res.status(400).json("error");
 		console.log(req.query);
@@ -57,7 +57,7 @@ module.exports = {
 				res.json(JSON.parse(body));
 			})
 	},
-	searchArtist: (req, res) => {
+	searchArtist: (req, res, next) => {
 		if (Object.keys(req.query).length === 0)
 			res.status(400).json("error");
 		console.log(req.query);
