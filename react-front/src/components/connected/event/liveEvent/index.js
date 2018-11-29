@@ -22,7 +22,7 @@ export default class LiveEvent extends Component {
             playlist: [],
             initLoading: true,
             loading: false,
-            isBlocked: false
+            isBlocked: false,
         };
         this.roomID = this.props.roomID;
         console.log("Live event : CONSTRUCTOR");
@@ -77,6 +77,7 @@ export default class LiveEvent extends Component {
         })
     }
     render() {
+
         return (
             <div>
                 <Row>
@@ -109,7 +110,6 @@ export default class LiveEvent extends Component {
                                                             )
                                                         }
                                                         </Draggable>
-                                                    {/* </li> */}
                                                     </Col>
                                                 ))
                                             }

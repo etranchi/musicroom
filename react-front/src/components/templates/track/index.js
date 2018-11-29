@@ -14,7 +14,18 @@ export default  class liveEvent extends Component {
             <Layout>
                 <Content>
                     <Row>
-                        <Col span={24}>
+                        <Col span={4}>
+                        {
+                            console.log(this.props)
+                        }
+                        {
+                            this.props.lastLike === this.props.track._id  ? <i  style={{fontColor:"green"}} className="fas fa-arrow-up"></i> : null
+                        }
+                        {
+                            this.props.lastUnLike === this.props.track._id  ? <i  style={{fontColor:"red"}} className="fas fa-arrow-down"></i> : null
+                        }
+                        </Col>
+                        <Col span={20}>
                             <List.Item actions={
                             [
                                 <i onClick={this.props.callSocket.bind(this,"updateScore", this.props.track._id, 1)} style={{fontSize:'28px'}} className="far fa-thumbs-up"></i>,

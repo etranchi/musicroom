@@ -43,8 +43,10 @@ class cardEvent extends Component {
     checkRight = () => {
         console.log("CHECK RIGHT", this.props.state.data.event.creator.email, this.props.state.user.email)
         if (this.props.state.data.event.creator.email === this.props.state.user.email)
+        
             this.setState({isCreator:true})
         else  {
+            console.log("YOU ARE NOT ADMIN")
             this.setState({
                 isMember:this.isUser(this.props.state.data.event.members),
                 isAdmin:this.isUser(this.props.state.data.event.adminMembers)

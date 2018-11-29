@@ -15,11 +15,20 @@
 }
 
 .player {
-    width:100%;
+    display:flex;
+    justify-content: space-between;
     height:120px;
 }
 
 .defaultComponentProperty {
     height: inherit;
     display: inline-block;
+}
+
+.control {
+    min-width: 800px;
+}
+
+.default {
+    min-width:300px;
 }
