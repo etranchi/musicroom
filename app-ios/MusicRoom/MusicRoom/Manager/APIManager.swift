@@ -259,6 +259,34 @@ class APIManager: NSObject, URLSessionDelegate {
         }
     }
     
+    func putEvent(_ event : Event, completion : @escaping((Event?) -> ())) {
+        let url = self.url + "event/"
+        var req = URLRequest(url : URL(string: url)!)
+        req.httpMethod = "PUT"
+        do {
+            req.httpBody = try jsonEncoder.encode(event)
+        } catch (let err) {
+            print(err.localizedDescription)
+        }
+        req.setValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
+        URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: req) { (data, response, err) in
+            if err != nil {
+                completion(nil)
+            }
+            if let d = data {
+                do {
+                    print(d)
+                    let dic = try JSONDecoder().decode(Event.self, from: d)
+                    print(dic)
+                    completion(dic)
+                }
+                catch (let err){
+                    print(err.localizedDescription)
+                }
+            }
+            }.resume()
+        
+    }
     
     func getEvents(completion : @escaping ((DataEvent) -> ())){
         let eventsUrl = self.url + "event"
@@ -270,24 +298,11 @@ class APIManager: NSObject, URLSessionDelegate {
     }
     
     func getImgEvent(_ path : String, completion : @escaping (UIImage?) -> ()) {
-        let url = URL(string: self.url + "eventPicture/" + path)
-        URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: url!) { (data, response, err) in
-            if err != nil {
-                print(err?.localizedDescription)
-                completion(nil)
-            }
-            if let res = response as? URLResponse {
-                if let imageData = data {
-                    completion(UIImage(data: imageData))
-                } else {
-                    print("image is nil")
-                    completion(nil)
-                }
-            } else {
-                print("No response from http request")
-                completion(nil)
-            }
-        }.resume()
+        let url = self.url + "eventPicture/" + path
+        let imageView = UIImageView()
+        imageView.getImageUsingCacheWithUrlString(urlString: url) { (image) in
+            completion(image)
+        }
     }
     
     func getAllUsers(_ token : String, completion : @escaping (([User]) -> ())) {
@@ -334,6 +349,11 @@ class APIManager: NSObject, URLSessionDelegate {
         } catch (let err) {
             print(err.localizedDescription)
         }
+    }
+    
+    func            loadImageUsingCacheWithUrl(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ())
+    {
+        URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: url, completionHandler: completion).resume()
     }
     
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {

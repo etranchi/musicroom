@@ -45,7 +45,7 @@ class EventsController: UITableViewController {
         return 1
     }
 
-    func presentSelectedEvent(_ event : Event) {
+    func presentSelectedEvent(_ event : Event, img : UIImage) {
         let vc = EventDetailController(event)
         self.navigationController?.pushViewController(vc, animated: true)
     }

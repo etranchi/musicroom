@@ -11,17 +11,26 @@ import UIKit
 class SearchMemberController: UITableViewController{
     var searchController : UISearchController!
     
-    var dataUsers : [User] = []
-    var filteredData : [User] = []
-    
+    var dataUsers : [(User,Bool)] = []
+    var filteredData : [(User,Bool)] = []
+    var root : EventDetailController?
     var admins : Bool?
     var event : Event? {
         didSet {
             if let _ = event {
                 apiManager.getAllUsers(userManager.currentUser!.token!, completion: { (res) in
                     DispatchQueue.main.async {
-                        self.dataUsers = res
-                        self.filteredData = res
+                        res.forEach({ (user) in
+                            if (self.members != nil && (self.members?.index(where: { (ur) -> Bool in
+                                return user.id == ur.id
+                            })) != nil) {
+                                self.dataUsers.append((user, true))
+                            } else {
+                                self.dataUsers.append((user, false))
+                            }
+                        })
+                        self.filteredData = self.dataUsers
+                        print(self.filteredData)
                         self.tableView.reloadData()
                     }
                 })
@@ -31,7 +40,20 @@ class SearchMemberController: UITableViewController{
     var members : [User]?
     
     @objc func updateEvent() {
-            print("Updateeeeee ")
+        let ret = dataUsers.filter({ (user, bool) -> Bool in
+            return bool
+        })
+        let bis : [User] = ret.map({ (user, bool) -> User in
+            return user
+        })
+        if admins! {
+            event!.adminMembers = bis
+        } else {
+            event!.members = bis
+        }
+        root!.addMembersAdmins(event!)
+        self.navigationController?.popViewController(animated: true)
+        
     }
     
     override func viewDidLoad() {
@@ -42,7 +64,7 @@ class SearchMemberController: UITableViewController{
         tableView.allowsMultipleSelection = true
         tableView.separatorStyle = .none
         let button = UIButton()
-        button.setAttributedTitle(NSAttributedString(string: "Done", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
+        button.setAttributedTitle(NSAttributedString(string: "Save", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
         button.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
         button.addTarget(self, action: #selector(updateEvent), for: .touchUpInside)
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
@@ -54,7 +76,6 @@ class SearchMemberController: UITableViewController{
         searchController.searchBar.showsCancelButton = false
         searchController.hidesNavigationBarDuringPresentation = false
         self.navigationItem.titleView = searchController.searchBar
-        // tableView.tableHeaderView = searchController.searchBar
         definesPresentationContext = true
         
         // Uncomment the following line to preserve selection between presentations
@@ -84,9 +105,15 @@ class SearchMemberController: UITableViewController{
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-        cell.backgroundColor = UIColor(white: 0.1, alpha: 1)
-        cell.textLabel!.text = filteredData[indexPath.row].login
+        cell.textLabel!.text = filteredData[indexPath.row].0.login
         cell.textLabel?.textColor = .white
+        cell.selectionStyle = .none
+        cell.isSelected = filteredData[indexPath.row].1
+        if cell.isSelected {
+            cell.backgroundColor = UIColor.green
+        } else {
+            cell.backgroundColor = UIColor(white: 0.1, alpha: 1)
+        }
         // Configure the cell...
 
         return cell
@@ -95,13 +122,38 @@ class SearchMemberController: UITableViewController{
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)
-        
+        let userSelected = filteredData[indexPath.row].0
+        cell?.isSelected = true
         cell?.backgroundColor = UIColor.green
+        let toChange = dataUsers.index { (user, bool) -> Bool in
+            if user.id == userSelected.id {
+                return true
+            }
+            return false
+        }
+        if toChange != nil {
+            dataUsers[toChange!].1 = true
+            filteredData[indexPath.row].1 = true
+            
+        }
+        
     }
     
     override func tableView(_ tableView : UITableView, didDeselectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)
+        let userSelected = filteredData[indexPath.row].0
+        cell?.isSelected = false
         cell?.backgroundColor = UIColor(white: 0.1, alpha: 1)
+        let toChange = dataUsers.index { (user, bool) -> Bool in
+            if user.id == userSelected.id {
+                return true
+            }
+            return false
+        }
+        if toChange != nil {
+            dataUsers[toChange!].1 = false
+            filteredData[indexPath.row].1 = false
+        }
     }
     /*
     // Override to support conditional editing of the table view.
@@ -154,7 +206,8 @@ class SearchMemberController: UITableViewController{
 extension SearchMemberController : UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         if let searchText = searchController.searchBar.text {
-            filteredData = searchText.isEmpty ? dataUsers : dataUsers.filter({(user) -> Bool in
+            filteredData = searchText.isEmpty ? dataUsers : dataUsers.filter({(arg) -> Bool in
+                let (user, _) = arg
                 return (user.login.range(of: searchText, options: .caseInsensitive) != nil)
             })
             tableView.reloadData()

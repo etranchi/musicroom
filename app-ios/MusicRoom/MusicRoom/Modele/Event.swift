@@ -37,8 +37,8 @@ struct Event : Codable {
     let creationDate : String
     let date : String
     let playlist : Playlist?
-    let members : [User]
-    let adminMembers : [User]
+    var members : [User]
+    var adminMembers : [User]
     let picture : String?
     enum CodingKeys : String, CodingKey{
         case shared = "public"

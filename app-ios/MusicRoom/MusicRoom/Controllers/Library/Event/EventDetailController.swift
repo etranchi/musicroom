@@ -1,4 +1,4 @@
-//
+    //
 //  EventDetailController.swift
 //  MusicRoom
 //
@@ -15,12 +15,16 @@ class EventDetailController: UIViewController{
     var tableView : UITableView?
     
     @objc func updateEvent() {
-        print("Updateeee")
+        apiManager.putEvent(currentEvent) { (event) in
+            if (event != nil) {
+                ToastView.shared.short(self.view, txt_msg: "Event Updated", color: UIColor.green)
+            }
+        }
     }
     override func viewDidLoad() {
         super.viewDidLoad()
         let button = UIButton()
-        button.setAttributedTitle(NSAttributedString(string: "Done", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
+        button.setAttributedTitle(NSAttributedString(string: "Save", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
         button.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
         button.addTarget(self, action: #selector(updateEvent), for: .touchUpInside)
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
@@ -67,6 +71,10 @@ class EventDetailController: UIViewController{
     }()
     
     
+    func addMembersAdmins(_ event: Event) {
+        currentEvent = event
+    }
+    
     @objc func goToList() {
         print("goToList")
     }
@@ -90,7 +98,7 @@ class EventDetailController: UIViewController{
             headerImg!.widthAnchor.constraint(equalTo: view.widthAnchor),
             headerImg!.heightAnchor.constraint(equalToConstant: 250),
             headerImg!.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            headerImg!.topAnchor.constraint(equalTo: (self.navigationController?.navigationBar.bottomAnchor)!),
+            headerImg!.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
             
             creatorLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.6),
             creatorLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -133,14 +141,11 @@ class EventDetailController: UIViewController{
         tableView?.isScrollEnabled = false
         tableView!.register(LibraryCell.self, forCellReuseIdentifier: libraryCellId)
         tableView!.translatesAutoresizingMaskIntoConstraints = false
+
         apiManager.getImgEvent(event.picture!) { (img) in
-            if img != nil {
-                DispatchQueue.main.async {
-                    self.headerImg = AlbumHeaderView(frame: .zero, albumCover: img!, title: event.title)
-                    self.setupView()
-                }
-                
-            }
+            self.headerImg = AlbumHeaderView(frame: .zero, albumCover: img!, title: event.title)
+            self.setupView()
+                   
         }
 
     }
@@ -188,13 +193,17 @@ extension EventDetailController : UITableViewDelegate, UITableViewDataSource {
         switch indexPath.row {
         case 0:
             let vc = SearchMemberController()
+            vc.root = self
             vc.event = currentEvent
             vc.admins = false
+            vc.members = currentEvent.members
             self.navigationController?.pushViewController(vc, animated: true)
         case 1:
             let vc = SearchMemberController()
+            vc.root = self
             vc.event = currentEvent
             vc.admins = true
+            vc.members = currentEvent.adminMembers
             self.navigationController?.pushViewController(vc, animated: true)
         default:
             print("Omg... wtf..")
