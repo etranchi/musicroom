@@ -5,9 +5,8 @@ import CardHeader from './Header'
 import CreatorProfil from './creatorProfil'
 import BodyEvent from './Body'
 import Map from '../map'
-import axios from 'axios'
 import geolib from 'geolib'
-import {socket, createRoom, joinRoom, updateTracks, leaveRoom} from '../../sockets';
+import {socket, createRoom, joinRoom} from '../../sockets';
 
 class cardEvent extends Component {
 	constructor(props) {
