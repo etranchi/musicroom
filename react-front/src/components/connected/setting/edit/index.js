@@ -11,7 +11,7 @@ class EditSetting extends Component {
 			login: props.state.user.login,
 			password: null,
 			cpypassword: null,
-			picture: this.props.state.user.facebookId ?  this.props.state.user.picture : process.env.REACT_APP_API_URL + "/userPicture/" +  this.props.state.user.picture,
+			picture: this.props.state.user.facebookId ?  process.env.REACT_APP_API_URL + "/userPicture/" + this.props.state.user.picture : process.env.REACT_APP_API_URL + "/userPicture/" + this.props.state.user.picture,
 			newPicture: '',
 			loading:false,
 			infoFile: '',
