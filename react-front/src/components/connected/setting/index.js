@@ -81,7 +81,8 @@ class Setting extends Component {
 			return (<EditSetting state={this.props.state} updateParent={this.props.updateParent}/>)
 		else
 		{
-			let userPicture = this.state.user.facebookId ? this.state.user.picture : process.env.REACT_APP_API_URL + "/userPicture/" + this.state.user.picture
+			let userPicture = this.state.user.facebookId ? process.env.REACT_APP_API_URL + "/userPicture/" + this.state.user.picture : process.env.REACT_APP_API_URL + "/userPicture/" + this.state.user.picture
+			console.log(userPicture)
 			return (
 				<Layout>
 					<Header> <h1>Profil : </h1></Header>
