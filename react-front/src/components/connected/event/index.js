@@ -20,17 +20,14 @@ class Event extends Component {
 			'backgroundColor':'#00897b',
 			'opacity':1,
 			'color':'white'
-		  }	
-	}
-	componentDidMount() {
+		  }
+		console.log("event constructor");
 	}
 
 	changeView = (value) => {
 		this.setState({currentSubView : value})
 	}
 
-
-	
 	render() {
 		console.log("event render");
 		console.log(this.props)

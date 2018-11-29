@@ -52,9 +52,15 @@ module.exports = function (io) {
 
             let room = ftSocket.getRoom(roomID);
             if (room)
+            {
+                console.log("[Socket] -> getRoomPlaylist ", room.tracks.length)
                 io.sockets.in(room.id).emit('getRoomPlaylist', room.tracks)
+            }
             else
+            {
+                console.log("[Socket] -> getRoomPlaylist fail ")
                 return;
+            }
         });
 
         socket.on('createRoom', (roomID, tracks, event) => {
@@ -101,11 +107,15 @@ module.exports = function (io) {
 
             let room = ftSocket.getRoom(roomID)
             if (room) {
+                console.log("[Socket] -> updateScore ", room.tracks.length)
                 room = ftSocket.updateScore(room, trackID, points)
                 room = ftSocket.updateRoom(room)
                 io.sockets.in(room.id).emit('updateScore', room.tracks)
             } else
+            {
+                console.log("[Socket] -> updateScore fail")
                 return io.sockets.in(room.id).emit('updateScore', 'fail');
+            }
         });
         /* Socket for update socket and send new value */
         socket.on('updateEvent', (roomID, newEvent) => {

@@ -5,9 +5,8 @@ import CardHeader from './Header'
 import CreatorProfil from './creatorProfil'
 import BodyEvent from './Body'
 import Map from '../map'
-import axios from 'axios'
 import geolib from 'geolib'
-import {socket, createRoom, joinRoom, updateTracks, leaveRoom} from '../../sockets';
+import {socket, createRoom, joinRoom} from '../../sockets';
 
 class cardEvent extends Component {
 	constructor(props) {
@@ -56,22 +55,25 @@ class cardEvent extends Component {
     }
     componentDidMount = () => {
         socket.on('updateEvent', (newEvent) => {
+            console.log('socket updateEvent receive data ', newEvent)
             this.props.state.data.event = newEvent
             this.checkRight()
             this.props.updateParent({'data': this.props.state.data})
         })
         socket.on('createRoom', (tracks, msg) => {
+            console.log('socket createRoom receive data ', msg)
             if (msg === 'err') joinRoom(this.props.state.data.event._id)
             else console.log("ERROR OCCCURED JOIN ROOM")
                
         })
         socket.on('joinRoom', (msg) => {
-            console.log("joinRoom : ", msg)
+            console.log('socket join room', msg)
         })
         socket.on('leaveRoom', (msg) => {
-            console.log("Leaving Room ", msg)
+            console.log('socketleaveRoom ', msg)
         })
-        createRoom(this.props.state.data.event._id, [], this.props.state.data.event)
+        let tracks = this.props.state.data.event.playlist.tracks ? this.props.state.data.event.playlist.tracks.data : []
+        createRoom(this.props.state.data.event._id, tracks, this.props.state.data.event)
         this.checkRight()
     }
     componentWillUnmount = () => {
@@ -89,6 +91,7 @@ class cardEvent extends Component {
         this.setState({'isHidden': !this.state.isHidden})
     }
     openLiveEvent = () => {
+        
         this.props.updateParent({'currentComponent':'liveEvent'})
     }    
     isToday = date => {
@@ -120,7 +123,7 @@ class cardEvent extends Component {
                 <CreatorProfil right={this.state} state={this.props.state} updateParent={this.props.updateParent} />
                 <BodyEvent right={this.state} state={this.props.state} updateParent={this.props.updateParent} updateMap={this.updateMap.bind(this)}/>
                 {
-                    this.isToday(this.props.state.data.event.event_date) &&  this.props.state.data.event.playlist.tracks ?
+                    this.isToday(this.props.state.data.event.event_date) &&  this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks ?
                         <Button   style={this.launchButton} type="primary" onClick={this.openLiveEvent}> <b> Start Event </b> </Button>
                         : 
                         null

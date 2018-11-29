@@ -9,16 +9,20 @@ const DZ = window.DZ;
 class Setting extends Component {
 	constructor(props) {
 		super(props);
+		console.log("setting constructor");
+		console.log("props");
+		console.log(props);
 		this.state = {
 			user: props.state.user,
 			error: {},
 			loading: false
 		}
-		this.loginDeezer = this.loginDeezer.bind(this);
-		this.logoutDeezer = this.logoutDeezer.bind(this);
+		console.log("state");
+		console.log(this.state);
 	}
 
 	componentWillMount = () => {
+		console.log('setting somponent will mount');
 		axios.get(process.env.REACT_APP_API_URL + '/user/me', 
 		{'headers':{'Authorization':'Bearer '+ localStorage.getItem('token')}})
 		.then((resp) => {
@@ -29,7 +33,7 @@ class Setting extends Component {
 		})
 	}
 
-	loginDeezer () {
+	loginDeezer = () => {
 		const that = this;
 		DZ.init({
 		    appId  : '310224',
@@ -51,7 +55,7 @@ class Setting extends Component {
         }, {perms: 'basic_access,email,offline_access,manage_library,delete_library'});
     }
 
-    logoutDeezer() {
+    logoutDeezer = () => {
     	axios.delete(process.env.REACT_APP_API_URL + '/user/login/deezer', {'headers':{'Authorization' : 'Bearer ' + localStorage.getItem('token')}})
     	.then(resp => {
     		this.props.updateParent({ user: resp.data })
@@ -63,17 +67,21 @@ class Setting extends Component {
     }
 
 	render() {
+		console.log("setting render props -> ");
+		console.log(this.props);
+		console.log("state -> ");
+		console.log(this.state);
 		const {Content, Footer, Header} = Layout;
 		let token = null;
-		if (this.props.state && this.props.state.user && this.props.state.user.deezerToken)
-			token = this.props.state.user.deezerToken
+		if (this.state.user && this.state.user.deezerToken)
+			token = this.state.user.deezerToken
 		if (!this.state.loading)
 			return <p> OUPSI </p>
 		if (this.props.state.currentComponent === 'editSetting')
 			return (<EditSetting state={this.props.state} updateParent={this.props.updateParent}/>)
 		else
 		{
-			let userPicture = this.props.state.user.facebookId ? process.env.REACT_APP_API_URL + "/userPicture/" + this.props.state.user.picture : process.env.REACT_APP_API_URL + "/userPicture/" + this.props.state.user.picture
+			let userPicture = this.state.user.facebookId ? process.env.REACT_APP_API_URL + "/userPicture/" + this.state.user.picture : process.env.REACT_APP_API_URL + "/userPicture/" + this.state.user.picture
 			console.log(userPicture)
 			return (
 				<Layout>
@@ -104,7 +112,7 @@ class Setting extends Component {
 							</Col>
 							<Col span={1}/>
 							<Col span={6}>
-								<b> {this.props.state.user.email}</b>
+								<b> {this.state.user.email}</b>
 							</Col>
 						</Row>
 						<Row>
@@ -114,7 +122,7 @@ class Setting extends Component {
 							</Col>
 							<Col span={1}/>
 							<Col span={6}>
-								<b> { this.props.state.user.login }</b>
+								<b> { this.state.user.login }</b>
 							</Col>
 						</Row>
 						<Row>
@@ -124,7 +132,7 @@ class Setting extends Component {
 							</Col>
 							<Col span={1}/>
 							<Col span={6}>
-								<b> { new Date(this.props.state.user.creationDate).toLocaleDateString('fr-FR')}</b>
+								<b> { new Date(this.state.user.creationDate).toLocaleDateString('fr-FR')}</b>
 							</Col>
 						</Row>
 						<Divider />

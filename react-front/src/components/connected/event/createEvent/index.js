@@ -80,7 +80,7 @@ export default class CreateEvent extends Component {
             axios.post(process.env.REACT_APP_API_URL + '/event/',  data)
             .then((resp) => { 
                 this.info("Evènement crée")
-                this.props.updateParent({'currentComponent' : "event"})
+                this.props.updateParent({'currentComponent' : "listEvent"})
             })
             .catch((err) => { console.log("Create Event : handleSubmit :/event Error ", err); })  
         })
@@ -132,7 +132,6 @@ export default class CreateEvent extends Component {
     }
 	render = () => {
         this.uploadButton = ( <div> <Icon type={this.state.loading ? 'loading' : 'plus'} /> <div className="ant-upload-text">Upload</div> </div> );
-        const {Footer,Content } = Layout;
         return (
             <Layout >
                 <Layout.Content>

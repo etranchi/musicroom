@@ -6,13 +6,6 @@ import { List, Card, Avatar, Icon, Col, Row, Layout } from 'antd';
 const { Content } = Layout
 
 class MemberList extends Component {
-        constructor(props) {
-            super(props);
-       
-   
-    }
-
-
 	render() {
         return (
             <Content>
