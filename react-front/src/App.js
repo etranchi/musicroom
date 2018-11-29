@@ -28,11 +28,11 @@ class App extends Component {
 
   updateState = (val) => {
     
-    console.log("old state ->");
-    console.log(this.state);
-    console.log("new state ->");
-    console.log(val);
-    console.log('end update parent');
+    // console.log("old state ->");
+    // console.log(this.state);
+    // console.log("new state ->");
+    // console.log(val);
+    // console.log('end update parent');
     this.setState(val);
   }
   componentDidUpdate= () => {

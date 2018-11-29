@@ -25,20 +25,17 @@ export default class LiveEvent extends Component {
             isBlocked: false
         };
         this.roomID = this.props.roomID;
-        console.log("live event constructor");
+        console.log("Live event : CONSTRUCTOR");
     }
     componentDidMount = () => {
-        socket.on('createEventLive', (tracks) => {
-            this.sortTracks(tracks);
-        });
         socket.on('getRoomPlaylist', (tracks) => {
-            console.log("getRoomPlaylist -> ", tracks)
+            console.log("socket : receive data from getRoomPlaylist : ", tracks)
             this.savePlaylist(tracks);
         });
         socket.on('updateScore', (tracks) => {
+            console.log("socket : receive data from updateScore : ", tracks)
             this.savePlaylist(tracks);
         });
-
         /**************************************/
     }
     componentWillMount = () => {

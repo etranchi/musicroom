@@ -6,7 +6,7 @@ import MemberList  from './MemberList';
 import {Divider, Icon, Col, Row, Modal, Input, DatePicker } from 'antd';
 import PersonalPlayer from '../../personalPlayer'
 import axios from 'axios'
-import {updateEvent} from '../../../sockets';
+import { updateEvent, updateTracks } from '../../../sockets';
 
 
 class Body extends Component {
@@ -72,6 +72,7 @@ class Body extends Component {
                 this.props.updateParent({'data' : this.props.state.data, 'playlistId':playlist.id})
                 console.log("Playlist change, socket update Event")
                 updateEvent(this.roomID, this.props.state.data.event)
+                updateTracks(this.roomID, this.props.state.data.event.playlist.tracks.data)
                 this.setState({playlistId:playlist.id})         
             })
             .catch((err) => { console.log("Wrong Playlist id.", err); })  

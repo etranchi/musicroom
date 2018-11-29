@@ -18,18 +18,9 @@ module.exports = {
         }
     },
     updateScore: (room, trackID, points) => {
-        console.log()
         room.tracks.forEach((track) => {
-            if (track._id === trackID) 
-            {
-                console.log("Like ")
-                track.like += points 
-            }
-        })
-
-        room.tracks.forEach((track) => {
-            console.log('update Score : ', track.like)
-
+            if (!track.like) track.like = 0
+            if (track._id === trackID) track.like += points 
         })
         return room
     },
@@ -46,10 +37,6 @@ module.exports = {
             }
         })
 
-        ret.tracks.forEach((track) => {
-            console.log('update Room : ',track.like)
-
-        })
         return ret
     },
     createRoom: (roomID, tracks, event) => {
@@ -70,6 +57,7 @@ module.exports = {
            this.rooms.forEach((room) => {
                 if (room.id === roomID) {
                     ret = room
+                    return ;
                 }
             });
             return ret
