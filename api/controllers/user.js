@@ -3,6 +3,7 @@
 const model = require('../models/user');
 const Crypto = require('../modules/crypto');
 const Utils = require('../modules/utils');
+const customError = require('../modules/customError');
 const Joi 	= require('joi');
 const config = require('../config/config.json');
 const argon = require('argon2');
@@ -22,7 +23,6 @@ const argon = require('argon2');
 //     html: '<p>Your html here</p>'// plain text body
 // };
 
-
 exports.connect = (req, res) => {
 		return res.status(200).json({
 			'token': Crypto.createToken(req.user),
@@ -40,8 +40,7 @@ exports.bindDeezerToken = async (req, res, next) => {
 		res.status(200).send(user);
 	} catch (err) {
 		console.log("bindDeezerToken " + err)
-		err.status = 400
-		next(err)
+		next(new customError(err.message, 400))
 	}
 }
 
@@ -55,8 +54,7 @@ exports.deleteDeezerToken = async (req, res, next) => {
 		res.status(200).send(user);
 	} catch (err) {
 		console.log("bindDeezerToken " + err)
-		err.status = 400
-		next(err)
+		next(new customError(err.message, 400))
 	}
 }
 
@@ -70,8 +68,7 @@ exports.getUsers = async (req, res, next) => {
 		res.status(200).send(users);
 	} catch (err) {
 		console.error("Error getUsers : %s", err);
-		err.status = 400
-		next(err)
+		next(new customError(err.message, 400))
 	}
 }
 
@@ -106,9 +103,8 @@ exports.postUser = async (req, res, next) => {
 	} catch (err) {
 		console.error("Error postUser : " + err.toString());
 		if (err.code == 11000)
-			err = new Error("Email already used");
-		err.status = 400
-		next(err)
+			next(new customError("Email already used", 400))
+		next(new customError(err.message, 400))
 	}
 }
 
@@ -117,8 +113,7 @@ exports.getMe = async (req, res, next) => {
 		res.status(200).send(Utils.filter(model.schema.obj, await model.findOne({"_id": req.user._id}), 0));
 	} catch (err) {
 		console.error("Error getUserById: %s", err);
-		err.status = 400
-		next(err)
+		next(new customError(err.message, 400))
 	}
 
 }
@@ -135,8 +130,7 @@ exports.getUserById = async (req, res, next) => {
 		res.status(200).send(Utils.filter(model.schema.obj, user, 0));
 	} catch (err) {
 		console.error("Error getUserById: %s", err);
-		err.status = 400
-		next(err)
+		next(new customError(err.message, 400))
 	}
 
 }
@@ -148,8 +142,7 @@ exports.deleteUserById = async (req, res, next) => {
 		res.status(204).send();
 	} catch (err) {
 		console.error("Error deleteUserById: %s", err);
-		err.status = 400
-		next(err)
+		next(new customError(err.message, 400))
 	}
 
 }
@@ -184,8 +177,7 @@ exports.modifyUserById = async (req, res, next) => {
 		return res.status(200).send(Utils.filter(model.schema.obj, user, 0));
 	} catch (err) {
 		console.error("Error modifyUserById: %s", err);
-		err.status = 400
-		next(err)
+		next(new customError(err.message, 400))
 	}
 }
 
@@ -200,10 +192,9 @@ exports.confirmUser = async (req, res, next) => {
 	} catch (err) {
 		console.error("Error confirm user: %s", err);
 		if (err.message === 'Bad token')
-			err.status = 401
+			next(new customError(err.message, 401))
 		else
-			err.status = 400
-		next(err)
+			next(new customError(err.message, 400))
 	}		
 }
 
@@ -220,8 +211,7 @@ exports.resendMail = async (req, res, next) => {
 		res.status(202).send({message: "Mail send (if account exist and not already validate)"})
 	} catch (err) {
 		console.error("Error resend mail: %s", err);
-		err.status = 400
-		next(err)
+		next(new customError(err.message, 400))
 	}		
 }
 

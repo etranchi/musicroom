@@ -1,13 +1,14 @@
 const trackModel = require('../models/track');
 const config = require('../config/config');
 const request = require('request-promise');
+const customError = require('../modules/customError');
 
 module.exports = {
 	getTracks: async (req, res) => {
 		try {
 			res.status(200).json(await trackModel.find())
 		} catch (err) {
-			res.status(400).json(err)
+			next(new customError(err.message, err.code))
 		}
 	},
 	getTrackById: async (req, res) => {
@@ -26,7 +27,7 @@ module.exports = {
 			return res.status(200).json(track || {});
 		} catch (err) {
 			console.log("Bad Request getTrackById" + err)
-			res.status(400).json(err);
+			next(new customError(err.message, err.code))
 		}
 	},
 	// putTrackVote: async (req, res) => {
@@ -35,7 +36,7 @@ module.exports = {
 	// 		await trackModel.updateOne({id: req.params.id}, {$inc: {vote: add}})
 	// 		res.status(200).json(data);
 	// 	} catch (err) {
-	// 		res.status(400).json(err);
+	// 		next(new customError(err.message, err.code));
 	// 	}
 
 	// },
@@ -45,7 +46,7 @@ module.exports = {
 			res.status(204).send();
 		} catch (err) {
 			console.log(err)
-			res.status(400).send(err);
+			next(new customError(err.message, err.code))
 		}
 	}
 };

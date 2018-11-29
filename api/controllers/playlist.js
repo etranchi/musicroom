@@ -1,13 +1,14 @@
 const playlistModel 	= require('../models/playlist');
 const config 			= require('../config/config');
 const request 			= require('request-promise');
+const customError = require('../modules/customError');
 
 module.exports = { 
 	getPlaylists: async (req, res) => {
 		try {
 			res.status(200).json(await playlistModel.find())
 		} catch (err) {
-			res.status(400).json(err)
+			next(new customError(err.message, 400))
 		}
 	},
 	getPlaylistsByUser: async (req, res) => {
@@ -26,7 +27,7 @@ module.exports = {
 				localPlaylists = [...localPlaylists, ...deezerPlaylists.data]
 			res.status(200).json(localPlaylists)
 		} catch (err) {
-			res.status(400).json(err)
+			next(new customError(err.message, 400))
 		}
 	},
 	getPlaylistById: async (req, res) => {
@@ -49,7 +50,7 @@ module.exports = {
 			res.status(200).json(playlist || {});
 		} catch (err) {
 			console.log("Bad Request getPlaylistUserById" + err)
-			res.status(400).json(err);
+			next(new customError(err.message, 400));
 		}
 	},
 	getPlaylistUserById: async (req, res) => {
@@ -72,7 +73,7 @@ module.exports = {
 			res.status(200).json(playlist || {});
 		} catch (err) {
 			console.log("Bad Request getPlaylistUserById" + err)
-			res.status(400).json(err);
+			next(new customError(err.message, 400))
 		}
 	},
 	postPlaylist: async (req, res) => {
@@ -93,7 +94,7 @@ module.exports = {
 			res.status(201).json(playlist);
 		} catch (err) {
 			console.log(err)
-			res.status(400).json(err);
+			next(new customError(err.message, 400))
 		}
 	},
 	putPlaylistById: async (req, res) => {
@@ -102,7 +103,7 @@ module.exports = {
 			res.status(200).json(playlist);
 		} catch (err) {
 			console.log("Bad Request putPlaylistById" + err)
-			res.status(400).send(err);
+			next(new customError(err.message, 400))
 		}
 	},
 	addTrackToPlaylistById: async (req, res) => {
@@ -141,7 +142,7 @@ module.exports = {
 			res.status(200).send({message: 'Track added'});
 		} catch (err) {
 			console.log("Bad Request addTrackToPlaylistById" + err)
-			res.status(400).send(err);
+			next(new customError(err.message, 400))
 		}
 	},
 	deletePlaylistById: async (req, res) => {
@@ -150,7 +151,7 @@ module.exports = {
 			res.status(204).json({message: 'PLaylist deleted'});
 		} catch (err) {
 			console.log("Bad Request deletePlaylistById" + err)
-			res.status(400).send(err);
+			next(new customError(err.message, 400))
 		}
 	},
 	deleteTrackPlaylistById: async (req, res) => {
@@ -179,7 +180,7 @@ module.exports = {
 			res.status(204).json({message: 'Track deleted'});
 		} catch (err) {
 			console.log("Bad Request deletePlaylistById" + err)
-			res.status(400).send(err);
+			next(new customError(err.message, 400))
 		}
 	}
 };
