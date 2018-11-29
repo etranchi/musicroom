@@ -262,8 +262,13 @@ class APIManager: NSObject, URLSessionDelegate {
         var req = URLRequest(url : URL(string: url)!)
         let headers : HTTPHeaders = ["Authorization": "Bearer \(userManager.currentUser!.token!)"]
         do {
-            let data = try jsonEncoder.encode(event)
-            let parameter = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! Parameters
+            let admins = event.adminMembers.dictionary
+            let members = event.members.dictionary
+            var parameter : Parameters = event.dictionary
+
+            parameter.updateValue(event.members.dictionary, forKey: "members")
+            print(parameter)
+            
             APIManager.Manager.request(url, method: .put, parameters: parameter, encoding: URLEncoding.default, headers: headers)
         } catch {
          print("err")
