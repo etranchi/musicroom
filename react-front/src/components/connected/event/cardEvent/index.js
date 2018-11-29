@@ -30,7 +30,6 @@ class cardEvent extends Component {
             'displayUser' : false
         
         }
-        console.log('card event constructor');
     }
 
 
@@ -42,20 +41,29 @@ class cardEvent extends Component {
         }
         return false;
     }
+    checkRight = () => {
+        console.log("CHECK RIGHT", this.props.state.data.event.creator.email, this.props.state.user.email)
+        if (this.props.state.data.event.creator.email === this.props.state.user.email)
+            this.setState({isCreator:true})
+        else  {
+            this.setState({
+                isMember:this.isUser(this.props.state.data.event.members),
+                isAdmin:this.isUser(this.props.state.data.event.adminMembers)
+            })
+        }
+        if (this.state.isCreator || this.state.isMember || this.state.isAdmin)
+            this.setState({isViewer:false})
+    }
     componentDidMount = () => {
         socket.on('updateEvent', (newEvent) => {
-            console.log('Receive SOCKET UPDATE')
             this.props.state.data.event = newEvent
-            this.setState({'data': this.props.state.data})
+            this.checkRight()
+            this.props.updateParent({'data': this.props.state.data})
         })
         socket.on('createRoom', (tracks, msg) => {
-            if (msg === 'err')
-            {
-                console.log("Room joined")
-                joinRoom(this.props.state.data.event._id)
-            }
-            else
-             console.log("Room created : ", tracks, "Message : ", msg)
+            if (msg === 'err') joinRoom(this.props.state.data.event._id)
+            else console.log("ERROR OCCCURED JOIN ROOM")
+               
         })
         socket.on('joinRoom', (msg) => {
             console.log("joinRoom : ", msg)
@@ -64,19 +72,11 @@ class cardEvent extends Component {
             console.log("Leaving Room ", msg)
         })
         createRoom(this.props.state.data.event._id, [], this.props.state.data.event)
-        if (this.props.state.data.event.creator.email === this.props.state.user.email)
-            this.setState({isCreator:true})
-        else  {
-            this.setState({isMember:this.isUser(this.props.state.data.event.members)})
-            this.setState({isAdmin:this.isUser(this.props.state.data.event.adminMembers)})
-        }
-
-        if (this.state.isCreator || this.state.isMember || this.state.isAdmin)
-            this.setState({isViewer:false})
+        this.checkRight()
     }
     componentWillUnmount = () => {
-        console.log("UNMOUNTING")
-        leaveRoom(this.props.state.data.event._id)
+
+        //     leaveRoom(this.props.state.data.event._id)
     }
     updateMap = () => {
         let calc = geolib.getDistanceSimple(
@@ -89,18 +89,15 @@ class cardEvent extends Component {
         this.setState({'isHidden': !this.state.isHidden})
     }
     openLiveEvent = () => {
-        updateTracks(this.props.state.data.event._id, this.props.state.data.event.playlist.tracks.data)
         this.props.updateParent({'currentComponent':'liveEvent'})
     }    
     isToday = date => {
-
         let timeEvent           = new Date(date).getTime();
         let curTime             = new Date(new Date()).getTime()
         let timeBeforeEvent     = timeEvent - curTime;
         let dayTimeStamp        = (3600 * 1000) * 24;
         let day                 = timeBeforeEvent / dayTimeStamp
 
-        console.log("Console.log", timeBeforeEvent, dayTimeStamp)
         if (timeBeforeEvent <= dayTimeStamp/24 && day < 1 && day > -1)
             return true;
         else
@@ -123,7 +120,7 @@ class cardEvent extends Component {
                 <CreatorProfil right={this.state} state={this.props.state} updateParent={this.props.updateParent} />
                 <BodyEvent right={this.state} state={this.props.state} updateParent={this.props.updateParent} updateMap={this.updateMap.bind(this)}/>
                 {
-                    this.isToday(this.props.state.data.event.event_date) ?
+                    this.isToday(this.props.state.data.event.event_date) &&  this.props.state.data.event.playlist.tracks ?
                         <Button   style={this.launchButton} type="primary" onClick={this.openLiveEvent}> <b> Start Event </b> </Button>
                         : 
                         null

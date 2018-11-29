@@ -30,7 +30,7 @@ exports.connect = (req, res) => {
 		});
     }
 
-exports.bindDeezerToken = async (req, res) => {
+exports.bindDeezerToken = async (req, res, next) => {
 	try {
 		let user = await model.findOneAndUpdate(
 			{_id: req.user._id}, 
@@ -40,11 +40,12 @@ exports.bindDeezerToken = async (req, res) => {
 		res.status(200).send(user);
 	} catch (err) {
 		console.log("bindDeezerToken " + err)
-		res.status(400).send({error: "not linked"});
+		err.status = 400
+		next(err)
 	}
 }
 
-exports.deleteDeezerToken = async (req, res) => {
+exports.deleteDeezerToken = async (req, res, next) => {
 	try {
 		let user = await model.findOneAndUpdate(
 			{_id: req.user._id}, 
@@ -54,27 +55,28 @@ exports.deleteDeezerToken = async (req, res) => {
 		res.status(200).send(user);
 	} catch (err) {
 		console.log("bindDeezerToken " + err)
-		res.status(400).send({error: "not linked"});
+		err.status = 400
+		next(err)
 	}
 }
 
-exports.getUsers = async (req, res) => {
+exports.getUsers = async (req, res, next) => {
 	try {
 		console.info("getUser: getting all users ...");
-		let users = await model.find()
+		let users = await model.find({_id: {$ne: req.user._id}})
 		users.map((user) => {
 			return Utils.filter(model.schema.obj, user, 0)
 		})
 		res.status(200).send(users);
 	} catch (err) {
 		console.error("Error getUsers : %s", err);
-		res.status(400).send(err.toString());
+		err.status = 400
+		next(err)
 	}
 }
 
-exports.postUser = async (req, res) => {
+exports.postUser = async (req, res, next) => {
 	try {
-		// TODO ? A VOIR ? ADD PICTURE IN PUT?
 		if (req.body.body)
 			req.body = JSON.parse(req.body.body)
 		console.log("BODY : ", req.body)
@@ -103,23 +105,23 @@ exports.postUser = async (req, res) => {
 		res.status(201).send({'token': Crypto.createToken(user)})
 	} catch (err) {
 		console.error("Error postUser : " + err.toString());
-		if (err.code == 11000)
-			return res.status(400).send({message: "User already exist"});
-		res.status(400).send({message: err.toString()});
+		err.status = 400
+		next(err)
 	}
 }
 
-exports.getMe = async (req, res) => {
+exports.getMe = async (req, res, next) => {
 	try {
 		res.status(200).send(Utils.filter(model.schema.obj, await model.findOne({"_id": req.user._id}), 0));
 	} catch (err) {
 		console.error("Error getUserById: %s", err);
-		res.status(400).send({message: err.toString()});
+		err.status = 400
+		next(err)
 	}
 
 }
 
-exports.getUserById = async (req, res) => {
+exports.getUserById = async (req, res, next) => {
 	try {
 		const { error } = validateId(req.params);
 		if (error) {
@@ -131,24 +133,26 @@ exports.getUserById = async (req, res) => {
 		res.status(200).send(Utils.filter(model.schema.obj, user, 0));
 	} catch (err) {
 		console.error("Error getUserById: %s", err);
-		res.status(400).send({message: err.toString()});
+		err.status = 400
+		next(err)
 	}
 
 }
 
-exports.deleteUserById = async (req, res) => {
+exports.deleteUserById = async (req, res, next) => {
 	try {
 		console.info("deleteUserById : delete _id -> %s", req.user._id);
 		await model.deleteOne({"_id": req.user._id})
 		res.status(204).send();
 	} catch (err) {
 		console.error("Error deleteUserById: %s", err);
-		res.status(400).send({message: err.toString()});
+		err.status = 400
+		next(err)
 	}
 
 }
 
-exports.modifyUserById = async (req, res) => {
+exports.modifyUserById = async (req, res, next) => {
 	req.body = JSON.parse(req.body.body);
 	try {
 		console.log(req.body)
@@ -168,25 +172,30 @@ exports.modifyUserById = async (req, res) => {
 		return res.status(200).send(Utils.filter(model.schema.obj, user, 0));
 	} catch (err) {
 		console.error("Error modifyUserById: %s", err);
-		res.status(400).send({message: err.toString()});
+		err.status = 400
+		next(err)
 	}
 }
 
-exports.confirmUser = async (req, res) => {
+exports.confirmUser = async (req, res, next) => {
 	try {
 		if (req.user.status == 'Created')
 		{
 			await model.updateOne({_id: req.user._id}, {status: 'Active'});
 			return res.status(200).send({'token': Crypto.createToken(await model.findOne({_id: req.user._id}))});
 		}
-		res.status(400).send({message: "Bad token"});
+		throw new Error('Bad token');
 	} catch (err) {
 		console.error("Error confirm user: %s", err);
-		res.status(400).send({message: err.toString()});
+		if (err.message === 'Bad token')
+			err.status = 401
+		else
+			err.status = 400
+		next(err)
 	}		
 }
 
-exports.resendMail = async (req, res) => {
+exports.resendMail = async (req, res, next) => {
 	try {
 		let user = await model.findOne({email: req.body.email, status: 'Created'})
 		if (user) {
@@ -199,7 +208,8 @@ exports.resendMail = async (req, res) => {
 		res.status(202).send({message: "Mail send (if account exist and not already validate)"})
 	} catch (err) {
 		console.error("Error resend mail: %s", err);
-		res.status(400).send({message: err.toString()});
+		err.status = 400
+		next(err)
 	}		
 }
 

@@ -5,7 +5,9 @@ const middlewares = {
 		if (req.user.status === 'Active') {
 			next();
 		} else {
-			return res.send(401, {message: "Account not confirmed"});
+			let err = new Error('Account not confirmed')
+			err.status = 401
+			next(err)
 		}
 	}
 };

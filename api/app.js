@@ -37,9 +37,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.use('/', routes);
-// app.use(function(err, req, res, next) {
-//   // logic
-// });
+app.use(function(err, req, res, next) {
+    console.log("Je suis dans le gestionnaire d'erreur -> ")
+    if (err.message)
+      return res.status(err.status || 500).send({error: err.message})
+    return res.status(500).send({error: "Le serveur a mal"})
+});
 
 app.get('/', ( req, res) =>  {
 	res.status(200).json({"message":"Welcome to Music vroom!"});
