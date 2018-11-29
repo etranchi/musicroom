@@ -102,13 +102,26 @@ module.exports = function (io) {
             } else
                 return io.sockets.in(room.id).emit('updateTracks', 'fail');
         });
-        socket.on('updateScore', (roomID, trackID, points) => {
+        socket.on('updateTrack', (roomID, track) => {
+            let room = ftSocket.getRoom(roomID)
+            if (room) {
+                room.tracks.forEach(music => {
+                    if (music._id === track._id)
+                    {
+                        console.log("track Updated")
+                        music = track
+                    }
+                    
+                });
+            }
+        });
+        socket.on('updateScore', (roomID, trackID, points, userID) => {
             console.log("[Socket] -> updateScore")
 
             let room = ftSocket.getRoom(roomID)
             if (room) {
                 console.log("[Socket] -> updateScore ", room.tracks.length)
-                room = ftSocket.updateScore(room, trackID, points)
+                room = ftSocket.updateScore(room, trackID, points, userID)
                 room = ftSocket.updateRoom(room)
                 io.sockets.in(room.id).emit('updateScore', room.tracks)
             } else
