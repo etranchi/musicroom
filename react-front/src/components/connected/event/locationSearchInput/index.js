@@ -1,13 +1,12 @@
-
 import React, { Component } from 'react';
 import './styles.css';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng} from 'react-places-autocomplete';
-import SimpleMap from '../simpleMap'
+import Map from '../map'
 
 
 
-class LocationSearchInput extends Component {
-	constructor(props) {
+export default class LocationSearchInput extends Component {
+  constructor(props) {
     super(props);
     this.state = {
       location: {
@@ -17,13 +16,10 @@ class LocationSearchInput extends Component {
       addressObj: '',
       key: 0
     };
-    this.handleSelect = this.handleSelect.bind(this);
   }
- 
   handleChange = address => {
     this.setState({ address });
-  };
- 
+  }
   handleSelect = address => {
     geocodeByAddress(address)
       .then(results =>  {
@@ -38,11 +34,6 @@ class LocationSearchInput extends Component {
       .then(latLng => console.log('Success', latLng))
       .catch(error => console.error('Error', error));
   }
-
-  openCard = () => {
-    return;
-  }
- 
 	render() {
 			return (
         <div >
@@ -84,10 +75,8 @@ class LocationSearchInput extends Component {
             </div>
           )}
         </PlacesAutocomplete>
-          {this.state.key === 1 ? <SimpleMap event={this.props.state} state={this.props.state} center={this.state.location.coord}/> : null}
+          {this.props.displayMap  ? <Map state={this.props.state} events={this.props.state.data.event ? [this.props.state.data.event] : []} center={this.state.location.coord}/> : null }
         </div>
 			);
 		}
 }
-
-export default LocationSearchInput;

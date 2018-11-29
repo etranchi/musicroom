@@ -1,45 +1,50 @@
 import React, { Component } from 'react';
 import { Card, Avatar, Icon, Divider, Modal, Row, Col, Button } from 'antd';
 import './styles.css';
-import geolib from 'geolib'
-import Map from "../simpleMap"
+import Map from "../map"
 import axios from 'axios'
 
-class PreviewCardEvent extends Component {
+export default class PreviewCardEvent extends Component {
 	constructor(props) {
         super(props);
-
-    this.state = {
-        visible: false,
+        this.state = {
+            visible: false,
+            distance: 0
+        };
     }
+    getDistance = (coordA, coordB) =>  {
+        let R     = 6371; // km
+        let dLat  = this.toRad(coordB.lat - coordA.lat);
+        let dLon  = this.toRad(coordB.lng - coordA.lng);
+        let lat1  = this.toRad(coordA.lng);
+        let lat2  = this.toRad(coordB.lng);
 
+        let a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+        let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+        let d = R * c;
+        return d.toFixed(0);
     }
-
-    getDistance(coordA, coordB){
-        const calc = geolib.getDistanceSimple(
-            {latitude: coordA.lat, longitude: coordA.lng},
-            {latitude: coordB.lat, longitude:coordB.lng}
-        );
-        return (calc/1000)
+   toRad = (Value) => {
+        return Value * Math.PI / 180;
     }
-    
     openCard = (e) => {
+        window.scrollTo(600, 600);
         this.props.state.data.event = this.props.event;
-        this.props.updateParent({'currentComponent': 'cardEvent', 'data': this.props.state.data})
+        this.props.updateParent({'currentComponent': 'cardEvent', 'data': this.props.state.data});
     }
-
     componentDidMount = () => {
-        console.log("component preview card mount");
-        this.distance = this.getDistance(this.props.state.data.userCoord, this.props.event.location.coord).toFixed(0)
-        this.date = this.props.event.event_date ? this.formatDateAnnounce(this.props.event.event_date) : "Inconnue"
+        if (!this.props.event.location.coord) {
+            this.props.event.location.coord = {
+                lat: 0,
+                lng:0
+            };
+        }
+        let distance = this.getDistance(this.props.event.location.coord, this.props.state.data.userCoord);
+        this.setState({distance:distance});
+        this.date = this.props.event.event_date ? this.formatDateAnnounce(this.props.event.event_date) : "Inconnue";
     }
-
     openMap(val){
-        let calc = geolib.getDistanceSimple(
-            {latitude: this.props.state.data.userCoord.lat, longitude: this.props.state.data.userCoord.lng},
-            {latitude: this.props.event.location.coord.lat, longitude:this.props.event.location.coord.lng}
-        );
-        this.setState({'distance':calc/1000});
         this.showModal();
     }
     showModal = () => {
@@ -48,41 +53,49 @@ class PreviewCardEvent extends Component {
     handleOk = (e) => {
         this.setState({visible: false});
     }
-    
     handleCancel = (e) => {
         this.setState({visible: false});
     }
     formatDateAnnounce = (date) => {
+        let hours = date.split("Z")[0];
+        if (hours) {
+            hours = hours.split("T")[1];
+            hours = hours.split(".")[0];
+        }
+        let timeEvent           = new Date(date).getTime();
+        let curTime             = new Date(new Date()).getTime()
+        let timeBeforeEvent     = timeEvent - curTime;
+        let dayTimeStamp        = (3600 * 1000) * 24;
+        let weekTimeStamp       = dayTimeStamp * 7;
+        let options             = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        let ret                 = "Le : " + new Date(date).toLocaleDateString('fr-Fr', options);
 
-        let classicDate = new Date(date).toLocaleDateString('fr-Fr')
-        let timeEvent = new Date(date).getTime();
-        let curTime = new Date(new Date()).getTime()
-        let timeBeforeEvent = timeEvent - curTime;
-        let dayTimeStamp = (3600 * 1000) * 24;
-        let weekTimeStamp = dayTimeStamp * 7;
-
-        if (timeBeforeEvent < 0.0) return "Out dated"
-        if (timeBeforeEvent > weekTimeStamp)return "Le : " + classicDate
-        else if (timeBeforeEvent === weekTimeStamp) return ("In one week")
+        if (timeBeforeEvent < 0.0)
+            return "Déja passée"
+        if (timeBeforeEvent > weekTimeStamp)
+            return ret
+        else if (timeBeforeEvent === weekTimeStamp)
+            return ("Dans une semaine")
         else {
-           let day = Math.round(timeBeforeEvent / dayTimeStamp)
-            if (day === 1) return ('Tomorow')
-            else if (day === 0) return ("Today")
-            else return ("In " + day + 'days')
+           let day = timeBeforeEvent / dayTimeStamp
+            if (day < 1)
+                return "Aujourd'hui à " + hours
+            if (day <= 2)
+                return "Demain à " + hours
+            if (day > 2) 
+                return "Après-demain à " + hours
+            else 
+                return ("Dans " + day + ' jours')
         }
     }
     delete = () => {
-        console.log('couccou');
-        console.log(this.props.event);
         axios.delete(process.env.REACT_APP_API_URL + '/event/'+ this.props.event._id, {headers:{Authorization: 'Bearer ' + localStorage.getItem('token')}})
         .then(resp => {
             console.log(resp);
             this.props.getEvents();
-            console.log('deleted soit disant');
         })
         .catch(err => {
             console.log(err);
-            console.log('not deleted');
         })
     }
 	render() {
@@ -103,31 +116,25 @@ class PreviewCardEvent extends Component {
                         <div>
                             <p style={{textAlign:'center'}}>{this.date}</p>
                             <Divider />
-                            <p style={{textAlign:'center'}}>À {this.distance} km</p>
+                            <p style={{textAlign:'center'}}>À {this.state.distance} km</p>
                         </div>
                     }
-                />
-                
+                />  
                 <Modal
                     title={"Vous êtes à " + this.state.distance + "km"}
                     visible={this.state.visible}
                     onOk={this.handleOk}
                     onCancel={this.handleCancel}
-                >
-                
-                    <Map state={this.props.state} openCard={this.openCard} event={this.props.event}/>
+                >  
+                    <Map state={this.props.state} openCard={this.openCard} events={[this.props.event]}/>
                     <Row>
-					<Col span={11}></Col>
+					<Col span={11}/>
 					<Col span={4}>
 						<Button  onClick={this.openCard.bind(this)}> Voir l'évent </Button>
 					</Col>
-				</Row>
-                
+				</Row>       
             </Modal>
             </Card>
         )
 	}
 }
-
-export default PreviewCardEvent;
-

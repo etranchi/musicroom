@@ -1,6 +1,7 @@
 'use strict';
 
 const playlistModel = require('../models/playlist');
+const eventModel = require('../models/event');
 
 this.rooms = [];
 
@@ -17,23 +18,18 @@ module.exports = {
         }
     },
     updateScore: (room, trackID, points) => {
-        console.log()
         room.tracks.forEach((track) => {
-            if (track._id === trackID) 
-            {
-                console.log("Like ")
-                track.like += points 
-            }
-        })
-
-        room.tracks.forEach((track) => {
-            console.log('update Score : ', track.like)
-
+            if (!track.like) track.like = 0
+            if (track._id === trackID) track.like += points 
         })
         return room
     },
     updateRoom: (tmpRoom) => {
         let ret;
+        tmpRoom.tracks.forEach((track) => {
+            if (!track.like)
+                track.like = 0;
+        })
         this.rooms.forEach((room) => {
             if (room.id === tmpRoom.id) {
                 room.tracks = this.sortTracksByScore(tmpRoom.tracks)
@@ -41,16 +37,13 @@ module.exports = {
             }
         })
 
-        ret.tracks.forEach((track) => {
-            console.log('update Room : ',track.like)
-
-        })
         return ret
     },
-    createRoom: (roomID, tracks) => {
+    createRoom: (roomID, tracks, event) => {
         let room = {
             id: roomID,
-            tracks: this.sortTracksByScore(tracks)
+            tracks: this.sortTracksByScore(tracks),
+            data: event
         };
         room.tracks.forEach((track) => {
             track.like = 0;
@@ -64,11 +57,19 @@ module.exports = {
            this.rooms.forEach((room) => {
                 if (room.id === roomID) {
                     ret = room
+                    return ;
                 }
             });
             return ret
         }
-        console.log("get room return null")
         return null;
-    }
+    },
+    saveNewEvent: async (newEvent) => {
+
+        if (newEvent._id)
+        {
+            return await eventModel.updateOne({_id: newEvent._id}, newEvent, {new: true})
+        }
+
+    },
 };
