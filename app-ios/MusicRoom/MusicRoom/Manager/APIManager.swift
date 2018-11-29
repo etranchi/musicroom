@@ -11,7 +11,7 @@ import Alamofire
 
 class APIManager: NSObject, URLSessionDelegate {
     
-    let ip: String = "192.168.99.100"
+    let ip: String = "www.come-over.com"
     let token: String? = nil
     let delegate: Alamofire.SessionDelegate = Manager.delegate
     var url: String {
@@ -20,8 +20,8 @@ class APIManager: NSObject, URLSessionDelegate {
     
     private static var Manager: Alamofire.SessionManager = {
         let serverTrustPolicies: [String: ServerTrustPolicy] = [
-            "https://192.168.99.100:4242/event": .disableEvaluation,
-            "https://192.168.99.100:4242/": .disableEvaluation,
+            "https://www.come-over.com:4242/event": .disableEvaluation,
+            "https://www.come-over.com:4242/": .disableEvaluation,
         ]
         let configuration = URLSessionConfiguration.default
         configuration.httpAdditionalHeaders = Alamofire.SessionManager.defaultHTTPHeaders

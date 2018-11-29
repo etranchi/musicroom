@@ -8,7 +8,9 @@ target 'MusicRoom' do
   # Pods for MusicRoom
   pod 'FacebookCore', '0.3.0'
   pod 'FacebookLogin', '0.3.0'
-  pod 'Google/SignIn'
+  pod 'GoogleSignIn'
   pod 'Alamofire'
+  pod 'Socket.IO-Client-Swift', '~> 13.3.0'
+  pod 'Starscream', '<= 3.0.5'
 end
 

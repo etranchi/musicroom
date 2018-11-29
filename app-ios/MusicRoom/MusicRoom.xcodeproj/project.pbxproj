@@ -36,6 +36,7 @@
 		7932725221A453D9008D4D87 /* PlaylistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7932725121A453D9008D4D87 /* PlaylistCell.swift */; };
 		7932725421A45EB8008D4D87 /* AlignedCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7932725321A45EB7008D4D87 /* AlignedCollectionViewFlowLayout.swift */; };
 		79493E962194570600DD03FF /* MinimizedPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79493E952194570600DD03FF /* MinimizedPlayerView.swift */; };
+		795133F521B01A62004FB227 /* SocketIOManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 795133F421B01A62004FB227 /* SocketIOManager.swift */; };
 		796ECB3A218DCAE400321B3B /* ProgressCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796ECB39218DCAE400321B3B /* ProgressCircle.swift */; };
 		7970B6EF2190C3980007F831 /* AppUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7970B6EE2190C3980007F831 /* AppUtility.swift */; };
 		7991484221889F8D00120E2D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7991484121889F8D00120E2D /* Extensions.swift */; };
@@ -121,6 +122,7 @@
 		7932725121A453D9008D4D87 /* PlaylistCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistCell.swift; sourceTree = "<group>"; };
 		7932725321A45EB7008D4D87 /* AlignedCollectionViewFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlignedCollectionViewFlowLayout.swift; sourceTree = "<group>"; };
 		79493E952194570600DD03FF /* MinimizedPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinimizedPlayerView.swift; sourceTree = "<group>"; };
+		795133F421B01A62004FB227 /* SocketIOManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketIOManager.swift; sourceTree = "<group>"; };
 		796ECB39218DCAE400321B3B /* ProgressCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressCircle.swift; sourceTree = "<group>"; };
 		7970B6EE2190C3980007F831 /* AppUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUtility.swift; sourceTree = "<group>"; };
 		7991484121889F8D00120E2D /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -454,6 +456,7 @@
 				8F18989B217F3B4D00CE1A8D /* DeezerManager.swift */,
 				77B444752181CD0200B3F536 /* APIManager.swift */,
 				79A3F9A82193E602007CEB86 /* PlayerManager.swift */,
+				795133F421B01A62004FB227 /* SocketIOManager.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -597,6 +600,8 @@
 				"${BUILT_PRODUCTS_DIR}/GTMOAuth2/GTMOAuth2.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/Socket.IO-Client-Swift/SocketIO.framework",
+				"${BUILT_PRODUCTS_DIR}/Starscream/Starscream.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -609,6 +614,8 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMOAuth2.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketIO.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Starscream.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -706,6 +713,7 @@
 				79938C8D21A314CD006D7281 /* PlaylistCollectionView.swift in Sources */,
 				7991484221889F8D00120E2D /* Extensions.swift in Sources */,
 				79CDCF2B218876ED0095CC63 /* CustomNavigationController.swift in Sources */,
+				795133F521B01A62004FB227 /* SocketIOManager.swift in Sources */,
 				79DD4A7D219C51B7005578EB /* AlbumCollectionView.swift in Sources */,
 				79FF7D10219D795A001DAE17 /* SeeAllSongsController.swift in Sources */,
 				8F364B8B217E5B9100B57FC8 /* MusicRoom.xcdatamodeld in Sources */,

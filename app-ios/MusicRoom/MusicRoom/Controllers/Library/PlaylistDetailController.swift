@@ -73,6 +73,31 @@ class PlaylistDetailController: UITableViewController {
         setupHeader()
     }
     
+    func hideDots(_ hide: Bool) {
+        let cells = tableView.visibleCells as! [AlbumTrackListCell]
+        cells.forEach { (cell) in
+            cell.dotsLabel.isHidden = hide
+        }
+    }
+    
+    @objc func edit() {
+        tableView.isEditing = true
+        hideDots(true)
+    }
+    
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return .none
+    }
+
+    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let movedObject = self.tracks[sourceIndexPath.row]
+        tracks.remove(at: sourceIndexPath.row)
+        tracks.insert(movedObject, at: destinationIndexPath.row)
+        tableView.isEditing = false
+        hideDots(false)
+        tableView.reloadData()
+    }
+    
     func updateHeaderView() {
         var headerRect = CGRect(x: 0, y: -headerHeight, width: tableView.bounds.width, height: headerHeight)
         headerRect.origin.y = tableView.contentOffset.y
@@ -101,6 +126,8 @@ class PlaylistDetailController: UITableViewController {
         cell.selectionStyle = .none
         cell.rootController = self
         cell.indexPath = indexPath
+        cell.dotsLabel.isUserInteractionEnabled = true
+        cell.dotsLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(edit)))
         return cell
     }
     
