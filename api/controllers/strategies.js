@@ -8,6 +8,7 @@ const Crypto = require('../modules/crypto');
 const modelUser = require('../models/user');
 const argon = require('argon2');
 const jwt = require('jsonwebtoken');
+const customError = require('../modules/customError');
 
 module.exports = function () {
 

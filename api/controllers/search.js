@@ -1,6 +1,6 @@
 const config = require('../config/config');
 const request = require('request');
-
+const customError = require('../modules/customError');
 
 const moduleUrl = '/search';
 
@@ -14,7 +14,7 @@ module.exports = {
 			{uri: config.deezer.apiUrl + moduleUrl + '?q=' + req.query.q},
 			(err, head, body) => {
 				if (err)
-					res.json(err)
+					next(new customError(err.message, err.code))
 				res.json(JSON.parse(body));
 			})
 	},
@@ -27,7 +27,7 @@ module.exports = {
 			{uri: config.deezer.apiUrl + moduleUrl + '/album ' + '?q=' + req.query.q},
 			(err, head, body) => {
 				if (err)
-					res.json(err)
+					next(new customError(err.message, err.code))
 				res.json(JSON.parse(body));
 			})
 	},
@@ -40,7 +40,7 @@ module.exports = {
 			{uri: config.deezer.apiUrl + moduleUrl + '/track ' + '?q=' + req.query.q},
 			(err, head, body) => {
 				if (err)
-					res.json(err)
+					next(new customError(err.message, err.code))
 				res.json(JSON.parse(body));
 			})
 	},
@@ -53,7 +53,7 @@ module.exports = {
 			{uri: config.deezer.apiUrl + moduleUrl + '/playlist ' + '?q=' + req.query.q},
 			(err, head, body) => {
 				if (err)
-					res.json(err)
+					next(new customError(err.message, err.code))
 				res.json(JSON.parse(body));
 			})
 	},
@@ -66,7 +66,7 @@ module.exports = {
 			{uri: config.deezer.apiUrl + moduleUrl + '/artist ' + '?q=' + req.query.q},
 			(err, head, body) => {
 				if (err)
-					res.json(err)
+					next(new customError(err.message, err.code))
 				res.json(JSON.parse(body));
 			})
 	}
