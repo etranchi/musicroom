@@ -13,6 +13,7 @@ class EventDetailController: UIViewController{
     var headerImg : AlbumHeaderView?
     private let libraryCellId = "libraryCellId"
     var tableView : UITableView?
+    var root : EventsController?
     
     @objc func updateEvent() {
         apiManager.putEvent(currentEvent) { (event) in
@@ -73,6 +74,7 @@ class EventDetailController: UIViewController{
     
     func addMembersAdmins(_ event: Event) {
         currentEvent = event
+        root!.reloadEvent()
     }
     
     @objc func goToList() {

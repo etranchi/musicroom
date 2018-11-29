@@ -45,8 +45,17 @@ class EventsController: UITableViewController {
         return 1
     }
 
+    func reloadEvent() {
+        apiManager.getEvents { (res) in
+            self.events = res
+            self.numberOfRows = self.sections.count
+            self.tableView.reloadData()
+        }
+    }
+    
     func presentSelectedEvent(_ event : Event, img : UIImage) {
         let vc = EventDetailController(event)
+        vc.root = self
         self.navigationController?.pushViewController(vc, animated: true)
     }
     

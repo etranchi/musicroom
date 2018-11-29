@@ -182,9 +182,7 @@ class APIManager: NSObject, URLSessionDelegate {
     }
     
     func deleteTrackFromPlaylist(_ playListId: String, _ track: Track, target: PlaylistDetailController?) {
-        print("playlistid")
-        print(playListId)
-        print(track)
+
         let playlistsUrl = self.url + "playlist/\(playListId)/\(track.id)"
         var createPlaylistRequest = URLRequest(url: URL(string: playlistsUrl)!)
         createPlaylistRequest.httpMethod = "DELETE"
@@ -260,31 +258,18 @@ class APIManager: NSObject, URLSessionDelegate {
     }
     
     func putEvent(_ event : Event, completion : @escaping((Event?) -> ())) {
-        let url = self.url + "event/"
+        let url = self.url + "event/\(event._id!)"
         var req = URLRequest(url : URL(string: url)!)
-        req.httpMethod = "PUT"
+        let headers : HTTPHeaders = ["Authorization": "Bearer \(userManager.currentUser!.token!)"]
         do {
-            req.httpBody = try jsonEncoder.encode(event)
-        } catch (let err) {
-            print(err.localizedDescription)
+            let data = try jsonEncoder.encode(event)
+            let parameter = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as! Parameters
+            APIManager.Manager.request(url, method: .put, parameters: parameter, encoding: URLEncoding.default, headers: headers)
+        } catch {
+         print("err")
         }
-        req.setValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
-        URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: req) { (data, response, err) in
-            if err != nil {
-                completion(nil)
-            }
-            if let d = data {
-                do {
-                    print(d)
-                    let dic = try JSONDecoder().decode(Event.self, from: d)
-                    print(dic)
-                    completion(dic)
-                }
-                catch (let err){
-                    print(err.localizedDescription)
-                }
-            }
-            }.resume()
+        
+
         
     }
     

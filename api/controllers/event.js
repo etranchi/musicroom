@@ -40,6 +40,7 @@ module.exports = {
 		console.log("Je suis ici", req.params)
 		try {
 			// ADD JOI.VALIDATION
+			console.log(req.body)
 			let test = await modelEvent.updateOne({_id: req.params.id}, req.body, {new: true})
 			res.status(200).json(test)
 		} catch (err) {

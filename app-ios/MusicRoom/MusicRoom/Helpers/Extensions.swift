@@ -10,6 +10,21 @@ import UIKit
 
 let                 imageCache = NSCache<NSString, UIImage>()
 
+
+extension Data {
+    
+    // struct
+    init<T>(from value: T) {
+        var value = value
+        self.init(bytes: &value, count: MemoryLayout<T>.size)
+    }
+    
+    // extract Struct
+    func extract<T>(from: T.Type) -> T {
+        return self.withUnsafeBytes { $0.pointee }   // FAILS HERE: EXC_BAD_ACCESS
+    }
+}
+
 extension           UIImageView
 {
 
