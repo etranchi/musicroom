@@ -10,9 +10,10 @@ import UIKit
 
 class PlaylistDetailController: UITableViewController {
 
-    let playlist: Playlist
+    var playlist: Playlist
     var tracks: [Track]
     let playlistCover: UIImage
+    var isUnlocked = true
     
     var headerView: AlbumHeaderView!
     let songCellId = "SongCellId"
@@ -36,6 +37,35 @@ class PlaylistDetailController: UITableViewController {
         let navi = navigationController as? CustomNavigationController
         navi?.animatedHideNavigationBar()
         navigationController?.navigationBar.topItem?.title = ""
+        SocketIOManager.sharedInstance.joinPlayList(playlist._id!)
+        SocketIOManager.sharedInstance.listenToPlaylistChanges(playlist._id!) { (resp, playlist) in
+            if resp == 0 {
+                self.lockPlaylist()
+            } else {
+                self.unlockPlaylist(playlist)
+            }
+        }
+    }
+    
+    private func lockPlaylist() {
+        isUnlocked = false
+        
+        tableView.reloadData()
+    }
+    
+    private func unlockPlaylist(_ playlist: Playlist?) {
+        if let p = playlist {
+            self.playlist = p
+            tracks = p.tracks!.data
+            guard self.tracks.count > 0, let album = self.tracks[0].album, let imageURL = album.cover_medium else { return }
+            UIImageView().getImageUsingCacheWithUrlString(urlString: imageURL) { (image) in
+                self.headerView.albumImageBackground.image = image
+                self.headerView.albumImageView.image = image
+            }
+        }
+        isUnlocked = true
+        isEditing = false
+        tableView.reloadData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -44,6 +74,7 @@ class PlaylistDetailController: UITableViewController {
         let navi = navigationController as? CustomNavigationController
         navi?.animatedShowNavigationBar()
         navigationController?.navigationBar.topItem?.title = "Search"
+        SocketIOManager.sharedInstance.leavePlaylist(playlist._id!)
     }
     
     override func viewWillLayoutSubviews() {
@@ -74,15 +105,13 @@ class PlaylistDetailController: UITableViewController {
     }
     
     func hideDots(_ hide: Bool) {
-        let cells = tableView.visibleCells as! [AlbumTrackListCell]
-        cells.forEach { (cell) in
-            cell.dotsLabel.isHidden = hide
-        }
+        tableView.reloadData()
     }
     
     @objc func edit() {
-        tableView.isEditing = true
-        hideDots(true)
+        SocketIOManager.sharedInstance.lockPlaylist(playlist._id!)
+        tableView.isEditing = isUnlocked
+        hideDots(isUnlocked)
     }
     
     override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
@@ -94,8 +123,16 @@ class PlaylistDetailController: UITableViewController {
         tracks.remove(at: sourceIndexPath.row)
         tracks.insert(movedObject, at: destinationIndexPath.row)
         tableView.isEditing = false
-        hideDots(false)
         tableView.reloadData()
+        playlist.tracks?.data = tracks
+        SocketIOManager.sharedInstance.unlockPlaylist(playlist._id!, playlist: playlist)
+        tableView.reloadData()
+        guard tracks.count > 0, let album = tracks[0].album, let imageURL = album.cover_medium else { return }
+        UIImageView().getImageUsingCacheWithUrlString(urlString: imageURL) { (image) in
+            self.headerView.albumImageBackground.image = image
+            self.headerView.albumImageView.image = image
+        }
+        
     }
     
     func updateHeaderView() {
@@ -128,6 +165,11 @@ class PlaylistDetailController: UITableViewController {
         cell.indexPath = indexPath
         cell.dotsLabel.isUserInteractionEnabled = true
         cell.dotsLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(edit)))
+        if isEditing {
+            cell.dotsLabel.isHidden = true
+        } else {
+            cell.dotsLabel.isHidden = false
+        }
         return cell
     }
     
@@ -137,7 +179,7 @@ class PlaylistDetailController: UITableViewController {
             tracks.remove(at: index.row)
             tableView.deleteRows(at: [index], with: .fade)
         } else {
-            ToastView.shared.short(self.view, txt_msg: "Can't modify deezer playlsit", color: UIColor.red)
+            ToastView.shared.short(self.view, txt_msg: "Can't modify deezer playlist", color: UIColor.red)
         }
     }
     

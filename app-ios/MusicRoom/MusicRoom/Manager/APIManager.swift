@@ -134,7 +134,6 @@ class APIManager: NSObject, URLSessionDelegate {
         let playlistsUrl = self.url + "playlist"
         var playlistsRequest = URLRequest(url: URL(string: playlistsUrl)!)
         playlistsRequest.httpMethod = "GET"
-        print(userManager.currentUser!.token!)
         playlistsRequest.addValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
         self.searchAll([Playlist].self, request: playlistsRequest, completion: { (playlists) in
             completion(playlists)
@@ -159,9 +158,29 @@ class APIManager: NSObject, URLSessionDelegate {
         createPlaylistRequest.addValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
         createPlaylistRequest.httpBody = postString.data(using: .utf8)
         URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: createPlaylistRequest) { (data, response, error) in
-
             target?.reloadPlaylists()
         }.resume()
+    }
+    
+    func updatePlaylist(_ playlist: Playlist) {
+        guard let pId = playlist._id else { return }
+        let playlistURL = self.url + "playlist/\(pId)"
+        do {
+            let data = try jsonEncoder.encode(playlist)
+            let json = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
+            let ulr =  URL(string: playlistURL)
+            var req = URLRequest(url: ulr! as URL)
+            req.httpMethod = "PUT"
+            req.setValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
+            req.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+            req.httpBody = json!.data(using: String.Encoding.utf8.rawValue)
+            request(req)
+            URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: req) { (data, response, err) in
+                SocketIOManager.sharedInstance.socket.emit("updatePlaylist", pId)
+            }.resume()
+        } catch {
+            print("err")
+        }
     }
     
     func deletePlaylist(_ id: String, _ target: PlaylistController?) {
@@ -180,8 +199,6 @@ class APIManager: NSObject, URLSessionDelegate {
         let headers : HTTPHeaders = ["Authorization": "Bearer \(userManager.currentUser!.token!)"]
         APIManager.Manager.request(postEventUrl, method: .put, parameters: parameter, encoding: URLEncoding.default, headers: headers)
     }
-    
-    
     
     func addTrackToLibrary(_ trackId: String) {
         let addTrackUrl = self.url + "track/\(trackId)"
@@ -214,16 +231,6 @@ class APIManager: NSObject, URLSessionDelegate {
         URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: createPlaylistRequest) { (data, response, error) in
             target?.tableView.reloadData()
         }.resume()
-    }
-
-    func searchATA(_ search: String, completion: @escaping ([Track], [Album], [Artist]) -> ()){
-        searchAlbums(search) { (albums) in
-            self.searchTracks(search, completion: { (tracks) in
-                self.searchArtists(search, completion: { (artists) in
-                    completion(tracks, albums, artists)
-                })
-            })
-        }
     }
     
     func registerUser(_ user : Data?) {
@@ -333,7 +340,6 @@ class APIManager: NSObject, URLSessionDelegate {
         } catch (let err) {
             print(err.localizedDescription)
         }
-        
     }
     
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
@@ -359,4 +365,3 @@ class APIManager: NSObject, URLSessionDelegate {
         }.resume()
     }
 }
-

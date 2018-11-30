@@ -12,5 +12,6 @@ target 'MusicRoom' do
   pod 'Alamofire'
   pod 'Socket.IO-Client-Swift', '~> 13.3.0'
   pod 'Starscream', '<= 3.0.5'
+  pod 'SwiftyJSON', '~> 4.0'
 end
 
