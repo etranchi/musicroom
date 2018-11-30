@@ -64,7 +64,7 @@ class PlaylistDetailController: UITableViewController {
             }
         }
         isUnlocked = true
-        isEditing = false
+        tableView.isEditing = false
         tableView.reloadData()
     }
     
@@ -104,14 +104,10 @@ class PlaylistDetailController: UITableViewController {
         setupHeader()
     }
     
-    func hideDots(_ hide: Bool) {
-        tableView.reloadData()
-    }
-    
     @objc func edit() {
-        SocketIOManager.sharedInstance.lockPlaylist(playlist._id!)
         tableView.isEditing = isUnlocked
-        hideDots(isUnlocked)
+        tableView.reloadData()
+        SocketIOManager.sharedInstance.lockPlaylist(playlist._id!)
     }
     
     override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
@@ -165,7 +161,7 @@ class PlaylistDetailController: UITableViewController {
         cell.indexPath = indexPath
         cell.dotsLabel.isUserInteractionEnabled = true
         cell.dotsLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(edit)))
-        if isEditing {
+        if tableView.isEditing {
             cell.dotsLabel.isHidden = true
         } else {
             cell.dotsLabel.isHidden = false
