@@ -37,6 +37,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.use('/', routes);
+app.get('/', ( req, res) =>  {
+	res.status(200).json({"message":"Welcome to Music vroom!"});
+});
 app.use(function(req, res, next) {
   if (!req.route) {
     let err = new Error('Not found')
@@ -50,10 +53,6 @@ app.use(function(err, req, res, next) {
     if (err.message)
       return res.status(err.status || err.code || 500).send({error: err.message})
     return res.status(500).send({error: "Le serveur a mal"})
-});
-
-app.get('/', ( req, res) =>  {
-	res.status(200).json({"message":"Welcome to Music vroom!"});
 });
 
 let httpsServer = https.createServer(credentials, app);
