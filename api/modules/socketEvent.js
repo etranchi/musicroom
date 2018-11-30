@@ -28,10 +28,8 @@ module.exports = function (io) {
                         console.log("UNLOCK")
                     }
                 }, 5000)
-                socket.to(playlistId).emit('blockPlaylist')
-            } else {
-                socket.to(playlistId).emit('alreadyBlocked')
             }
+            socket.to(playlistId).emit('blockPlaylist')
         });
 
         socket.on('joinPlaylist', (playlistId) => {
