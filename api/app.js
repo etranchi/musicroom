@@ -15,8 +15,24 @@ const config = require('./config/config.json');
 const bodyParser = require('body-parser');
 const expressSwagger = require('express-swagger-generator')(app);
 const socketIo = require('socket.io');
+const middleware = require('./modules/middlewares');
+const winston = require('winston');
 
+const dir = './logs';
+if (!fs.existsSync(dir)){
+    fs.mkdirSync(dir);
+}
 const credentials = {key: privateKey, cert: certificate};
+
+const logger = winston.createLogger({
+  levels: winston.config.syslog.levels,
+  transports: [
+    new winston.transports.File({
+      filename: './logs/errors.log',
+      level: 'error'
+    })
+  ]
+});
 
 app.use(compression());
 app.use(helmet());
@@ -36,7 +52,8 @@ app.use(express.static('public'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-app.use('/', routes);
+app.use('/', middleware.logs, routes);
+
 app.get('/', ( req, res) =>  {
 	res.status(200).json({"message":"Welcome to Music vroom!"});
 });
@@ -49,6 +66,7 @@ app.use(function(req, res, next) {
   next();
 });
 app.use(function(err, req, res, next) {
+  logger.error(JSON.stringify(req.meta) + " -> " + err.message)
     console.log("Je suis dans le gestionnaire d'erreur -> " + err.message)
     if (err.message)
       return res.status(err.status || err.code || 500).send({error: err.message})
