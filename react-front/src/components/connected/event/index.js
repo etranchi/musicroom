@@ -29,8 +29,8 @@ class Event extends Component {
 	}
 
 	render() {
-		console.log("event render");
-		console.log(this.props)
+		// console.log("event render");
+		// console.log(this.props)
 			if (this.props.state.currentComponent === 'cardEvent' && this.state.currentSubView)
 				this.setState({currentSubView:''})
 			else if (this.props.state.currentComponent === 'event' && !this.state.currentSubView)
