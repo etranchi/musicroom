@@ -3,7 +3,7 @@ import './styles.css';
 import defaultTrackImg from '../../../../assets/track.png'
 import moment from 'moment'
 import axios from 'axios'
-import { Col, Row, Icon, Layout } from 'antd'
+import { Col, Row, Icon, Layout, Select } from 'antd'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import PersonalPlayer from '../../event/personalPlayer'
 import { leavePlaylist, joinPlaylist, updatePlaylist, socket, blockSocketEvent } from '../../sockets';
@@ -24,7 +24,8 @@ class Tracks extends Component {
 			playlist: {title:'',tracks:{data:[]}},
 			initLoading: true,
 			loading: false,
-			isBlocked: true
+			isBlocked: true,
+			playlists:[]
 		}
 	}
 	componentDidMount() {
@@ -48,6 +49,12 @@ class Tracks extends Component {
 				});
 			});
 		})
+		this.getPlaylists((res) => {
+			this.setState({
+			  playlists: res.data,
+			});
+		});
+
 		this.getPlaylist((res) => {
 			res.data._id && joinPlaylist(res.data._id)
 			this.setState({
@@ -56,6 +63,8 @@ class Tracks extends Component {
 			  isBlocked: !res.data._id
 			});
 		});
+
+		
 		
 	}
 
@@ -70,6 +79,20 @@ class Tracks extends Component {
 		})
 		.catch((err) => {
 			this.setState({playlist:{tracks: {data:[]}}, isloading:false})
+			console.log('Playlist error');
+			console.log(err);
+		})
+	}
+
+	getPlaylists = (callback) => {
+		axios.get(process.env.REACT_APP_API_URL + '/playlist', {'headers':{'Authorization': 'Bearer ' + localStorage.getItem('token')}})
+		.then((resp) => {
+			console.log("get playlists");
+			console.log(resp.data);
+			callback(resp)
+		})
+		.catch((err) => {
+			this.setState({playlists: [], loading:false})
 			console.log('Playlist error');
 			console.log(err);
 		})
@@ -142,8 +165,26 @@ class Tracks extends Component {
 		})
 		updatePlaylist(this.state.playlist._id)
 	}
+	handleChange = (array) => {
+		console.log("change");
+		console.log(this.state.playlist);
+		console.log(array);
+
+		axios.put(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlists[array[0]]._id + '/track',
+		 {id: array[1].id},
+		 {'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
+		.then(resp => {
+			console.log("resp -> ");
+			console.log(resp);
+		})
+		.catch(err => {
+			console.log("error -> ");
+			console.log(err);
+		})
+	  }
 
 	render() {
+		console.log(this.state);
 		return(
 		<div>
 			
@@ -165,7 +206,7 @@ class Tracks extends Component {
 					>
 					<ul className="collection">
 					{this.state.playlist.tracks.data.map((item, index) => (
-						<li className="collection-item avatar">
+						<li className="collection-item avatar" >
 						<Draggable key={item.id} draggableId={item.id} index={index} >
 						{(provided, snapshot) => (
 							<div
@@ -174,15 +215,20 @@ class Tracks extends Component {
 							{...provided.dragHandleProps}
 							>
 							
-							<li className="collection-item avatar" key={index} >
+							
 							{this.state.playlist._id && <Icon type="close" style={{'float':'right', 'color':'red','cursor':'pointer'}} onClick={() => this.deleteTrack(index)}></Icon>}
 								<span>
 									<img src={item.album ? item.album.cover_small || defaultTrackImg : defaultTrackImg} alt="" className="circle"/>
 									<span className="title">{item.title} - Duration: {moment.utc(item.duration * 1000).format('mm:ss')}</span>
-									<p style={{'font-style':'italic'}}>{item.album ? item.album.title : ""}</p>
+									<p style={{'fontStyle':'italic'}}>{item.album ? item.album.title : ""}</p>
 								</span>
-								
-							</li>
+								<Select style={{ width: 120 }} onChange={this.handleChange}>
+								{this.state.playlists.map((playlist, i) => {
+									return ( <Select.Option value={[i, item]} >{playlist.title} </Select.Option> )
+
+									})
+								}
+							</Select>
 							</div>
 						)}
 						</Draggable>
