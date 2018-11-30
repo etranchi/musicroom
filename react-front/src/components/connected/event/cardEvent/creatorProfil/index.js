@@ -19,7 +19,6 @@ class CreatorProfil extends Component {
         this.setState({iconPrivacy: this.props.state.data.event.public ? 'unlock' : 'lock'})
         updateEvent(this.roomID, this.props.state.data.event)
     }
-
     showModal = () => {
         this.setState({visible: true});
     }
@@ -31,7 +30,6 @@ class CreatorProfil extends Component {
     handleCancel = (e) => {
         this.setState({visible: false});
     }
-
 	render() {
         let userPicture = this.props.state.data.event.creator.facebookId ? this.props.state.data.event.creator.picture : process.env.REACT_APP_API_URL + "/userPicture/" + this.props.state.data.event.creator.picture
         return (

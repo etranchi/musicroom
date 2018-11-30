@@ -5,7 +5,7 @@ import Options from "./options"
 import TrackInformation from "./trackInformation"
 import './styles.css';
 
-export default class PersonalPlayer extends Component {
+export default class Player extends Component {
 	constructor(props) {
         super(props);
 		this.state = {
