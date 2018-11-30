@@ -84,7 +84,7 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
             rootTarget?.addSongToPlaylist(cell.playlist)
             return
         }
-        let vc = PlaylistDetailController(playlists[indexPath.item], cell.imageView.image!, collectionView)
+        let vc = PlaylistDetailController(playlists[indexPath.item], cell.imageView.image!)
         rootTarget?.navigationController?.pushViewController(vc, animated: true)
     }
     

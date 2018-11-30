@@ -55,6 +55,18 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
         sb.translatesAutoresizingMaskIntoConstraints = false
         return sb
     }()
+    
+    let descriptionLabel : UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 13, weight: .medium)
+        label.textColor = .white
+        label.textAlignment = .center
+        label.text = "Description :"
+        label.numberOfLines = 1
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     let descriptionTV : UITextView = {
         let tv = UITextView()
         tv.font = UIFont.systemFont(ofSize: 14, weight: .light)
@@ -127,6 +139,7 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
         scrollView!.addSubview(datePicker)
         scrollView!.addSubview(descriptionTV)
         scrollView!.addSubview(playlistView!)
+        scrollView!.addSubview(descriptionLabel)
         NSLayoutConstraint.activate([
             
             titleTF.topAnchor.constraint(equalTo: scrollView!.topAnchor, constant: 20),
@@ -146,9 +159,13 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
             segmentedBar.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
             segmentedBar.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 20),
             
+            descriptionLabel.widthAnchor.constraint(equalTo: scrollView!.widthAnchor, multiplier: 0.9),
+            descriptionLabel.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
+            descriptionLabel.topAnchor.constraint(equalTo: segmentedBar.bottomAnchor, constant: 20),
+            
             descriptionTV.widthAnchor.constraint(equalTo: scrollView!.widthAnchor, multiplier: 0.9),
             descriptionTV.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
-            descriptionTV.topAnchor.constraint(equalTo: segmentedBar.bottomAnchor, constant: 20),
+            descriptionTV.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 10),
             descriptionTV.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.6),
             
             datePicker.widthAnchor.constraint(equalTo: scrollView!.widthAnchor, multiplier: 0.9),

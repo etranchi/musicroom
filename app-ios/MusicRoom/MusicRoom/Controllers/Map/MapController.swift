@@ -107,12 +107,12 @@ class MapController: UIViewController {
     }
     
     @objc func goToEventDescription() {
-        print("je go bien vers les events")
-        /*if let ann = annotation as? MyAnnotation {
-            let img = ann.image
-            let ev = ann.event
-            let view = EventDetailView(frame: .zero, ev!, img!)
-        }*/
+        let selected = mapView.selectedAnnotations[0] as? MyAnnotation
+        if selected != nil {
+            let vc = EventDetailController(selected!.event!)
+            vc.rootMap = self
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
     }
     
     @objc func createEvent() {
@@ -247,6 +247,7 @@ class MyAnnotation : MKPointAnnotation {
     var identifier : String?
     var imagePath : String?
     var image : UIImage?
+    var id : Int?
     var event : Event?
     override init() {
         super.init()

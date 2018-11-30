@@ -265,7 +265,7 @@ class APIManager: NSObject, URLSessionDelegate {
         URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: loginRequest) { (data, response, err) in
             if err != nil {
                 completion(nil)
-            }
+             }
             if let d = data {
                 do {
                     let dic = try JSONDecoder().decode(DataUser.self, from: d)
@@ -288,27 +288,46 @@ class APIManager: NSObject, URLSessionDelegate {
         }
     }
     
-    func putEvent(_ event : Event, completion : @escaping((Event?) -> ())) {
+    func putEvent(_ event : Event, completion : @escaping((Bool) -> ())) {
         let url = self.url + "event/\(event._id!)"
-        var req = URLRequest(url : URL(string: url)!)
-        let headers : HTTPHeaders = ["Authorization": "Bearer \(userManager.currentUser!.token!)"]
         do {
-            let admins = event.adminMembers.dictionary
-            let members = event.members.dictionary
-            var parameter : Parameters = event.dictionary
-
-            parameter.updateValue(event.members.dictionary, forKey: "members")
-            print(parameter)
+            print("yooooo")
             
-            APIManager.Manager.request(url, method: .put, parameters: parameter, encoding: URLEncoding.default, headers: headers)
+            let data = try jsonEncoder.encode(event)
+            print("good")
+            let json = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
+            print(json)
+            var req = URLRequest(url : URL(string: url)!)
+            req.httpMethod = "PUT"
+            req.setValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
+            req.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+            req.httpBody = json!.data(using: String.Encoding.utf8.rawValue)
+            URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: req, completionHandler: { (data, resp, err) in
+                print("plouf")
+                if err != nil {
+                    print("error")
+                    completion(false)
+                }
+                print("je passe")
+                if let d = data {
+                    let json = NSString(data: d, encoding: String.Encoding.utf8.rawValue)
+                    print(json)
+                    completion(true)
+                }
+            }).resume()
         } catch {
-         print("err")
+            print("err")
         }
-        
-
-        
     }
     
+    func getEventById(_ id : String, completion: @escaping ((Event) -> ())) {
+        let url = self.url + "event/\(id)"
+        var request = URLRequest(url: URL(string: url)!)
+        request.httpMethod = "GET"
+        self.searchAll(Event.self, request: request) { (res) in
+            completion(res)
+        }
+    }
     func getEvents(completion : @escaping ((DataEvent) -> ())){
         let eventsUrl = self.url + "event"
         var request = URLRequest(url: URL(string: eventsUrl)!)

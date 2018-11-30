@@ -51,7 +51,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         else {
             print(user[0])
             print(user[0].token!)
-            let nav = TabBarController()
             userManager.currentUser = user[0]
             let nav = TabBarController()
             print(userManager.currentUser!.token!)

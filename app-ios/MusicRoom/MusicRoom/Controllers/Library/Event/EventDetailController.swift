@@ -14,14 +14,34 @@ class EventDetailController: UIViewController{
     private let libraryCellId = "libraryCellId"
     var tableView : UITableView?
     var root : EventsController?
+    var rootMap : MapController?
+
     
     @objc func updateEvent() {
-        apiManager.putEvent(currentEvent) { (event) in
-            if (event != nil) {
+        apiManager.putEvent(currentEvent) { (res) in
+            if (res) {
                 ToastView.shared.short(self.view, txt_msg: "Event Updated", color: UIColor.green)
+                apiManager.getEventById(self.currentEvent._id!) { (res) in
+                    self.currentEvent = res
+                    if self.root != nil {
+                        self.root!.reloadEvent()
+                    } else {
+                        self.rootMap?.getAllEvents()
+                    }
+                    self.reloadLabel()
+                }
             }
         }
+        
     }
+    
+    func reloadLabel() {
+        creatorLabel.attributedText = NSAttributedString(string: "Created by \(currentEvent.creator!.login)")
+        dateLabel.attributedText = NSAttributedString(string: "Date : \(currentEvent.date)")
+        descriptionLabel.attributedText = NSAttributedString(string: "Description :")
+        descriptionTextLabel.attributedText = NSAttributedString(string: currentEvent.description)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         let button = UIButton()
@@ -77,10 +97,6 @@ class EventDetailController: UIViewController{
         root!.reloadEvent()
     }
     
-    @objc func goToList() {
-        print("goToList")
-    }
-    
     func setupView() {
         
         creatorLabel.attributedText = NSAttributedString(string: "Created by \(currentEvent.creator!.login)")
@@ -120,8 +136,8 @@ class EventDetailController: UIViewController{
             
             tableView!.widthAnchor.constraint(equalTo: view.widthAnchor),
             tableView!.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            tableView!.heightAnchor.constraint(equalToConstant: 80),
-            tableView!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -128)
+            tableView!.heightAnchor.constraint(equalToConstant: 120),
+            tableView!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -192)
             ])
         
     }
@@ -184,6 +200,9 @@ extension EventDetailController : UITableViewDelegate, UITableViewDataSource {
         case 1:
             cell.titleLabel.text = "Admins"
             cell.iconView0.image = #imageLiteral(resourceName: "playlists_icon")
+        case 2 :
+            cell.titleLabel.text = "Playlist"
+            cell.iconView0.image = #imageLiteral(resourceName: "play_icon")
         default:
             cell.titleLabel.text = "Omg... wtf.."
         }
@@ -207,6 +226,12 @@ extension EventDetailController : UITableViewDelegate, UITableViewDataSource {
             vc.admins = true
             vc.members = currentEvent.adminMembers
             self.navigationController?.pushViewController(vc, animated: true)
+        case 2:
+            let cell = tableView.cellForRow(at: indexPath)
+            print(currentEvent.playlist)
+            print(headerImg?.albumCover)
+            let vc = PlaylistDetailController(currentEvent.playlist!, headerImg!.albumCover)
+            self.navigationController?.pushViewController(vc, animated: true)
         default:
             print("Omg... wtf..")
         }
@@ -214,7 +239,7 @@ extension EventDetailController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 2
+        return 3
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
