@@ -49,7 +49,7 @@ app.use(function(req, res, next) {
   next();
 });
 app.use(function(err, req, res, next) {
-    console.log("Je suis dans le gestionnaire d'erreur -> ")
+    console.log("Je suis dans le gestionnaire d'erreur -> " + err.message)
     if (err.message)
       return res.status(err.status || err.code || 500).send({error: err.message})
     return res.status(500).send({error: "Le serveur a mal"})
