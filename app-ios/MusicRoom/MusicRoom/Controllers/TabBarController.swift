@@ -66,7 +66,6 @@ class TabBarController: UITabBarController {
         songDetail.root = self
         playerController.rootViewController = self
         playerController.minimizedPlayer = minimizedPlayer
-        //addChild(playerController)
         addChildViewController(playerController)
         tabBar.removeFromSuperview()
         view.addSubview(playerView)

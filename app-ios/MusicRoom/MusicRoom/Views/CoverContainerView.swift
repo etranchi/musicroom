@@ -12,7 +12,7 @@ class CoverContainerView: UIView {
     
     let underPreviousTrack: Track?
     let previousTrack: Track?
-    let currentTrack: Track
+    let currentTrack: Track?
     let nextTrack: Track?
     let overNextTrack: Track?
     let playerController: PlayerController
@@ -21,7 +21,7 @@ class CoverContainerView: UIView {
     let transparencyEffect: CGFloat = 0.4
     let animationTime = 0.6
     
-    init(target: UIViewController, _ underPreviousTrack: Track?, _ previousTrack: Track?, _ currentTrack: Track, _ nextTrack: Track?, _ overNextTrack: Track?) {
+    init(target: UIViewController, _ underPreviousTrack: Track?, _ previousTrack: Track?, _ currentTrack: Track?, _ nextTrack: Track?, _ overNextTrack: Track?) {
         self.playerController = target as! PlayerController
         self.underPreviousTrack = underPreviousTrack
         self.previousTrack = previousTrack
@@ -30,7 +30,9 @@ class CoverContainerView: UIView {
         self.overNextTrack = overNextTrack
         super.init(frame: .zero)
         
-        setupView()
+        if currentTrack != nil {
+            setupView()
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -173,7 +175,7 @@ class CoverContainerView: UIView {
                 previousCoverImageView.image = #imageLiteral(resourceName: "album_placeholder")
             }
         }
-        if let cb = currentTrack.album!.cover_big {
+        if let cb = currentTrack!.album!.cover_big {
             currentCoverImageView.loadImageUsingCacheWithUrlString(urlString: cb)
         } else {
             currentCoverImageView.image = #imageLiteral(resourceName: "album_placeholder")
