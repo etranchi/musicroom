@@ -58,8 +58,10 @@ export default class CreateEvent extends Component {
     }
     handleSubmit = event => {
         event.preventDefault();
-        if (!this.state.description || !this.state.title || !this.state.event_date || !this.state.location.coord)
+        if (!this.state.description || !this.state.title || !this.state.event_date || !this.state.location.coord) {
             this.info("Error input invalid")
+            return 
+        }
         let data = new FormData();    
         if (this.state.infoFile && this.state.infoFile.file && this.state.infoFile.file.originFileObj)
             data.append('file', this.state.infoFile.file.originFileObj);
