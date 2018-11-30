@@ -48,7 +48,14 @@ class LibraryController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.row {
         case 0:
-            print("Selected Songs Library")
+            apiManager.getLibraryTracks(completion: { (tracks) in
+                let layout = UICollectionViewFlowLayout()
+                layout.scrollDirection = .vertical
+                layout.minimumInteritemSpacing = 0
+                layout.minimumLineSpacing = 0
+                let vc = SeeAllSongsController(tracks, "Songs", layout: layout)
+                self.navigationController?.pushViewController(vc, animated: true)
+            })
         case 1:
             let vc = PlaylistController()
             self.navigationController?.pushViewController(vc, animated: true)

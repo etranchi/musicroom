@@ -41,6 +41,8 @@ class CreatePlaylistButtonCell: UICollectionViewCell {
         }
     }
     
+    
+    
     func setupView() {
         createButton.setAttributedTitle(NSAttributedString(string: title != nil ? title! : "CREATE", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white, .font: UIFont.systemFont(ofSize: 15, weight: .heavy)]), for: .normal)
         createButton.addTarget(self, action: #selector(handleCreate), for: .touchUpInside)

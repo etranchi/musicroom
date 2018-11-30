@@ -64,7 +64,7 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = cellForItem(at: indexPath) as! PlaylistCell
+        guard let cell = cellForItem(at: indexPath) as? PlaylistCell else { return }
         if eventCreation {
             if selectedCell != nil {
                 selectedCell!.layer.borderColor = nil
@@ -98,6 +98,7 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
             let cell = dequeueReusableCell(withReuseIdentifier: buttonCellId, for: indexPath) as! CreatePlaylistButtonCell
             cell.title = "CREATE PLAYLIST"
             cell.vc = self
+
             return cell
         }
         let cell = dequeueReusableCell(withReuseIdentifier: playlistCellId, for: indexPath) as! PlaylistCell

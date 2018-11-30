@@ -10,7 +10,6 @@ import UIKit
 
 class SongDetailView: UIView {
     var root: UIViewController?
-    var playlistView: PlaylistCollectionView?
     var track: Track? {
         didSet {
             titleLabel.text = track!.title
@@ -21,14 +20,6 @@ class SongDetailView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
-        print("yo")
-        /*apiManager.getUserPlaylists(completion: { (res) in
-            print(res)
-            self.playlistView!.eventCreation = true
-            self.playlistView!.playlists = res
-            print("yp")
-            self.playlistView!.reloadData()
-        })*/
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -89,12 +80,15 @@ class SongDetailView: UIView {
     func hideView() {
         isUserInteractionEnabled = false
         UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.cancelButton.transform = CGAffineTransform(translationX: 0, y: 100)
             self.detailView.transform = CGAffineTransform(translationX: 0, y: self.bounds.height)
+            self.imageView.transform = CGAffineTransform(translationX: 0, y: self.bounds.height)
+            self.titleLabel.transform = CGAffineTransform(translationX: 0, y: self.bounds.height)
+            self.authorLabel.transform = CGAffineTransform(translationX: 0, y: self.bounds.height)
         })
-        UIView.animate(withDuration: 0.25, delay: 0.375, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 0.25, delay: 0.25, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.alpha = 0
         })
-        
     }
     
     func showView() {
@@ -102,8 +96,15 @@ class SongDetailView: UIView {
         UIView.animate(withDuration: 0.25, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.alpha = 1
         })
-        UIView.animate(withDuration: 0.75, delay: 0.125, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 0.45, delay: 0.125, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveLinear, animations: {
+            self.cancelButton.transform = .identity
             self.detailView.transform = .identity
+            
+        })
+        UIView.animate(withDuration: 0.75, delay: 0.125, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.imageView.transform = .identity
+            self.titleLabel.transform = .identity
+            self.authorLabel.transform = .identity
         })
     }
     
@@ -181,15 +182,11 @@ class SongDetailView: UIView {
         addtoSongsView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleAddToSongs)))
         
         
-        playlistView = PlaylistCollectionView([], .horizontal, nil)
-        playlistView!.translatesAutoresizingMaskIntoConstraints = false
         
         containerView.addSubview(addtoSongsView)
         containerView.addSubview(addtoPlayListView)
         addtoPlayListView.addSubview(playListImageView)
         addtoPlayListView.addSubview(playlistLabel)
-        addtoPlayListView.addSubview(playlistView!)
-        playlistView?.isHidden = true
         addtoSongsView.addSubview(songsImageView)
         addtoSongsView.addSubview(songsLabel)
         NSLayoutConstraint.activate([
@@ -215,18 +212,13 @@ class SongDetailView: UIView {
             
             playlistLabel.centerYAnchor.constraint(equalTo: addtoPlayListView.centerYAnchor),
             playlistLabel.leadingAnchor.constraint(equalTo: playListImageView.trailingAnchor, constant: 14),
-            playlistLabel.heightAnchor.constraint(equalToConstant: 30),
+            playlistLabel.heightAnchor.constraint(equalToConstant: 40),
             playlistLabel.trailingAnchor.constraint(equalTo: addtoPlayListView.trailingAnchor, constant: -5),
             
             songsLabel.centerYAnchor.constraint(equalTo: addtoSongsView.centerYAnchor),
             songsLabel.leadingAnchor.constraint(equalTo: songsImageView.trailingAnchor, constant: 14),
-            songsLabel.heightAnchor.constraint(equalToConstant: 30),
-            songsLabel.trailingAnchor.constraint(equalTo: addtoSongsView.trailingAnchor, constant: -5),
-            
-            playlistView!.topAnchor.constraint(equalTo: playListImageView.bottomAnchor, constant: 5),
-            playlistView!.widthAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: 0.9),
-            playlistView!.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            playlistView!.heightAnchor.constraint(equalToConstant: 200)
+            songsLabel.heightAnchor.constraint(equalToConstant: 40),
+            songsLabel.trailingAnchor.constraint(equalTo: addtoSongsView.trailingAnchor, constant: -5)
         ])
     }
     
@@ -239,10 +231,10 @@ class SongDetailView: UIView {
         
         addSubview(blurEffectView)
         addSubview(detailView)
-        detailView.addSubview(cancelButton)
-        detailView.addSubview(imageView)
-        detailView.addSubview(titleLabel)
-        detailView.addSubview(authorLabel)
+        addSubview(cancelButton)
+        addSubview(imageView)
+        addSubview(titleLabel)
+        addSubview(authorLabel)
         detailView.addSubview(containerView)
         NSLayoutConstraint.activate([
             blurEffectView.topAnchor.constraint(equalTo: topAnchor),
@@ -255,17 +247,17 @@ class SongDetailView: UIView {
             detailView.leadingAnchor.constraint(equalTo: leadingAnchor),
             detailView.trailingAnchor.constraint(equalTo: trailingAnchor),
             
-            cancelButton.bottomAnchor.constraint(equalTo: detailView.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            cancelButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -20),
             cancelButton.centerXAnchor.constraint(equalTo: centerXAnchor),
             cancelButton.widthAnchor.constraint(equalToConstant: 300),
             cancelButton.heightAnchor.constraint(equalToConstant: 30),
             
-            imageView.topAnchor.constraint(equalTo: detailView.safeAreaLayoutGuide.topAnchor, constant: 100),
+            imageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 60),
             imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
             imageView.widthAnchor.constraint(equalToConstant: size),
             imageView.heightAnchor.constraint(equalToConstant: size),
             
-            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 20),
+            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 10),
             titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
             titleLabel.heightAnchor.constraint(lessThanOrEqualToConstant: 40),
@@ -275,12 +267,12 @@ class SongDetailView: UIView {
             authorLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
             authorLabel.heightAnchor.constraint(equalToConstant: 15),
             
-            containerView.topAnchor.constraint(equalTo: authorLabel.bottomAnchor, constant: 60),
+            containerView.topAnchor.constraint(equalTo: authorLabel.bottomAnchor, constant: 100),
             containerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
             containerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            containerView.heightAnchor.constraint(equalToConstant: 64)
+            containerView.heightAnchor.constraint(equalToConstant: 80)
         ])
         addButtons()
-        self.detailView.transform = CGAffineTransform(translationX: 0, y: self.bounds.height)
+        hideView()
     }
 }

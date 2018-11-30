@@ -11,6 +11,7 @@ import UIKit
 let playerController = PlayerController([], -2)
 let songDetail = SongDetailView(frame: UIApplication.shared.keyWindow!.screen.bounds)
 var currentTrack: Track?
+var lovedTracksId: [Int] = []
 
 class TabBarController: UITabBarController {
 
@@ -61,6 +62,7 @@ class TabBarController: UITabBarController {
     }
     
     fileprivate func setupTabBarController() {
+        updateLovedTrackList()
         songDetail.root = self
         playerController.rootViewController = self
         playerController.minimizedPlayer = minimizedPlayer
@@ -110,6 +112,15 @@ class TabBarController: UITabBarController {
         viewControllers = [navi0, navi1, navi2]
     }
     
+    func updateLovedTrackList() {
+        apiManager.getLibraryTracks { (tracks) in
+            lovedTracksId.removeAll()
+            tracks.forEach({ (track) in
+                lovedTracksId.append(track.id)
+            })
+        }
+    }
+    
     func animatedShowPlayer() {
         animatedHideTabBar()
         UIView.animate(withDuration: 0.25, delay: 0.1, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
@@ -119,7 +130,7 @@ class TabBarController: UITabBarController {
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             
             self.playerView.transform = .identity
-            self.minimizedPlayer.transform = CGAffineTransform(translationX: 0, y: -self.view.bounds.height + self.offsetY + 44)
+            self.minimizedPlayer.transform = CGAffineTransform(translationX: 0, y: -self.view.bounds.height + self.offsetY)
             
         })
     }
@@ -131,7 +142,7 @@ class TabBarController: UITabBarController {
         })
         animatedShowTabBar()
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-            self.playerView.transform = CGAffineTransform(translationX: 0, y: self.view.bounds.height - self.offsetY - 44)
+            self.playerView.transform = CGAffineTransform(translationX: 0, y: self.view.bounds.height - self.offsetY)
             self.minimizedPlayer.transform = .identity
         })
     }
