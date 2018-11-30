@@ -50,12 +50,23 @@ class AlbumTrackListCell: UITableViewCell {
     let dotsLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
+        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
         label.textColor = .lightGray
         label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "..."
         return label
+    }()
+    
+    let lockedIcon: UIImageView = {
+        let iv = UIImageView()
+        
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        iv.contentMode = .scaleAspectFit
+        iv.layer.masksToBounds = true
+        iv.image = #imageLiteral(resourceName: "locked_icon")
+        iv.isUserInteractionEnabled = true
+        return iv
     }()
     
     let plusButton: UIButton = {
@@ -102,6 +113,7 @@ class AlbumTrackListCell: UITableViewCell {
         addSubview(authorLabel)
         addSubview(dotsLabel)
         addSubview(separator)
+        addSubview(lockedIcon)
         
         NSLayoutConstraint.activate([
             plusButton.centerYAnchor.constraint(equalTo: centerYAnchor),
@@ -121,8 +133,13 @@ class AlbumTrackListCell: UITableViewCell {
             
             dotsLabel.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -14),
             dotsLabel.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -2),
-            dotsLabel.widthAnchor.constraint(equalToConstant: 20),
+            dotsLabel.widthAnchor.constraint(equalToConstant: 40),
             dotsLabel.heightAnchor.constraint(equalToConstant: 30),
+            
+            lockedIcon.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            lockedIcon.centerYAnchor.constraint(equalTo: centerYAnchor),
+            lockedIcon.widthAnchor.constraint(equalToConstant: 40),
+            lockedIcon.heightAnchor.constraint(equalToConstant: 20),
             
             separator.leadingAnchor.constraint(equalTo: leadingAnchor),
             separator.trailingAnchor.constraint(equalTo: trailingAnchor),

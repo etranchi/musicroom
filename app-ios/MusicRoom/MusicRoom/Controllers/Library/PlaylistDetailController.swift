@@ -163,8 +163,12 @@ class PlaylistDetailController: UITableViewController {
         cell.dotsLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(edit)))
         if tableView.isEditing {
             cell.dotsLabel.isHidden = true
+        } else if isUnlocked == false {
+            cell.dotsLabel.isHidden = true
+            cell.lockedIcon.isHidden = false
         } else {
             cell.dotsLabel.isHidden = false
+            cell.lockedIcon.isHidden = true
         }
         return cell
     }
