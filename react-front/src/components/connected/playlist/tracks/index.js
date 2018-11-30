@@ -38,16 +38,6 @@ class Tracks extends Component {
 				});
 			});
 		})
-		socket.on('alreadyBlocked', () => {
-			console.log("LA PLAYLIST EST LOCK")
-			this.getPlaylist((res) => {
-				this.setState({
-				initLoading: false,
-				playlist: res.data,
-				isBlocked: true
-				});
-			});
-		})
 		socket.on('playlistUpdated', () => {
 			console.log("playlistUpdated socket event")
 			this.getPlaylist((res) => {

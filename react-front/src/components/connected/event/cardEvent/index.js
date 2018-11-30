@@ -30,8 +30,6 @@ class cardEvent extends Component {
         
         }
     }
-
-
     isUser = tab => 
     {
         for (let i = 0; i < tab.length; i++) {
@@ -43,8 +41,10 @@ class cardEvent extends Component {
     checkRight = () => {
         console.log("CHECK RIGHT", this.props.state.data.event.creator.email, this.props.state.user.email)
         if (this.props.state.data.event.creator.email === this.props.state.user.email)
+        
             this.setState({isCreator:true})
         else  {
+            console.log("YOU ARE NOT ADMIN")
             this.setState({
                 isMember:this.isUser(this.props.state.data.event.members),
                 isAdmin:this.isUser(this.props.state.data.event.adminMembers)
@@ -72,7 +72,7 @@ class cardEvent extends Component {
         socket.on('leaveRoom', (msg) => {
             console.log('socketleaveRoom ', msg)
         })
-        let tracks = this.props.state.data.event.playlist.tracks ? this.props.state.data.event.playlist.tracks.data : []
+        let tracks = this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks ? this.props.state.data.event.playlist.tracks.data : []
         createRoom(this.props.state.data.event._id, tracks, this.props.state.data.event)
         this.checkRight()
     }
@@ -91,8 +91,8 @@ class cardEvent extends Component {
         this.setState({'isHidden': !this.state.isHidden})
     }
     openLiveEvent = () => {
-        
-        this.props.updateParent({'currentComponent':'liveEvent'})
+        this.props.state.data.right = this.state;
+        this.props.updateParent({'data':this.props.state.data, currentComponent:'liveEvent'})
     }    
     isToday = date => {
         let timeEvent           = new Date(date).getTime();

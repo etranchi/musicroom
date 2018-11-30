@@ -17,18 +17,26 @@ module.exports = {
             return err
         }
     },
-    updateScore: (room, trackID, points) => {
+    updateScore: (room, trackID, points, userID) => {
         room.tracks.forEach((track) => {
-            if (!track.like) track.like = 0
-            if (track._id === trackID) track.like += points 
+            if (!track.like) track.like = 0;
+            if (!track.userLike) track.userLike = [];
+            if (!track.userUnLike) track.userUnLike = [];
+            if (track._id === trackID)
+            {
+                console.log("Update score : find")
+                points > 0 ? track.userLike.push(userID) : track.userUnLike.push(userID)
+                track.like += points
+            } 
         })
         return room
     },
     updateRoom: (tmpRoom) => {
         let ret;
         tmpRoom.tracks.forEach((track) => {
-            if (!track.like)
-                track.like = 0;
+            if (!track.like) track.like = 0;
+            if (!track.userLike) track.userLike = [];
+            if (!track.userUnLike) track.userUnLike = [];
         })
         this.rooms.forEach((room) => {
             if (room.id === tmpRoom.id) {
@@ -43,12 +51,14 @@ module.exports = {
         let room = {
             id: roomID,
             tracks: this.sortTracksByScore(tracks),
-            data: event
+            data: event,
         };
         room.tracks.forEach((track) => {
             track.like = 0;
+            track.userLike = [];
+            track.userUnLike = [];
         })
-        this.rooms.push(room)
+        this.rooms.push(room);
         return room
     },
     getRoom: (roomID) => {

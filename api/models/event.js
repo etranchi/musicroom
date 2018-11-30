@@ -28,9 +28,15 @@ const Event = new Schema({
 	creation_date: {type: Date, default: Date.now},
 	event_date: {type: Date, default: Date.now},
 	playlist: {type: Playlist.schema},
-	members : [User.schema],
+	members : [{
+		type: User.schema,
+		ref: 'Member'
+	}],
 	picture: {type: String, default: "default.jpeg"},
-	adminMembers: [User.schema]
+	adminMembers: [{
+		type: User.schema,
+		ref: 'AdminMember'
+	}]
 
 }, { versionKey: false });
 
