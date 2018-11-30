@@ -5,7 +5,7 @@ import axios from 'axios'
 import { Col, Row } from 'antd'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import PersonalPlayer from '../../event/personalPlayer'
-import {socket, getRoomPlaylist, updateScore, updateTracks, updateTrack} from '../../sockets';
+import {socket, getRoomPlaylist, updateScore, updateTracks, updateTrack, blockSocketEvent} from '../../sockets';
 
 const reorder = (list, startIndex, endIndex) => {
 	const result = Array.from(list);
@@ -26,10 +26,20 @@ export default class LiveEvent extends Component {
             rotate: {
                 active:false,
                 id: 0
-            }
+            },
+            isCreator: false,
+            isAdmin: false,
         };
         this.roomID = this.props.roomID;
         console.log("Live event : CONSTRUCTOR");
+    }
+    isUser = tab => 
+    {
+        for (let i = 0; i < tab.length; i++) {
+            if (tab[i].email === this.props.state.user.email)
+                return true;
+        }
+        return false;
     }
     componentDidMount = () => {
         socket.on('getRoomPlaylist', (tracks) => {
@@ -41,11 +51,15 @@ export default class LiveEvent extends Component {
         });
         socket.on('updateScore', (tracks) => {
             console.log("socket : receive data from updateScore : ", tracks)
-            this.setState({rotate: {active:false, id:0}}, () => {
-                this.savePlaylist(tracks);
-           });
+            this.setState({rotate: {active:false, id:0, liked: false}});
+           this.savePlaylist(tracks);
         });
         /**************************************/
+        if (this.props.state.data.event.creator.email === this.props.state.user.email)
+            this.setState({isCreator:true})
+        else  {
+            this.setState({ isAdmin:this.isUser(this.props.state.data.event.adminMembers) })
+        }
     }
     componentWillMount = () => {
         this.setState({
@@ -77,31 +91,29 @@ export default class LiveEvent extends Component {
         console.log("AFTER : ", OldTrack.userLike)
         console.log("AFTER : ", OldTrack.userUnLike)
         updateTrack(this.roomID,  OldTrack)
-        this.setState({rotate: {active:true, id:OldTrack._id}}, () => {
+        this.setState({rotate: {active:true, id:OldTrack._id, liked: value > 0 ? true : false}}, () => {
             updateScore(this.roomID, OldTrack._id, value, this.props.state.user._id)
         })
 
     }
-    onDragEnd = (result) => {
-        if (!result.destination) return;
-        let state = this.state;
-        const items = reorder(
-            this.state.playlist.tracks.data,
-            result.source.index,
-            result.destination.index
-        );
-        state.playlist.tracks.data = items;
-        axios.put(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id, 
-            this.state.playlist,
-            {'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}}
-        )
-        .then(resp => {
-            this.setState(items);
-        })
-        .catch(err => {
-            console.log(err);
-        })
-    }
+    onDragStart = () => {
+        blockSocketEvent(this.roomID)
+	}
+	
+	onDragEnd = (result) => {
+		if (!result.destination) {
+		  return;
+		}
+	
+		var state = this.state;
+		const items = reorder(
+		  this.state.playlist.tracks.data,
+		  result.source.index,
+		  result.destination.index
+		);
+		state.playlist.tracks.data = items;
+		updateTracks(this.roomID, items)
+	}
     render() {
 
         return (
@@ -119,7 +131,7 @@ export default class LiveEvent extends Component {
                     <Col span={6}/>
                     <Col span={12}>
                         <DragDropContext onDragEnd={this.onDragEnd}>
-                            <Droppable droppableId="droppable" isDropDisabled={this.state.isBlocked}>
+                            <Droppable droppableId="droppable" isDragDisabled={this.state.isAdmin || this.state.isCreator} isDropDisabled={this.state.isAdmin || this.state.isCreator} >
                             {
                                 (provided, snapshot) =>  (
                                     <Row>

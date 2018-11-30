@@ -24,7 +24,7 @@ module.exports = {
             if (!track.userUnLike) track.userUnLike = [];
             if (track._id === trackID)
             {
-                console.log("FIND")
+                console.log("Update score : find")
                 points > 0 ? track.userLike.push(userID) : track.userUnLike.push(userID)
                 track.like += points
             } 

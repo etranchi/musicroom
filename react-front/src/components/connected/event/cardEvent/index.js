@@ -30,8 +30,6 @@ class cardEvent extends Component {
         
         }
     }
-
-
     isUser = tab => 
     {
         for (let i = 0; i < tab.length; i++) {
@@ -74,7 +72,7 @@ class cardEvent extends Component {
         socket.on('leaveRoom', (msg) => {
             console.log('socketleaveRoom ', msg)
         })
-        let tracks = this.props.state.data.event.playlist.tracks ? this.props.state.data.event.playlist.tracks.data : []
+        let tracks = this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks ? this.props.state.data.event.playlist.tracks.data : []
         createRoom(this.props.state.data.event._id, tracks, this.props.state.data.event)
         this.checkRight()
     }
@@ -93,8 +91,8 @@ class cardEvent extends Component {
         this.setState({'isHidden': !this.state.isHidden})
     }
     openLiveEvent = () => {
-        
-        this.props.updateParent({'currentComponent':'liveEvent'})
+        this.props.state.data.right = this.state;
+        this.props.updateParent({'data':this.props.state.data, currentComponent:'liveEvent'})
     }    
     isToday = date => {
         let timeEvent           = new Date(date).getTime();

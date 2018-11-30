@@ -2,6 +2,11 @@ import openSocket from 'socket.io-client';
 
 const socket = openSocket(process.env.REACT_APP_API_URL);
 
+function subscribeToTimer(cb) {
+    socket.on('timer', timestamp => cb(null, timestamp));
+    socket.emit('subscribeToTimer', 1000);
+}
+
 function joinPlaylist (playlistId) {
     console.log("je join la plalist -> " + playlistId)
     socket.emit("joinPlaylist", playlistId)
@@ -55,4 +60,13 @@ function updatePlayer (roomID, event) {
 function leaveRoom (roomID) {
     socket.emit("leaveRoom", roomID)
 }
-export { updatePlayer, joinPlaylist, leavePlaylist, updatePlaylist, socket, blockSocketEvent, getRoomPlaylist, updateTrack, updateScore, joinRoom, createRoom, createEventLive, updateEvent, updateTracks, leaveRoom};
+
+/* TEST socket */
+
+function testJoinRoom (roomID, userName) {
+    socket.emit("testJoinRoom", roomID, userName)
+}
+function message (roomID, msg) {
+    socket.emit("message", roomID, msg)
+}
+export {message, testJoinRoom, updatePlayer, joinPlaylist, leavePlaylist, updatePlaylist, socket, blockSocketEvent, getRoomPlaylist, updateTrack, updateScore, joinRoom, createRoom, createEventLive, updateEvent, updateTracks, leaveRoom};

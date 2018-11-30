@@ -28,10 +28,8 @@ module.exports = function (io) {
                         console.log("UNLOCK")
                     }
                 }, 5000)
-                socket.to(playlistId).emit('blockPlaylist')
-            } else {
-                socket.to(playlistId).emit('alreadyBlocked')
             }
+            socket.to(playlistId).emit('blockPlaylist')
         });
 
         socket.on('joinPlaylist', (playlistId) => {
@@ -70,6 +68,7 @@ module.exports = function (io) {
             if (!room) {
                 console.log("[Socket] ->  Room Created")
                 room = ftSocket.createRoom(roomID, tracks, event)
+                socket.join(room.id);
                 io.sockets.in(room.id).emit('createRoom', room.tracks, "ok")
             } else {
                 console.log("[Socket] ->  Room Exist")

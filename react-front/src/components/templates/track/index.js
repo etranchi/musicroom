@@ -22,7 +22,7 @@ export default  class liveEvent extends Component {
         const rest      = this.props.track.duration % 60;
         const min       = (this.props.track.duration - rest) / 60
         const duration  = min + ":" + rest + 'min';
-        let needRotate  = false;
+
         let isLike      = false;
         let isUnLike    = false;
 
@@ -36,15 +36,14 @@ export default  class liveEvent extends Component {
             if (this.props.track.userUnLike.indexOf(this.props.userID) != -1)
                 isUnLike = true
         }
-
         return (
-            <Layout style={layoutStyle} className={ needRotate ? "flip-horizontal-bottom " : null }>
+            <Layout style={layoutStyle} className={ this.props.rotate.active   ? this.props.rotate.liked ? "slide-top" : "slide-bottom" : null }>
                 <Content>
                     <Row>
                         <Col span={4}>
                             <div style={orderStyle}><b style={{fontSize:'4em'}}> {this.props.order + 1}.</b></div>
                         </Col>
-                        <Col span={8}>
+                        <Col span={20}>
                             <List.Item actions={
                             [
                                 <i onClick={this.props.callSocket.bind(this,"updateScore", this.props.track, 1)}  style={isLike ? {display:'none'}  : {display:'block'} } className="far fa-thumbs-up HoverLike"></i>,
