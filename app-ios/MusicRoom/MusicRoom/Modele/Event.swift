@@ -40,7 +40,7 @@ struct Event : Codable {
     let members : [User]
     let adminMembers : [User]
     let picture : String?
-    enum CodingKeys : CodingKey, String {
+    enum CodingKeys : String, CodingKey {
         case shared = "public"
         case creationDate = "creation_date"
         case date = "event_date"
