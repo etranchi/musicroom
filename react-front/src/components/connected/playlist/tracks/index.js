@@ -5,7 +5,7 @@ import moment from 'moment'
 import axios from 'axios'
 import { Col, Row, Icon, Layout } from 'antd'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import PersonalPlayer from '../../event/personalPlayer'
+import Player from '../../event/player'
 import { leavePlaylist, joinPlaylist, updatePlaylist, socket, blockSocketEvent } from '../../sockets';
 
 const reorder = (list, startIndex, endIndex) => {
@@ -194,7 +194,7 @@ class Tracks extends Component {
 				)}
         		</Droppable>
       			</DragDropContext>
-				{this.state.playlist.tracks.data.length > 0 && <PersonalPlayer  tracks={this.state.playlist.tracks.data}></PersonalPlayer>}
+				{this.state.playlist.tracks.data.length > 0 && <Player  tracks={this.state.playlist.tracks.data} roomID={this.props.state.data.event._id}/>}
 				</Layout.Content>
 		</div>
 		)

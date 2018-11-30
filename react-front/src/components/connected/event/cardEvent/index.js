@@ -113,6 +113,11 @@ class cardEvent extends Component {
         console.log(this.props);
         return  (
             <div>
+                <Row>
+                    <Col span={8}> 
+                        <a href="#!" className="btn waves-effect waves-teal" onClick={() => this.props.changeView('listEvent')}>Back</a> 
+                    </Col>
+                </Row>
                 <CardHeader state={this.props.state} updateParent={this.props.updateParent} />
                 <Row>
                     <Col>
