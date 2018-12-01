@@ -74,7 +74,7 @@ class PlaylistDetailController: UITableViewController {
         let navi = navigationController as? CustomNavigationController
         navi?.animatedShowNavigationBar()
         navigationController?.navigationBar.topItem?.title = "Search"
-        SocketIOManager.sharedInstance.leavePlaylist(playlist._id!)
+        //SocketIOManager.sharedInstance.leavePlaylist(playlist._id!)
     }
     
     override func viewWillLayoutSubviews() {
