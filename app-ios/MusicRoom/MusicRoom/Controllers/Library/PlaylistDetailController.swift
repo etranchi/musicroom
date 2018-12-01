@@ -18,7 +18,7 @@ class PlaylistDetailController: UITableViewController {
     var headerView: AlbumHeaderView!
     let songCellId = "SongCellId"
     
-    private let headerHeight: CGFloat = 200
+    private let headerHeight: CGFloat = 225
     
     init(_ playlist: Playlist, _ playlistCover: UIImage, _ root : UIView) {
         self.playlist = playlist

@@ -872,21 +872,15 @@
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/Bolts\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/FBSDKCoreKit\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/FBSDKLoginKit\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/FBSDKShareKit\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/FacebookCore\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/FacebookLogin\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/FacebookShare\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/GTMOAuth2\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/GTMSessionFetcher\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleToolboxForMac\"",
-					"\"${PODS_ROOT}/FirebaseAnalytics/Frameworks\"",
-					"\"${PODS_ROOT}/FirebaseCore/Frameworks\"",
-					"\"${PODS_ROOT}/FirebaseInstanceID/Frameworks\"",
-					"\"${PODS_ROOT}/Google/Frameworks\"",
 					"\"${PODS_ROOT}/GoogleSignIn/Frameworks\"",
 				);
 				INFOPLIST_FILE = MusicRoom/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -915,7 +909,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = R5PF2384QF;
 				INFOPLIST_FILE = MusicRoom/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

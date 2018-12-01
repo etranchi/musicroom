@@ -50,7 +50,7 @@ class AlbumTrackListCell: UITableViewCell {
     let dotsLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .heavy)
         label.textColor = .lightGray
         label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -132,9 +132,9 @@ class AlbumTrackListCell: UITableViewCell {
             authorLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             
             dotsLabel.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -14),
-            dotsLabel.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -2),
+            dotsLabel.topAnchor.constraint(equalTo: topAnchor),
+            dotsLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
             dotsLabel.widthAnchor.constraint(equalToConstant: 40),
-            dotsLabel.heightAnchor.constraint(equalToConstant: 30),
             
             lockedIcon.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             lockedIcon.centerYAnchor.constraint(equalTo: centerYAnchor),

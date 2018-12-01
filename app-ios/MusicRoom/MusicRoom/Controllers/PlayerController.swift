@@ -82,7 +82,6 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
     }
 
     func player(_ player: DZRPlayer!, didPlay playedBytes: Int64, outOf totalBytes: Int64) {
@@ -211,18 +210,16 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         let size = view.bounds.height
         let bestConstant: CGFloat = size > 800 ? 50 : 25
         let bestMult: CGFloat = size > 800 ? 0.17 : 0.1
-        print(size)
+        
         backgroundCoverView = setupBackgroudView()
         coverContainerView = setupCoverContainer()
         playerButtonView = PlayerButtonsView(target: self, isPlaying)
         downButton.addTarget(self, action: #selector(handleHide), for: .touchUpInside)
         playerButtonView?.translatesAutoresizingMaskIntoConstraints = false
-        
         if index != -2 {
             titleLabel.text = tracks[index].title
             authorLabel.text = tracks[index].artist!.name
         }
-        
         view.addSubview(backgroundCoverView!)
         view.addSubview(coverContainerView!)
         view.addSubview(titleLabel)
@@ -259,19 +256,13 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             playerButtonView!.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             playerButtonView!.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             playerButtonView!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -size * bestMult),
-            playerButtonView!.heightAnchor.constraint(equalToConstant: 80)
+            playerButtonView!.heightAnchor.constraint(equalToConstant: 120)
         ])
     }
 }
 
 extension PlayerController {
     fileprivate func setupCoverContainer() -> CoverContainerView {
-        guard index != -2 else {
-            let ccv = CoverContainerView(target: self, nil, nil, nil, nil, nil)
-            ccv.translatesAutoresizingMaskIntoConstraints = false
-            ccv.clipsToBounds = true
-            return ccv
-        }
         var underPreviousTrack: Track? = nil
         var previousTrack: Track? = nil
         var nextTrack: Track? = nil
@@ -296,12 +287,6 @@ extension PlayerController {
     }
     
     fileprivate func setupBackgroudView() -> BackgroundCoverView {
-        guard index != -2 else {
-            let bcv = BackgroundCoverView(nil, nil, nil)
-            bcv.translatesAutoresizingMaskIntoConstraints = false
-            bcv.clipsToBounds = true
-            return bcv
-        }
         var previousTrack: Track? = nil
         var nextTrack: Track? = nil
         if index - 1 >= 0 {

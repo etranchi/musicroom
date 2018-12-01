@@ -195,7 +195,7 @@ class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate 
         let data = try? JSONSerialization.data(withJSONObject: json, options: [])
         print(JSONSerialization.isValidJSONObject(json))
         apiManager.loginUser(data) { (user) in
-            print(user)
+            print(user ?? "GPALUSER")
         }
     }
     

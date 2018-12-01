@@ -101,7 +101,7 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
             
             let sourceItem = MKMapItem(placemark: soucePlaceMark)
             let destItem = MKMapItem(placemark: destPlaceMark)
-            var directionReq : MKDirectionsRequest = MKDirectionsRequest()
+            let directionReq : MKDirectionsRequest = MKDirectionsRequest()
             directionReq.source = sourceItem
             directionReq.destination = destItem
             directionReq.transportType = .automobile
@@ -118,7 +118,7 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
                 }
                 let myRoute = response.routes[0]
                 self.mapView.add(myRoute.polyline, level: .aboveRoads)
-                var rekt = myRoute.polyline.boundingMapRect
+                let rekt = myRoute.polyline.boundingMapRect
                 let coord = MKCoordinateRegionForMapRect(rekt)
                 let distance = MKCoordinateRegionMake(coord.center, coord.span)
                 self.mapView.setRegion(distance, animated: true)
@@ -262,7 +262,6 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
             // pays ville codepostale rue numero
             let address = Address(p: (selectedPin?.administrativeArea)!, v: (selectedPin?.locality)!, cp: (selectedPin?.isoCountryCode)!, r: (selectedPin?.thoroughfare)!, n: (selectedPin?.subThoroughfare)!)
             let location = Location(address: address, coord: coord)
-            let dataImg = NSData(contentsOf: urlImageToString!)
             apiManager.getMe((myUser?.token)!, completion: { (user) in
                 let event = Event(_id : nil, creator : user, title: self.titleTF.text!, description: self.descriptionTV.text!, location: location, visibility: self.segmentedBar.selectedSegmentIndex, shared: self.segmentedBar.selectedSegmentIndex == 0 ? true : false , creationDate: String(describing: Date()), date: String(describing: Date()), playlist: self.playlistView?.selectedPlaylist!, members: [], adminMembers: [], picture : nil)
                 apiManager.postEvent((myUser?.token)!, event: event, img: self.imageView.image!) { (resp) in
