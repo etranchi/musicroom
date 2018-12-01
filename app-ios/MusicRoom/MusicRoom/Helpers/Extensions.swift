@@ -10,12 +10,34 @@ import UIKit
 
 let                 imageCache = NSCache<NSString, UIImage>()
 
+
+
+extension Encodable {
+    subscript(key: String) -> Any? {
+        return dictionary[key]
+    }
+    var dictionary: [String: Any] {
+        return (try? JSONSerialization.jsonObject(with: JSONEncoder().encode(self))) as? [String: Any] ?? [:]
+    }
+}
+
+extension Data {
+    
+    // struct
+    init<T>(from value: T) {
+        var value = value
+        self.init(bytes: &value, count: MemoryLayout<T>.size)
+    }
+    
+    // extract Struct
+    func extract<T>(from: T.Type) -> T {
+        return self.withUnsafeBytes { $0.pointee }   // FAILS HERE: EXC_BAD_ACCESS
+    }
+}
+
 extension           UIImageView
 {
-    private func            loadImageUsingCacheWithUrl(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ())
-    {
-        URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
-    }
+
     
     func            getImageUsingCacheWithUrlString(urlString: String, completion: @escaping (UIImage) -> ())
     {
@@ -27,7 +49,7 @@ extension           UIImageView
         }
         let url = URL(string: urlString)
         guard let gurl = url else { return }
-        self.loadImageUsingCacheWithUrl(from: gurl, completion: { (data, response, error) in
+        apiManager.loadImageUsingCacheWithUrl(from: gurl, completion: { (data, response, error) in
             if error != nil {
                 print(error!.localizedDescription)
                 return

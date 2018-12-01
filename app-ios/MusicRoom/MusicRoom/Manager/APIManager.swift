@@ -278,7 +278,7 @@ class APIManager: NSObject, URLSessionDelegate {
         URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: loginRequest) { (data, response, err) in
             if err != nil {
                 completion(nil)
-            }
+             }
             if let d = data {
                 do {
                     let dic = try JSONDecoder().decode(DataUser.self, from: d)
@@ -301,12 +301,51 @@ class APIManager: NSObject, URLSessionDelegate {
         }
     }
     
+    func putEvent(_ event : Event, completion : @escaping((Bool) -> ())) {
+        let url = self.url + "event/\(event._id!)"
+        do {
+            print("yooooo")
+            
+            let data = try jsonEncoder.encode(event)
+            print("good")
+            let json = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
+            print(json)
+            var req = URLRequest(url : URL(string: url)!)
+            req.httpMethod = "PUT"
+            req.setValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
+            req.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+            req.httpBody = json!.data(using: String.Encoding.utf8.rawValue)
+            URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: req, completionHandler: { (data, resp, err) in
+                print("plouf")
+                if err != nil {
+                    print("error")
+                    completion(false)
+                }
+                print("je passe")
+                if let d = data {
+                    let json = NSString(data: d, encoding: String.Encoding.utf8.rawValue)
+                    print(json)
+                    completion(true)
+                }
+            }).resume()
+        } catch {
+            print("err")
+        }
+    }
     
-    func getEvents(completion : @escaping (([Event]) -> ())){
+    func getEventById(_ id : String, completion: @escaping ((Event) -> ())) {
+        let url = self.url + "event/\(id)"
+        var request = URLRequest(url: URL(string: url)!)
+        request.httpMethod = "GET"
+        self.searchAll(Event.self, request: request) { (res) in
+            completion(res)
+        }
+    }
+    func getEvents(completion : @escaping ((DataEvent) -> ())){
         let eventsUrl = self.url + "event"
         var request = URLRequest(url: URL(string: eventsUrl)!)
         request.httpMethod = "GET"
-        self.searchAll([Event].self, request: request) { (res) in
+        self.searchAll(DataEvent.self, request: request) { (res) in
             completion(res)
         }
     }
@@ -316,6 +355,16 @@ class APIManager: NSObject, URLSessionDelegate {
         let imageView = UIImageView()
         imageView.getImageUsingCacheWithUrlString(urlString: url) { (image) in
             completion(image)
+        }
+    }
+    
+    func getAllUsers(_ token : String, completion : @escaping (([User]) -> ())) {
+        let allUserUrl = self.url + "user"
+        var request = URLRequest(url: URL(string: allUserUrl)!)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        searchAll([User].self, request: request) { (me) in
+            completion(me)
         }
     }
     
@@ -355,6 +404,11 @@ class APIManager: NSObject, URLSessionDelegate {
         }
     }
     
+    func            loadImageUsingCacheWithUrl(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ())
+    {
+        URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: url, completionHandler: completion).resume()
+    }
+    
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         completionHandler(.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
     }
@@ -363,6 +417,7 @@ class APIManager: NSObject, URLSessionDelegate {
     {
         URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: request) { (data, response, err) in
             if err != nil {
+                print(err?.localizedDescription)
                 print("error while requesting")
             }
             if let d = data {

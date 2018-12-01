@@ -37,13 +37,21 @@ struct Event : Codable {
     let creationDate : String
     let date : String
     let playlist : Playlist?
-    let members : [User]
-    let adminMembers : [User]
+    var members : [User]
+    var adminMembers : [User]
     let picture : String?
-    enum CodingKeys : String, CodingKey {
+    
+    enum CodingKeys : String, CodingKey{
         case shared = "public"
         case creationDate = "creation_date"
         case date = "event_date"
         case creator, title, description, location, visibility, playlist, members, adminMembers, picture, _id
     }
+
+}
+
+struct DataEvent : Codable {
+    let myEvents : [Event]
+    let friendEvents : [Event]
+    let allEvents : [Event]
 }

@@ -20,7 +20,7 @@ class PlaylistDetailController: UITableViewController {
     
     private let headerHeight: CGFloat = 225
     
-    init(_ playlist: Playlist, _ playlistCover: UIImage, _ root : UIView) {
+    init(_ playlist: Playlist, _ playlistCover: UIImage) {
         self.playlist = playlist
         self.playlistCover = playlistCover
         self.tracks = playlist.tracks != nil ? playlist.tracks!.data : []

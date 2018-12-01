@@ -24,14 +24,12 @@ module.exports = function (io) {
                 console.log("BLOCK PLAYLIST EVENT")
                 setTimeout(() => {
                     if (playlistBlocked.indexOf(playlistId) !== -1) {
-                        socket.to(playlistId).emit('playlistUpdated');
+                        io.in(playlistId).emit('playlistUpdated');
                         console.log("UNLOCK")
                     }
                 }, 5000)
-                socket.to(playlistId).emit('blockPlaylist')
-            } else {
-                socket.to(playlistId).emit('alreadyBlocked')
             }
+            socket.to(playlistId).emit('blockPlaylist')
         });
 
         socket.on('joinPlaylist', (playlistId) => {
@@ -70,6 +68,7 @@ module.exports = function (io) {
             if (!room) {
                 console.log("[Socket] ->  Room Created")
                 room = ftSocket.createRoom(roomID, tracks, event)
+                socket.join(room.id);
                 io.sockets.in(room.id).emit('createRoom', room.tracks, "ok")
             } else {
                 console.log("[Socket] ->  Room Exist")
@@ -102,13 +101,26 @@ module.exports = function (io) {
             } else
                 return io.sockets.in(room.id).emit('updateTracks', 'fail');
         });
-        socket.on('updateScore', (roomID, trackID, points) => {
+        socket.on('updateTrack', (roomID, track) => {
+            let room = ftSocket.getRoom(roomID)
+            if (room) {
+                room.tracks.forEach(music => {
+                    if (music._id === track._id)
+                    {
+                        console.log("track Updated")
+                        music = track
+                    }
+                    
+                });
+            }
+        });
+        socket.on('updateScore', (roomID, trackID, points, userID) => {
             console.log("[Socket] -> updateScore")
 
             let room = ftSocket.getRoom(roomID)
             if (room) {
                 console.log("[Socket] -> updateScore ", room.tracks.length)
-                room = ftSocket.updateScore(room, trackID, points)
+                room = ftSocket.updateScore(room, trackID, points, userID)
                 room = ftSocket.updateRoom(room)
                 io.sockets.in(room.id).emit('updateScore', room.tracks)
             } else

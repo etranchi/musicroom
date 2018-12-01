@@ -1,13 +1,13 @@
 'use strict';
 
+const customError = require('../modules/customError');
+
 const middlewares = {
 	isConfirmed: function isConfirm(req, res, next) {
 		if (req.user.status === 'Active') {
 			next();
 		} else {
-			let err = new Error('Account not confirmed')
-			err.status = 401
-			next(err)
+			next(new customError('Account not confirmed', 401))
 		}
 	}
 };

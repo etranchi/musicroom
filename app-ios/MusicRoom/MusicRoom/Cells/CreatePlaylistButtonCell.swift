@@ -10,6 +10,7 @@ import UIKit
 
 class CreatePlaylistButtonCell: UICollectionViewCell {
     var vc : UICollectionView?
+    var title : String?
     
     let createButton: UIButton = {
         let createButton = UIButton(type: .system)
@@ -17,7 +18,7 @@ class CreatePlaylistButtonCell: UICollectionViewCell {
         createButton.translatesAutoresizingMaskIntoConstraints = false
         createButton.setTitleColor(.white, for: .normal)
         createButton.backgroundColor = UIColor(red: 40 / 255, green: 180 / 255, blue: 40 / 255, alpha: 1)
-        createButton.setAttributedTitle(NSAttributedString(string: "CREATE PLAYLIST", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white, .font: UIFont.systemFont(ofSize: 15, weight: .heavy)]), for: .normal)
+        // createButton.setAttributedTitle(NSAttributedString(string: t"CREATE PLAYLIST", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white, .font: UIFont.systemFont(ofSize: 15, weight: .heavy)]), for: .normal)
         createButton.layer.masksToBounds = true
         createButton.layer.cornerRadius = 40 / 2
         return createButton
@@ -43,6 +44,7 @@ class CreatePlaylistButtonCell: UICollectionViewCell {
     
     
     func setupView() {
+        createButton.setAttributedTitle(NSAttributedString(string: title != nil ? title! : "CREATE", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white, .font: UIFont.systemFont(ofSize: 15, weight: .heavy)]), for: .normal)
         createButton.addTarget(self, action: #selector(handleCreate), for: .touchUpInside)
         addSubview(createButton)
         NSLayoutConstraint.activate([

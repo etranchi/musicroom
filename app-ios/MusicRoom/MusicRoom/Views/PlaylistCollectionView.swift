@@ -84,7 +84,7 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
             rootTarget?.addSongToPlaylist(cell.playlist)
             return
         }
-        let vc = PlaylistDetailController(playlists[indexPath.item], cell.imageView.image!, collectionView)
+        let vc = PlaylistDetailController(playlists[indexPath.item], cell.imageView.image!)
         rootTarget?.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -96,6 +96,7 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.item == playlists.count  && rootTarget != nil {
             let cell = dequeueReusableCell(withReuseIdentifier: buttonCellId, for: indexPath) as! CreatePlaylistButtonCell
+            cell.title = "CREATE PLAYLIST"
             cell.vc = self
 
             return cell

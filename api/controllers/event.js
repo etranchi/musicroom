@@ -29,6 +29,8 @@ module.exports = {
 			if (req.file && req.file.filename) req.body.picture = req.file.filename
 			let event = await modelEvent.create(req.body)
 			await event.populate('creator', 'User')
+			await event.populate('members', 'Member')
+			await event.populate('adminMembers', 'AdminMember')
 			res.status(200).send(event)
 		} catch (err) {
 			console.log("ERROR POST EVENT -> " + err)
@@ -39,6 +41,7 @@ module.exports = {
 		console.log("Je suis ici", req.params)
 		try {
 			// ADD JOI.VALIDATION
+			console.log(req.body)
 			let test = await modelEvent.updateOne({_id: req.params.id}, req.body, {new: true})
 			res.status(200).json(test)
 		} catch (err) {
