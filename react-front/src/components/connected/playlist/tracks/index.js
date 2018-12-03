@@ -135,12 +135,12 @@ class Tracks extends Component {
 			{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}}
 		)
 		.then(resp => {
+			updatePlaylist(this.state.playlist._id)
 			this.setState(items);
 		})
 		.catch(err => {
 			console.log(err);
 		})
-		updatePlaylist(this.state.playlist._id)
 	}
 
 	render() {
