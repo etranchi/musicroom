@@ -32,7 +32,7 @@ struct Event : Codable {
     let title : String
     let description : String
     let location : Location
-    let visibility : Int
+    let visibility : Int?
     let shared : Bool
     let creationDate : String
     let date : String

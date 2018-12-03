@@ -38,6 +38,9 @@ class LibraryController: UITableViewController {
         case 2 :
             cell.titleLabel.text = "Events"
             cell.iconView0.image = UIImage(named: "people")
+        case 3 :
+            cell.titleLabel.text = "Settings"
+            cell.iconView0.image = #imageLiteral(resourceName: "settings_icon")
         default:
             cell.titleLabel.text = "Omg... wtf.."
         }
@@ -62,6 +65,9 @@ class LibraryController: UITableViewController {
         case 2 :
             let vc = EventsController()
             self.navigationController?.pushViewController(vc, animated: true)
+        case 3 :
+            let vc = SettingsController()
+            self.navigationController?.pushViewController(vc, animated: true)
         default:
             print("Omg... wtf..")
         }
@@ -69,7 +75,7 @@ class LibraryController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 3
+        return 4
     }
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

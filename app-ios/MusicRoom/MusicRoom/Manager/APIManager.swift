@@ -110,13 +110,26 @@ class APIManager: NSObject, URLSessionDelegate {
         }.resume()
     }
     
-    func login(_ forg: String, _ token : String, completion: @escaping ( (DataUser) -> ())) {
+    func login(_ forg: String, _ token : String, completion: @escaping ( ([String: AnyObject]) -> ())) {
         let loginUrl = self.url + "user/login/" + forg + "?access_token=" + token
         var loginRequest = URLRequest(url : URL(string : loginUrl)!)
         loginRequest.httpMethod = "GET"
-        searchAll(DataUser.self, request: loginRequest, completion: { (res) in
-            completion(res)
-        })
+        URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: loginRequest) { (data, response, err) in
+            if err != nil {
+                print("error while requesting")
+            }
+            do {
+                let responseJSON = try JSONSerialization.jsonObject(with: data!, options: [])
+                if let responseJSON = responseJSON as? [String: AnyObject] {
+                    // print(responseJSON)
+                    print("good")
+                    completion(responseJSON)
+                }
+            }
+            catch (let err){
+                print(err.localizedDescription)
+            }
+            }.resume()
     }
     
     func searchArtists(_ search: String, completion: @escaping ([Artist]) -> ()) {
@@ -337,6 +350,8 @@ class APIManager: NSObject, URLSessionDelegate {
         let url = self.url + "event/\(id)"
         var request = URLRequest(url: URL(string: url)!)
         request.httpMethod = "GET"
+        request.setValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         self.searchAll(Event.self, request: request) { (res) in
             completion(res)
         }
@@ -345,6 +360,8 @@ class APIManager: NSObject, URLSessionDelegate {
         let eventsUrl = self.url + "event"
         var request = URLRequest(url: URL(string: eventsUrl)!)
         request.httpMethod = "GET"
+        request.setValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         self.searchAll(DataEvent.self, request: request) { (res) in
             completion(res)
         }
@@ -372,7 +389,7 @@ class APIManager: NSObject, URLSessionDelegate {
         do {
             let postEventUrl = self.url + "event/"
             let dataBody = try jsonEncoder.encode(event)
-            let dataImg = UIImagePNGRepresentation(img)
+            let dataImg = UIImageJPEGRepresentation(img, 0.1)
             let headers : HTTPHeaders = [
                 "Authorization": "Bearer \(token)",
                 "Content-type": "multipart/form-data"
@@ -380,7 +397,7 @@ class APIManager: NSObject, URLSessionDelegate {
             APIManager.Manager.upload(multipartFormData: { (multipartFormData) in
                 multipartFormData.append(dataBody, withName: "body")
                 if let data = dataImg {
-                    multipartFormData.append(data, withName: "file", fileName: "image.png", mimeType: "image/png")
+                    multipartFormData.append(data, withName: "file", fileName: "image.jpeg", mimeType: "image/jpeg")
                 }
             }, usingThreshold: UInt64.init(), to: postEventUrl, method: .post, headers: headers) { (result) in
                 switch result{
