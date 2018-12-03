@@ -5,14 +5,33 @@ const router = express.Router();
 const eventController = require('../controllers/event');
 const multer  = require('multer')
 const upload = multer({ dest: "./public/eventPicture/"})
-  
-router.get('/', eventController.getEvents);
+const passport = require('passport');
+const middlewares = require('../modules/middlewares');
 
-router.get('/:id', eventController.getEventById);
-router.put('/:id', eventController.putEventById);
+router.get('/',
+    passport.authenticate('bearer'),
+    middlewares.isConfirmed,
+    eventController.getEvents);
 
-router.delete('/:id', eventController.deleteEventById);
+router.get('/:id',
+    passport.authenticate('bearer'),
+    middlewares.isConfirmed,
+    eventController.getEventById);
 
-router.post('/', upload.single('file'), eventController.postEvent);
+router.put('/:id',
+    passport.authenticate('bearer'),
+    middlewares.isConfirmed,
+    eventController.putEventById);
+
+router.delete('/:id',
+    passport.authenticate('bearer'),
+    middlewares.isConfirmed,
+    eventController.deleteEventById);
+
+router.post('/',
+    passport.authenticate('bearer'),
+    middlewares.isConfirmed,
+    upload.single('file'),
+    eventController.postEvent);
 
 module.exports = router;

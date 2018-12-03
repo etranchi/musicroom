@@ -2,11 +2,26 @@
 
 const modelEvent = require('../models/event');
 const ObjectId = require('mongodb').ObjectID;
+const customError = require('../modules/customError');
+
 module.exports = {
-	getEvents: async (req, res) => {
+	getEvents: async (req, res, next) => {
 		try {
-			let myEvents = [] // await modelEvent.find({'creator._id': req.user._id})
-			let friendEvents = [] // await modelEvent.find({'adminMembers._id': req.user._id})
+			let myEvents = await modelEvent.find({'creator._id': req.user._id})
+			let friendEvents = await modelEvent
+				.find({$or: [
+					{adminMembers:
+						{$elemMatch:
+							{_id: req.user._id}
+						}
+					},
+					{members:
+						{$elemMatch:
+							{_id: req.user._id}
+						}
+					}
+				]}
+			)
 			let allEvents = await modelEvent.find();
 			res.status(200).json({myEvents, friendEvents, allEvents});
 		} catch (err) {
@@ -14,14 +29,14 @@ module.exports = {
 			next(new customError(err.message, 400))
 		}
 	},
-	getEventById: async (req, res) => {
+	getEventById: async (req, res, next) => {
 		try {
 			res.status(200).json(await modelEvent.findOne({'_id':req.params.id}));
 		} catch (err) {
 			next(new customError(err.message, 400))
 		}
 	},
-	postEvent: async (req, res) => {
+	postEvent: async (req, res, next) => {
 		try {
 			req.body = JSON.parse(req.body.body);
 			if (!req.body.location)
@@ -37,7 +52,7 @@ module.exports = {
 			next(new customError(err.message, 400))
 		}
 	},
-	putEventById: async (req, res) => {
+	putEventById: async (req, res, next) => {
 		try {
 			if (!req.body.creator)
 				throw new Error('No creator')
@@ -53,7 +68,7 @@ module.exports = {
 			next(new customError(err.message, 400))
 		}
 	},
-	deleteEventById: async (req, res) => {
+	deleteEventById: async (req, res, next) => {
 		try {
 			await modelEvent.deleteOne({'_id': req.params.id})
 			res.status(204).send();
