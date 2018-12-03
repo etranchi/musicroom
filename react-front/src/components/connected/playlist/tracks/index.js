@@ -240,7 +240,7 @@ class Tracks extends Component {
 				)}
         		</Droppable>
       			</DragDropContext>
-				{this.state.playlist.tracks.data.length > 0 && <Player  tracks={this.state.playlist.tracks.data} roomID={this.props.state.data.event._id}/>}
+				{this.state.playlist.tracks.data.length > 0 && <Player  tracks={this.state.playlist.tracks.data}/>}
 				</Layout.Content>
 		</div>
 		)

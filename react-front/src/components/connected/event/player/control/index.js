@@ -77,7 +77,24 @@ export default class Player extends Component {
     }
 
     playerUpdate = (event) => {
-        updatePlayer(this.props.roomID, event);
+        if (this.props.roomID)
+            updatePlayer(this.props.roomID, event);
+        else
+        {
+            switch (event){
+                case "next":
+                    this.nextTrack();
+                    break;
+                case "prev":
+                    this.prevTrack();
+                    break;
+                case "play":
+                    this.playTrack();
+                    break;
+                default:
+                    break;
+            } 
+        }
     }
 
 	render() {

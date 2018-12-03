@@ -77,8 +77,8 @@ export default class LiveEvent extends Component {
         let me          = this.props.state.user;
         let index       = -1;
 
-        if      (OldTrack.userLike   && (index = OldTrack.userLike.indexOf(me._id)) != -1)   OldTrack.userLike.splice(0, index)
-        else if (OldTrack.userUnLike && (index = OldTrack.userUnLike.indexOf(me._id)) != -1) OldTrack.userUnLike.splice(0, index)
+        if      (OldTrack.userLike   && (index = OldTrack.userLike.indexOf(me._id)) !== -1)   OldTrack.userLike.splice(0, index)
+        else if (OldTrack.userUnLike && (index = OldTrack.userUnLike.indexOf(me._id)) !== -1) OldTrack.userUnLike.splice(0, index)
         updateTrack(this.roomID,  OldTrack)
         this.setState({rotate: {active:true, id:OldTrack._id, liked: value > 0 ? true : false}}, () => {
             updateScore(this.roomID, OldTrack._id, value, this.props.state.user._id)

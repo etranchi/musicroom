@@ -38,12 +38,12 @@ export default  class liveEvent extends Component {
 
         if ( this.props.userID && this.props.track.userLike && this.props.track.userLike.length > 0)
         {
-            if (this.props.track.userLike.indexOf(this.props.userID) != -1)
+            if (this.props.track.userLike.indexOf(this.props.userID) !== -1)
                 isLike = true
         }
         if ( this.props.userID && this.props.track.userUnLike && this.props.track.userUnLike.length > 0)
         {
-            if (this.props.track.userUnLike.indexOf(this.props.userID) != -1)
+            if (this.props.track.userUnLike.indexOf(this.props.userID) !== -1)
                 isUnLike = true
         }
         return (
