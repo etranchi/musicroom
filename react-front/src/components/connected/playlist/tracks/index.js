@@ -156,45 +156,45 @@ class Tracks extends Component {
 				</Col>
 			</Row>
 			<Layout.Content>
-				<h3 style={{'textAlign':'center', 'font-size': '20px'}}>{this.state.playlist.title}</h3>
+				<h3 style={{textAlign:'center', fontSize: '20px'}}>{this.state.playlist.title}</h3>
 				<DragDropContext onDragEnd={this.onDragEnd} onDragStart={this.onDragStart}>
 				<Droppable droppableId="droppable" isDragDisabled={this.state.isBlocked} isDropDisabled={this.state.isBlocked}>
 				{(provided, snapshot) => (
-					<div
-					ref={provided.innerRef}
-					>
-					<ul className="collection">
-					{this.state.playlist.tracks.data.map((item, index) => (
-						<li className="collection-item avatar">
-						<Draggable key={item.id} draggableId={item.id} index={index} >
-						{(provided, snapshot) => (
-							<div
-							ref={provided.innerRef}
-							{...provided.draggableProps}
-							{...provided.dragHandleProps}
-							>
-							
-							<li className="collection-item avatar" key={index} >
-							{this.state.playlist._id && <Icon type="close" style={{'float':'right', 'color':'red','cursor':'pointer'}} onClick={() => this.deleteTrack(index)}></Icon>}
-								<span>
-									<img src={item.album ? item.album.cover_small || defaultTrackImg : defaultTrackImg} alt="" className="circle"/>
-									<span className="title">{item.title} - Duration: {moment.utc(item.duration * 1000).format('mm:ss')}</span>
-									<p style={{'font-style':'italic'}}>{item.album ? item.album.title : ""}</p>
-								</span>
+					<div ref={provided.innerRef}>
+						<ul className="collection">
+						{
+							this.state.playlist.tracks.data.map((item, index) => (
+								<li key={index} className="collection-item avatar">
+									<Draggable key={item.id} draggableId={item.id} index={index} >
+									{
+										(provided, snapshot) => (
+											<div
+											ref={provided.innerRef}
+											{...provided.draggableProps}
+											{...provided.dragHandleProps}
+											>
 								
-							</li>
-							</div>
-						)}
-						</Draggable>
-						</li>
-					))}
-					</ul>
-					{provided.placeholder}
+											
+											{this.state.playlist._id && <Icon type="close" style={{float:'right', color:'red',cursor:'pointer'}} onClick={() => this.deleteTrack(index)}></Icon>}
+												<span>
+													<img src={item.album ? item.album.cover_small || defaultTrackImg : defaultTrackImg} alt="" className="circle"/>
+													<span className="title">{item.title} - Duration: {moment.utc(item.duration * 1000).format('mm:ss')}</span>
+													<p style={{fontStyle:'italic'}}>{item.album ? item.album.title : ""}</p>
+												</span>
+												
+											</div>
+									)}
+									</Draggable>
+								</li>
+							))
+						}
+						</ul>
+						{provided.placeholder}
 					</div>
 				)}
         		</Droppable>
       			</DragDropContext>
-				{this.state.playlist.tracks.data.length > 0 && <Player  tracks={this.state.playlist.tracks.data} roomID={this.props.state.data.event._id}/>}
+				{ this.state.playlist && this.state.playlist.tracks.data.length > 0 && <Player  tracks={this.state.playlist.tracks.data}/>}
 				</Layout.Content>
 		</div>
 		)

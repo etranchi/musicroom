@@ -23,7 +23,7 @@ export default class Player extends Component {
         this.props.tracks.forEach(track => { tracksID.push(track.id) });
         this.setState({'tracksID':tracksID, 'tracks':this.props.tracks}, () => {
             DZ.player.playTracks(tracksID)
-            DZ.player.pause()
+            // DZ.player.pause()
             DZ.player.setVolume(50)     
         });
     }
@@ -57,6 +57,7 @@ export default class Player extends Component {
         console.log("play/pause");
     }
     nextTrack = () => {
+        console.log("NEXT TRACK")
         let index = this.state.currentTracksID + 1;
         if (index > this.state.tracks.length)
             return ;
@@ -77,10 +78,15 @@ export default class Player extends Component {
     }
 
     playerUpdate = (event) => {
-        updatePlayer(this.props.roomID, event);
+        if (this.props.roomID)
+        {
+            console.log("PLAYER  : playerUpdate")
+            updatePlayer(this.props.roomID, event);
+        }
     }
 
 	render() {
+        console.log("Render  player CONTROL :", this.props , this.state)
         return (
             <Row style={{height:'inherit', margin:'3% 0 0 0'}}>
                 <Col span={3}/>
