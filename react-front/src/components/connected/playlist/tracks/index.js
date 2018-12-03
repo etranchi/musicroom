@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import './styles.css';
 import defaultTrackImg from '../../../../assets/track.png'
 import moment from 'moment'
 import axios from 'axios'
 import { Col, Row, Icon, Layout, Select } from 'antd'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import Player from '../../event/player'
-import { leavePlaylist, joinPlaylist, updatePlaylist, socket, blockSocketEvent } from '../../sockets';
+import Player from '../../../other/player'
+import { leavePlaylist, joinPlaylist, updatePlaylist, socket, blockSocketEvent } from '../../../other/sockets';
 
 const reorder = (list, startIndex, endIndex) => {
 	console.log("IN REORDER")

@@ -94,7 +94,7 @@ export default class PreviewCardEvent extends Component {
         })
     }
 	render() {
-        const userPicture = this.props.event.creator.picture.indexOf("https://") != -1? this.props.event.creator.picture : process.env.REACT_APP_API_URL + "/userPicture/" + this.props.event.creator.picture
+        const userPicture = this.props.event.creator.picture.indexOf("https://") !== -1? this.props.event.creator.picture : process.env.REACT_APP_API_URL + "/userPicture/" + this.props.event.creator.picture
         return (
             <Card
                 className="zoomCard"

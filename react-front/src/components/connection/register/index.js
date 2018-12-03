@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import axios from 'axios'
-import './styles.css';
 import { Icon, Button, Input, Upload, message, Layout, Col, Row, Divider} from 'antd';
 
 

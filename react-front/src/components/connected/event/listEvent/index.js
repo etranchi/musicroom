@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './styles.css';
 import PreviewCard from '../previewCardEvent'
 import { Layout, Spin } from 'antd';
 import axios from 'axios'

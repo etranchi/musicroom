@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import './styles.css';
 import EditSetting from './edit';
 import {Button, Divider, Layout, Col, Row, Card, Avatar, Spin} from 'antd';
 
@@ -60,7 +59,7 @@ class Setting extends Component {
 			return (<EditSetting state={this.props.state} updateState={this.updateState} updateParent={this.props.updateParent}/>)
 		else
 		{
-			let userPicture = this.state.user.picture.indexOf("https://") != -1 ?  this.state.user.picture : process.env.REACT_APP_API_URL + "/userPicture/" + this.state.user.picture
+			let userPicture = this.state.user.picture.indexOf("https://") !== -1 ?  this.state.user.picture : process.env.REACT_APP_API_URL + "/userPicture/" + this.state.user.picture
 			return (
 				<Layout>
 					<Header> <h1>Profil : </h1></Header>
