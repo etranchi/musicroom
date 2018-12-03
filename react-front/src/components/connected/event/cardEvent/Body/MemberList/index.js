@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import './styles.css';
-import SearchBar from '../../../../searchbar';
+import SearchBar from '../../../../../other/searchbar';
 import { List, Card, Avatar, Icon, Col, Row, Layout } from 'antd';
 
 const { Content } = Layout

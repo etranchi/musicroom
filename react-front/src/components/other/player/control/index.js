@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './styles.css';
 import {Row, Col} from 'antd';
-import {socket, updatePlayer} from '../../../sockets'
+import {socket, updatePlayer} from '../../sockets'
 
 const { DZ } = window
 

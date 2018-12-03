@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import LocationSearchInput from '../locationSearchInput'
 import './styles.css';
 import axios from 'axios'
-import SearchBar from '../../searchbar'
+import SearchBar from '../../../other/searchbar'
 import { Avatar, Card, Icon, Button, Input, DatePicker, Upload, message, Divider, Layout, Col, Row, Checkbox} from 'antd';
 
 export default class CreateEvent extends Component {
