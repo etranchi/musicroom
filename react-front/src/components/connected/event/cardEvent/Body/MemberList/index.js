@@ -29,7 +29,7 @@ class MemberList extends Component {
                                 renderItem={item => (
                                     <List.Item>
                                         <Card.Meta
-                                            avatar={<Avatar size={116} src={item.facebookId ? item.picture : process.env.REACT_APP_API_URL + "/userPicture/" + item.picture} />}
+                                            avatar={<Avatar size={116} src={item.picturepicture ? item.picture : process.env.REACT_APP_API_URL + "/userPicture/" + item.picture} />}
                                             title={item.login}
                                             description={item.email}
                                         />

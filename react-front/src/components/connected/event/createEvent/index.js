@@ -81,7 +81,7 @@ export default class CreateEvent extends Component {
                 adminMembers  : []
             }
             data.append('body', JSON.stringify(this.event));
-            axios.post(process.env.REACT_APP_API_URL + '/event/',  data)
+            axios.post(process.env.REACT_APP_API_URL + '/event/',  data, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
             .then((resp) => { 
                 this.info("Evènement crée")
                 this.props.changeView('listEvent')
