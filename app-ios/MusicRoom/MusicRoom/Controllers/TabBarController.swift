@@ -84,7 +84,8 @@ class TabBarController: UITabBarController {
             minimizedPlayer.leadingAnchor.constraint(equalTo: tabBar.leadingAnchor),
             minimizedPlayer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -43),
             
-            
+            playerView.topAnchor.constraint(equalTo: view.topAnchor),
+            playerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             playerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             playerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             
@@ -95,10 +96,6 @@ class TabBarController: UITabBarController {
         ])
         
         playerView.transform = CGAffineTransform(translationX: 0, y: view.bounds.height - offsetY)
-        playerViewTopConstraint = playerView.topAnchor.constraint(equalTo: view.topAnchor)
-        playerViewBottomConstrant = playerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        playerViewTopConstraint.isActive = true
-        playerViewBottomConstrant.isActive = true
         tabViewController0.title = "Your Library"
         tabViewController1.title = "Search"
         tabViewController2.title = "Map"
@@ -128,11 +125,50 @@ class TabBarController: UITabBarController {
             })
         }
     }
+
+    func animatedShowPlayer() {
+        animatedHideTabBar()
+        isPlayerOpened = true
+        UIView.animate(withDuration: 0.25, delay: 0.1, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            playerController.downButton.alpha = 1
+            self.minimizedPlayer.alpha = 0
+        })
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            
+            self.playerView.transform = .identity
+            self.minimizedPlayer.transform = CGAffineTransform(translationX: 0, y: -self.view.bounds.height + self.offsetY)
+            
+        })
+    }
     
-    let             menuHeight = UIScreen.main.bounds.height
-    var             playerViewTopConstraint: NSLayoutConstraint!
-    var             playerViewBottomConstrant: NSLayoutConstraint!
+    func animatedHidePlayer() {
+        isPlayerOpened = false
+        UIView.animate(withDuration: 0.3, delay: 0.1, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            playerController.downButton.alpha = 0
+            self.minimizedPlayer.alpha = 1
+        })
+        animatedShowTabBar()
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.playerView.transform = CGAffineTransform(translationX: 0, y: self.view.bounds.height - self.offsetY)
+            self.minimizedPlayer.transform = .identity
+        })
+    }
     
+    func animatedShowTabBar() {
+        UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.tabBar.transform = .identity
+        })
+    }
+    
+    func animatedHideTabBar() {
+        UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.tabBar.transform = CGAffineTransform(translationX: 0, y: self.offsetY)
+        })
+    }
+    
+    
+    //pan gesture
+    let                 menuHeight = UIScreen.main.bounds.height
     @objc func          handlePan(gesture: UIPanGestureRecognizer) {
         guard currentTrack != nil else { return }
         let             translation = gesture.translation(in: view)
@@ -196,46 +232,5 @@ class TabBarController: UITabBarController {
                 animatedHidePlayer()
             }
         }
-    }
-
-    
-    func animatedShowPlayer() {
-        animatedHideTabBar()
-        isPlayerOpened = true
-        UIView.animate(withDuration: 0.25, delay: 0.1, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-            playerController.downButton.alpha = 1
-            self.minimizedPlayer.alpha = 0
-        })
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-            
-            self.playerView.transform = .identity
-            self.minimizedPlayer.transform = CGAffineTransform(translationX: 0, y: -self.view.bounds.height + self.offsetY)
-            
-        })
-    }
-    
-    func animatedHidePlayer() {
-        isPlayerOpened = false
-        UIView.animate(withDuration: 0.3, delay: 0.1, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-            playerController.downButton.alpha = 0
-            self.minimizedPlayer.alpha = 1
-        })
-        animatedShowTabBar()
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-            self.playerView.transform = CGAffineTransform(translationX: 0, y: self.view.bounds.height - self.offsetY)
-            self.minimizedPlayer.transform = .identity
-        })
-    }
-    
-    func animatedShowTabBar() {
-        UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-            self.tabBar.transform = .identity
-        })
-    }
-    
-    func animatedHideTabBar() {
-        UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-            self.tabBar.transform = CGAffineTransform(translationX: 0, y: self.offsetY)
-        })
     }
 }
