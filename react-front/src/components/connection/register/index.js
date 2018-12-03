@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import axios from 'axios'
-import './styles.css';
 import { Icon, Button, Input, Upload, message, Layout, Col, Row, Divider} from 'antd';
 
 
@@ -41,20 +40,14 @@ class Register extends Component {
 		delete this.state.infoFile
 		data.append('body', JSON.stringify(this.state));
 		axios.post(process.env.REACT_APP_API_URL + '/user', data)
-		.then((resp) => {
-			axios.put(process.env.REACT_APP_API_URL + '/user/confirm', null, {'headers':{'Authorization': 'Bearer '+ resp.data.token}})
-			.then((resp) => {
-				localStorage.setItem('token', resp.data.token);
-				console.log("confirm success");
-				this.props.updateParent({'token':resp.data.token, 'currentComponent': 'event', 'user': resp.data.user});
-			})
-			.catch((err) => {
-				console.log("confirm error -> " + err)
-			})
-
+		.then(() => {
+			message.success("Mail Send !")
+			this.props.updateParent({'currentComponent': 'login'})
 		})
 		.catch((err) => {
+			console.log("error");
 			console.log(err);
+			message.error("Send Mail error");
 		})
 	}
 	handlePicture = (info) => {
@@ -65,9 +58,6 @@ class Register extends Component {
         }
         this.getBase64(info.file.originFileObj, imageUrl => this.setState({ imageUrl, loading: false}));
       }
-    info = (text) => {
-        message.info(text);
-      };
     getBase64 = (img, callback) => {
         const reader = new FileReader();
         reader.addEventListener('load', () => callback(reader.result));

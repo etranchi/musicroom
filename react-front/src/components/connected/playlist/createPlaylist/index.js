@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import './styles.css';
 import { Input, Row, Col, Divider, Button } from 'antd'
 import axios from 'axios'
-import SearchBar from '../../searchbar'
+import SearchBar from '../../../other/searchbar'
 import Track from '../../../templates/track'
 
 class CreatePlaylist extends Component {

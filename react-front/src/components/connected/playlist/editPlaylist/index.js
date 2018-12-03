@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './styles.css';
 import axios from 'axios'
 import { Input, Button, Col, Row } from 'antd'
 
@@ -49,7 +48,7 @@ class EditPlaylist extends Component {
 	}
 
 	delete = () => {
-		axios.delete(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id,
+		axios.delete(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id || this.state.playlist.id,
 			{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}}
 		)
 		.then(resp => {

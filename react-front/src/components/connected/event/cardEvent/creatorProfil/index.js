@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import './styles.css';
 import { Divider, Card, Avatar, Modal, Icon, Col, Row, Input} from 'antd';
-import {updateEvent} from '../../../sockets';
+import {updateEvent} from '../../../../other/sockets';
 
 class CreatorProfil extends Component {
     

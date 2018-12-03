@@ -3,7 +3,7 @@ import './styles.css';
 import defaultImage from '../../../../assets/playlist.png'
 import axios from 'axios'
 import {Button, Row, Col} from 'antd'
-import SearchBar from '../../searchbar'
+import SearchBar from '../../../other/searchbar'
 
 class List extends Component {
 	constructor(props) {

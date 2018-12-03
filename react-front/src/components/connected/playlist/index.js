@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './styles.css';
 import List from './list'
 import Tracks from './tracks'
 import CreatePlaylist from './createPlaylist'

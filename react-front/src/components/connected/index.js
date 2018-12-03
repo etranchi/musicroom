@@ -4,7 +4,6 @@ import Event from './event'
 import Playlist from './playlist'
 import Setting from './setting'
 import axios from 'axios'
-import './styles.css';
 
 export default class Connected extends Component {
 	constructor(props){
