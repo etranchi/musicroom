@@ -16,6 +16,7 @@ export default class Player extends Component {
         this.setState(value)
     }
 	render() {
+        console.log("Render  player :")
         return ( 
             <div className='player' style={{backgroundColor:this.props.color ? this.props.color : 'white'}}>
                 <div className='defaultComponentProperty default'> 

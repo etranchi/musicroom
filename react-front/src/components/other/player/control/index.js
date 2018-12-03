@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './styles.css';
 import {Row, Col} from 'antd';
-import {socket, updatePlayer} from '../../../sockets'
+import {socket, updatePlayer} from '../../sockets'
 
 const { DZ } = window
 
@@ -60,6 +60,7 @@ export default class Player extends Component {
         console.log("play/pause");
     }
     nextTrack = () => {
+        console.log("NEXT TRACK")
         let index = this.state.currentTracksID + 1;
         if (index > this.state.tracks.length)
             return ;

@@ -3,8 +3,8 @@ import './styles.css';
 import Track from '../../../templates/track'
 import { Col, Row } from 'antd'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import Player from '../../event/player'
-import {socket, getRoomPlaylist, updateScore, updateTracks, updateTrack, blockSocketEvent} from '../../sockets';
+import Player from '../../../other/player'
+import {socket, getRoomPlaylist, updateScore, updateTracks, updateTrack, blockSocketEvent} from '../../../other/sockets';;
 
 const reorder = (list, startIndex, endIndex) => {
 	const result = Array.from(list);

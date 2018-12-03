@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import './styles.css';
-import SearchBar from '../../../searchbar';
+import SearchBar from '../../../../other/searchbar';
 import LocationSearchInput from '../../locationSearchInput'
 import MemberList  from './MemberList';
 import {Divider, Icon, Col, Row, Modal, Input, DatePicker } from 'antd';
-import Player from '../../player'
+import Player from '../../../../other/player'
 import axios from 'axios'
-import { updateEvent, updateTracks } from '../../../sockets';
+import { updateEvent, updateTracks } from '../../../../other/sockets';
 
 
 export default class Body extends Component {

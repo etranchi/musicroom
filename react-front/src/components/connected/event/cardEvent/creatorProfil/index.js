@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import './styles.css';
 import { Divider, Card, Avatar, Modal, Icon, Col, Row, Input} from 'antd';
-import {updateEvent} from '../../../sockets';
+import {updateEvent} from '../../../../other/sockets';
 
 class CreatorProfil extends Component {
     
@@ -31,7 +30,7 @@ class CreatorProfil extends Component {
         this.setState({visible: false});
     }
 	render() {
-        let userPicture = this.props.state.data.event.creator.facebookId ? this.props.state.data.event.creator.picture : process.env.REACT_APP_API_URL + "/userPicture/" + this.props.state.data.event.creator.picture
+        let userPicture = this.props.state.data.event.creator.picture.indexOf("https://") !== -1 ? this.props.state.data.event.creator.picture : process.env.REACT_APP_API_URL + "/userPicture/" + this.props.state.data.event.creator.picture
         return (
             <div>
             <Row >

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './styles.css';
 import { Layout, Row, Col, Divider, Spin } from 'antd';
 import axios from 'axios'
 import PreviewCard from '../previewCardEvent'
@@ -18,7 +17,7 @@ export default class listCloseEvent extends Component {
     }
     componentWillMount = () => {
         window.scrollTo(700, 700)
-		axios.get(process.env.REACT_APP_API_URL + '/event')
+		axios.get(process.env.REACT_APP_API_URL + '/event', {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
 		.then((resp) => {
             this.setState({events: resp.data.allEvents.reverse()}, () => {
                 this.setState({loading:false});

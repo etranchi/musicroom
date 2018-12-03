@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './styles.css';
 import PreviewCard from '../previewCardEvent'
 import { Layout, Spin } from 'antd';
 import axios from 'axios'
@@ -25,7 +24,7 @@ export default class ListEvent extends Component {
 		});
 	}
 	getEvents = callback => {
-		axios.get(process.env.REACT_APP_API_URL + '/event')
+		axios.get(process.env.REACT_APP_API_URL + '/event', {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
 		.then(resp => {
 			if (callback)
 				callback(resp.data);

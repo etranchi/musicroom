@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import LocationSearchInput from '../locationSearchInput'
 import './styles.css';
 import axios from 'axios'
-import SearchBar from '../../searchbar'
+import SearchBar from '../../../other/searchbar'
 import { Avatar, Card, Icon, Button, Input, DatePicker, Upload, message, Divider, Layout, Col, Row, Checkbox} from 'antd';
 
 export default class CreateEvent extends Component {
@@ -81,7 +81,7 @@ export default class CreateEvent extends Component {
                 adminMembers  : []
             }
             data.append('body', JSON.stringify(this.event));
-            axios.post(process.env.REACT_APP_API_URL + '/event/',  data)
+            axios.post(process.env.REACT_APP_API_URL + '/event/',  data, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
             .then((resp) => { 
                 this.info("Evènement crée")
                 this.props.changeView('listEvent')
