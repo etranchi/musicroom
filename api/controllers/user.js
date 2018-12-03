@@ -222,7 +222,8 @@ exports.forgotPassword = async (req, res, next) => {
 		console.log(newPass)
 		let user = await model.findOneAndUpdate({email: req.body.email, status: 'Active'}, {password: await argon.hash(newPass)}, {new: true})
 		if (user) {
-			mail.sendMail("[MusicRoom] New password", "<p>Your new password is " + newPass + "</p>")
+			console.log(user)
+			mail.sendMail("[MusicRoom] New password", "<p>Your new password is " + newPass + "</p>", user.email)
 		}
 		res.status(200).send({message: "Mail send (if account exist and already validate)"})
 	} catch (err) {

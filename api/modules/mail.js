@@ -19,7 +19,7 @@ const logger = winston.createLogger({
 });
 
 class Mail {
-    static sendMail(subject, html) {
+    static sendMail(subject, html, to) {
         const transporter = nodemailer.createTransport({
             service: config.mail.service,
             auth: {
@@ -30,7 +30,7 @@ class Mail {
 
         let mailOptions = {
             from: config.mail.email, // sender address
-            to: config.mail.email, // list of receivers
+            to: to, // list of receivers
             subject: subject, // Subject line
             html: html // plain text body
         };
