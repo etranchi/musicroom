@@ -51,7 +51,23 @@ module.exports = {
 	},
 	getEventById: async (req, res, next) => {
 		try {
-			res.status(200).json(await modelEvent.findOne({'_id':req.params.id}));
+			let event = await modelEvent
+				.findOne({$and: [{_id: req.params.id}, {$or: [
+					{adminMembers:
+						{$elemMatch:
+							{_id: req.user._id}
+						}
+					},
+					{members:
+						{$elemMatch:
+							{_id: req.user._id}
+						}
+					},
+					{'creator._id': {$eq: req.user._id}},
+					{public: true}
+				]}]}
+			)
+			res.status(200).json(event || {})
 		} catch (err) {
 			next(new customError(err.message, 400))
 		}
@@ -83,7 +99,7 @@ module.exports = {
 			if (!req.body.description)
 				throw new Error('No description')
 			let user = await modelEvent
-				.find({$and: [{_id: req.params.id}, {$or: [
+				.findOne({$and: [{_id: req.params.id}, {$or: [
 					{adminMembers:
 						{$elemMatch:
 							{_id: req.user._id}
