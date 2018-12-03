@@ -100,7 +100,9 @@ exports.postUser = async (req, res, next) => {
 		// 	else
 		// 	  console.log(info);
 		//  });
-		res.status(201).send({'token': Crypto.createToken(user)})
+		console.log(config.front_url + "/user/confirm/" + Crypto.createToken(user));
+		mail.sendMail("[MusicRoom] Confirm mail", "<a href='" + config.front_url + "/user/confirm/" + Crypto.createToken(user) + "'>click on this link to confirm</a>", user.email)
+		res.status(201).send();
 	} catch (err) {
 		console.error("Error postUser : " + err.toString());
 		if (err.code == 11000)
@@ -205,9 +207,9 @@ exports.resendMail = async (req, res, next) => {
 		if (user) {
 			let token =  Crypto.createToken(user);
 			// RESEND MAIL FrontUrl/token
-
+			mail.sendMail("[MusicRoom] Confirm mail", "<a href='" + config.front_url + "/user/confirm/" + token + "'>click on this link to confirm</a>", user.email)
 			// TO DEL WHEN MAIL OK
-			return res.status(200).send({token});
+			// return res.status(200).send({token});
 		}
 		res.status(202).send({message: "Mail send (if account exist and not already validate)"})
 	} catch (err) {
