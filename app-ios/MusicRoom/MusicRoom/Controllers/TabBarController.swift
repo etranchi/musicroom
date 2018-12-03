@@ -143,9 +143,10 @@ class TabBarController: UITabBarController {
             playerView.transform = CGAffineTransform(translationX: 0, y: self.view.bounds.height - self.offsetY + y)
             tabBar.transform = CGAffineTransform(translationX: 0, y: -y * 0.1)
             minimizedPlayer.transform = CGAffineTransform(translationX: 0, y: y)
-//            if y > -100 {
-//                minimizedPlayer.alpha = abs(y / 100)
-//            }
+            if y > -100 {
+                minimizedPlayer.alpha = 1 + y / 100
+                playerController.downButton.alpha = y / 100
+            }
         }
         if gesture.state == .ended {
             handleEnded(gesture)
