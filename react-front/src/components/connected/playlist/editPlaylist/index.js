@@ -49,7 +49,7 @@ class EditPlaylist extends Component {
 	}
 
 	delete = () => {
-		axios.delete(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id || this.state.playlist.id,
+		axios.delete(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id,
 			{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}}
 		)
 		.then(resp => {
@@ -59,6 +59,10 @@ class EditPlaylist extends Component {
 			console.log(err);
 		})
 	}
+
+	addTrack = (item) => {
+    	this.setState({ tracks: [...this.state.tracks, item] })
+    }
 
 	render() {
 		console.log(this.state.playlist);
