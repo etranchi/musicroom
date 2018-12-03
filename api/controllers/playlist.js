@@ -1,16 +1,17 @@
 const playlistModel 	= require('../models/playlist');
 const config 			= require('../config/config');
 const request 			= require('request-promise');
+const customError = require('../modules/customError');
 
 module.exports = { 
-	getPlaylists: async (req, res) => {
+	getPlaylists: async (req, res, next) => {
 		try {
 			res.status(200).json(await playlistModel.find())
 		} catch (err) {
-			res.status(400).json(err)
+			next(new customError(err.message, 400))
 		}
 	},
-	getPlaylistsByUser: async (req, res) => {
+	getPlaylistsByUser: async (req, res, next) => {
 		try {
 			let localPlaylists = await playlistModel.find({idUser: req.user._id})
 			let options = {
@@ -26,20 +27,23 @@ module.exports = {
 				localPlaylists = [...localPlaylists, ...deezerPlaylists.data]
 			res.status(200).json(localPlaylists)
 		} catch (err) {
-			res.status(400).json(err)
+			next(new customError(err.message, 400))
 		}
 	},
-	getPlaylistById: async (req, res) => {
+	getPlaylistById: async (req, res, next) => {
 		try {
 			let playlist = {}
 			if (!Number(req.params.id))
 				playlist = await playlistModel.findOne({'_id': req.params.id})
 			else {
+				
 				let options = {
 					method: 'GET',
 					uri: config.deezer.apiUrl + '/playlist/' + req.params.id,
 					json: true
 				};
+				if (req.user.deezerToken)
+				options.qs = {"access_token": req.user.deezerToken};
 				playlist = await request(options)
 				if (playlist.id) {
 					return res.status(200).json(playlist);
@@ -49,10 +53,10 @@ module.exports = {
 			res.status(200).json(playlist || {});
 		} catch (err) {
 			console.log("Bad Request getPlaylistUserById" + err)
-			res.status(400).json(err);
+			next(new customError(err.message, 400));
 		}
 	},
-	getPlaylistUserById: async (req, res) => {
+	getPlaylistUserById: async (req, res, next) => {
 		try {
 			let playlist = {}
 			if (!Number(req.params.id))
@@ -72,13 +76,15 @@ module.exports = {
 			res.status(200).json(playlist || {});
 		} catch (err) {
 			console.log("Bad Request getPlaylistUserById" + err)
-			res.status(400).json(err);
+			next(new customError(err.message, 400))
 		}
 	},
-	postPlaylist: async (req, res) => {
+	postPlaylist: async (req, res, next) => {
 		console.log('posting playlist');
 		try {
 			req.body.idUser = req.user._id
+			if (!req.body.title)
+				throw new Error('No title')
 			if (!req.body.creator)
 			{
 				req.body.creator = {
@@ -93,19 +99,19 @@ module.exports = {
 			res.status(201).json(playlist);
 		} catch (err) {
 			console.log(err)
-			res.status(400).json(err);
+			next(new customError(err.message, 400))
 		}
 	},
-	putPlaylistById: async (req, res) => {
+	putPlaylistById: async (req, res, next) => {
 		try {
 			playlist = await playlistModel.findOneAndUpdate({_id: req.params.id, idUser: req.user._id}, req.body, {new: true})
 			res.status(200).json(playlist);
 		} catch (err) {
 			console.log("Bad Request putPlaylistById" + err)
-			res.status(400).send(err);
+			next(new customError(err.message, 400))
 		}
 	},
-	addTrackToPlaylistById: async (req, res) => {
+	addTrackToPlaylistById: async (req, res, next) => {
 		try {
 			if (!Number(req.params.id)) {
 				let options = {
@@ -141,19 +147,19 @@ module.exports = {
 			res.status(200).send({message: 'Track added'});
 		} catch (err) {
 			console.log("Bad Request addTrackToPlaylistById" + err)
-			res.status(400).send(err);
+			next(new customError(err.message, 400))
 		}
 	},
-	deletePlaylistById: async (req, res) => {
+	deletePlaylistById: async (req, res, next) => {
 		try {
 			await playlistModel.deleteOne({_id: req.params.id, idUser: req.user._id})
 			res.status(204).json({message: 'PLaylist deleted'});
 		} catch (err) {
 			console.log("Bad Request deletePlaylistById" + err)
-			res.status(400).send(err);
+			next(new customError(err.message, 400))
 		}
 	},
-	deleteTrackPlaylistById: async (req, res) => {
+	deleteTrackPlaylistById: async (req, res, next) => {
 		
 		try {
 			console.log("Body SWIFT -> ")
@@ -179,7 +185,7 @@ module.exports = {
 			res.status(204).json({message: 'Track deleted'});
 		} catch (err) {
 			console.log("Bad Request deletePlaylistById" + err)
-			res.status(400).send(err);
+			next(new customError(err.message, 400))
 		}
 	}
 };

@@ -4,22 +4,19 @@ import SearchBar from '../../../searchbar';
 import LocationSearchInput from '../../locationSearchInput'
 import MemberList  from './MemberList';
 import {Divider, Icon, Col, Row, Modal, Input, DatePicker } from 'antd';
-import PersonalPlayer from '../../personalPlayer'
+import Player from '../../player'
 import axios from 'axios'
-import {updateEvent} from '../../../sockets';
+import { updateEvent, updateTracks } from '../../../sockets';
 
 
-class Body extends Component {
-        constructor(props) {
-            super(props);
-
+export default class Body extends Component {
+    constructor(props) {
+        super(props);
         this.state = {
             playlistId : this.props.state.data.event.playlist && this.props.state.data.event.playlist.id ? this.props.state.data.event.playlist.id : null
         }
         this.roomID =  this.props.state.data.event._id
-
     }
-
     componentDidMount = () => {
         this.setState({formatDate: this.formatDateAnnounce(this.props.state.data.event.event_date)})
     }
@@ -72,6 +69,7 @@ class Body extends Component {
                 this.props.updateParent({'data' : this.props.state.data, 'playlistId':playlist.id})
                 console.log("Playlist change, socket update Event")
                 updateEvent(this.roomID, this.props.state.data.event)
+                updateTracks(this.roomID, this.props.state.data.event.playlist.tracks.data)
                 this.setState({playlistId:playlist.id})         
             })
             .catch((err) => { console.log("Wrong Playlist id.", err); })  
@@ -202,7 +200,7 @@ class Body extends Component {
                     :
                     null
                 }
-                { this.state.playlistId  && this.props.state.data.event.playlist.tracks.data.length > 0 ? <PersonalPlayer  tracks={this.props.state.data.event.playlist.tracks.data}/> : null} 
+                { this.state.playlistId  && this.props.state.data.event.playlist.tracks.data.length > 0 ? <Player  tracks={this.props.state.data.event.playlist.tracks.data} roomID={this.props.state.data.event._id}/> : null} 
                 {/* Modal for description modification  */}
                 <Modal title="Description : " visible={this.state.modDesc} onOk={this.handleOk.bind(this, "modDesc")} onCancel={this.handleCancel.bind(this, "modDesc")} >
                     <Input.TextArea  placeholder="Descriptif de l'évènement : " name= "description" value={this.props.state.data.event.description} onChange={this.handleChangeModal}/> 
@@ -240,4 +238,3 @@ class Body extends Component {
   }
 }
 
-export default Body;

@@ -30,7 +30,6 @@ class SearchBar extends Component {
 		this.setState({value:value}, () => {
 				axios.get(process.env.REACT_APP_API_URL + '/search/track?q='+ value)
 				.then((resp) => {
-					console.log(resp);
 					this.setState({'list': resp.data.data || []});
 				})
 				.catch((err) => {
@@ -48,7 +47,6 @@ class SearchBar extends Component {
 			this.setState({'value': value});
 			axios.get(process.env.REACT_APP_API_URL + '/search/playlist?q='+ value)
 			.then((resp) => {
-				console.log(resp);
 				this.setState({'list': resp.data.data || []});
 			})
 			.catch((err) => {
@@ -118,14 +116,22 @@ class SearchBar extends Component {
 	}
 
 	addTrack = (item) => {
-		this.setState({
-			value: '',
-			list: [],
-			glbUserList: [],
-			position: 0
-		}, () => {
-			this.props.addTrack(item)		
+		axios.get(process.env.REACT_APP_API_URL + '/track/' + item.id)
+		.then(resp => {
+			this.setState({
+				value: '',
+				list: [],
+				glbUserList: [],
+				position: 0
+			}, () => {
+				this.props.addTrack(resp.data);
+			})
 		})
+		.catch(err => {
+			console.log("searchbar get track error");
+			console.log(err);
+		})
+		
 	}
 
 	render() {

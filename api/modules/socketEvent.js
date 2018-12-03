@@ -24,23 +24,26 @@ module.exports = function (io) {
                 console.log("BLOCK PLAYLIST EVENT")
                 setTimeout(() => {
                     if (playlistBlocked.indexOf(playlistId) !== -1) {
-                        socket.to(playlistId).emit('playlistUpdated');
+                        io.in(playlistId).emit('playlistUpdated');
                         console.log("UNLOCK")
                     }
                 }, 5000)
-                socket.to(playlistId).emit('blockPlaylist')
-            } else {
-                socket.to(playlistId).emit('alreadyBlocked')
             }
+            socket.to(playlistId).emit('blockPlaylist')
         });
 
         socket.on('joinPlaylist', (playlistId) => {
             console.log("[Socket] -> joinPlaylist", playlistId)
             socket.join(playlistId);
+            console.log("Nb clients in room " + playlistId + " -> " + io.sockets.adapter.rooms[playlistId].length)
         });
         socket.on('leavePlaylist', (playlistId) => {
             console.log("[Socket] -> leavePlaylist")
             socket.leave(playlistId);
+            if (io.sockets.adapter.rooms[playlistId])
+                console.log("Nb clients in room " + playlistId + " -> " + io.sockets.adapter.rooms[playlistId].length)
+            else
+                console.log("No more room for " + playlistId)
         });
 
 
@@ -52,9 +55,15 @@ module.exports = function (io) {
 
             let room = ftSocket.getRoom(roomID);
             if (room)
+            {
+                console.log("[Socket] -> getRoomPlaylist ", room.tracks.length)
                 io.sockets.in(room.id).emit('getRoomPlaylist', room.tracks)
+            }
             else
+            {
+                console.log("[Socket] -> getRoomPlaylist fail ")
                 return;
+            }
         });
 
         socket.on('createRoom', (roomID, tracks, event) => {
@@ -64,6 +73,7 @@ module.exports = function (io) {
             if (!room) {
                 console.log("[Socket] ->  Room Created")
                 room = ftSocket.createRoom(roomID, tracks, event)
+                socket.join(room.id);
                 io.sockets.in(room.id).emit('createRoom', room.tracks, "ok")
             } else {
                 console.log("[Socket] ->  Room Exist")
@@ -91,21 +101,39 @@ module.exports = function (io) {
             let room = ftSocket.getRoom(roomID)
             if (room) {
                 room.tracks = tracks
-                room = ftSocket.updateRoom(room)
+                console.log(tracks[0], tracks[1])
+                // room = ftSocket.updateRoom(room)
                 io.sockets.in(room.id).emit('updateScore', room.tracks)
             } else
                 return io.sockets.in(room.id).emit('updateTracks', 'fail');
         });
-        socket.on('updateScore', (roomID, trackID, points) => {
+        socket.on('updateTrack', (roomID, track) => {
+            let room = ftSocket.getRoom(roomID)
+            if (room) {
+                room.tracks.forEach(music => {
+                    if (music._id === track._id)
+                    {
+                        console.log("track Updated")
+                        music = track
+                    }
+                    
+                });
+            }
+        });
+        socket.on('updateScore', (roomID, trackID, points, userID) => {
             console.log("[Socket] -> updateScore")
 
             let room = ftSocket.getRoom(roomID)
             if (room) {
-                room = ftSocket.updateScore(room, trackID, points)
+                console.log("[Socket] -> updateScore ", room.tracks.length)
+                room = ftSocket.updateScore(room, trackID, points, userID)
                 room = ftSocket.updateRoom(room)
                 io.sockets.in(room.id).emit('updateScore', room.tracks)
             } else
+            {
+                console.log("[Socket] -> updateScore fail")
                 return io.sockets.in(room.id).emit('updateScore', 'fail');
+            }
         });
         /* Socket for update socket and send new value */
         socket.on('updateEvent', (roomID, newEvent) => {

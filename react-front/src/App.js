@@ -28,11 +28,11 @@ class App extends Component {
 
   updateState = (val) => {
     
-    console.log("old state ->");
-    console.log(this.state);
-    console.log("new state ->");
-    console.log(val);
-    console.log('end update parent');
+    // console.log("old state ->");
+    // console.log(this.state);
+    // console.log("new state ->");
+    // console.log(val);
+    // console.log('end update parent');
     this.setState(val);
   }
   componentDidUpdate= () => {
@@ -60,8 +60,8 @@ class App extends Component {
   }
   render() {
     const token = localStorage.getItem('token')
-    console.log("app render state -> ");
-    console.log(this.state);
+    // console.log("app render state -> ");
+    // console.log(this.state);
     return (
         <Layout className="App">
           <Header className="HeaderApp">

@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import './styles.css';
 import Track from '../../../templates/track'
-import axios from 'axios'
 import { Col, Row } from 'antd'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import PersonalPlayer from '../../event/personalPlayer'
-import {socket, getRoomPlaylist, updateScore} from '../../sockets';
+import Player from '../../event/player'
+import {socket, getRoomPlaylist, updateScore, updateTracks, updateTrack, blockSocketEvent} from '../../sockets';
 
 const reorder = (list, startIndex, endIndex) => {
 	const result = Array.from(list);
@@ -22,24 +21,35 @@ export default class LiveEvent extends Component {
             playlist: [],
             initLoading: true,
             loading: false,
-            isBlocked: false
+            isBlocked: false,
+            rotate: {
+                active:false,
+                id: 0
+            },
+            isCreator: false,
+            isAdmin: false,
         };
         this.roomID = this.props.roomID;
-        console.log("live event constructor");
     }
     componentDidMount = () => {
-        socket.on('createEventLive', (tracks) => {
-            this.sortTracks(tracks);
-        });
         socket.on('getRoomPlaylist', (tracks) => {
-            console.log("getRoomPlaylist -> ", tracks)
+            console.log("socket : receive data from getRoomPlaylist : ", tracks)
             this.savePlaylist(tracks);
+        });
+        socket.on('updateTrack', (msg) => {
+            console.log("socket : receive data from updateTrack : ")
         });
         socket.on('updateScore', (tracks) => {
+            console.log("socket : receive data from updateScore : ", tracks)
+            this.setState({rotate: {active:false, id:0, liked: false}});
             this.savePlaylist(tracks);
         });
-
         /**************************************/
+        if (this.props.state.data.event.creator.email === this.props.state.user.email)
+            this.setState({isCreator:true})
+        else  {
+            this.setState({ isAdmin:this.isUser(this.props.state.data.event.adminMembers) })
+        }
     }
     componentWillMount = () => {
         this.setState({
@@ -54,37 +64,48 @@ export default class LiveEvent extends Component {
         playlist.tracks.data = tracks;
         this.setState({playlist:playlist});
     }
-    callSocket = (type, id, value) => {
-        if (type === 'updateScore') {
-            updateScore(this.roomID, id, value)
+    isUser = tab => 
+    {
+        for (let i = 0; i < tab.length; i++) {
+            if (tab[i].email === this.props.state.user.email)
+                return true;
         }
+        return false;
     }
-    onDragEnd = (result) => {
+    callSocket = (type, OldTrack, value) => {
+
+        let me          = this.props.state.user;
+        let index       = -1;
+
+        if      (OldTrack.userLike   && (index = OldTrack.userLike.indexOf(me._id)) !== -1)   OldTrack.userLike.splice(0, index)
+        else if (OldTrack.userUnLike && (index = OldTrack.userUnLike.indexOf(me._id)) !== -1) OldTrack.userUnLike.splice(0, index)
+        updateTrack(this.roomID,  OldTrack)
+        this.setState({rotate: {active:true, id:OldTrack._id, liked: value > 0 ? true : false}}, () => {
+            updateScore(this.roomID, OldTrack._id, value, this.props.state.user._id)
+        })
+
+    }
+    onDragStart = () => {
+        blockSocketEvent(this.roomID)
+	}
+	onDragEnd = (result) => {
         if (!result.destination) return;
-        let state = this.state;
-        const items = reorder(
-            this.state.playlist.tracks.data,
-            result.source.index,
-            result.destination.index
-        );
+		let state = this.state;
+		const items = reorder( this.state.playlist.tracks.data, result.source.index, result.destination.index );
         state.playlist.tracks.data = items;
-        axios.put(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id, 
-            this.state.playlist,
-            {'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}}
-        )
-        .then(resp => {
-            this.setState(items);
-        })
-        .catch(err => {
-            console.log(err);
-        })
-    }
+        updateTracks(this.roomID, items)
+	}
     render() {
         return (
             <div>
                 <Row>
+                    <Col span={8}> 
+                        <a href="#!" className="btn waves-effect waves-teal" onClick={this.props.openCardEvent.bind(this, this.props.state.data.event)}>Back</a> 
+                    </Col> 
+                </Row>
+                <Row>
                     <Col span={24}>
-                        {this.state.playlist.tracks.data.length > 0 && <PersonalPlayer  tracks={this.state.playlist.tracks.data} roomID={this.props.roomID}></PersonalPlayer>}
+                        {this.state.playlist.tracks.data.length > 0 && <Player  tracks={this.state.playlist.tracks.data} roomID={this.props.roomID}/>}
                     </Col>
                 </Row>
                 <br/>
@@ -95,7 +116,7 @@ export default class LiveEvent extends Component {
                     <Col span={6}/>
                     <Col span={12}>
                         <DragDropContext onDragEnd={this.onDragEnd}>
-                            <Droppable droppableId="droppable" isDropDisabled={this.state.isBlocked}>
+                            <Droppable droppableId="droppable" isDragDisabled={!(this.state.isAdmin || this.state.isCreator)} isDropDisabled={!(this.state.isAdmin || this.state.isCreator)} >
                             {
                                 (provided, snapshot) =>  (
                                     <Row>
@@ -107,12 +128,11 @@ export default class LiveEvent extends Component {
                                                         {
                                                             (provided, snapshot) => (
                                                                 <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} >
-                                                                    <Track track={item} callSocket={this.callSocket}/>
+                                                                    <Track userID={this.props.state.user._id} rotate={this.state.rotate} order={index} track={item} callSocket={this.callSocket}/>
                                                                 </div>
                                                             )
                                                         }
                                                         </Draggable>
-                                                    {/* </li> */}
                                                     </Col>
                                                 ))
                                             }

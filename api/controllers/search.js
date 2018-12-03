@@ -1,11 +1,11 @@
 const config = require('../config/config');
 const request = require('request');
-
+const customError = require('../modules/customError');
 
 const moduleUrl = '/search';
 
 module.exports = {
-	search: (req, res) => {
+	search: (req, res, next) => {
 		if (Object.keys(req.query).length === 0)
 			res.status(400).json("error");
 		console.log(req.query);
@@ -14,11 +14,11 @@ module.exports = {
 			{uri: config.deezer.apiUrl + moduleUrl + '?q=' + req.query.q},
 			(err, head, body) => {
 				if (err)
-					res.json(err)
+					next(new customError(err.message, err.code))
 				res.json(JSON.parse(body));
 			})
 	},
-	searchAlbum: (req, res) => {
+	searchAlbum: (req, res, next) => {
 		if (Object.keys(req.query).length === 0)
 			res.status(400).json("error");
 		console.log(req.query);
@@ -27,11 +27,11 @@ module.exports = {
 			{uri: config.deezer.apiUrl + moduleUrl + '/album ' + '?q=' + req.query.q},
 			(err, head, body) => {
 				if (err)
-					res.json(err)
+					next(new customError(err.message, err.code))
 				res.json(JSON.parse(body));
 			})
 	},
-	searchTrack: (req, res) => {
+	searchTrack: (req, res, next) => {
 		if (Object.keys(req.query).length === 0)
 			res.status(400).json("error");
 		console.log(req.query);
@@ -40,11 +40,11 @@ module.exports = {
 			{uri: config.deezer.apiUrl + moduleUrl + '/track ' + '?q=' + req.query.q},
 			(err, head, body) => {
 				if (err)
-					res.json(err)
+					next(new customError(err.message, err.code))
 				res.json(JSON.parse(body));
 			})
 	},
-	searchPlaylist: (req, res) => {
+	searchPlaylist: (req, res, next) => {
 		if (Object.keys(req.query).length === 0)
 			res.status(400).json("error");
 		console.log(req.query);
@@ -53,11 +53,11 @@ module.exports = {
 			{uri: config.deezer.apiUrl + moduleUrl + '/playlist ' + '?q=' + req.query.q},
 			(err, head, body) => {
 				if (err)
-					res.json(err)
+					next(new customError(err.message, err.code))
 				res.json(JSON.parse(body));
 			})
 	},
-	searchArtist: (req, res) => {
+	searchArtist: (req, res, next) => {
 		if (Object.keys(req.query).length === 0)
 			res.status(400).json("error");
 		console.log(req.query);
@@ -66,7 +66,7 @@ module.exports = {
 			{uri: config.deezer.apiUrl + moduleUrl + '/artist ' + '?q=' + req.query.q},
 			(err, head, body) => {
 				if (err)
-					res.json(err)
+					next(new customError(err.message, err.code))
 				res.json(JSON.parse(body));
 			})
 	}

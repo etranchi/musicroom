@@ -3,9 +3,9 @@ import './styles.css';
 import defaultTrackImg from '../../../../assets/track.png'
 import moment from 'moment'
 import axios from 'axios'
-import { Col, Row, Icon, Layout } from 'antd'
+import { Col, Row, Icon, Layout, Select } from 'antd'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import PersonalPlayer from '../../event/personalPlayer'
+import Player from '../../event/player'
 import { leavePlaylist, joinPlaylist, updatePlaylist, socket, blockSocketEvent } from '../../sockets';
 
 const reorder = (list, startIndex, endIndex) => {
@@ -24,22 +24,13 @@ class Tracks extends Component {
 			playlist: {title:'',tracks:{data:[]}},
 			initLoading: true,
 			loading: false,
-			isBlocked: true
+			isBlocked: true,
+			playlists:[]
 		}
 	}
 	componentDidMount() {
 		socket.on('blockPlaylist', () => {
 			console.log("JE BLOCK LA PLAYLIST POUR TOUS LES AUTRES")
-			this.getPlaylist((res) => {
-				this.setState({
-				initLoading: false,
-				playlist: res.data,
-				isBlocked: true
-				});
-			});
-		})
-		socket.on('alreadyBlocked', () => {
-			console.log("LA PLAYLIST EST LOCK")
 			this.getPlaylist((res) => {
 				this.setState({
 				initLoading: false,
@@ -58,6 +49,12 @@ class Tracks extends Component {
 				});
 			});
 		})
+		this.getPlaylists((res) => {
+			this.setState({
+			  playlists: res.data,
+			});
+		});
+
 		this.getPlaylist((res) => {
 			res.data._id && joinPlaylist(res.data._id)
 			this.setState({
@@ -66,6 +63,8 @@ class Tracks extends Component {
 			  isBlocked: !res.data._id
 			});
 		});
+
+		
 		
 	}
 
@@ -80,6 +79,20 @@ class Tracks extends Component {
 		})
 		.catch((err) => {
 			this.setState({playlist:{tracks: {data:[]}}, isloading:false})
+			console.log('Playlist error');
+			console.log(err);
+		})
+	}
+
+	getPlaylists = (callback) => {
+		axios.get(process.env.REACT_APP_API_URL + '/playlist', {'headers':{'Authorization': 'Bearer ' + localStorage.getItem('token')}})
+		.then((resp) => {
+			console.log("get playlists");
+			console.log(resp.data);
+			callback(resp)
+		})
+		.catch((err) => {
+			this.setState({playlists: [], loading:false})
 			console.log('Playlist error');
 			console.log(err);
 		})
@@ -145,15 +158,33 @@ class Tracks extends Component {
 			{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}}
 		)
 		.then(resp => {
+			updatePlaylist(this.state.playlist._id)
 			this.setState(items);
 		})
 		.catch(err => {
 			console.log(err);
 		})
-		updatePlaylist(this.state.playlist._id)
 	}
+	handleChange = (array) => {
+		console.log("change");
+		console.log(this.state.playlist);
+		console.log(array);
+
+		axios.put(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlists[array[0]]._id + '/track',
+		 {id: array[1].id},
+		 {'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
+		.then(resp => {
+			console.log("resp -> ");
+			console.log(resp);
+		})
+		.catch(err => {
+			console.log("error -> ");
+			console.log(err);
+		})
+	  }
 
 	render() {
+		console.log(this.state);
 		return(
 		<div>
 			
@@ -166,7 +197,7 @@ class Tracks extends Component {
 				</Col>
 			</Row>
 			<Layout.Content>
-				<h3 style={{'textAlign':'center', 'font-size': '20px'}}>{this.state.playlist.title}</h3>
+				<h3 style={{'textAlign':'center', 'fontSize': '20px'}}>{this.state.playlist.title}</h3>
 				<DragDropContext onDragEnd={this.onDragEnd} onDragStart={this.onDragStart}>
 				<Droppable droppableId="droppable" isDragDisabled={this.state.isBlocked} isDropDisabled={this.state.isBlocked}>
 				{(provided, snapshot) => (
@@ -175,7 +206,7 @@ class Tracks extends Component {
 					>
 					<ul className="collection">
 					{this.state.playlist.tracks.data.map((item, index) => (
-						<li className="collection-item avatar">
+						<li className="collection-item avatar" key={index}>
 						<Draggable key={item.id} draggableId={item.id} index={index} >
 						{(provided, snapshot) => (
 							<div
@@ -184,15 +215,20 @@ class Tracks extends Component {
 							{...provided.dragHandleProps}
 							>
 							
-							<li className="collection-item avatar" key={index} >
+							
 							{this.state.playlist._id && <Icon type="close" style={{'float':'right', 'color':'red','cursor':'pointer'}} onClick={() => this.deleteTrack(index)}></Icon>}
 								<span>
 									<img src={item.album ? item.album.cover_small || defaultTrackImg : defaultTrackImg} alt="" className="circle"/>
 									<span className="title">{item.title} - Duration: {moment.utc(item.duration * 1000).format('mm:ss')}</span>
-									<p style={{'font-style':'italic'}}>{item.album ? item.album.title : ""}</p>
+									<p style={{'fontStyle':'italic'}}>{item.album ? item.album.title : ""}</p>
 								</span>
-								
-							</li>
+								<Select style={{ width: 120 }} onChange={this.handleChange}>
+								{this.state.playlists.map((playlist, i) => {
+									return ( <Select.Option value={[i, item]} >{playlist.title} </Select.Option> )
+
+									})
+								}
+							</Select>
 							</div>
 						)}
 						</Draggable>
@@ -204,7 +240,7 @@ class Tracks extends Component {
 				)}
         		</Droppable>
       			</DragDropContext>
-				{this.state.playlist.tracks.data.length > 0 && <PersonalPlayer  tracks={this.state.playlist.tracks.data}></PersonalPlayer>}
+				{this.state.playlist.tracks.data.length > 0 && <Player  tracks={this.state.playlist.tracks.data}/>}
 				</Layout.Content>
 		</div>
 		)

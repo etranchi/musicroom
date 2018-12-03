@@ -4,7 +4,7 @@ import {Row, Col,Progress} from 'antd';
 
 
 const { DZ } = window
-export default class PersonalPlayer extends Component {
+export default class Options extends Component {
 
 	constructor(props) {
         super(props);

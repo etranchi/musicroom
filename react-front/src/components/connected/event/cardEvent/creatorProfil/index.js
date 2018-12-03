@@ -13,13 +13,12 @@ class CreatorProfil extends Component {
     
     }
     handleChangePrivacy = event => {
-        if (!this.props.right.isCreator || !this.props.right.isAdmin)
+        if (!this.props.right.isCreator && !this.props.right.isAdmin)
             return ;
         this.props.state.data.event.public = !this.props.state.data.event.public
         this.setState({iconPrivacy: this.props.state.data.event.public ? 'unlock' : 'lock'})
         updateEvent(this.roomID, this.props.state.data.event)
     }
-
     showModal = () => {
         this.setState({visible: true});
     }
@@ -31,9 +30,7 @@ class CreatorProfil extends Component {
     handleCancel = (e) => {
         this.setState({visible: false});
     }
-
 	render() {
-        console.log("CREATOR PROFIL : ", this.props.state.data.event)
         let userPicture = this.props.state.data.event.creator.facebookId ? this.props.state.data.event.creator.picture : process.env.REACT_APP_API_URL + "/userPicture/" + this.props.state.data.event.creator.picture
         return (
             <div>

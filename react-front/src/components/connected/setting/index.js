@@ -2,42 +2,31 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import './styles.css';
 import EditSetting from './edit';
-import {Button, Divider, Layout, Col, Row, Card, Avatar} from 'antd';
+import {Button, Divider, Layout, Col, Row, Card, Avatar, Spin} from 'antd';
 
 const DZ = window.DZ;
+const {Content, Footer, Header} = Layout;
 
 class Setting extends Component {
 	constructor(props) {
 		super(props);
-		console.log("setting constructor");
-		console.log("props");
-		console.log(props);
 		this.state = {
 			user: props.state.user,
 			error: {},
-			loading: false
-		}
-		console.log("state");
-		console.log(this.state);
+			loading: false,
+		};
 	}
-
 	componentWillMount = () => {
-		console.log('setting somponent will mount');
 		axios.get(process.env.REACT_APP_API_URL + '/user/me', 
-		{'headers':{'Authorization':'Bearer '+ localStorage.getItem('token')}})
-		.then((resp) => {
-			this.setState({user:resp.data, loading:true});
-		})
-		.catch((err) => {
-			this.setState({error: err})
-		})
+			{'headers':{'Authorization':'Bearer '+ localStorage.getItem('token')}})
+				.then((resp) => { this.setState({user:resp.data, loading:true}); })
+				.catch((err) => { this.setState({error: err}) });
 	}
-
 	loginDeezer = () => {
 		const that = this;
 		DZ.init({
-		    appId  : '310224',
-		    channelUrl : 'https://localhost:3000',
+		    appId  		: '310224',
+		    channelUrl 	: 'https://localhost:3000',
 		  });
         DZ.login(function(response) {
           if (response.authResponse) {
@@ -46,42 +35,32 @@ class Setting extends Component {
 				that.props.updateParent({ user: resp.data })
 				that.setState({ user: resp.data })
 			})
-			.catch(err => {
-				console.log(err);
-			})
-          } else {
-            console.log('User cancelled login or did not fully authorize.');
-          }
+			.catch(err => { console.log(err); })
+          } else console.log('User cancelled login or did not fully authorize.');
         }, {perms: 'basic_access,email,offline_access,manage_library,delete_library'});
     }
-
     logoutDeezer = () => {
     	axios.delete(process.env.REACT_APP_API_URL + '/user/login/deezer', {'headers':{'Authorization' : 'Bearer ' + localStorage.getItem('token')}})
     	.then(resp => {
     		this.props.updateParent({ user: resp.data })
     		this.setState({ user: resp.data })
     	})
-    	.catch(err => {
-    		console.log(err);
-    	})
-    }
-
+    	.catch(err => { console.log(err); })
+	}
+	updateState = data => {
+		this.setState({user:data.user})
+	}
 	render() {
-		console.log("setting render props -> ");
-		console.log(this.props);
-		console.log("state -> ");
-		console.log(this.state);
-		const {Content, Footer, Header} = Layout;
 		let token = null;
 		if (this.state.user && this.state.user.deezerToken)
 			token = this.state.user.deezerToken
 		if (!this.state.loading)
-			return <p> OUPSI </p>
+			return <Spin tip=" Waiting user information ..." size="large" > </Spin>
 		if (this.props.state.currentComponent === 'editSetting')
-			return (<EditSetting state={this.props.state} updateParent={this.props.updateParent}/>)
+			return (<EditSetting state={this.props.state} updateState={this.updateState} updateParent={this.props.updateParent}/>)
 		else
 		{
-			let userPicture = this.state.user.facebookId ? this.state.user.picture : process.env.REACT_APP_API_URL + "/userPicture/" + this.state.user.picture
+			let userPicture = this.state.user.picture.indexOf("https://") != -1 ?  this.state.user.picture : process.env.REACT_APP_API_URL + "/userPicture/" + this.state.user.picture
 			return (
 				<Layout>
 					<Header> <h1>Profil : </h1></Header>
@@ -90,7 +69,7 @@ class Setting extends Component {
 						<Row>
 							<Col span={8}/>
 							<Col>
-							{!token ? (<Button onClick={this.loginDeezer.bind(this)}>Link Deezer</Button>): (<Button onClick={this.logoutDeezer.bind(this)}>Unlink Deezer</Button>)}
+								{ !token ? (<Button onClick={this.loginDeezer.bind(this)}>Link Deezer</Button>): (<Button onClick={this.logoutDeezer.bind(this)}>Unlink Deezer</Button>) }
 							</Col>
 						</Row>
 						<Divider />

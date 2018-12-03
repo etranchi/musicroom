@@ -19,18 +19,23 @@ const Event = new Schema({
 			n: {type: String}
 		},
 		coord: {
-			lat: {type: Number},
-			lng: {type: Number}
+			lat: {type: Number, required: true},
+			lng: {type: Number, required: true}
 		}
 	},
-	visibility: {type:Number},
-	public: {type: Boolean},
+	public: {type: Boolean, default: false},
 	creation_date: {type: Date, default: Date.now},
 	event_date: {type: Date, default: Date.now},
 	playlist: {type: Playlist.schema},
-	members : [User.schema],
-	picture: {type: String, default: "default.jpeg"},
-	adminMembers: [User.schema]
+	members : [{
+		type: User.schema,
+		ref: 'Member'
+	}],
+	adminMembers: [{
+		type: User.schema,
+		ref: 'AdminMember'
+	}],
+	picture: {type: String, default: "default.jpeg"}
 
 }, { versionKey: false });
 

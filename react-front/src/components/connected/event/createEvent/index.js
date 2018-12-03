@@ -9,35 +9,35 @@ export default class CreateEvent extends Component {
 	constructor(props) {
         super(props);
         this.state = {
-            "creator": null,
-            "members": [],
-            "adminMembers": [],
-            "title": "",
-            "description": "",
-            "picture": '',
-            "playlist": null,
-            "event_date": new Date(),
-            "date": "",
-            "format_date": '',
-            "public": true,
-            "location": {},
-            'imageUrl': '',
-            'infoFile': '',
-            'loading' : false,
+            creator     : null,
+            members     : [],
+            adminMembers: [],
+            title       : '',
+            description : '',
+            picture     : '',
+            playlist    : null,
+            event_date  : new Date(),
+            date        : '',
+            format_date : '',
+            public      : true,
+            location    : {},
+            imageUrl    : '',
+            infoFile    : '',
+            loading     : false
         };
     }
     updateLocation = val => {
         let location = {
-                "address" : {
-                    "p": val.addressObj.address_components[5]  ? val.addressObj.address_components[5].long_name : "Inconnue",
-                    "v": val.addressObj.address_components[2]  ? val.addressObj.address_components[2].long_name : "Inconnue",
-                    "cp": val.addressObj.address_components[6] ? val.addressObj.address_components[6].long_name : "Inconnue",
-                    "r": val.addressObj.address_components[1]  ? val.addressObj.address_components[1].long_name : "Inconnue",
-                    "n": val.addressObj.address_components[0]  ? val.addressObj.address_components[0].long_name : "Inconnue"
+                address : {
+                    p: val.addressObj.address_components[5]  ? val.addressObj.address_components[5].long_name : "Inconnue",
+                    v: val.addressObj.address_components[2]  ? val.addressObj.address_components[2].long_name : "Inconnue",
+                    cp: val.addressObj.address_components[6] ? val.addressObj.address_components[6].long_name : "Inconnue",
+                    r: val.addressObj.address_components[1]  ? val.addressObj.address_components[1].long_name : "Inconnue",
+                    n: val.addressObj.address_components[0]  ? val.addressObj.address_components[0].long_name : "Inconnue"
                 },
-                "coord": {
-                    "lat": val.location.coord ? val.location.coord.lat: 0,
-                    "lng": val.location.coord ? val.location.coord.lng: 0,
+                coord: {
+                    lat: val.location.coord ? val.location.coord.lat: 0,
+                    lng: val.location.coord ? val.location.coord.lng: 0,
                 }
         }
         this.setState({'location':location})
@@ -58,8 +58,10 @@ export default class CreateEvent extends Component {
     }
     handleSubmit = event => {
         event.preventDefault();
-        if (!this.state.description || !this.state.title || !this.state.event_date || !this.state.location.coord)
+        if (!this.state.description || !this.state.title || !this.state.event_date || !this.state.location.coord) {
             this.info("Error input invalid")
+            return 
+        }
         let data = new FormData();    
         if (this.state.infoFile && this.state.infoFile.file && this.state.infoFile.file.originFileObj)
             data.append('file', this.state.infoFile.file.originFileObj);
@@ -67,20 +69,22 @@ export default class CreateEvent extends Component {
         axios.get(process.env.REACT_APP_API_URL + '/user/me', {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
         .then((resp) => {
             this.event = {
-                "creator"       : resp.data,
-                "title"         : this.state.title,
-                "description"   : this.state.description,
-                "playlist"      : this.state.playlist,
-                "event_date"    : this.state.event_date,
-                "date"          : new Date(),
-                "public"        : this.state.public,
-                "location"      : this.state.location
+                creator       : resp.data,
+                title         : this.state.title,
+                description   : this.state.description,
+                playlist      : this.state.playlist,
+                event_date    : this.state.event_date,
+                date          : new Date(),
+                public        : this.state.public,
+                location      : this.state.location,
+                members       : [],
+                adminMembers  : []
             }
             data.append('body', JSON.stringify(this.event));
             axios.post(process.env.REACT_APP_API_URL + '/event/',  data)
             .then((resp) => { 
                 this.info("Evènement crée")
-                this.props.updateParent({'currentComponent' : "event"})
+                this.props.changeView('listEvent')
             })
             .catch((err) => { console.log("Create Event : handleSubmit :/event Error ", err); })  
         })
@@ -90,7 +94,6 @@ export default class CreateEvent extends Component {
         this.setState({[event.target.name]: event.target.value});
     }
     handleChangeDate = (value, dateString) => {
-        console.log("Value : ", value, dateString)
         this.setState({'event_date':  dateString})
         this.setState({'format_date':  this.formatDateAnnounce(dateString)})
     }
@@ -132,13 +135,12 @@ export default class CreateEvent extends Component {
     }
 	render = () => {
         this.uploadButton = ( <div> <Icon type={this.state.loading ? 'loading' : 'plus'} /> <div className="ant-upload-text">Upload</div> </div> );
-        const {Footer,Content } = Layout;
         return (
             <Layout >
                 <Layout.Content>
                     <Row> 
                         <Col span={8}> 
-                            <a href="#!" className="btn waves-effect waves-teal" onClick={() => this.props.updateParent({'currentComponent': 'event'})}>Back</a> 
+                            <a href="#!" className="btn waves-effect waves-teal" onClick={() => this.props.changeView('listEvent')}>Back</a> 
                         </Col> 
                     </Row>
                     <Row>
