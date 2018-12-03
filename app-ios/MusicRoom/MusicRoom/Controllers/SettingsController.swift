@@ -26,10 +26,10 @@ class SettingsController: UIViewController, DeezerSessionDelegate {
         }
     }
     func deezerDidLogin() {
-        print(userManager.currentUser)
+        print(userManager.currentUser ?? "Bite")
         let user = userManager.currentUser
         if user != nil {
-            print(deezerManager.deezerConnect?.accessToken)
+            print(deezerManager.deezerConnect?.accessToken ?? "Bite")
             user!.deezer_token = deezerManager.deezerConnect?.accessToken
             userManager.save()
             apiManager.giveDeezerToken(user!)

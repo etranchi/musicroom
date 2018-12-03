@@ -207,15 +207,19 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         if firstPlay {
             cancelable?.cancel()
         }
+        let size = view.bounds.height
+        let bestConstant: CGFloat = size > 800 ? 50 : 25
+        let bestMult: CGFloat = size > 800 ? 0.17 : 0.1
+        
         backgroundCoverView = setupBackgroudView()
         coverContainerView = setupCoverContainer()
         playerButtonView = PlayerButtonsView(target: self, isPlaying)
         downButton.addTarget(self, action: #selector(handleHide), for: .touchUpInside)
         playerButtonView?.translatesAutoresizingMaskIntoConstraints = false
-        
-        titleLabel.text = tracks[index].title
-        authorLabel.text = tracks[index].artist!.name
-        
+        if index != -2 {
+            titleLabel.text = tracks[index].title
+            authorLabel.text = tracks[index].artist!.name
+        }
         view.addSubview(backgroundCoverView!)
         view.addSubview(coverContainerView!)
         view.addSubview(titleLabel)
@@ -229,12 +233,12 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             backgroundCoverView!.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             backgroundCoverView!.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            downButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 45),
+            downButton.topAnchor.constraint(equalTo: view.topAnchor, constant: bestConstant),
             downButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 7),
             downButton.widthAnchor.constraint(equalToConstant: 27),
             downButton.heightAnchor.constraint(equalToConstant: 26),
             
-            coverContainerView!.topAnchor.constraint(equalTo: view.topAnchor, constant: 40),
+            coverContainerView!.topAnchor.constraint(equalTo: downButton.bottomAnchor, constant: 10),
             coverContainerView!.bottomAnchor.constraint(equalTo: titleLabel.topAnchor, constant: -5),
             coverContainerView!.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             coverContainerView!.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -251,8 +255,8 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             
             playerButtonView!.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             playerButtonView!.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            playerButtonView!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -view.bounds.height * 0.17),
-            playerButtonView!.heightAnchor.constraint(equalToConstant: 80)
+            playerButtonView!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -size * bestMult),
+            playerButtonView!.heightAnchor.constraint(equalToConstant: 120)
         ])
     }
 }

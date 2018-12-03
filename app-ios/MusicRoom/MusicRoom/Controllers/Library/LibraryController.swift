@@ -37,7 +37,7 @@ class LibraryController: UITableViewController {
             cell.iconView0.image = #imageLiteral(resourceName: "playlists_icon")
         case 2 :
             cell.titleLabel.text = "Events"
-            cell.iconView0.image = #imageLiteral(resourceName: "people")
+            cell.iconView0.image = UIImage(named: "people")
         default:
             cell.titleLabel.text = "Omg... wtf.."
         }

@@ -18,7 +18,7 @@ class PlaylistDetailController: UITableViewController {
     var headerView: AlbumHeaderView!
     let songCellId = "SongCellId"
     
-    private let headerHeight: CGFloat = 200
+    private let headerHeight: CGFloat = 225
     
     init(_ playlist: Playlist, _ playlistCover: UIImage) {
         self.playlist = playlist
@@ -64,7 +64,7 @@ class PlaylistDetailController: UITableViewController {
             }
         }
         isUnlocked = true
-        isEditing = false
+        tableView.isEditing = false
         tableView.reloadData()
     }
     
@@ -74,7 +74,7 @@ class PlaylistDetailController: UITableViewController {
         let navi = navigationController as? CustomNavigationController
         navi?.animatedShowNavigationBar()
         navigationController?.navigationBar.topItem?.title = "Search"
-        SocketIOManager.sharedInstance.leavePlaylist(playlist._id!)
+        //SocketIOManager.sharedInstance.leavePlaylist(playlist._id!)
     }
     
     override func viewWillLayoutSubviews() {
@@ -104,14 +104,10 @@ class PlaylistDetailController: UITableViewController {
         setupHeader()
     }
     
-    func hideDots(_ hide: Bool) {
-        tableView.reloadData()
-    }
-    
     @objc func edit() {
-        SocketIOManager.sharedInstance.lockPlaylist(playlist._id!)
         tableView.isEditing = isUnlocked
-        hideDots(isUnlocked)
+        tableView.reloadData()
+        SocketIOManager.sharedInstance.lockPlaylist(playlist._id!)
     }
     
     override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
@@ -165,10 +161,14 @@ class PlaylistDetailController: UITableViewController {
         cell.indexPath = indexPath
         cell.dotsLabel.isUserInteractionEnabled = true
         cell.dotsLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(edit)))
-        if isEditing {
+        if tableView.isEditing {
             cell.dotsLabel.isHidden = true
+        } else if isUnlocked == false {
+            cell.dotsLabel.isHidden = true
+            cell.lockedIcon.isHidden = false
         } else {
             cell.dotsLabel.isHidden = false
+            cell.lockedIcon.isHidden = true
         }
         return cell
     }

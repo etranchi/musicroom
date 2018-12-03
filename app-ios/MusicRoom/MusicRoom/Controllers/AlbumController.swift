@@ -17,7 +17,7 @@ class AlbumController: UITableViewController {
     var headerView: AlbumHeaderView!
     let songCellId = "SongCellId"
     
-    private let headerHeight: CGFloat = 200
+    private let headerHeight: CGFloat = 225
     
     init(_ album: Album, _ albumCover: UIImage) {
         self.album = album
@@ -106,6 +106,7 @@ class AlbumController: UITableViewController {
         cell.track = tracks?[indexPath.row]
         cell.authorLabel.text = album.artist?.name
         cell.selectionStyle = .none
+        cell.lockedIcon.isHidden = true
         cell.rootController = self
         return cell
     }

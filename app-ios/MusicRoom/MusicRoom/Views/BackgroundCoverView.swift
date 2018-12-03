@@ -11,11 +11,11 @@ import UIKit
 class BackgroundCoverView: UIView {
 
     let previousTrack: Track?
-    let currentTrack: Track
+    let currentTrack: Track?
     let nextTrack: Track?
     
     let offset = UIApplication.shared.keyWindow!.bounds.width
-    let animationTime = 0.6
+    let animationTime = 0.4
     
     let previousImageView: UIImageView = {
         let iv = UIImageView()
@@ -60,13 +60,14 @@ class BackgroundCoverView: UIView {
         return view
     }()
 
-    init(_ previousTrack: Track?, _ currentTrack: Track, _ nextTrack: Track?) {
+    init(_ previousTrack: Track?, _ currentTrack: Track?, _ nextTrack: Track?) {
         self.previousTrack = previousTrack
         self.currentTrack = currentTrack
         self.nextTrack = nextTrack
         super.init(frame: .zero)
-        
-        setupView()
+        if currentTrack != nil {
+            setupView()
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -82,14 +83,14 @@ class BackgroundCoverView: UIView {
     }
     
     func handleNextAnimation() {
-        if currentTrack.album!.cover_big == nextTrack?.album!.cover_big {
+        if currentTrack!.album!.cover_big == nextTrack?.album!.cover_big {
             return
         }
         handleAnimation(iv: nextImageView)
     }
     
     func handlePreviousAnimation() {
-        if currentTrack.album!.cover_big == previousTrack?.album!.cover_big {
+        if currentTrack!.album!.cover_big == previousTrack?.album!.cover_big {
             return
         }
         handleAnimation(iv: previousImageView)
@@ -144,7 +145,7 @@ class BackgroundCoverView: UIView {
                 previousImageView.image = #imageLiteral(resourceName: "album_placeholder")
             }
         }
-        if let big = currentTrack.album!.cover_big {
+        if let big = currentTrack!.album!.cover_big {
             currentImageView.loadImageUsingCacheWithUrlString(urlString: big)
         } else {
             currentImageView.image = #imageLiteral(resourceName: "album_placeholder")

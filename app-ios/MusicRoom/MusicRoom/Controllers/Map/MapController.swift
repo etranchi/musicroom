@@ -87,7 +87,7 @@ class MapController: UIViewController {
     
     func setupButton() {
         let localize = UIButton()
-        localize.setImage(#imageLiteral(resourceName: "localize"), for: .normal)
+        localize.setImage(UIImage(named: "localize"), for: .normal)
         localize.addTarget(self, action: #selector(localizeMe), for: .touchUpInside)
         localize.translatesAutoresizingMaskIntoConstraints = false
         mapView.addSubview(localize)
