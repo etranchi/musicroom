@@ -22,9 +22,11 @@ export default class Player extends Component {
         let tracksID    = []
         this.props.tracks.forEach(track => { tracksID.push(track.id) });
         this.setState({'tracksID':tracksID, 'tracks':this.props.tracks}, () => {
+            console.log(tracksID);
             DZ.player.playTracks(tracksID)
+
             // DZ.player.pause()
-            DZ.player.setVolume(50)     
+            DZ.player.setVolume(50)
         });
     }
     componentDidMount = () => {
@@ -52,7 +54,8 @@ export default class Player extends Component {
     }
     playTrack = () => {
         this.setState({isPlaying:!this.state.isPlaying}, () => {
-            this.state.isPlaying ?  DZ.player.play() :  DZ.player.pause()     
+            this.state.isPlaying ?  DZ.player.play() :  DZ.player.pause()
+            console.log("play/pause set state");
         });
         console.log("play/pause");
     }
@@ -72,21 +75,32 @@ export default class Player extends Component {
             return ;
         this.setState({currentTracksID:index})
         this.props.updateParentState({currentTracksID:index})
-        DZ.player.prev()
-        console.log("prev");
-        console.log(this.props);
+        DZ.player.prev();
     }
 
     playerUpdate = (event) => {
         if (this.props.roomID)
-        {
-            console.log("PLAYER  : playerUpdate")
             updatePlayer(this.props.roomID, event);
+        else
+        {
+            switch (event){
+                case "next":
+                    this.nextTrack();
+                    break;
+                case "prev":
+                    this.prevTrack();
+                    break;
+                case "play":
+                    this.playTrack();
+                    break;
+                default:
+                    break;
+            } 
         }
     }
 
 	render() {
-        console.log("Render  player CONTROL :", this.props , this.state)
+        console.log(this.state);
         return (
             <Row style={{height:'inherit', margin:'3% 0 0 0'}}>
                 <Col span={3}/>
