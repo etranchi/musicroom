@@ -8,6 +8,7 @@ const Joi 	= require('joi');
 const config = require('../config/config.json');
 const argon = require('argon2');
 
+const mail = require('../modules/mail');
 // const nodemailer = require('nodemailer');
 // const transporter = nodemailer.createTransport({
 //     service: config.mail.service,
@@ -213,6 +214,21 @@ exports.resendMail = async (req, res, next) => {
 		console.error("Error resend mail: %s", err);
 		next(new customError(err.message, 400))
 	}		
+}
+
+exports.forgotPassword = async (req, res, next) => {
+	try {
+		let newPass = Utils.randPassowrd()
+		console.log(newPass)
+		let user = await model.findOneAndUpdate({email: req.body.email, status: 'Active'}, {password: await argon.hash(newPass)}, {new: true})
+		if (user) {
+			mail.sendMail("[MusicRoom] New password", "<p>Your new password is " + newPass + "</p>")
+		}
+		res.status(200).send({message: "Mail send (if account exist and already validate)"})
+	} catch (err) {
+		console.error("Error forgot password mail: %s", err);
+		next(new customError(err.message, 400))
+	}
 }
 
 function validateId(id)
