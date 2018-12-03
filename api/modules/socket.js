@@ -44,7 +44,6 @@ module.exports = {
                 ret = room;
             }
         })
-
         return ret
     },
     createRoom: (roomID, tracks, event) => {

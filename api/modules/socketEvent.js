@@ -101,7 +101,8 @@ module.exports = function (io) {
             let room = ftSocket.getRoom(roomID)
             if (room) {
                 room.tracks = tracks
-                room = ftSocket.updateRoom(room)
+                console.log(tracks[0], tracks[1])
+                // room = ftSocket.updateRoom(room)
                 io.sockets.in(room.id).emit('updateScore', room.tracks)
             } else
                 return io.sockets.in(room.id).emit('updateTracks', 'fail');

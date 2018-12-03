@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import './styles.css';
 import { Input, Row, Col, Divider, Button } from 'antd'
 import axios from 'axios'
+import SearchBar from '../../searchbar'
+import Track from '../../../templates/track'
 
 class CreatePlaylist extends Component {
 	constructor(props){
@@ -34,7 +36,8 @@ class CreatePlaylist extends Component {
 
     addTrack = (item) => {
     	this.setState({ tracks: [...this.state.tracks, item] })
-    }
+	}
+	
     deleteTrack =(index) => {
     	var array = [...this.state.tracks];
     	array.splice(index, 1);
@@ -42,6 +45,7 @@ class CreatePlaylist extends Component {
     }
 
 	render() {
+		console.log(this.state);
 	return (
 		<div>
 			<Row>
@@ -56,6 +60,18 @@ class CreatePlaylist extends Component {
                 </Col>
 			</Row>
             <Divider />
+			<Row>
+			<Col span={8}>
+					<SearchBar updateParent={this.props.updateParent} type="tracks" addTrack={this.addTrack}/>
+				</Col>
+				</Row>
+			<Row>
+			{this.state.tracks.map((val, i) => {
+						return (
+							<Track order={i} track={val}/>
+						);
+					})}
+			</Row>
 			<Row>
                 <Col span={8}></Col>
                 <Col span={8}>
