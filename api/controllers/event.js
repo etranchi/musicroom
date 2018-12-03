@@ -22,7 +22,27 @@ module.exports = {
 					}
 				]}
 			)
-			let allEvents = await modelEvent.find();
+			let allEvents = await modelEvent
+				.find(
+					{$and: [
+						{adminMembers:
+							{$not:
+								{$elemMatch:
+									{_id: req.user._id}
+								}
+							}
+						},
+						{members:
+							{$not:
+								{$elemMatch:
+									{_id: req.user._id}
+								}
+							}
+						},
+						{'creator._id': {$ne: req.user._id}},
+						{public: true}
+					]}
+			)
 			res.status(200).json({myEvents, friendEvents, allEvents});
 		} catch (err) {
 			console.log("Error getEvents: " + err)
@@ -62,6 +82,18 @@ module.exports = {
 				throw new Error('No location')
 			if (!req.body.description)
 				throw new Error('No description')
+			let user = await modelEvent
+				.find({$and: [{_id: req.params.id}, {$or: [
+					{adminMembers:
+						{$elemMatch:
+							{_id: req.user._id}
+						}
+					},
+					{'creator._id': {$eq: req.user._id}}
+				]}]}
+			)
+			if (!user || user.length < 1)
+				return next(new customError('You are not authorize to modify this event', 401))
 			let test = await modelEvent.updateOne({_id: req.params.id}, req.body, {new: true})
 			res.status(200).json(test)
 		} catch (err) {
