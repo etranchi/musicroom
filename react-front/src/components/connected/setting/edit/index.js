@@ -12,12 +12,12 @@ export default class EditSetting extends Component {
 			login: props.state.user.login,
 			password: null,
 			cpypassword: null,
-			picture: this.props.state.user.picture.indexOf("https://") != -1 ? this.props.state.user.picture: process.env.REACT_APP_API_URL + "/userPicture/" + this.props.state.user.picture,
+			picture: this.props.state.user.picture.indexOf("https://") !== -1 ? this.props.state.user.picture: process.env.REACT_APP_API_URL + "/userPicture/" + this.props.state.user.picture,
 			newPicture: '',
 			loading:false,
 			infoFile: '',
 		};
-		this.currentUser = props.state.user;;
+		this.currentUser = props.state.user;
 	}
 	updateChange(e) {
 		this.setState({[e.target.name]: e.target.value});
@@ -86,7 +86,6 @@ export default class EditSetting extends Component {
         return isJPG && isLt2M;
 	}
 	render() {
-		const {Content, Footer, Header} = Layout
 		this.uploadButton = (
             <div>
               <Icon type={this.state.loading ? 'loading' : 'plus'} />
