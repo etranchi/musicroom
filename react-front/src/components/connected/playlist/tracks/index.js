@@ -158,12 +158,12 @@ class Tracks extends Component {
 			{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}}
 		)
 		.then(resp => {
+			updatePlaylist(this.state.playlist._id)
 			this.setState(items);
 		})
 		.catch(err => {
 			console.log(err);
 		})
-		updatePlaylist(this.state.playlist._id)
 	}
 	handleChange = (array) => {
 		console.log("change");
@@ -197,7 +197,7 @@ class Tracks extends Component {
 				</Col>
 			</Row>
 			<Layout.Content>
-				<h3 style={{'textAlign':'center', 'font-size': '20px'}}>{this.state.playlist.title}</h3>
+				<h3 style={{'textAlign':'center', 'fontSize': '20px'}}>{this.state.playlist.title}</h3>
 				<DragDropContext onDragEnd={this.onDragEnd} onDragStart={this.onDragStart}>
 				<Droppable droppableId="droppable" isDragDisabled={this.state.isBlocked} isDropDisabled={this.state.isBlocked}>
 				{(provided, snapshot) => (
@@ -206,7 +206,7 @@ class Tracks extends Component {
 					>
 					<ul className="collection">
 					{this.state.playlist.tracks.data.map((item, index) => (
-						<li className="collection-item avatar" >
+						<li className="collection-item avatar" key={index}>
 						<Draggable key={item.id} draggableId={item.id} index={index} >
 						{(provided, snapshot) => (
 							<div
