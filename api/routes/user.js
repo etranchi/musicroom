@@ -90,6 +90,18 @@ router.post('/resendMail',
 	);
 
 /**
+ * @route POST /user/forgotPassword
+ * @group user - Operations about user
+ * @param {string} email.query.required - user's email
+ * @returns {object} 200
+ * @returns {Error} 400
+ * @returns {Error}  default - Unexpected error
+ */
+router.post('/forgotPassword',
+		userController.forgotPassword
+	);
+
+/**
  * @route GET /user/me
  * @group user - Operations about user
  * @security - Bearer: []
