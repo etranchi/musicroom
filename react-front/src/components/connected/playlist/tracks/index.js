@@ -112,10 +112,25 @@ class Tracks extends Component {
 
 	deleteTrack = (index) => {
 		console.log("Je suis lock ? " + this.state.isBlocked)
-		if (this.state.isBlocked === false) {
+		if (this.state.playlist.id)
+		{
+			axios.delete(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist.id + '/' + this.state.playlist.tracks.data[index].id, 
+				{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}}
+			)
+			.then(resp => {
+				var state = this.state;
+				state.playlist.tracks.data.splice(index,1);
+				this.setState(state);
+				updatePlaylist(this.state.playlist._id)
+			})
+			.catch(err => {
+				console.log(err);
+			})
+		}
+		else if (this.state.isBlocked === false) {
 			var state = this.state;
 			state.playlist.tracks.data.splice(index,1);
-			axios.put(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id, 
+			axios.put(process.env.REACT_APP_API_URL + '/playlist/' + (this.state.playlist._id || this.state.playlist.id), 
 				this.state.playlist,
 				{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}}
 			)
@@ -157,7 +172,7 @@ class Tracks extends Component {
 			this.state.playlist,
 			{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}}
 		)
-		.then(resp => {
+		.then(() => {
 			updatePlaylist(this.state.playlist._id)
 			this.setState(items);
 		})
@@ -170,15 +185,11 @@ class Tracks extends Component {
 		console.log(this.state.playlist);
 		console.log(array);
 
-		axios.put(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlists[array[0]]._id + '/track',
+		axios.put(process.env.REACT_APP_API_URL + '/playlist/' + (this.state.playlists[array[0]]._id || this.state.playlists[array[0]].id)  + '/track',
 		 {id: array[1].id},
 		 {'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
-		.then(resp => {
-			console.log("resp -> ");
-			console.log(resp);
-		})
 		.catch(err => {
-			console.log("error -> ");
+			console.log("[error] add track to playlist");
 			console.log(err);
 		})
 	  }
@@ -216,7 +227,7 @@ class Tracks extends Component {
 							>
 							
 							
-							{this.state.playlist._id && <Icon type="close" style={{'float':'right', 'color':'red','cursor':'pointer'}} onClick={() => this.deleteTrack(index)}></Icon>}
+							{<Icon type="close" style={{'float':'right', 'color':'red','cursor':'pointer'}} onClick={() => this.deleteTrack(index)}></Icon>}
 								<span>
 									<img src={item.album ? item.album.cover_small || defaultTrackImg : defaultTrackImg} alt="" className="circle"/>
 									<span className="title">{item.title} - Duration: {moment.utc(item.duration * 1000).format('mm:ss')}</span>
