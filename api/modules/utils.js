@@ -37,5 +37,21 @@ class Utils {
 		});
 		return input;
 	}
+	static randPassowrd() {
+		let chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz!@#$%^&*()_-/?<>[]{}";
+		let string_length = randomIntFromInterval(8, 20);
+		let randomstring = '';
+		for (var i = 0; i < string_length; i++) {
+			let rnum = Math.floor(Math.random() * chars.length);
+			randomstring += chars.substring(rnum, rnum + 1);
+		}
+		return (randomstring)
+	}
 }
+
+function randomIntFromInterval(min, max)
+{
+	return Math.floor(Math.random()*(max-min+1)+min);
+}
+
 module.exports = Utils;
