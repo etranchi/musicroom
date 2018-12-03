@@ -140,7 +140,7 @@ export default class CreateEvent extends Component {
                 <Layout.Content>
                     <Row> 
                         <Col span={8}> 
-                            <a href="#!" className="btn waves-effect waves-teal" onClick={() => this.props.updateParent({'currentComponent': 'event'})}>Back</a> 
+                            <a href="#!" className="btn waves-effect waves-teal" onClick={() => this.props.changeView('listEvent')}>Back</a> 
                         </Col> 
                     </Row>
                     <Row>

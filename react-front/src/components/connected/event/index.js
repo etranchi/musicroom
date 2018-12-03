@@ -3,7 +3,7 @@ import {Row, Col } from 'antd';
 import Create from './createEvent';
 import List from './listEvent';
 import ListCloseEvent from './listCloseEvent';
-import PersonalPlayer from './personalPlayer';
+import Player from './player';
 import CardEvent from './cardEvent';
 import LiveEvent from './liveEvent';
 import './styles.css';
@@ -17,7 +17,13 @@ export default class Event extends Component {
 		this.selectedMenu = { backgroundColor:'#00897b', opacity:1, color:'white' };
 	}
 	changeView = value => {
+		this.props.updateParent({currentComponent:'event'})
 		this.setState({currentSubView : value})
+	}
+	openCardEvent = event => {
+        window.scrollTo(600, 600);
+        this.props.state.data.event = event;
+        this.props.updateParent({'currentComponent': 'cardEvent', 'data': this.props.state.data});
 	}
 	render() {
 		if (this.props.state.currentComponent === 'cardEvent' && this.state.currentSubView)
@@ -50,12 +56,12 @@ export default class Event extends Component {
 						:
 						null 
 				}
-				{this.props.state.currentComponent 	=== 'cardEvent' 		&& <CardEvent state={this.props.state} updateParent={this.props.updateParent}/>}
+				{this.props.state.currentComponent 	=== 'cardEvent' 		&& <CardEvent state={this.props.state} updateParent={this.props.updateParent} changeView={this.changeView}/>}
 				{this.state.currentSubView 			=== 'createEvent' 		&& <Create state={this.props.state} updateParent={this.props.updateParent} changeView={this.changeView}/>}
-				{this.state.currentSubView 			=== 'listEvent' 		&& <List state={this.props.state} updateParent={this.props.updateParent}/>}
-				{this.state.currentSubView 			=== 'listcloseEvent' 	&& <ListCloseEvent state={this.props.state} updateParent={this.props.updateParent}/>}
-				{this.state.currentSubView 			=== 'personalPlayer' 	&& <PersonalPlayer strokeColor={'#e0e0e0'} color={'#d84315'} tracks={this.props.state.data.events[0].playlist.tracks.data}/>}
-				{this.props.state.currentComponent 	=== 'liveEvent' 		&& <LiveEvent state={this.props.state} roomID={this.props.state.data.event._id} playlist={this.props.state.data.event.playlist}/>}
+				{this.state.currentSubView 			=== 'listEvent' 		&& <List state={this.props.state} updateParent={this.props.updateParent} openCardEvent={this.openCardEvent}/>}
+				{this.state.currentSubView 			=== 'listcloseEvent' 	&& <ListCloseEvent state={this.props.state} updateParent={this.props.updateParent} openCardEvent={this.openCardEvent}/>}
+				{/* {this.state.currentSubView 			=== 'personalPlayer' 	&& <Player strokeColor={'#e0e0e0'} color={'#d84315'} tracks={this.props.state.data.events[0].playlist.tracks.data} roomID={this.props.state.data.event._id}/>} */}
+				{this.props.state.currentComponent 	=== 'liveEvent' 		&& <LiveEvent state={this.props.state} roomID={this.props.state.data.event._id} playlist={this.props.state.data.event.playlist} openCardEvent={this.openCardEvent}/>}
 			</div>
 		);
 	}
