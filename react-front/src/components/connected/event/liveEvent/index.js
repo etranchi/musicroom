@@ -42,7 +42,7 @@ export default class LiveEvent extends Component {
         socket.on('updateScore', (tracks) => {
             console.log("socket : receive data from updateScore : ", tracks)
             this.setState({rotate: {active:false, id:0, liked: false}});
-           this.savePlaylist(tracks);
+            this.savePlaylist(tracks);
         });
         /**************************************/
         if (this.props.state.data.event.creator.email === this.props.state.user.email)
@@ -89,11 +89,11 @@ export default class LiveEvent extends Component {
         blockSocketEvent(this.roomID)
 	}
 	onDragEnd = (result) => {
-		if (!result.destination) return;
+        if (!result.destination) return;
 		let state = this.state;
 		const items = reorder( this.state.playlist.tracks.data, result.source.index, result.destination.index );
-		state.playlist.tracks.data = items;
-		updateTracks(this.roomID, items)
+        state.playlist.tracks.data = items;
+        updateTracks(this.roomID, items)
 	}
     render() {
         return (
@@ -116,7 +116,7 @@ export default class LiveEvent extends Component {
                     <Col span={6}/>
                     <Col span={12}>
                         <DragDropContext onDragEnd={this.onDragEnd}>
-                            <Droppable droppableId="droppable" isDragDisabled={this.state.isAdmin || this.state.isCreator} isDropDisabled={this.state.isAdmin || this.state.isCreator} >
+                            <Droppable droppableId="droppable" isDragDisabled={!(this.state.isAdmin || this.state.isCreator)} isDropDisabled={!(this.state.isAdmin || this.state.isCreator)} >
                             {
                                 (provided, snapshot) =>  (
                                     <Row>
