@@ -21,6 +21,10 @@ class MapController: UIViewController {
         return mk
     }()
     
+    override func viewWillAppear(_ animated: Bool) {
+        getAllEvents()
+    }
+    
     func getAllEvents() {
         apiManager.getEvents(completion: { res in
             if res.allEvents.count > 0 {

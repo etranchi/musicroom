@@ -317,24 +317,19 @@ class APIManager: NSObject, URLSessionDelegate {
     func putEvent(_ event : Event, completion : @escaping((Bool) -> ())) {
         let url = self.url + "event/\(event._id!)"
         do {
-            print("yooooo")
-            
             let data = try jsonEncoder.encode(event)
-            print("good")
             let json = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
-            print(json)
             var req = URLRequest(url : URL(string: url)!)
             req.httpMethod = "PUT"
             req.setValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
             req.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
             req.httpBody = json!.data(using: String.Encoding.utf8.rawValue)
             URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: req, completionHandler: { (data, resp, err) in
-                print("plouf")
+        
                 if err != nil {
                     print("error")
                     completion(false)
                 }
-                print("je passe")
                 if let d = data {
                     let json = NSString(data: d, encoding: String.Encoding.utf8.rawValue)
                     print(json)
@@ -383,6 +378,20 @@ class APIManager: NSObject, URLSessionDelegate {
         searchAll([User].self, request: request) { (me) in
             completion(me)
         }
+    }
+    func deleteEventById(_ id: String, completion: @escaping (() -> ())) {
+        let url = self.url + "event/\(id)"
+        var request = URLRequest(url: URL(string: url)!)
+        request.httpMethod = "DELETE"
+        request.setValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
+        URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: request, completionHandler: { (data, resp, err) in
+            if err != nil {
+                print("error")
+                return
+            }
+            completion()
+        }).resume()
+        
     }
     
     func postEvent(_ token : String, event : Event, img : UIImage, onCompletion: @escaping ((Bool) -> Void)) {

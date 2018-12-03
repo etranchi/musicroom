@@ -136,8 +136,8 @@ class EventDetailController: UIViewController{
             
             tableView!.widthAnchor.constraint(equalTo: view.widthAnchor),
             tableView!.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            tableView!.heightAnchor.constraint(equalToConstant: 120),
-            tableView!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -192)
+            tableView!.heightAnchor.constraint(equalToConstant: 160),
+            tableView!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -140)
             ])
         
     }
@@ -203,6 +203,10 @@ extension EventDetailController : UITableViewDelegate, UITableViewDataSource {
         case 2 :
             cell.titleLabel.text = "Playlist"
             cell.iconView0.image = #imageLiteral(resourceName: "play_icon")
+        case 3 :
+            cell.titleLabel.text = "Delete"
+            cell.iconView1.image = nil
+            cell.iconView0.image = #imageLiteral(resourceName: "trash")
         default:
             cell.titleLabel.text = "Omg... wtf.."
         }
@@ -227,11 +231,17 @@ extension EventDetailController : UITableViewDelegate, UITableViewDataSource {
             vc.members = currentEvent.adminMembers
             self.navigationController?.pushViewController(vc, animated: true)
         case 2:
-            let cell = tableView.cellForRow(at: indexPath)
-            print(currentEvent.playlist)
-            print(headerImg?.albumCover)
             let vc = PlaylistDetailController(currentEvent.playlist!, headerImg!.albumCover)
             self.navigationController?.pushViewController(vc, animated: true)
+        case 3:
+            apiManager.deleteEventById(currentEvent._id!, completion: {
+                    if self.root != nil {
+                        self.root?.reloadEvent()
+                    } else {
+                        self.rootMap?.getAllEvents()
+                    }
+                    self.navigationController?.popViewController(animated: true)
+                })
         default:
             print("Omg... wtf..")
         }
@@ -239,7 +249,7 @@ extension EventDetailController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 3
+        return 4
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
