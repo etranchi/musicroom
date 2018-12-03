@@ -169,7 +169,7 @@ exports.modifyUserById = async (req, res, next) => {
 		} else {
 			delete userUpdate.password
 		}
-		const {error} = Joi.validate(userUpdate, {login: Joi.string().min(3).max(9), password: Joi.string(), picture: Joi.string()})
+		const {error} = Joi.validate(userUpdate, {login: Joi.string().min(3).max(50), password: Joi.string(), picture: Joi.string()})
 		if (error) {
 			throw new Error(error.details[0].message)
 		}
@@ -226,7 +226,7 @@ function validateId(id)
 function validateUser(user) {
 
 	const schema = {
-		login: Joi.string().min(3).max(9).required(),
+		login: Joi.string().min(3).max(50).required(),
 		email: Joi.string().email({ minDomainAtoms: 2 }).required(),
 		password: Joi.string().min(8).max(30).required(),
 		picture: Joi.string()
