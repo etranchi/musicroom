@@ -7,22 +7,7 @@ const customError = require('../modules/customError');
 const Joi 	= require('joi');
 const config = require('../config/config.json');
 const argon = require('argon2');
-
 const mail = require('../modules/mail');
-// const nodemailer = require('nodemailer');
-// const transporter = nodemailer.createTransport({
-//     service: config.mail.service,
-//     auth: {
-//            user: config.mail.email,
-//            pass: config.mail.password
-//        }
-//    });
-// let mailOptions = {
-//     from: config.mail.email, // sender address
-//     to: config.mail.email, // list of receivers
-//     subject: 'Music room token', // Subject line
-//     html: '<p>Your html here</p>'// plain text body
-// };
 
 exports.connect = (req, res) => {
 		return res.status(200).json({
@@ -92,15 +77,6 @@ exports.postUser = async (req, res, next) => {
 		user.email = Utils.normalize(user.email)
 		user.password = await argon.hash(user.password);
 		user = await model.create(user);
-		// MAIL -> FrontUrl/token and send response "User created"
-		// mailOptions.html = "click on <a href='FRONT ROUTE/confirm?token=" + Crypto.createToken(user) + "'>this link</a> to confirm your account"
-		// transporter.sendMail(mailOptions, function (err, info) {
-		// 	if(err)
-		// 	  console.log(err)
-		// 	else
-		// 	  console.log(info);
-		//  });
-		console.log(config.front_url + "/user/confirm/" + Crypto.createToken(user));
 		mail.sendMail("[MusicRoom] Confirm mail", "<a href='" + config.front_url + "/user/confirm/" + Crypto.createToken(user) + "'>click on this link to confirm</a>", user.email)
 		res.status(201).send();
 	} catch (err) {
