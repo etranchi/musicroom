@@ -59,14 +59,19 @@ app.get('/', ( req, res) =>  {
 });
 app.use(function(req, res, next) {
   if (!req.route) {
-    let err = new Error('Not found')
+    let err = new Error('Page not found')
     err.status = 404
     return next (err);
   }
   next();
 });
 app.use(function(err, req, res, next) {
-  logger.error(JSON.stringify(req.meta) + " -> " + err.message)
+  let message
+  if (req.meta.user_agent === "MusicRoom")
+    message = "[Error][" + req.meta.date + "][from Swift App " + req.meta.user_agent + " ip " + req.meta.ip + "] Request method " + req.meta.method + " on " + req.meta.route + " body -> " + req.meta.body + " -> Status " + (err.status || 500) + " Error: " + (err.message || "Server crash")
+  else
+    message = "[Error][" + req.meta.date + "][from " + req.meta.user_agent + " " + req.meta.ip + "] Request method " + req.meta.method + " on " + req.meta.route + " body -> " + JSON.stringify(req.meta.body) + " -> Status " + (err.status || 500) + " Error: " + (err.message || "Server crash")
+  logger.error(message)
     console.log("Je suis dans le gestionnaire d'erreur -> " + err.message)
     if (err.message)
       return res.status(err.status || err.code || 500).send({error: err.message})
