@@ -18,11 +18,11 @@
 
 import FBSDKCoreKit.FBSDKAppEvents
 
-public extension AppEventsLogger {
+extension AppEventsLogger {
   /**
    Specifies when `AppEventsLogger` sends log events to the server.
    */
-  enum FlushBehavior {
+  public enum FlushBehavior {
     /**
      Flush automatically: periodically (once a minute or every 100 logged events) and always at app reactivation.
      */
@@ -34,19 +34,21 @@ public extension AppEventsLogger {
      but they will only be written with an explicit call to `flush`.
      */
     case explicitOnly
+  }
+}
 
-    internal init(sdkFlushBehavior: FBSDKAppEventsFlushBehavior) {
-      switch sdkFlushBehavior {
-      case .auto: self = .auto
-      case .explicitOnly: self = .explicitOnly
-      }
+extension AppEventsLogger.FlushBehavior {
+  internal init(sdkFlushBehavior: FBSDKAppEventsFlushBehavior) {
+    switch sdkFlushBehavior {
+    case .auto: self = .auto
+    case .explicitOnly: self = .explicitOnly
     }
+  }
 
-    internal var sdkFlushBehavior: FBSDKAppEventsFlushBehavior {
-      switch self {
-      case .auto: return .auto
-      case .explicitOnly: return .explicitOnly
-      }
+  internal var sdkFlushBehavior: FBSDKAppEventsFlushBehavior {
+    switch self {
+    case .auto: return .auto
+    case .explicitOnly: return .explicitOnly
     }
   }
 }

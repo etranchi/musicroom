@@ -19,7 +19,7 @@ class CoverContainerView: UIView {
     
     let zoomingEffect: CGFloat = 40.0
     let transparencyEffect: CGFloat = 0.4
-    let animationTime = 0.6
+    let animationTime = 0.4
     
     init(target: UIViewController, _ underPreviousTrack: Track?, _ previousTrack: Track?, _ currentTrack: Track?, _ nextTrack: Track?, _ overNextTrack: Track?) {
         self.playerController = target as! PlayerController

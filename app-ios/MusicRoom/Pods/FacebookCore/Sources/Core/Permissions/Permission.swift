@@ -23,7 +23,7 @@ import Foundation
  Each permission has its own set of requirements and suggested use cases.
  See a full list at https://developers.facebook.com/docs/facebook-login/permissions
  */
-public struct Permission: Hashable, ExpressibleByStringLiteral {
+public struct Permission {
 
   /// Name of the permission.
   public let name: String
@@ -36,9 +36,9 @@ public struct Permission: Hashable, ExpressibleByStringLiteral {
   public init(name: String) {
     self.name = name
   }
+}
 
-  // MARK: ExpressibleByStringLiteral
-
+extension Permission: ExpressibleByStringLiteral {
   /**
    Create a permission with a string value.
 
@@ -65,8 +65,9 @@ public struct Permission: Hashable, ExpressibleByStringLiteral {
   public init(extendedGraphemeClusterLiteral value: String) {
     self.init(name: value)
   }
+}
 
-  // MARK: Hashable
+extension Permission: Hashable {
 
   /// The hash value.
   public var hashValue: Int {

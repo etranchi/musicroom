@@ -11,7 +11,7 @@ import UIKit
 class SearchController: UITableViewController {
     
     let manager = APIManager()
-    var initialSearch = "Alive"
+    var initialSearch = "Who"
     
     var albums: [Album] = []
     var tracks: [Track] = []

@@ -15,7 +15,7 @@ class BackgroundCoverView: UIView {
     let nextTrack: Track?
     
     let offset = UIApplication.shared.keyWindow!.bounds.width
-    let animationTime = 0.6
+    let animationTime = 0.4
     
     let previousImageView: UIImageView = {
         let iv = UIImageView()

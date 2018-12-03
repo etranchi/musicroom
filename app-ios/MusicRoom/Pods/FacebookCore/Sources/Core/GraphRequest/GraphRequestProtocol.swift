@@ -41,7 +41,7 @@ public protocol GraphRequestProtocol {
   var graphPath: String { get }
 
   /// The request parameters.
-  var parameters: [String: Any]? { get }
+  var parameters: [String : Any]? { get }
 
   /// The `AccessToken` used by the request to authenticate.
   var accessToken: AccessToken? { get }
@@ -53,13 +53,13 @@ public protocol GraphRequestProtocol {
   var apiVersion: GraphAPIVersion { get }
 }
 
-public extension GraphRequestProtocol {
+extension GraphRequestProtocol {
   /**
    A convenience method that creates and starts a connection to the Graph API.
 
    - parameter completion: Optional completion closure that is going to be called when the connection finishes or fails.
    */
-  func start(_ completion: GraphRequestConnection.Completion<Self>? = nil) {
+  public func start(_ completion: GraphRequestConnection.Completion<Self>? = nil) {
     let connection = GraphRequestConnection()
     connection.add(self, completion: completion)
     connection.start()
@@ -71,9 +71,9 @@ public extension GraphRequestProtocol {
  */
 public enum GraphRequestHTTPMethod: String {
   /// `GET` graph request HTTP method.
-  case GET
+  case GET = "GET"
   /// `POST` graph request HTTP method.
-  case POST
+  case POST = "POST"
   /// `DELETE` graph request HTTP method.
-  case DELETE
+  case DELETE = "DELETE"
 }

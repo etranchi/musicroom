@@ -21,22 +21,22 @@ import UIKit
 
 import FBSDKCoreKit.FBSDKProfilePictureView
 
-public extension UserProfile {
+extension UserProfile {
 
   /// A view to display a profile picture.
-  final class PictureView: UIView {
+  public final class PictureView: UIView {
 
-    private let sdkProfilePictureView: FBSDKProfilePictureView = FBSDKProfilePictureView(frame: .zero)
+    fileprivate let sdkProfilePictureView = FBSDKProfilePictureView(frame: .zero)
 
     /// The aspect ratio of the source image of the profile picture.
-    public var pictureAspectRatio: UserProfile.PictureAspectRatio = .square {
+    public var pictureAspectRatio = UserProfile.PictureAspectRatio.square {
       didSet {
         sdkProfilePictureView.pictureMode = pictureAspectRatio.sdkPictureMode
       }
     }
 
     /// The user id to show the picture for.
-    public var userId: String = "me" {
+    public var userId = "me" {
       didSet {
         sdkProfilePictureView.profileID = userId
       }
@@ -45,7 +45,7 @@ public extension UserProfile {
     /**
      Create a new instance of `UserProfilePictureView`.
 
-     - parameter frame: Optional frame rectangle for the view, measured in points.
+     - parameter frame:   Optional frame rectangle for the view, measured in points.
      - parameter profile: Optional profile to display a picture for. Default: `UserProfile.current`.
      */
     public init(frame: CGRect = .zero, profile: UserProfile? = nil) {
@@ -76,12 +76,15 @@ public extension UserProfile {
     public func setNeedsImageUpdate() {
       sdkProfilePictureView.setNeedsImageUpdate()
     }
+  }
+}
 
-    private func setupSDKProfilePictureView() {
-      sdkProfilePictureView.frame = bounds
-      sdkProfilePictureView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-      addSubview(sdkProfilePictureView)
-      setNeedsImageUpdate() // Trigger the update to refresh the image, just in case.
-    }
+extension UserProfile.PictureView {
+
+  fileprivate func setupSDKProfilePictureView() {
+    sdkProfilePictureView.frame = bounds
+    sdkProfilePictureView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    addSubview(sdkProfilePictureView)
+    setNeedsImageUpdate() // Trigger the update to refresh the image, just in case.
   }
 }

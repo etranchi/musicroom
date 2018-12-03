@@ -20,20 +20,17 @@ import Foundation
 
 import FBSDKLoginKit
 
-internal class LoginButtonDelegateBridge: NSObject, FBSDKLoginButtonDelegate {
+internal class LoginButtonDelegateBridge: NSObject {
   internal weak var loginButton: LoginButton?
 
   func setupAsDelegateFor(_ sdkLoginButton: FBSDKLoginButton, loginButton: LoginButton) {
     self.loginButton = loginButton
     sdkLoginButton.delegate = self
   }
+}
 
-  // MARK: FBSDKLoginButtonDelegate
-
-  // swiftlint:disable:next implicitly_unwrapped_optional
-  func loginButton(_ sdkButton: FBSDKLoginButton!,
-                   didCompleteWith sdkResult: FBSDKLoginManagerLoginResult?,
-                   error: Error?) {
+extension LoginButtonDelegateBridge: FBSDKLoginButtonDelegate {
+  func loginButton(_ sdkButton: FBSDKLoginButton!, didCompleteWith sdkResult: FBSDKLoginManagerLoginResult?, error: Error?) {
     guard
       let loginButton = loginButton,
       let delegate = loginButton.delegate else {
@@ -44,7 +41,6 @@ internal class LoginButtonDelegateBridge: NSObject, FBSDKLoginButtonDelegate {
     delegate.loginButtonDidCompleteLogin(loginButton, result: result)
   }
 
-  // swiftlint:disable:next implicitly_unwrapped_optional
   func loginButtonDidLogOut(_ sdkButton: FBSDKLoginButton!) {
     guard
       let loginButton = loginButton,

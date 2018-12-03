@@ -16,14 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import FBSDKLoginKit
 import Foundation
+import FBSDKLoginKit
 
-public extension LoginButton {
+extension LoginButton {
   /**
    Indicates the desired login tooltip behavior.
    */
-  enum TooltipBehavior {
+  public enum TooltipBehavior {
     /// Tooltip will only be displayed if the app is eligible (determined by possible server round trip).
     case automatic
     /// Force display of the tooltip (typically for UI testing).
@@ -41,11 +41,11 @@ public extension LoginButton {
   }
 }
 
-public extension LoginButton {
+extension LoginButton {
   /**
    Indicates the desired login tooltip color style.
    */
-  enum TooltipColorStyle {
+  public enum TooltipColorStyle {
     /// Light blue background, white text, faded blue close button.
     case friendlyBlue
     /// Dark gray background, white text, light gray close button.

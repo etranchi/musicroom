@@ -22,6 +22,7 @@ class TabBarController: UITabBarController {
     let tabViewController2 = MapController()
     let minimizedPlayer = MinimizedPlayerView()
     let playerView = playerController.view!
+    var isPlayerOpened = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -81,10 +82,9 @@ class TabBarController: UITabBarController {
             minimizedPlayer.leadingAnchor.constraint(equalTo: tabBar.leadingAnchor),
             minimizedPlayer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -43),
             
-            playerView.topAnchor.constraint(equalTo: view.topAnchor),
+            
             playerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             playerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            playerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             songDetail.topAnchor.constraint(equalTo: view.topAnchor),
             songDetail.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -93,6 +93,10 @@ class TabBarController: UITabBarController {
         ])
         
         playerView.transform = CGAffineTransform(translationX: 0, y: view.bounds.height - offsetY - 44)
+        playerViewTopConstraint = playerView.topAnchor.constraint(equalTo: view.topAnchor)
+        playerViewBottomConstrant = playerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        playerViewTopConstraint.isActive = true
+        playerViewBottomConstrant.isActive = true
         tabViewController0.title = "Your Library"
         tabViewController1.title = "Search"
         tabViewController2.title = "Map"
@@ -108,6 +112,9 @@ class TabBarController: UITabBarController {
         let navi1 = CustomNavigationController(rootViewController: tabViewController1)
         let navi2 = CustomNavigationController(rootViewController: tabViewController2)
         
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+        minimizedPlayer.addGestureRecognizer(panGesture)
+        
         viewControllers = [navi0, navi1, navi2]
     }
     
@@ -119,6 +126,50 @@ class TabBarController: UITabBarController {
             })
         }
     }
+    
+    let             menuHeight = UIScreen.main.bounds.height
+    var             playerViewTopConstraint: NSLayoutConstraint!
+    var             playerViewBottomConstrant: NSLayoutConstraint!
+    
+    @objc func          handlePan(gesture: UIPanGestureRecognizer) {
+        guard currentTrack != nil else { return }
+        let             translation = gesture.translation(in: view)
+        var             y = translation.y
+        
+        if isPlayerOpened {
+            print("opened")
+        } else {
+            y = y > 0 ? 0 : y
+            playerView.transform = CGAffineTransform(translationX: 0, y: self.view.bounds.height - self.offsetY + y)
+            tabBar.transform = CGAffineTransform(translationX: 0, y: -y * 0.1)
+            minimizedPlayer.transform = CGAffineTransform(translationX: 0, y: y)
+//            if y > -100 {
+//                minimizedPlayer.alpha = abs(y / 100)
+//            }
+        }
+        if gesture.state == .ended {
+            handleEnded(gesture)
+        }
+    }
+    
+    fileprivate func    handleEnded(_ gesture: UIPanGestureRecognizer) {
+        let             translation = gesture.translation(in: view)
+        let             velocity = gesture.velocity(in: view)
+        if isPlayerOpened {
+            print("opened")
+        } else {
+            if velocity.y < -700 {
+                animatedShowPlayer()
+                return
+            }
+            if abs(translation.y) > menuHeight * 0.1 {
+                animatedShowPlayer()
+            } else {
+                animatedHidePlayer()
+            }
+        }
+    }
+
     
     func animatedShowPlayer() {
         animatedHideTabBar()

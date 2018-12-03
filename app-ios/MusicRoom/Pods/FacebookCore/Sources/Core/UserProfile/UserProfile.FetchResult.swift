@@ -18,27 +18,30 @@
 
 import FBSDKCoreKit
 
-public extension UserProfile {
+extension UserProfile {
   /**
    Describes the result of a fetch of `UserProfile`.
    */
-  enum FetchResult {
+  public enum FetchResult {
     /// Profile was succesfully fetched.
     case success(UserProfile)
     /// Profile fetch failed.
     case failed(Error)
+  }
+}
 
-    internal init(sdkProfile: FBSDKProfile?, error: Error?) {
-      if let error = error {
-        self = .failed(error)
-      } else if let sdkProfile = sdkProfile {
-        let profile = UserProfile(sdkProfile: sdkProfile)
-        self = .success(profile)
-      } else {
-        //FIXME: (nlutsenko) Use a good error type here.
-        let error = NSError(domain: "", code: 42, userInfo: nil)
-        self = .failed(error)
-      }
+extension UserProfile.FetchResult {
+
+  internal init(sdkProfile: FBSDKProfile?, error: Error?) {
+    if let error = error {
+      self = .failed(error)
+    } else if let sdkProfile = sdkProfile {
+      let profile = UserProfile(sdkProfile: sdkProfile)
+      self = .success(profile)
+    } else {
+      //FIXME: (nlutsenko) Use a good error type here.
+      let error = NSError(domain: "", code: 42, userInfo: nil)
+      self = .failed(error)
     }
   }
 }

@@ -96,12 +96,12 @@ class SongDetailView: UIView {
         UIView.animate(withDuration: 0.25, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.alpha = 1
         })
-        UIView.animate(withDuration: 0.45, delay: 0.125, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveLinear, animations: {
+        UIView.animate(withDuration: 0.175, delay: 0.125, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveLinear, animations: {
             self.cancelButton.transform = .identity
             self.detailView.transform = .identity
             
         })
-        UIView.animate(withDuration: 0.75, delay: 0.125, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 0.375, delay: 0.125, usingSpringWithDamping: 0.8, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.imageView.transform = .identity
             self.titleLabel.transform = .identity
             self.authorLabel.transform = .identity

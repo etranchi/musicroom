@@ -23,7 +23,7 @@ import Foundation
  Each permission has its own set of requirements and suggested use cases.
  See a full list at https://developers.facebook.com/docs/facebook-login/permissions
  */
-public enum PublishPermission: PermissionRepresentable {
+public enum PublishPermission {
   /**
    Provides access to publish Posts, Open Graph actions, achievements,
    scores and other activity on behalf of a person using your app.
@@ -32,10 +32,9 @@ public enum PublishPermission: PermissionRepresentable {
   /// Enables your app to retrieve Page Access Tokens for the Pages and Apps that the person administrates.
   case managePages
   /**
-   When you also have the manage_pages permission, gives your app the ability to post,
-   comment and like as any of the Pages managed by a person using your app.
+   When you also have the manage_pages permission, gives your app the ability to post, comment and like as any of the Pages managed by a person using your app.
    Apps need both manage_pages and publish_pages to be able to publish as a Page.
-   */
+  */
   case publishPages
   /// Provides the ability to set a person's attendee status on Facebook Events (e.g. attending, maybe, or declined).
   case rsvpEvent
@@ -44,9 +43,9 @@ public enum PublishPermission: PermissionRepresentable {
    See https://developers.facebook.com/docs/facebook-login/permissions for full list of available permissions.
    */
   case custom(String)
+}
 
-  // MARK: PermissionRepresentable
-
+extension PublishPermission: PermissionRepresentable {
   internal var permissionValue: Permission {
     switch self {
     case .publishActions: return "publish_actions"
