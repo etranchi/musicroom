@@ -23,6 +23,7 @@ const middlewares = {
 		}
 	},
 	logs: function logs(req, res, next) {
+		let message
 		req.meta = {
 			date: moment().format('LLL'),
 			ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
@@ -31,7 +32,11 @@ const middlewares = {
 			method: req.method,
 			body: req.body
 		}
-		logger.info(req.meta)
+		if (req.meta.user_agent === "MusicRoom")
+			message = "[" + req.meta.date + "][from Swift App " + req.meta.user_agent + " ip " + req.meta.ip + "] Request method " + req.meta.method + " on " + req.meta.route + " body -> " + req.meta.body
+		else
+			message = "[" + req.meta.date + "][from " + req.meta.user_agent + " " + req.meta.ip + "] Request method " + req.meta.method + " on " + req.meta.route + " body -> " + JSON.stringify(req.meta.body)
+		logger.info(message)
 		next();
 	  }
 };
