@@ -113,8 +113,7 @@ export default class LiveEvent extends Component {
                 <br/>
                 <br/>
                 <Row>
-                    <Col span={6}/>
-                    <Col span={12}>
+                    <Col span={12} offset={6}>
                         <DragDropContext onDragEnd={this.onDragEnd}>
                             <Droppable droppableId="droppable" isDragDisabled={!(this.state.isAdmin || this.state.isCreator)} isDropDisabled={!(this.state.isAdmin || this.state.isCreator)} >
                             {
