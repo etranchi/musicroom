@@ -36,11 +36,14 @@ module.exports = {
 			if (!Number(req.params.id))
 				playlist = await playlistModel.findOne({'_id': req.params.id})
 			else {
+				
 				let options = {
 					method: 'GET',
 					uri: config.deezer.apiUrl + '/playlist/' + req.params.id,
 					json: true
 				};
+				if (req.user.deezerToken)
+					options.qs = {"access_token": req.user.deezerToken};
 				playlist = await request(options)
 				if (playlist.id) {
 					return res.status(200).json(playlist);

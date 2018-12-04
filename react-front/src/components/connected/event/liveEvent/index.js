@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import './styles.css';
 import Track from '../../../templates/track'
-import axios from 'axios'
 import { Col, Row } from 'antd'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import PersonalPlayer from '../../event/personalPlayer'
-import {socket, getRoomPlaylist, updateScore, updateTracks, updateTrack, blockSocketEvent} from '../../sockets';
+import Player from '../../../other/player'
+import {socket, getRoomPlaylist, updateScore, updateTracks, updateTrack, blockSocketEvent} from '../../../other/sockets';;
 
 const reorder = (list, startIndex, endIndex) => {
 	const result = Array.from(list);
@@ -31,15 +30,6 @@ export default class LiveEvent extends Component {
             isAdmin: false,
         };
         this.roomID = this.props.roomID;
-        console.log("Live event : CONSTRUCTOR");
-    }
-    isUser = tab => 
-    {
-        for (let i = 0; i < tab.length; i++) {
-            if (tab[i].email === this.props.state.user.email)
-                return true;
-        }
-        return false;
     }
     componentDidMount = () => {
         socket.on('getRoomPlaylist', (tracks) => {
@@ -52,7 +42,7 @@ export default class LiveEvent extends Component {
         socket.on('updateScore', (tracks) => {
             console.log("socket : receive data from updateScore : ", tracks)
             this.setState({rotate: {active:false, id:0, liked: false}});
-           this.savePlaylist(tracks);
+            this.savePlaylist(tracks);
         });
         /**************************************/
         if (this.props.state.data.event.creator.email === this.props.state.user.email)
@@ -74,22 +64,21 @@ export default class LiveEvent extends Component {
         playlist.tracks.data = tracks;
         this.setState({playlist:playlist});
     }
+    isUser = tab => 
+    {
+        for (let i = 0; i < tab.length; i++) {
+            if (tab[i].email === this.props.state.user.email)
+                return true;
+        }
+        return false;
+    }
     callSocket = (type, OldTrack, value) => {
 
         let me          = this.props.state.user;
-        let index    = -1;
-        console.log("BEFORE : ", OldTrack.userLike)
-        console.log("BEFORE : ", OldTrack.userUnLike)
-        if (OldTrack.userLike && (index = OldTrack.userLike.indexOf(me._id)) != -1) {
-            console.log("Enter userLike")
-            OldTrack.userLike.splice(0, index)
-        }
-        else if (OldTrack.userUnLike && (index = OldTrack.userUnLike.indexOf(me._id)) != -1) {
-            console.log("Enter userUnLike")
-            OldTrack.userUnLike.splice(0, index)
-        }
-        console.log("AFTER : ", OldTrack.userLike)
-        console.log("AFTER : ", OldTrack.userUnLike)
+        let index       = -1;
+
+        if      (OldTrack.userLike   && (index = OldTrack.userLike.indexOf(me._id)) !== -1)   OldTrack.userLike.splice(0, index)
+        else if (OldTrack.userUnLike && (index = OldTrack.userUnLike.indexOf(me._id)) !== -1) OldTrack.userUnLike.splice(0, index)
         updateTrack(this.roomID,  OldTrack)
         this.setState({rotate: {active:true, id:OldTrack._id, liked: value > 0 ? true : false}}, () => {
             updateScore(this.roomID, OldTrack._id, value, this.props.state.user._id)
@@ -99,28 +88,24 @@ export default class LiveEvent extends Component {
     onDragStart = () => {
         blockSocketEvent(this.roomID)
 	}
-	
 	onDragEnd = (result) => {
-		if (!result.destination) {
-		  return;
-		}
-	
-		var state = this.state;
-		const items = reorder(
-		  this.state.playlist.tracks.data,
-		  result.source.index,
-		  result.destination.index
-		);
-		state.playlist.tracks.data = items;
-		updateTracks(this.roomID, items)
+        if (!result.destination) return;
+		let state = this.state;
+		const items = reorder( this.state.playlist.tracks.data, result.source.index, result.destination.index );
+        state.playlist.tracks.data = items;
+        updateTracks(this.roomID, items)
 	}
     render() {
-
         return (
             <div>
                 <Row>
+                    <Col span={8}> 
+                        <a href="#!" className="btn waves-effect waves-teal" onClick={this.props.openCardEvent.bind(this, this.props.state.data.event)}>Back</a> 
+                    </Col> 
+                </Row>
+                <Row>
                     <Col span={24}>
-                        {this.state.playlist.tracks.data.length > 0 && <PersonalPlayer  tracks={this.state.playlist.tracks.data} roomID={this.props.roomID}></PersonalPlayer>}
+                        {this.state.playlist.tracks.data.length > 0 && <Player  tracks={this.state.playlist.tracks.data} roomID={this.props.roomID}/>}
                     </Col>
                 </Row>
                 <br/>
@@ -128,10 +113,9 @@ export default class LiveEvent extends Component {
                 <br/>
                 <br/>
                 <Row>
-                    <Col span={6}/>
-                    <Col span={12}>
+                    <Col span={12} offset={6}>
                         <DragDropContext onDragEnd={this.onDragEnd}>
-                            <Droppable droppableId="droppable" isDragDisabled={this.state.isAdmin || this.state.isCreator} isDropDisabled={this.state.isAdmin || this.state.isCreator} >
+                            <Droppable droppableId="droppable" isDragDisabled={!(this.state.isAdmin || this.state.isCreator)} isDropDisabled={!(this.state.isAdmin || this.state.isCreator)} >
                             {
                                 (provided, snapshot) =>  (
                                     <Row>

@@ -4,7 +4,6 @@ import Event from './event'
 import Playlist from './playlist'
 import Setting from './setting'
 import axios from 'axios'
-import './styles.css';
 
 export default class Connected extends Component {
 	constructor(props){
@@ -17,7 +16,6 @@ export default class Connected extends Component {
 	}
 	componentWillMount = () => {
 		this.getGeolocalisation();
-		this.getEvents();
 	}
 	getGeolocalisation = () => {
 		if (!this.props.state.data.userCoord) 
@@ -30,7 +28,7 @@ export default class Connected extends Component {
 			axios.get('https://api.ipify.org?format=json')
 				.then(ip => {
 					/* Transform user ip to coord */
-					axios.get('https://geo.ipify.org/api/v1?apiKey=at_EbajwXipAKZOdFKiI85swEhQEswi4&ipAddress=' + ip.data.ip)
+					axios.get('https://geo.ipify.org/api/v1?apiKey=at_SoggptEjCDvnJYqbssJZlNKVWyzvg&ipAddress=' + ip.data.ip)
 						.then(resp => {
 							this.props.state.data.userCoord.lat = resp.data.location.lat
 							this.props.state.data.userCoord.lng = resp.data.location.lng
@@ -42,7 +40,7 @@ export default class Connected extends Component {
 										this.props.updateParent({'data': this.props.state.data})
 										this.setState({loading:false})
 									},
-									(error) =>  {
+									() =>  {
 										console.log("getGeolocalisation -> cant more accuracy")
 										this.props.updateParent({'data': this.props.state.data})
 										this.setState({loading:false})
@@ -50,22 +48,13 @@ export default class Connected extends Component {
 									{ maximumAge:Infinity, timeout:5000 }
 								);
 							}
-
-					});
+						
+					})
 				})
 		}
-		this.setState({height: window.innerHeight + 'px'});
+		this.setState({height: window.innerHeight + 'px', loading:false});
 	}
-	getEvents = () => {
-		axios.get(process.env.REACT_APP_API_URL + '/event')
-		.then( resp => {
-			this.props.state.data.events = (resp.data.length > 0) ? resp.data.reverse() : resp.data ;
-			this.props.updateParent({'data' : this.props.state.data})
-		})
-		.catch( err => {
-			this.setState({events: []})
-		});
-	}
+
 	toggle = () => {
 		this.setState({ collapsed: !this.state.collapsed});
 	}

@@ -35,10 +35,15 @@ module.exports = function (io) {
         socket.on('joinPlaylist', (playlistId) => {
             console.log("[Socket] -> joinPlaylist", playlistId)
             socket.join(playlistId);
+            console.log("Nb clients in room " + playlistId + " -> " + io.sockets.adapter.rooms[playlistId].length)
         });
         socket.on('leavePlaylist', (playlistId) => {
             console.log("[Socket] -> leavePlaylist")
             socket.leave(playlistId);
+            if (io.sockets.adapter.rooms[playlistId])
+                console.log("Nb clients in room " + playlistId + " -> " + io.sockets.adapter.rooms[playlistId].length)
+            else
+                console.log("No more room for " + playlistId)
         });
 
 
@@ -96,7 +101,8 @@ module.exports = function (io) {
             let room = ftSocket.getRoom(roomID)
             if (room) {
                 room.tracks = tracks
-                room = ftSocket.updateRoom(room)
+                console.log(tracks[0], tracks[1])
+                // room = ftSocket.updateRoom(room)
                 io.sockets.in(room.id).emit('updateScore', room.tracks)
             } else
                 return io.sockets.in(room.id).emit('updateTracks', 'fail');

@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import './styles.css';
 import { message, Button, Divider, Row, Col} from 'antd';
 import CardHeader from './Header'
 import CreatorProfil from './creatorProfil'
 import BodyEvent from './Body'
 import Map from '../map'
 import geolib from 'geolib'
-import {socket, createRoom, joinRoom} from '../../sockets';
+import {socket, createRoom, joinRoom} from '../../../other/sockets';
 
 class cardEvent extends Component {
 	constructor(props) {
@@ -113,6 +112,11 @@ class cardEvent extends Component {
         console.log(this.props);
         return  (
             <div>
+                <Row>
+                    <Col span={8}> 
+                        <a href="#!" className="btn waves-effect waves-teal" onClick={() => this.props.changeView('listEvent')}>Back</a> 
+                    </Col>
+                </Row>
                 <CardHeader state={this.props.state} updateParent={this.props.updateParent} />
                 <Row>
                     <Col>

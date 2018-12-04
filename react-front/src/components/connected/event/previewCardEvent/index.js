@@ -28,11 +28,6 @@ export default class PreviewCardEvent extends Component {
    toRad = (Value) => {
         return Value * Math.PI / 180;
     }
-    openCard = (e) => {
-        window.scrollTo(600, 600);
-        this.props.state.data.event = this.props.event;
-        this.props.updateParent({'currentComponent': 'cardEvent', 'data': this.props.state.data});
-    }
     componentDidMount = () => {
         if (!this.props.event.location.coord) {
             this.props.event.location.coord = {
@@ -99,16 +94,16 @@ export default class PreviewCardEvent extends Component {
         })
     }
 	render() {
-        const userPicture = this.props.event.creator.facebookId ? this.props.event.creator.picture : process.env.REACT_APP_API_URL + "/userPicture/" + this.props.event.creator.picture
+        const userPicture = this.props.event.creator.picture.indexOf("https://") !== -1? this.props.event.creator.picture : process.env.REACT_APP_API_URL + "/userPicture/" + this.props.event.creator.picture
         return (
             <Card
                 className="zoomCard"
                 style={{ width: 300, display: "inline-block", margin: "1% 2% 0 "}}
-                cover={ <img onClick={this.openCard.bind(this)} alt="eventPicture" src={process.env.REACT_APP_API_URL + "/eventPicture/" +  this.props.event.picture} />}
+                cover={ <img onClick={this.props.openCardEvent.bind(this, this.props.event)} alt="eventPicture" src={process.env.REACT_APP_API_URL + "/eventPicture/" +  this.props.event.picture} />}
                 actions={[<Icon type="setting" theme="outlined"/>, <Icon type="edit" theme="outlined"/>, <i onClick={this.openMap.bind(this)} className="fas fa-map-marker"></i>,<i onClick={this.delete} className="fas fa-trash-alt"></i>]}
             >
                 <Card.Meta
-                    onClick={this.openCard.bind(this)}
+                    onClick={this.props.openCardEvent.bind(this, this.props.event)}
                     avatar={<Avatar size={116} src={userPicture} />}
                     title= {this.props.event.creator && this.props.event.creator.login ? this.props.event.creator.login : "Aucun" }
                     description=
@@ -126,11 +121,11 @@ export default class PreviewCardEvent extends Component {
                     onOk={this.handleOk}
                     onCancel={this.handleCancel}
                 >  
-                    <Map state={this.props.state} openCard={this.openCard} events={[this.props.event]}/>
+                    <Map state={this.props.state} openCardEvent={this.props.openCardEvent} events={[this.props.event]}/>
                     <Row>
 					<Col span={11}/>
 					<Col span={4}>
-						<Button  onClick={this.openCard.bind(this)}> Voir l'évent </Button>
+						<Button  onClick={this.props.openCardEvent.bind(this, this.props.event)}> Voir l'évent </Button>
 					</Col>
 				</Row>       
             </Modal>

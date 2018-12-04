@@ -1,28 +1,26 @@
 import React, { Component } from 'react';
-import './styles.css';
-import { Layout, Row, Col, Divider} from 'antd';
-import Map from '../map'
+import { Layout, Row, Col, Divider, Spin } from 'antd';
 import axios from 'axios'
 import PreviewCard from '../previewCardEvent'
 import List from '../listEvent'
+import Map from '../map'
 
 export default class listCloseEvent extends Component {
 	constructor(props) {
         super(props);
-
         this.state = {
             events: [],
-            loading: false,
+            loading: true,
             displayCard:false,
             currentEvent: {}
         };
     }
     componentWillMount = () => {
         window.scrollTo(700, 700)
-		axios.get(process.env.REACT_APP_API_URL + '/event')
+		axios.get(process.env.REACT_APP_API_URL + '/event', {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
 		.then((resp) => {
             this.setState({events: resp.data.allEvents.reverse()}, () => {
-                this.setState({loading:true});
+                this.setState({loading:false});
             });
 		})
 		.catch((err) => {
@@ -33,10 +31,16 @@ export default class listCloseEvent extends Component {
         this.setState({currentEvent:event, displayCard:true});
     }
 	render() {
-		if (!this.state.loading) return <div>Loading...</div>
+		if (this.state.loading)
+			return <Spin tip=" Waiting events ..." size="large" > </Spin>
         else {
             return (
                 <div>
+                    <Row> 
+                        <Col span={8}> 
+                            <a href="#!" className="btn waves-effect waves-teal" onClick={() => this.props.changeView('listEvent')}>Back</a> 
+                        </Col> 
+                    </Row>
                     <Divider />
                     <Layout>
                         <Layout.Content>
@@ -51,7 +55,7 @@ export default class listCloseEvent extends Component {
                                 </Col>
                             </Row>
                             <Divider />
-                            <List state={this.props.state} updateParent={this.props.updateParent}/>
+                            <List state={this.props.state} updateParent={this.props.updateParent} openCardEvent={this.props.openCardEvent}/>
                         </Layout.Content>
                     </Layout>
             </div>
