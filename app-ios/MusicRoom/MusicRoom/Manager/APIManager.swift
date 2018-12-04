@@ -67,6 +67,17 @@ class APIManager: NSObject, URLSessionDelegate {
         }
     }
     
+    func searchPlaylists(_ search: String, completion: @escaping ([SPlaylist]) -> ()) {
+        let w = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+        
+        let playlistsUrl = self.url + "search/playlist?q=\(w)"
+        var playlistsRequest = URLRequest(url: URL(string: playlistsUrl)!)
+        playlistsRequest.httpMethod = "GET"
+        self.searchAll(SearchPlaylist.self, request: playlistsRequest, completion: { (res) in
+            completion(res.data)
+        })
+    }
+    
     func searchAlbums(_ search: String, completion: @escaping ([Album]) -> ()) {
         let w = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
         
@@ -330,6 +341,8 @@ class APIManager: NSObject, URLSessionDelegate {
                 }
                 if let d = data {
                     let json = NSString(data: d, encoding: String.Encoding.utf8.rawValue)
+                    print("response puuuuut")
+                    print(json)
                     completion(true)
                 }
             }).resume()
@@ -344,10 +357,11 @@ class APIManager: NSObject, URLSessionDelegate {
         request.httpMethod = "GET"
         request.setValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        self.searchAll(Event.self, request: request) { (res) in
+        searchAll(Event.self, request: request) { (res) in
             completion(res)
         }
     }
+    
     func getEvents(completion : @escaping ((DataEvent) -> ())){
         let eventsUrl = self.url + "event"
         var request = URLRequest(url: URL(string: eventsUrl)!)
