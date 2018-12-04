@@ -46,9 +46,9 @@
         ]
     },
     "mail": {
-        "email": "kvignau@gmail.com",
-        "password": "",
-        "service": "gmail"
+        "email": "musicvroom42@gmail.com",
+		"password": "",
+		"service": "gmail"
     },
     "swagger": {
         "swaggerDefinition": {

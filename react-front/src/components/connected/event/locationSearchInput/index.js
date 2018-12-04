@@ -9,7 +9,7 @@ export default class LocationSearchInput extends Component {
     this.state = {
       location: {
         address: '',
-        coord: ''
+        coord  : ''
       },
       addressObj: '',
       key: 0
@@ -73,7 +73,16 @@ export default class LocationSearchInput extends Component {
             </div>
           )}
         </PlacesAutocomplete>
-          {this.props.displayMap  ? <Map state={this.props.state} events={this.props.state.data.event ? [this.props.state.data.event] : []} center={this.state.location.coord}/> : null }
+        {
+          this.props.displayMap  ? 
+            <Map 
+              state={this.props.state} 
+              events={this.props.state.data.event ? [this.props.state.data.event] : []} 
+              center={this.state.location.coord}
+            /> 
+            : 
+            null 
+        }
         </div>
 			);
 		}

@@ -26,40 +26,87 @@ export default class Event extends Component {
 	}
 	render() {
 		if (this.props.state.currentComponent === 'cardEvent' && this.state.currentSubView)
-			this.setState({currentSubView:''})
+			this.setState({currentSubView:''});
 		else if (this.props.state.currentComponent === 'event' && !this.state.currentSubView)
-			this.setState({currentSubView: 'listEvent'})
+			this.setState({currentSubView: 'listEvent'});
 		return (
 			<div>
 				{
 					this.props.state.currentComponent === 'event' ?
 						<Row style={{height:'160px'}}>
-							<Col span={1}/>
-							<Col span={7}  style={this.state.currentSubView === 'createEvent' ? this.selectedMenu : null} className="cardStyle" >
+							<Col 
+								span={7} offset={1}  
+								style={this.state.currentSubView === 'createEvent' ? this.selectedMenu : null} 
+								className="cardStyle"
+							>
 								<div className="SimpleBgHover">
-									<b className="textStyle" onClick={this.changeView.bind(this, 'createEvent')}>  Nouvelle Évènement </b>
+									<b className="textStyle" onClick={this.changeView.bind(this, 'createEvent')}>
+										Nouvelle Évènement 
+									</b>
 								</div>
 							</Col>
-							<Col span={7} style={this.state.currentSubView === 'listEvent' ? this.selectedMenu : null} className="cardStyle" >
+							<Col 
+								span={7} 
+								style={this.state.currentSubView === 'listEvent' ? this.selectedMenu : null}
+								className="cardStyle" 
+							>
 								<div className="SimpleBgHover">
-									<b className="textStyle" onClick={this.changeView.bind(this, 'listEvent')}>  Liste Évènements </b>
+									<b className="textStyle" onClick={this.changeView.bind(this, 'listEvent')}>  
+										Liste Évènements 
+									</b>
 								</div>
 							</Col>
-							<Col span={7} style={this.state.currentSubView === 'listcloseEvent' ? this.selectedMenu : null} className="cardStyle" >
+							<Col 
+								span={7} 
+								style={this.state.currentSubView === 'listcloseEvent' ? this.selectedMenu : null} 
+								className="cardStyle"
+							>
 								<div className="SimpleBgHover">
-									<b className="textStyle" onClick={this.changeView.bind(this, 'listcloseEvent')}>  Évènements à proximités </b>
+									<b className="textStyle" onClick={this.changeView.bind(this, 'listcloseEvent')}> 
+										Évènements à proximités 
+									</b>
 								</div>
 							</Col>						
-							<Col span={2}/>
 						</Row>
 						:
 						null 
 				}
-				{this.props.state.currentComponent 	=== 'cardEvent' 		&& <CardEvent state={this.props.state} updateParent={this.props.updateParent} changeView={this.changeView}/>}
-				{this.state.currentSubView 			=== 'createEvent' 		&& <Create state={this.props.state} updateParent={this.props.updateParent} changeView={this.changeView}/>}
-				{this.state.currentSubView 			=== 'listEvent' 		&& <List state={this.props.state} updateParent={this.props.updateParent} openCardEvent={this.openCardEvent}/>}
-				{this.state.currentSubView 			=== 'listcloseEvent' 	&& <ListCloseEvent state={this.props.state} updateParent={this.props.updateParent} openCardEvent={this.openCardEvent}/>}
-				{this.props.state.currentComponent 	=== 'liveEvent' 		&& <LiveEvent state={this.props.state} roomID={this.props.state.data.event._id} playlist={this.props.state.data.event.playlist} openCardEvent={this.openCardEvent}/>}
+				{
+					this.props.state.currentComponent 	=== 'cardEvent' 		&& <CardEvent  
+																						state={this.props.state} 
+																						updateParent={this.props.updateParent} 
+																						changeView={this.changeView}
+																					/>
+				}
+				{
+					this.state.currentSubView 			=== 'createEvent' 		&& <Create 
+																						state={this.props.state} 
+																						updateParent={this.props.updateParent} 
+																						changeView={this.changeView}
+																					/>
+				}
+				{
+					this.state.currentSubView 			=== 'listEvent' 		&& <List 
+																						state={this.props.state}
+																						updateParent={this.props.updateParent}
+																						openCardEvent={this.openCardEvent}
+																					/>
+				}
+				{
+					this.state.currentSubView 			=== 'listcloseEvent' 	&& <ListCloseEvent 
+																						state={this.props.state} 
+																						updateParent={this.props.updateParent} 
+																						openCardEvent={this.openCardEvent}
+																					/>
+				}
+				{
+					this.props.state.currentComponent 	=== 'liveEvent' 		&& <LiveEvent 
+																					state={this.props.state} 
+																					roomID={this.props.state.data.event._id}
+																					openCardEvent={this.openCardEvent} 
+																					playlist={this.props.state.data.event.playlist}
+																					/>
+				}
 			</div>
 		);
 	}
