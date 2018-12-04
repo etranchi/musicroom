@@ -121,8 +121,6 @@ class APIManager: NSObject, URLSessionDelegate {
             do {
                 let responseJSON = try JSONSerialization.jsonObject(with: data!, options: [])
                 if let responseJSON = responseJSON as? [String: AnyObject] {
-                    // print(responseJSON)
-                    print("good")
                     completion(responseJSON)
                 }
             }
@@ -332,7 +330,6 @@ class APIManager: NSObject, URLSessionDelegate {
                 }
                 if let d = data {
                     let json = NSString(data: d, encoding: String.Encoding.utf8.rawValue)
-                    print(json)
                     completion(true)
                 }
             }).resume()
@@ -416,8 +413,6 @@ class APIManager: NSObject, URLSessionDelegate {
                             onCompletion(false)
                             return
                         }
-                        print("response")
-                        print(response)
                         onCompletion(true)
                     }
                 case .failure(let error):

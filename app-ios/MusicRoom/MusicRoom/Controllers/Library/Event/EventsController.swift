@@ -60,13 +60,13 @@ class EventsController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.row == 0 && events?.myEvents != nil && (events?.myEvents.count)! > 0  {
+        if indexPath.row == 0 && events?.myEvents != nil {
             let cell = tableView.dequeueReusableCell(withIdentifier: eventCellId, for: indexPath) as! SearchEventsCell
             cell.rootTarget = self
             cell.title = sections[indexPath.section]
             cell.event = events?.myEvents
             return cell
-        } else if indexPath.row == 1 && events?.friendEvents != nil && (events?.friendEvents.count)! > 0 {
+        } else if indexPath.row == 1 && events?.friendEvents != nil {
             let cell = tableView.dequeueReusableCell(withIdentifier: eventCellId, for: indexPath) as! SearchEventsCell
             cell.rootTarget = self
             cell.title = sections[indexPath.section]
@@ -86,7 +86,7 @@ class EventsController: UITableViewController {
         } else if indexPath.row == 1 && (events?.friendEvents.count == 0 || events?.friendEvents == nil){
             return height
         }
-        return height
+        return 240
     }
  
 

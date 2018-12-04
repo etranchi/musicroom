@@ -28,21 +28,20 @@ class MapController: UIViewController {
     
     func getAllEvents() {
         apiManager.getEvents(completion: { res in
-            if res.allEvents.count > 0 {
-                self.events = res.allEvents
-                DispatchQueue.main.async {
-                    for ev in self.events! {
-                        let annotation = MyAnnotation()
-                        annotation.coordinate = CLLocationCoordinate2DMake(ev.location.coord.lat, ev.location.coord.lng)
-                        annotation.title = ev.title
-                        annotation.identifier = ev._id
-                        annotation.imagePath = ev.picture!
-                        annotation.event = ev
-                        let city = ev.location.address.p
-                        let state = ev.location.address.v
-                        annotation.subtitle = "\(city) \(state)"
-                        self.mapView.addAnnotation(annotation)
-                    }
+            let events = res.allEvents + res.friendEvents + res.myEvents
+            self.events = events
+            DispatchQueue.main.async {
+                for ev in self.events! {
+                    let annotation = MyAnnotation()
+                    annotation.coordinate = CLLocationCoordinate2DMake(ev.location.coord.lat, ev.location.coord.lng)
+                    annotation.title = ev.title
+                    annotation.identifier = ev._id
+                    annotation.imagePath = ev.picture!
+                    annotation.event = ev
+                    let city = ev.location.address.p
+                    let state = ev.location.address.v
+                    annotation.subtitle = "\(city) \(state)"
+                    self.mapView.addAnnotation(annotation)
                 }
             }
         })
