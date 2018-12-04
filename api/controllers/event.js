@@ -44,12 +44,17 @@ module.exports = {
 								{'adminMembers': 
 									{$in: req.user._id}
 								},
-								,
 								{'members': 
 									{$in: req.user._id}
+								},
+								{
+									public: true
 								}
 							]
 					})
+					.populate('creator')
+					.populate('members')
+					.populate('adminMembers')
 			res.status(200).json(event || {})
 		} catch (err) {
 			next(new customError(err.message, 400))
