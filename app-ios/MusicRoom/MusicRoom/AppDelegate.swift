@@ -14,6 +14,8 @@ import FacebookCore
 import GoogleSignIn
 import GoogleToolboxForMac
 import UserNotifications
+import FBSDKCoreKit
+import FBSDKLoginKit
 
 var deezerManager = DeezerManager()
 var apiManager = APIManager()
@@ -26,9 +28,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     var orientationLock = UIInterfaceOrientationMask.all
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
-        print(url)
-        return GIDSignIn.sharedInstance().handle(url as URL, sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
-                                                 annotation: options[UIApplicationOpenURLOptionsKey.annotation])
+        
+        if ( GIDSignIn.sharedInstance().handle(url as URL, sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
+                                               annotation: options[UIApplicationOpenURLOptionsKey.annotation])){
+            return true
+        }
+        return FBSDKApplicationDelegate.sharedInstance().application(app, open: url as URL, sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String, annotation: options[UIApplicationOpenURLOptionsKey.annotation])
     }
     
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
@@ -37,23 +42,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         
-        UNUserNotificationCenter.current().delegate = self
-        registerForPushNotifications()
         window = UIWindow()
         window?.makeKeyAndVisible()
-        deezerManager.startDeezer()
-        SocketIOManager.sharedInstance.socketConnect()
         let user = userManager.getAllUsers()
         if user.count == 0 {
             let nav = CustomNavigationController(rootViewController: AuthenticationController())
             window?.rootViewController = nav
         }
         else {
-            print(user[0])
-            print(user[0].token!)
+            UNUserNotificationCenter.current().delegate = self
+            registerForPushNotifications()
+            
+            deezerManager.startDeezer()
+            SocketIOManager.sharedInstance.socketConnect()
             userManager.currentUser = user[0]
             let nav = TabBarController()
-            print(userManager.currentUser!.token!)
             window?.rootViewController = nav
         }
         return true

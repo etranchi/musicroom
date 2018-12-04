@@ -12,7 +12,7 @@ import FacebookCore
 import GoogleSignIn
 import GoogleToolboxForMac
 
-class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate ,GIDSignInUIDelegate, LoginButtonDelegate {
+class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate ,GIDSignInUIDelegate, LoginButtonDelegate  {
     func loginButtonDidCompleteLogin(_ loginButton: LoginButton, result: LoginResult) {
         
         switch result {
@@ -22,14 +22,20 @@ class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate 
                 print("User cancelled login.")
             case .success(_,_, let accessToken):
                 apiManager.login("facebook", accessToken.authenticationToken, completion: { (data) in
-                    print("login")
-                    let user = userManager.newUser()
-                    user.token = data.token
-                    user.login = data.user.login
-                    userManager.currentUser = user
-                    userManager.save()
-                    let nav = TabBarController()
-                    self.present(nav, animated: true, completion: nil)
+                    if let d = data as? [String : AnyObject] {
+                        let user = userManager.newUser()
+                        user.token = d["token"] as! String
+                        user.login = (d["user"] as! [String : String])["login"] as! String
+                        userManager.currentUser = user
+                        userManager.logedWith = .fb
+                        userManager.save()
+                        let kwin = UIApplication.shared.keyWindow
+                        
+                        let nav = TabBarController()
+                        UIView.transition(with: kwin!, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                            kwin?.rootViewController = nav
+                        })
+                    }
                 })
         }
     }
@@ -45,21 +51,20 @@ class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate 
         if let error = error {
             print("\(error.localizedDescription)")
         } else {
-            // Perform any operations on signed in user here.
-            /* let userId = user.userID                  // For client-side use only!
-            let idToken = user.authentication.idToken // Safe to send to the server
-            let fullName = user.profile.name
-            let givenName = user.profile.givenName
-            let familyName = user.profile.familyName
-            let email = user.profile.email*/
             apiManager.login("google", user.authentication.accessToken, completion:  { (data) in
-                let user = userManager.newUser()
-                user.token = data.token
-                user.login = data.user.login
-                userManager.currentUser = user
-                userManager.save()
-                let nav = TabBarController()
-                self.present(nav, animated: true, completion: nil)
+                if let d = data as? [String : AnyObject] {
+                    let user = userManager.newUser()
+                    user.token = d["token"] as! String
+                    user.login = (d["user"] as! [String : String])["login"] as! String
+                    userManager.currentUser = user
+                    userManager.logedWith = .google
+                    userManager.save()
+                    let kwin = UIApplication.shared.keyWindow
+                    let nav = TabBarController()
+                    UIView.transition(with: kwin!, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                        kwin?.rootViewController = nav
+                    })
+                }
             })
         }
     }
@@ -80,15 +85,7 @@ class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate 
         googleButton = GIDSignInButton()
         
         facebook = LoginButton(readPermissions: [ReadPermission.publicProfile, ReadPermission.email])
-        let fbButton = UIButton(type: .roundedRect)
-        fbButton.backgroundColor = UIColor.darkGray
-        fbButton.frame = CGRect(x: 0,y : 0,width: 90,height:  40);
-        fbButton.center = view.center;
-        fbButton.setTitle("My Login Button", for: .normal)
-        // Handle clicks on the button
         facebook!.delegate = self
-        // Add the button to the view
-        // view.addSubview(fbButton)
         setupView()
         setupButton()
     }
@@ -196,6 +193,9 @@ class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate 
         print(JSONSerialization.isValidJSONObject(json))
         apiManager.loginUser(data) { (user) in
             print(user ?? "GPALUSER")
+            if user != nil {
+                userManager.logedWith = .local
+            }
         }
     }
     

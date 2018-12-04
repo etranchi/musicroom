@@ -195,21 +195,30 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
     
     @objc func createEvent() {
         // if data is good
+        print("youpla")
         if selectedPin == nil || selectedPin?.coordinate == nil || selectedPin?.coordinate.latitude == nil || selectedPin?.coordinate.longitude == nil {
+            print("youpla222")
             ToastView.shared.short(self.view, txt_msg: "Can't create event at this position", color : UIColor.red)
             return
         }
+        print("youpla33")
         if titleTF.text != nil && imageView.image != nil && playlistView?.selectedPlaylist != nil {
+            print("youpla21221")
             let myUser = userManager.currentUser
             let coord = Coord(lat: (selectedPin?.coordinate.latitude)!, lng: (selectedPin?.coordinate.longitude)!)
             // pays ville codepostale rue numero
             let address = Address(p: (selectedPin?.administrativeArea)!, v: (selectedPin?.locality)!, cp: (selectedPin?.isoCountryCode)!, r: (selectedPin?.thoroughfare)!, n: (selectedPin?.subThoroughfare)!)
             let location = Location(address: address, coord: coord)
-
+            print("youplawwwww")
             apiManager.getMe((myUser?.token)!, completion: { (user) in
+                print("youplappppp")
                 let event = Event(_id : nil, creator : user, title: self.titleTF.text!, description: self.descriptionTV.text!, location: location, visibility: self.segmentedBar.selectedSegmentIndex, shared: self.segmentedBar.selectedSegmentIndex == 0 ? true : false , creationDate: String(describing: Date()), date: String(describing: Date()), playlist: self.playlistView?.selectedPlaylist!, members: [], adminMembers: [], picture : nil)
+                print("youplauuuuuuuuuuu")
+                print(myUser?.token)
                 apiManager.postEvent((myUser?.token)!, event: event, img: self.imageView.image!) { (resp) in
+                    print("youpla21312321")
                     if resp {
+                        print("youpla0")
                         let vc = self.navigationController?.viewControllers[0] as! MapController
                         vc.selectedPin = nil
                         vc.mapView.removeAnnotations(vc.mapView.annotations)
@@ -220,13 +229,16 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
                         
                         
                     } else {
+                        print("youplaqweqwew")
                         ToastView.shared.short(self.view, txt_msg: "Error while creating your event", color : UIColor.red)
                     }
                 }
             })
+            print("youplajgrdsihbvjsandvn")
     
         }
         else {
+            print("youpla9999")
             ToastView.shared.short(self.view, txt_msg: "Check twice your information", color : UIColor.red)
         }
     }
