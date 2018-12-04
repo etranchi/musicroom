@@ -222,9 +222,10 @@ class APIManager: NSObject, URLSessionDelegate {
     }
     
     func addTrackToLibrary(_ trackId: String) {
-        let addTrackUrl = self.url + "track/\(trackId)"
+        let addTrackUrl = self.url + "track/"
         let headers: HTTPHeaders = ["Authorization": "Bearer \(userManager.currentUser!.token!)"]
-        APIManager.Manager.request(addTrackUrl, method: .get, parameters: [:], encoding: URLEncoding.default, headers: headers).response { (data) in
+        let parameter : Parameters = ["id" : trackId]
+        APIManager.Manager.request(addTrackUrl, method: .post, parameters: parameter, encoding: URLEncoding.default, headers: headers).response { (data) in
             self.getLibraryTracks { (tracks) in
                 lovedTracksId.removeAll()
                 tracks.forEach({ (track) in
@@ -237,7 +238,8 @@ class APIManager: NSObject, URLSessionDelegate {
     func removeTrackFromLibrary(_ trackId: String) {
         let addTrackUrl = self.url + "track/\(trackId)"
         let headers: HTTPHeaders = ["Authorization": "Bearer \(userManager.currentUser!.token!)"]
-        APIManager.Manager.request(addTrackUrl, method: .delete, parameters: [:], encoding: URLEncoding.default, headers: headers).response { (data) in
+        let parameter : Parameters = ["id":trackId]
+        APIManager.Manager.request(addTrackUrl, method: .delete, parameters: parameter, encoding: URLEncoding.default, headers: headers).response { (data) in
             self.getLibraryTracks { (tracks) in
                 lovedTracksId.removeAll()
                 tracks.forEach({ (track) in
