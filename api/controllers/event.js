@@ -19,7 +19,7 @@ module.exports = {
 					acc['friendEvents'].push(elem)
 				else if (elem.adminMembers.filter((e) => e._id.toString() === req.user._id.toString()).length > 0)
 					acc['friendEvents'].push(elem)
-				else
+				else if (elem.public === true)
 					acc['all'].push(elem)
 				return acc
 			}, {myEvents: [], friendEvents: [], all: []})
@@ -62,13 +62,7 @@ module.exports = {
 				throw new Error('No Location')
 			if (req.file && req.file.filename)
 				req.body.picture = req.file.filename
-			console.log("BODYYYYYYY")
-			console.log(req.body)
 			let event = await modelEvent.create(req.body)
-			console.log("no time to populate");
-			await event.populate('creator', 'User')
-			await event.populate('members', 'Member')
-			await event.populate('adminMembers', 'AdminMember')
 			res.status(200).send(event)
 		} catch (err) {
 			console.log("ERROR POST EVENT -> " + err)
