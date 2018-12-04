@@ -20,6 +20,7 @@ class CoverContainerView: UIView {
     let zoomingEffect: CGFloat = 40.0
     let transparencyEffect: CGFloat = 0.4
     let animationTime = 0.4
+    var pan: UIPanGestureRecognizer?
     
     init(target: UIViewController, _ underPreviousTrack: Track?, _ previousTrack: Track?, _ currentTrack: Track?, _ nextTrack: Track?, _ overNextTrack: Track?) {
         self.playerController = target as! PlayerController
@@ -31,7 +32,8 @@ class CoverContainerView: UIView {
         super.init(frame: .zero)
         
         if currentTrack != nil {
-            addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handlePan)))
+            pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+            addGestureRecognizer(pan!)
             setupView()
         }
     }
@@ -108,6 +110,7 @@ class CoverContainerView: UIView {
     }
     
     func handleEnded(x: CGFloat) {
+        removeGestureRecognizer(pan!)
         if x < 0 {
             currentLeadingAnchor?.constant = 25 + (offset - 30) * -1
             currentTrailingAnchor?.constant = -25 + (offset + 5) * -1
