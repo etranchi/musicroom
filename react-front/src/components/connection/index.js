@@ -55,14 +55,12 @@ class Connection extends Component {
     return (
       <div>
         <Row>
-          <Col span={10}></Col>
-          <Col span={4}>
+          <Col span={4} offset={10}>
             <div style={{textAlign:'center'}}>
               <Menu
                 onClick={this.handleClick}
                 selectedKeys={[this.state.current]}
-                mode="horizontal"
-              >
+                mode="horizontal">
                 <Menu.Item key="login" onClick={this.props.updateParent.bind(this, {'currentComponent': 'login'})}>
                   <Icon type="login" />Login
                 </Menu.Item>
@@ -76,8 +74,7 @@ class Connection extends Component {
        	  {this.props.state.currentComponent === 'register'? <Register updateParent={this.props.updateParent}/> : null}
           {this.props.state.currentComponent === 'login'? <Login updateParent={this.props.updateParent}/> : null}
          <Row style={{height:'80px'}}>
-          <Col span={8}></Col>
-          <Col span={3}>
+          <Col span={3} offset={8}>
             <FacebookLogin
               appId="711181125906087"
               autoLoad={false}
@@ -85,8 +82,7 @@ class Connection extends Component {
               cssClass="facebook_button"
               callback={this.responseFacebook.bind(this)} />
           </Col>
-          <Col span={2}></Col>
-          <Col span={3}>
+          <Col span={3} offset={2}>
             <GoogleLogin
               clientId="479103948820-tb38ba04oig61ogfdjgs6s07u9ph626o.apps.googleusercontent.com"
               className="google_button"
