@@ -31,6 +31,7 @@ class CoverContainerView: UIView {
         super.init(frame: .zero)
         
         if currentTrack != nil {
+            addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handlePan)))
             setupView()
         }
     }
@@ -79,6 +80,33 @@ class CoverContainerView: UIView {
         return iv
     }()
     
+    let                 menuHeight = UIScreen.main.bounds.height
+    @objc func          handlePan(gesture: UIPanGestureRecognizer) {
+        guard currentTrack != nil else { return }
+        let             translation = gesture.translation(in: self)
+        var             x = translation.x
+        let             max = offset
+        x = abs(x) > max ? x < 0 ? -max : max : x
+        x = x / max
+        print(x)
+        if x < 0 {
+            currentLeadingAnchor?.constant = 25 + (offset - 30) * x
+            currentTrailingAnchor?.constant = -25 + (offset + 5) * x
+            nextTrailingAnchor?.constant = (offset - 30) + 35 * -x
+            nextCoverImageView.alpha = transparencyEffect + (1 - transparencyEffect) * -x
+            currentCoverImageView.alpha = 1 - (1 - transparencyEffect) * -x
+        } else {
+            currentLeadingAnchor?.constant = 25 + (offset + 5) * x
+            currentTrailingAnchor?.constant = -25 + (offset - 30) * x
+            previousLeadingAnchor?.constant = (-offset + 30) - 35 * x
+            previousCoverImageView.alpha = transparencyEffect + (1 - transparencyEffect) * x
+            currentCoverImageView.alpha = 1 - (1 - transparencyEffect) * x
+        }
+        if gesture.state == .ended {
+            //handleEnded(gesture, x)
+        }
+    }
+    
     func handleAnimation(iv: UIImageView, isNext: Bool) {
         if isNext {
             currentLeadingAnchor?.constant -= offset - 30
@@ -112,6 +140,8 @@ class CoverContainerView: UIView {
     var nextLeadingAnchor: NSLayoutConstraint?
     var nextTrailingAnchor: NSLayoutConstraint?
     let offset = UIApplication.shared.keyWindow!.bounds.width - 50
+    
+    
     
     func setupView() {
         downLoadImagesIfNeeded()
