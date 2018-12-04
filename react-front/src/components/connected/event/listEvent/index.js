@@ -40,6 +40,7 @@ export default class ListEvent extends Component {
 			}
 		})
 		.catch(err => {
+			console.log("DISPLAY ERRO R:", err)
 			Error.display_error(err);
 			this.setState({
 				myEvents	: [], 

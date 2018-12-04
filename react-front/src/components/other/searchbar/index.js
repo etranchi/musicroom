@@ -30,6 +30,7 @@ class SearchBar extends Component {
 		this.setState({value:value}, () => {
 				axios.get(process.env.REACT_APP_API_URL + '/search/track?q='+ value)
 				.then((resp) => {
+
 					this.setState({'list': resp.data.data || []});
 				})
 				.catch((err) => {
@@ -47,6 +48,13 @@ class SearchBar extends Component {
 			this.setState({'value': value});
 			axios.get(process.env.REACT_APP_API_URL + '/search/playlist?q='+ value)
 			.then((resp) => {
+				if (resp.data.data)
+					{
+						resp.data.data.forEach(playlist => {
+							if (!playlist.id)
+								playlist.id = playlist._id
+						});
+					}
 				this.setState({'list': resp.data.data || []});
 			})
 			.catch((err) => {
