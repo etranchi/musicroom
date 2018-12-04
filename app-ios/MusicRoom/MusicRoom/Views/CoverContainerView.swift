@@ -86,9 +86,9 @@ class CoverContainerView: UIView {
         let             translation = gesture.translation(in: self)
         var             x = translation.x
         let             max = offset
-        x = abs(x) > max ? x < 0 ? -max : max : x
-        x = x / max
-        print(x)
+        x = (abs(x) > max ? x < 0 ? -max : max : x) / max
+        if previousTrack == nil && x > 0 { return }
+        if nextTrack == nil && x < 0 { return }
         if x < 0 {
             currentLeadingAnchor?.constant = 25 + (offset - 30) * x
             currentTrailingAnchor?.constant = -25 + (offset + 5) * x
@@ -103,7 +103,36 @@ class CoverContainerView: UIView {
             currentCoverImageView.alpha = 1 - (1 - transparencyEffect) * x
         }
         if gesture.state == .ended {
-            //handleEnded(gesture, x)
+            handleEnded(x: x)
+        }
+    }
+    
+    func handleEnded(x: CGFloat) {
+        if x < 0 {
+            currentLeadingAnchor?.constant = 25 + (offset - 30) * -1
+            currentTrailingAnchor?.constant = -25 + (offset + 5) * -1
+            nextTrailingAnchor?.constant = (offset - 30) + 35
+            playerController.backgroundCoverView?.handleNextAnimation()
+            playerController.handleNext(true)
+        } else {
+            currentLeadingAnchor?.constant = 25 + (offset + 5)
+            currentTrailingAnchor?.constant = -25 + (offset - 30)
+            previousLeadingAnchor?.constant = (-offset + 30) - 35
+            playerController.backgroundCoverView?.handlePreviousAnimation()
+            playerController.handlePrevious(true)
+        }
+        let iv = x < 0 ? nextCoverImageView : previousCoverImageView
+        UIView.animate(withDuration: animationTime, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            iv.alpha = 1
+            self.currentCoverImageView.alpha = self.transparencyEffect
+            self.layoutIfNeeded()
+        }) { (finished) in
+            if x < 0 {
+                self.playerController.setupTrack(indexOffset: 1)
+            } else {
+                
+                self.playerController.setupTrack(indexOffset: -1)
+            }
         }
     }
     

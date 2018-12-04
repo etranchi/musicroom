@@ -73,11 +73,11 @@ class PlayerButtonsView: UIView {
     }
     
     @objc func handlePrevious() {
-        playerController.handlePrevious()
+        playerController.handlePrevious(false)
     }
     
     @objc func handleNext() {
-        playerController.handleNext()
+        playerController.handleNext(false)
     }
     
     @objc func handlePlay() {
