@@ -131,7 +131,13 @@ export default class EditSetting extends Component {
 						<p> Mot de passe : </p>
 					</Col>
 					<Col span={6} offset={1}>
-						<Input name="password" type="password" placeholder="Enter your password" style={{ width: 200 }} value={this.state.password} onChange={this.updateChange.bind(this)}/>
+						<Input 
+							name="password" 
+							type="password" 
+							placeholder="Enter your password" 
+							style={{ width: 200 }} 
+							value={this.state.password} 
+							onChange={this.updateChange.bind(this)}/>
 					</Col>
 				</Row>
 				<Row>
