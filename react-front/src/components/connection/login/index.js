@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import {Button, Input, Layout, Col, Row, Divider} from 'antd';
+import {Button, Input, message, Layout, Col, Row, Divider} from 'antd';
 import axios from 'axios'
 import './styles.css';
 
 class Login extends Component {
 	constructor(props) {
 		super(props);
-
 		this.state = {
 			email: "",
 			password: ""
@@ -28,11 +27,17 @@ class Login extends Component {
 				'password': this.state.password
 		})
 		.then((resp) => {
-			console.log('login success', resp.data)
 			localStorage.setItem('token', resp.data.token)
-			this.props.updateParent({'token':resp.data.token, 'currentComponent': 'event', 'user': resp.data.user});
+			this.props.updateParent(
+				{
+					'token':resp.data.token,
+					'currentComponent': 'event',
+					'user': resp.data.user
+				});
 		})
-		.catch((err) => { console.log('login error', err); })
+		.catch((err) => { 
+			message.error("Invalid credentials")
+		})
 	}
 	render() {
 		const {Content} = Layout;
@@ -40,21 +45,32 @@ class Login extends Component {
 			<Content>
 			<Divider/>
 			<Row>
-				<Col span={10}></Col>
-				<Col span={4}>
-					<Input placeholder="Email" name= "email" value={this.state.email} onChange={this.handleChange}/>
+				<Col span={4} offset={10}>
+					<Input 
+					placeholder="Email" 
+					name= "email" 
+					value={this.state.email} 
+					onChange={this.handleChange}/>
 				</Col>
 			</Row>
 			<Row>
-				<Col span={10}></Col>
-				<Col span={4}>
-					<Input placeholder="Password" type="password" name= "password" value={this.state.password} onChange={this.handleChange}/>
+				<Col span={4} offset={10}>
+					<Input 
+					placeholder="Password" 
+					type="password" 
+					name= "password" 
+					value={this.state.password} 
+					onChange={this.handleChange}/>
 				</Col>
 			</Row>
 			<Row>
-				<Col span={11}></Col>
-				<Col span={2}>
-					<Button style={{'width':'100%'}}size="large"  onClick={this.handleSubmit.bind(this)}> Login </Button>
+				<Col span={4} offset={10}>
+					<Button 
+					style={{'width':'100%'}} 
+					size="large" 
+					onClick={this.handleSubmit.bind(this)}>
+					 Login 
+					</Button>
 				</Col>
 			</Row>
 			<Divider />

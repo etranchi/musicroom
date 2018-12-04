@@ -75,10 +75,14 @@ module.exports = {
 	postEvent: async (req, res, next) => {
 		try {
 			req.body = JSON.parse(req.body.body);
+			console.log("post event");
+			console.log(req.body);
 			if (!req.body.location)
 				throw new Error('No Location')
 			if (req.file && req.file.filename) req.body.picture = req.file.filename
+			console.log("creating event");
 			let event = await modelEvent.create(req.body)
+			console.log("no time to populate");
 			await event.populate('creator', 'User')
 			await event.populate('members', 'Member')
 			await event.populate('adminMembers', 'AdminMember')

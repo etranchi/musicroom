@@ -29,7 +29,7 @@ export default class Connected extends Component {
 			axios.get('https://api.ipify.org?format=json')
 				.then(ip => {
 					/* Transform user ip to coord */
-					axios.get('https://geo.ipify.org/api/v1?apiKey=at_EbajwXipAKZOdFKiI85swEhQEswi4&ipAddress=' + ip.data.ip)
+					axios.get('https://geo.ipify.org/api/v1?apiKey=at_SoggptEjCDvnJYqbssJZlNKVWyzvg&ipAddress=' + ip.data.ip)
 						.then(resp => {
 							this.props.state.data.userCoord.lat = resp.data.location.lat
 							this.props.state.data.userCoord.lng = resp.data.location.lng
