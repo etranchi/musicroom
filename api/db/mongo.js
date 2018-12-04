@@ -10,5 +10,9 @@ mongoose.Promise = global.Promise;
 
 const db = mongoose.connection;
 
+var User = require('../models/user'),
+    Event   = require('../models/event'),
+    Schema = mongoose.Schema;
+
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
