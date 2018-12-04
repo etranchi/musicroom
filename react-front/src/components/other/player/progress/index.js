@@ -21,10 +21,6 @@ export default class Progressor extends Component {
     }
     showPosition = () => {
         DZ.Event.subscribe('player_position', e => {
-            console.log(this.elapsed.current);
-            console.log(this.duration.current);
-            console.log(e[0]);
-            console.log(e[1]);
             if (this.elapsed.current && this.duration.current && e[1]) {
                 e[1] && this.setState({percent:e[0]/e[1] * 100}, () => {
                     this.elapsed.current.textContent = this.convertTime(e[0]);
@@ -40,7 +36,6 @@ export default class Progressor extends Component {
         });
     }
     componentDidMount() {
-        console.log("show position");
         this.showPosition();
     }
     render() {

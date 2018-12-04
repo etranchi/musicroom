@@ -35,6 +35,7 @@ export default class cardEvent extends Component {
         return false;
     }
     checkRight = () => {
+        console.log("ERROR HERE : ", this.props.state.data, this.props.state.user)
         if (this.props.state.data.event.creator.email === this.props.state.user.email)
             this.setState({isCreator:true});
         else {

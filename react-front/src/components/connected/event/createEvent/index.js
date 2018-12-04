@@ -46,6 +46,8 @@ export default class CreateEvent extends Component {
     updateEventPlaylist = playlist => {
         if (!playlist)
             return ;
+        else  if (playlist._id && playlist.id === playlist._id )
+            this.setState({playlist:playlist});
        else {
             axios.get(process.env.REACT_APP_API_URL + '/playlist/' + playlist.id, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
             .then((resp) => { 
