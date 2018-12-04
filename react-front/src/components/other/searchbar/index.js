@@ -48,14 +48,21 @@ class SearchBar extends Component {
 			this.setState({'value': value});
 			axios.get(process.env.REACT_APP_API_URL + '/search/playlist?q='+ value)
 			.then((resp) => {
+				let myPlaylist = []
 				if (resp.data.data)
-					{
-						resp.data.data.forEach(playlist => {
-							if (!playlist.id)
-								playlist.id = playlist._id
-						});
-					}
-				this.setState({'list': resp.data.data || []});
+				{
+					resp.data.data.forEach(playlist => {
+						if (!playlist.id)
+						{
+							playlist.id = playlist._id
+							if (playlist.creator.email === this.props.state.user.email)
+							myPlaylist.push(playlist)
+						}
+						else
+							myPlaylist.push(playlist)
+					});
+				}
+				this.setState({'list': myPlaylist});
 			})
 			.catch((err) => {
 				console.log('Playlist error');
