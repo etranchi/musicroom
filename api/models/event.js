@@ -5,8 +5,8 @@ const Playlist 		= require('../models/playlist');
 
 const Event = new Schema({
 	creator: {
-		type: User.schema,
-		ref: 'User'
+		type: Schema.Types.ObjectId,
+		ref: 'user'
 	},
 	title:{type: String, default: "Aucun"},
 	description:{type: String, default: "à définir"},
@@ -28,12 +28,12 @@ const Event = new Schema({
 	event_date: {type: Date, default: Date.now},
 	playlist: {type: Playlist.schema},
 	members : [{
-		type: User.schema,
-		ref: 'Member'
+		type: Schema.Types.ObjectId,
+		ref: 'user'
 	}],
 	adminMembers: [{
-		type: User.schema,
-		ref: 'AdminMember'
+		type: Schema.Types.ObjectId,
+		ref: 'user'
 	}],
 	picture: {type: String, default: "default.jpeg"}
 
