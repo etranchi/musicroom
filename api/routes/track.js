@@ -3,13 +3,22 @@
 const express = require('express');
 const router = express.Router();
 const trackController = require('../controllers/track');
+const passport = require('passport');
+const middlewares = require('../modules/middlewares');
 
-router.get('/', trackController.getTracks);
+router.get('/',
+    passport.authenticate('bearer'),
+    middlewares.isConfirmed,
+    trackController.getTracksByUser);
 
-router.get('/:id', trackController.getTrackById);
+router.post('/',
+    passport.authenticate('bearer'),
+    middlewares.isConfirmed,
+    trackController.postTrack);
 
-// router.put('/:id', trackController.postTrackVote);
-
-router.delete('/:id', trackController.deleteTrackById);
+router.delete('/:id',
+    passport.authenticate('bearer'),
+    middlewares.isConfirmed,
+    trackController.deleteTrackById);
 
 module.exports = router;
