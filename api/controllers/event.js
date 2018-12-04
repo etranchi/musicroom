@@ -7,43 +7,24 @@ const customError = require('../modules/customError');
 module.exports = {
 	getEvents: async (req, res, next) => {
 		try {
-			let myEvents = await modelEvent.find({'creator._id': req.user._id})
-			let friendEvents = await modelEvent
-				.find({$or: [
-					{adminMembers:
-						{$elemMatch:
-							{_id: req.user._id}
-						}
-					},
-					{members:
-						{$elemMatch:
-							{_id: req.user._id}
-						}
-					}
-				]}
-			)
-			let allEvents = await modelEvent
-				.find(
-					{$and: [
-						{adminMembers:
-							{$not:
-								{$elemMatch:
-									{_id: req.user._id}
-								}
-							}
-						},
-						{members:
-							{$not:
-								{$elemMatch:
-									{_id: req.user._id}
-								}
-							}
-						},
-						{'creator._id': {$ne: req.user._id}},
-						{public: true}
-					]}
-			)
-			res.status(200).json({myEvents, friendEvents, allEvents});
+			let events = await modelEvent.find()
+				.populate('creator')
+				.populate('members')
+				.populate('adminMembers')
+
+			let allEvents = events.reduce((acc, elem) => {
+				if (elem.creator._id.toString() === req.user._id.toString())
+					acc['myEvents'].push(elem)
+				else if (elem.members.filter((e) => e._id.toString() === req.user._id.toString()).length > 0)
+					acc['friendEvents'].push(elem)
+				else if (elem.adminMembers.filter((e) => e._id.toString() === req.user._id.toString()).length > 0)
+					acc['friendEvents'].push(elem)
+				else
+					acc['all'].push(elem)
+				return acc
+			}, {myEvents: [], friendEvents: [], all: []})
+
+			res.status(200).json({myEvents: allEvents.myEvents, friendEvents: allEvents.friendEvents, allEvents: allEvents.all});
 		} catch (err) {
 			console.log("Error getEvents: " + err)
 			next(new customError(err.message, 400))
@@ -79,8 +60,10 @@ module.exports = {
 			console.log(req.body);
 			if (!req.body.location)
 				throw new Error('No Location')
-			if (req.file && req.file.filename) req.body.picture = req.file.filename
-			console.log("creating event");
+			if (req.file && req.file.filename)
+				req.body.picture = req.file.filename
+			console.log("BODYYYYYYY")
+			console.log(req.body)
 			let event = await modelEvent.create(req.body)
 			console.log("no time to populate");
 			await event.populate('creator', 'User')

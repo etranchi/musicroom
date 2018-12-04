@@ -44,7 +44,6 @@ export default class Progressor extends Component {
         this.showPosition();
     }
     render() {
-        console.log(this.state);
         return (
             <Row style={{height:'inherit'}}>
                 <Col span={3} style={{textAlign:'center'}}>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './styles.css';
 import Login from './login'
+import Forgot from './forgot'
 import Register from './register'
 import {Row,  Col, Menu, Icon} from 'antd'
 import axios from 'axios'
@@ -13,7 +14,7 @@ class Connection extends Component {
     super(props)
 
     this.state = {
-      current:"mail"
+      current:"login"
     }
   }
   responseFacebook(response) {
@@ -55,7 +56,7 @@ class Connection extends Component {
     return (
       <div>
         <Row>
-          <Col span={4} offset={10}>
+          <Col>
             <div style={{textAlign:'center'}}>
               <Menu
                 onClick={this.handleClick}
@@ -65,7 +66,10 @@ class Connection extends Component {
                   <Icon type="login" />Login
                 </Menu.Item>
                 <Menu.Item key="register" onClick={this.props.updateParent.bind(this,{'currentComponent': 'register'})}>
-                <Icon type="form" /> Register
+                  <Icon type="form" /> Register
+                </Menu.Item>
+                <Menu.Item key="forgot" onClick={this.props.updateParent.bind(this,{'currentComponent': 'forgot'})}>
+                  <Icon type="form" /> Forgot
                 </Menu.Item>
               </Menu>
             </div>
@@ -73,6 +77,7 @@ class Connection extends Component {
          </Row>
        	  {this.props.state.currentComponent === 'register'? <Register updateParent={this.props.updateParent}/> : null}
           {this.props.state.currentComponent === 'login'? <Login updateParent={this.props.updateParent}/> : null}
+          {this.props.state.currentComponent === 'forgot'? <Forgot updateParent={this.props.updateParent}/> : null}
          <Row style={{height:'80px'}}>
           <Col span={3} offset={8}>
             <FacebookLogin
