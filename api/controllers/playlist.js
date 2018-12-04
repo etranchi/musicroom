@@ -69,20 +69,31 @@ let self = module.exports = {
 	postPlaylist: async (req, res, next) => {
 		console.log('posting playlist');
 		try {
-			req.body.idUser = req.user._id
-			if (!req.body.title)
-				throw new Error('No title')
-			if (!req.body.creator)
-			{
-				req.body.creator = {
-					id: req.user.deezerId,
-					name: req.user.login,
-					tracklist: req.user.deezerId ? config.deezer.apiUrl + '/user/' + req.user.deezerId + '/flow' : undefined,
-					type: 'user'
-				}
+			let playlist = {}
+			if (req.body.id) {
+				req.body = await self.getPlaylistDeezerById(req.body.id, req.user.deezerToken)
+				req.body.idUser = req.user._id
+				if (req.body.id)
+					playlist = await playlistModel.create(req.body);
+				else
+					throw new Error('Deezer playlist not exist')
 			}
-			console.log(req.body)
-			let playlist = await playlistModel.create(req.body);
+			else {
+				req.body.idUser = req.user._id
+				if (!req.body.title)
+					throw new Error('No title')
+				if (!req.body.creator)
+				{
+					req.body.creator = {
+						id: req.user.deezerId,
+						name: req.user.login,
+						tracklist: req.user.deezerId ? config.deezer.apiUrl + '/user/' + req.user.deezerId + '/flow' : undefined,
+						type: 'user'
+					}
+				}
+				console.log(req.body)
+				playlist = await playlistModel.create(req.body);
+			}
 			res.status(201).json(playlist);
 		} catch (err) {
 			console.log(err)
