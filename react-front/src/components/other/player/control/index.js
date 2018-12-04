@@ -67,6 +67,7 @@ export default class Player extends Component {
         this.setState({currentTracksID:index});
         this.props.updateParentState({currentTracksID:index});
         DZ.player.next();
+        DZ.player.seek(0);
     }
 
     prevTrack = () => {
@@ -76,6 +77,7 @@ export default class Player extends Component {
         this.setState({currentTracksID:index})
         this.props.updateParentState({currentTracksID:index})
         DZ.player.prev();
+        DZ.player.seek(0);
     }
 
     playerUpdate = (event) => {

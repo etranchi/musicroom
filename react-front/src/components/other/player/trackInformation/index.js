@@ -25,7 +25,7 @@ export default class TrackInformation extends Component {
 
 
 	render() {
-        const {title_short, artist, album} = this.props.track
+        const {artist, album} = this.props.track
         return (
             <Row style={{padding: '12% 0 0 0', height:'inherit'}}>
                 <Col span={1}></Col>
@@ -34,7 +34,7 @@ export default class TrackInformation extends Component {
                 </Col>
                 <Col span={9}>
                     <div style={{float:'left', padding: '3% 0 0 0'}}>
-                        <b> {title_short}</b>
+                        <b> {this.props.track.title_short ?this.props.track.title_short : this.props.track.title_medium}</b>
                         <br/>
                         <p style={{ display:'inline'}}> {artist.name} </p>
                     </div>
