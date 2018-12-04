@@ -55,8 +55,9 @@ class SearchBar extends Component {
 						if (!playlist.id)
 						{
 							playlist.id = playlist._id
-							if (playlist.creator.email === this.props.state.user.email)
-							myPlaylist.push(playlist)
+							console.log(playlist, this.props.state.user.email)
+							// if (playlist.creator.email === this.props.state.user.email)
+								myPlaylist.push(playlist)
 						}
 						else
 							myPlaylist.push(playlist)
