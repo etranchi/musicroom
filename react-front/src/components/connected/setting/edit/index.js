@@ -98,8 +98,7 @@ export default class EditSetting extends Component {
 			<Content>
 				<Row style={{height:50}}/>
 				<Row>
-					<Col span={4}/>
-					<Col span={4}>
+					<Col span={4} offset={4}>
 						<div style={{'margin': '0 0 0 25% '}}>
 							<Upload
 									name="file"
@@ -120,39 +119,32 @@ export default class EditSetting extends Component {
 				</Row>
 				<Divider />
 				<Row>
-					<Col span={4}/>
-					<Col span={3}>
+					<Col span={3} offset={4}>
 						<p> Login :</p>
 					</Col>
-					<Col span={1}/>
-					<Col span={6}>
+					<Col span={6} offset={1}>
 						<Input name="login" placeholder="Enter your login" style={{ width: 200 }} value={this.state.login} onChange={this.updateChange.bind(this)}/>
 					</Col>
 				</Row>
 				<Row>
-					<Col span={4}/>
-					<Col span={3}>
+					<Col span={3} offset={4}>
 						<p> Mot de passe : </p>
 					</Col>
-					<Col span={1}/>
-					<Col span={6}>
+					<Col span={6} offset={1}>
 						<Input name="password" type="password" placeholder="Enter your password" style={{ width: 200 }} value={this.state.password} onChange={this.updateChange.bind(this)}/>
 					</Col>
 				</Row>
 				<Row>
-					<Col span={4}/>
-					<Col span={3}>
+					<Col span={3} offset={4}>
 						<p> Confirmer le mot de passe : </p>
 					</Col>
-					<Col span={1}/>
-					<Col span={6}>
+					<Col span={6} offset={1}>
 						<Input name="cpypassword" type="password" placeholder="Enter your password" style={{ width: 200 }} value={this.state.cpypassword} onChange={this.updateChange.bind(this)}/>
 					</Col>
 				</Row>
 				<Divider />
 				<Row>
-					<Col span={8}/>
-					<Col span={6}>
+					<Col span={6} offset={8}>
 						<Button onClick={this.updateSave.bind(this)}>Save</Button>
 					</Col>
 				</Row>

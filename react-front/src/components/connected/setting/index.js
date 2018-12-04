@@ -73,8 +73,7 @@ class Setting extends Component {
 						</Row>
 						<Divider />
 						<Row>
-							<Col span={4}/>
-							<Col span={4}>
+							<Col span={4} offset={4}>
 								<Card.Meta avatar={<Avatar size={116} src={userPicture}/>} />
 							</Col>
 							<Col>
@@ -83,32 +82,26 @@ class Setting extends Component {
 						</Row>
 						<Divider />
 						<Row>
-							<Col span={4}/>
-							<Col span={3}>
+							<Col span={3} offset={4}>
 								<p style={{float:'right'}}>Adresse électronique :</p>
 							</Col>
-							<Col span={1}/>
-							<Col span={6}>
+							<Col span={6} offset={1}>
 								<b> {this.state.user.email}</b>
 							</Col>
 						</Row>
 						<Row>
-							<Col span={4}/>
-							<Col span={3}>
+							<Col span={3} offset={4}>
 								<p style={{float:'right'}}> Login :</p>
 							</Col>
-							<Col span={1}/>
-							<Col span={6}>
+							<Col span={6} offset={1}>
 								<b> { this.state.user.login }</b>
 							</Col>
 						</Row>
 						<Row>
-							<Col span={4}/>
-							<Col span={3}>
+							<Col span={3} offset={4}>
 								<p style={{float:'right'}}> Instruit depuis le : </p>
 							</Col>
-							<Col span={1}/>
-							<Col span={6}>
+							<Col span={6} offset={1}>
 								<b> { new Date(this.state.user.creationDate).toLocaleDateString('fr-FR')}</b>
 							</Col>
 						</Row>

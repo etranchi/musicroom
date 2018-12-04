@@ -41,7 +41,7 @@ export default class Connected extends Component {
 										this.props.updateParent({'data': this.props.state.data})
 										this.setState({loading:false})
 									},
-									(error) =>  {
+									() =>  {
 										console.log("getGeolocalisation -> cant more accuracy")
 										this.props.updateParent({'data': this.props.state.data})
 										this.setState({loading:false})
@@ -61,7 +61,7 @@ export default class Connected extends Component {
 			this.props.state.data.events = (resp.data.length > 0) ? resp.data.reverse() : resp.data ;
 			this.props.updateParent({'data' : this.props.state.data})
 		})
-		.catch( err => {
+		.catch( () => {
 			this.setState({events: []})
 		});
 	}
