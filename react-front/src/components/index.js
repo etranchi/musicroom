@@ -27,16 +27,12 @@ class Front extends Component {
 	}
 
   updateState = (val) => {
-    
     // console.log("old state ->");
     // console.log(this.state);
     // console.log("new state ->");
     // console.log(val);
     // console.log('end update parent');
     this.setState(val);
-  }
-  componentDidUpdate= () => {
-    console.log(this.state);
   }
   
   componentWillMount() {
@@ -54,6 +50,7 @@ class Front extends Component {
     })
     }
   }
+
   deleteToken() {
     localStorage.setItem('token', '');
     this.updateState({'token': '', 'currentComponent': 'login'})
@@ -62,37 +59,21 @@ class Front extends Component {
 	render() {
         const token = localStorage.getItem('token')
 		return (
-            <Layout className="App">
+          <Layout className="App">
             <Header className="HeaderApp">
-                <img alt="headerImg" className="HeaderImage" src="/header.png"></img>
-                {token &&
-                <div className="disconnect"> 
-                        <Button type="primary" onClick={this.deleteToken.bind(this)}>Disconnect</Button>
-                </div>
-                }
-                {
-                    token ?
-                    <Menu  state={this.state} updateParent={this.updateState}/>
-                    :
-                    null
-                }
+              <img alt="headerImg" className="HeaderImage" src="/header.png"></img>
+              {token && <div className="disconnect"><Button className="disconnect" type="primary" onClick={this.deleteToken.bind(this)}>Disconnect</Button></div>}
+              {token && <Menu  state={this.state} updateParent={this.updateState}/>}
             </Header>
-
-
             <Content style={{backgroundColor:'#263238 !important'}}>
-                <div id="dz-root"></div>
-                {token ? (
-                    <Connected updateParent={this.updateState} state={this.state}/>
-
-                ) : (
-                    <Connection updateParent={this.updateState} state={this.state}/>
-                )}
-
+              <div id="dz-root"></div>
+              {token && <Connected updateParent={this.updateState} state={this.state}/>}
+              {!token && <Connection updateParent={this.updateState} state={this.state}/>}
             </Content>
             <Footer style={{backgroundColor:'#263238'}}>
-                    <FooterLegacy />
+              <FooterLegacy />
             </Footer>
-        </Layout>
+          </Layout>
 		);
 	}
 }
