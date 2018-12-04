@@ -115,16 +115,16 @@ class RegisterController: UIViewController, UITextFieldDelegate {
     }()
     
     @objc func handleRegister() {
-        print("Register")
-        // let user = User(login : loginTF.text!, email: emailTF.text!, password: passTF.text!, token: nil)
         let apiManager = APIManager()
+        guard let login = loginTF.text, let mail = emailTF.text, let pass = passTF.text else { return }
         let json = [
-            "login" : "coucou",
-            "email" : "toto@yopmail.fr",
-            "password" : "totototo"
+            "login" : login,
+            "email" : mail,
+            "password" : pass
         ]
         let data = try? JSONSerialization.data(withJSONObject: json, options: [])
         apiManager.registerUser(data)
+        ToastView.shared.short(self.view, txt_msg: "Please now verify your account", color: UIColor.blue)
     }
     
     func setupView() {
