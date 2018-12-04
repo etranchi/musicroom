@@ -3,7 +3,7 @@ const config 			= require('../config/config');
 const request 			= require('request-promise');
 const customError = require('../modules/customError');
 
-module.exports = { 
+let self = module.exports = { 
 	getPlaylists: async (req, res, next) => {
 		try {
 			res.status(200).json(await playlistModel.find())
@@ -35,21 +35,8 @@ module.exports = {
 			let playlist = {}
 			if (!Number(req.params.id))
 				playlist = await playlistModel.findOne({'_id': req.params.id})
-			else {
-				
-				let options = {
-					method: 'GET',
-					uri: config.deezer.apiUrl + '/playlist/' + req.params.id,
-					json: true
-				};
-				if (req.user.deezerToken)
-					options.qs = {"access_token": req.user.deezerToken};
-				playlist = await request(options)
-				if (playlist.id) {
-					return res.status(200).json(playlist);
-				}
-				playlist = {}
-			}
+			else
+				playlist = await self.getPlaylistDeezerById(req.params.id, req.user.deezerToken)
 			res.status(200).json(playlist || {});
 		} catch (err) {
 			console.log("Bad Request getPlaylistUserById" + err)
@@ -186,6 +173,25 @@ module.exports = {
 		} catch (err) {
 			console.log("Bad Request deletePlaylistById" + err)
 			next(new customError(err.message, 400))
+		}
+	},
+
+	getPlaylistDeezerById: async (id, token) => {
+		try {
+			let options = {
+				method: 'GET',
+				uri: config.deezer.apiUrl + '/playlist/' + id,
+				json: true
+			};
+			if (token)
+				options.qs = {"access_token": token};
+			let playlist = await request(options)
+			if (playlist.id) {
+				return playlist;
+			}
+			return {}
+		} catch (err) {
+			throw err
 		}
 	}
 };

@@ -1,7 +1,7 @@
 const config = require('../config/config');
 const request = require('request');
 const customError = require('../modules/customError');
-
+const playlistModel 	= require('../models/playlist');
 const moduleUrl = '/search';
 
 module.exports = {
@@ -28,7 +28,7 @@ module.exports = {
 			(err, head, body) => {
 				if (err)
 					next(new customError(err.message, err.code))
-				res.json(JSON.parse(body));
+				res.json( JSON.parse(body));
 			})
 	},
 	searchTrack: (req, res, next) => {
@@ -44,18 +44,28 @@ module.exports = {
 				res.json(JSON.parse(body));
 			})
 	},
-	searchPlaylist: (req, res, next) => {
+	searchPlaylist: async  (req, res, next) => {
 		if (Object.keys(req.query).length === 0)
 			res.status(400).json("error");
 		console.log(req.query);
 		console.log(config.deezer.apiUrl + moduleUrl + '?q=' + req.query.q);
-		request(
-			{uri: config.deezer.apiUrl + moduleUrl + '/playlist ' + '?q=' + req.query.q},
-			(err, head, body) => {
-				if (err)
-					next(new customError(err.message, err.code))
-				res.json(JSON.parse(body));
-			})
+		try {
+			let playlist = await playlistModel.find({"title" : {$regex : ".*" + req.query.q + ".*"}})
+			request(
+				{uri: config.deezer.apiUrl + moduleUrl + '/playlist ' + '?q=' + req.query.q},
+				(err, head, body) => {
+					if (err)
+						next(new customError(err.message, err.code))
+					body = JSON.parse(body);
+					let playlists = {
+						data: playlist.concat(body.data)
+					}
+					res.json(playlists);
+				})
+		}
+		catch (err) {
+			next(new customError(err.message, 400))
+		}
 	},
 	searchArtist: (req, res, next) => {
 		if (Object.keys(req.query).length === 0)

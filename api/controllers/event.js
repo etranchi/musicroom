@@ -3,47 +3,29 @@
 const modelEvent = require('../models/event');
 const ObjectId = require('mongodb').ObjectID;
 const customError = require('../modules/customError');
+const playlistController = require('./playlist');
 
 module.exports = {
 	getEvents: async (req, res, next) => {
 		try {
-			let myEvents = await modelEvent.find({'creator._id': req.user._id})
-			let friendEvents = await modelEvent
-				.find({$or: [
-					{adminMembers:
-						{$elemMatch:
-							{_id: req.user._id}
-						}
-					},
-					{members:
-						{$elemMatch:
-							{_id: req.user._id}
-						}
-					}
-				]}
-			)
-			let allEvents = await modelEvent
-				.find(
-					{$and: [
-						{adminMembers:
-							{$not:
-								{$elemMatch:
-									{_id: req.user._id}
-								}
-							}
-						},
-						{members:
-							{$not:
-								{$elemMatch:
-									{_id: req.user._id}
-								}
-							}
-						},
-						{'creator._id': {$ne: req.user._id}},
-						{public: true}
-					]}
-			)
-			res.status(200).json({myEvents, friendEvents, allEvents});
+			let events = await modelEvent.find()
+				.populate('creator')
+				.populate('members')
+				.populate('adminMembers')
+
+			let allEvents = events.reduce((acc, elem) => {
+				if (elem.creator._id.toString() === req.user._id.toString())
+					acc['myEvents'].push(elem)
+				else if (elem.members.filter((e) => e._id.toString() === req.user._id.toString()).length > 0)
+					acc['friendEvents'].push(elem)
+				else if (elem.adminMembers.filter((e) => e._id.toString() === req.user._id.toString()).length > 0)
+					acc['friendEvents'].push(elem)
+				else if (elem.public === true)
+					acc['all'].push(elem)
+				return acc
+			}, {myEvents: [], friendEvents: [], all: []})
+
+			res.status(200).json({myEvents: allEvents.myEvents, friendEvents: allEvents.friendEvents, allEvents: allEvents.all});
 		} catch (err) {
 			console.log("Error getEvents: " + err)
 			next(new customError(err.message, 400))
@@ -52,21 +34,22 @@ module.exports = {
 	getEventById: async (req, res, next) => {
 		try {
 			let event = await modelEvent
-				.findOne({$and: [{_id: req.params.id}, {$or: [
-					{adminMembers:
-						{$elemMatch:
-							{_id: req.user._id}
-						}
-					},
-					{members:
-						{$elemMatch:
-							{_id: req.user._id}
-						}
-					},
-					{'creator._id': {$eq: req.user._id}},
-					{public: true}
-				]}]}
-			)
+				.findOne(
+					{_id: req.params.id,
+						$or:
+							[
+								{'creator': 
+									{$eq: req.user._id}
+								},
+								{'adminMembers': 
+									{$in: req.user._id}
+								},
+								,
+								{'members': 
+									{$in: req.user._id}
+								}
+							]
+					})
 			res.status(200).json(event || {})
 		} catch (err) {
 			next(new customError(err.message, 400))
@@ -79,13 +62,11 @@ module.exports = {
 			console.log(req.body);
 			if (!req.body.location)
 				throw new Error('No Location')
-			if (req.file && req.file.filename) req.body.picture = req.file.filename
-			console.log("creating event");
+			if (req.file && req.file.filename)
+				req.body.picture = req.file.filename
+			if (!req.body.playlist._id)
+				req.body.playlist = await playlistController.getPlaylistDeezerById(req.body.playlist.id, req.user.deezerToken)
 			let event = await modelEvent.create(req.body)
-			console.log("no time to populate");
-			await event.populate('creator', 'User')
-			await event.populate('members', 'Member')
-			await event.populate('adminMembers', 'AdminMember')
 			res.status(200).send(event)
 		} catch (err) {
 			console.log("ERROR POST EVENT -> " + err)
@@ -103,16 +84,19 @@ module.exports = {
 			if (!req.body.description)
 				throw new Error('No description')
 			let user = await modelEvent
-				.findOne({$and: [{_id: req.params.id}, {$or: [
-					{adminMembers:
-						{$elemMatch:
-							{_id: req.user._id}
-						}
-					},
-					{'creator._id': {$eq: req.user._id}}
-				]}]}
-			)
-			if (!user || user.length < 1)
+				.findOne(
+					{_id: req.params.id,
+						$or:
+							[
+								{'creator': 
+									{$eq: req.user._id}
+								},
+								{'adminMembers': 
+									{$in: req.user._id}
+								}
+							]
+					})
+			if (!user)
 				return next(new customError('You are not authorize to modify this event', 401))
 			let test = await modelEvent.updateOne({_id: req.params.id}, req.body, {new: true})
 			res.status(200).json(test)
