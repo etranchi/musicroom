@@ -8,19 +8,19 @@ export default class MapContainer extends Component {
        constructor(props) {
         super(props)
         this.state = {
-            showingInfoWindow: false,
-            activeMarker: {},
-            selectedPlace: {},
-            bounds: {},
-            eventsMarkers: []
+            showingInfoWindow   : false,
+            activeMarker        : {},
+            selectedPlace       : {},
+            bounds              : {},
+            eventsMarkers       : []
         };
     }
     componentDidMount = () => {
         const eventsMarkers = [];
         const points        = [];
         this.props.events.forEach((event, key) => {
-            const options             = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const date                 = "Le : " + new Date(event.event_date).toLocaleDateString('fr-Fr', options);
+            const options               = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const date                  = "Le : " + new Date(event.event_date).toLocaleDateString('fr-Fr', options);
             if (event.location.coord) {
                 eventsMarkers.push(
                     <Marker

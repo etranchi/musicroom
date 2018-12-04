@@ -7,87 +7,79 @@ import Map from '../map'
 import geolib from 'geolib'
 import {socket, createRoom, joinRoom} from '../../../other/sockets';
 
-class cardEvent extends Component {
+export default class cardEvent extends Component {
 	constructor(props) {
         super(props);
-
         this.state = {
-            isHidden: false,
-            isCreator: false,
-            isAdmin: false,
-            isMember: false,
-            isViewer: true,
-        }
+            isHidden    : false,
+            isCreator   : false,
+            isAdmin     : false,
+            isMember    : false,
+            isViewer    : true
+        };
         this.launchButton = {
-            'position': 'fixed',
-            'bottom': '50px',
-            'height': '80px',
-            'right': '140px',
-            'latitude': 0,
-            'longitude': 0,
-            'displayUser' : false
-        
-        }
+            position    : 'fixed',
+            bottom      : '50px',
+            height      : '80px',
+            right       : '140px',
+            latitude    : 0,
+            longitude   : 0,
+            displayUser : false
+        };
     }
-    isUser = tab => 
-    {
-        for (let i = 0; i < tab.length; i++) {
-            if (tab[i].email === this.props.state.user.email)
-                return true;
-        }
+    isUser = tab => {
+        tab.forEach(user => { 
+            if (user.email === this.props.state.user.email)
+                return true
+        });
         return false;
     }
     checkRight = () => {
-        console.log("CHECK RIGHT", this.props.state.data.event.creator.email, this.props.state.user.email)
         if (this.props.state.data.event.creator.email === this.props.state.user.email)
-        
-            this.setState({isCreator:true})
-        else  {
-            console.log("YOU ARE NOT ADMIN")
+            this.setState({isCreator:true});
+        else {
             this.setState({
                 isMember:this.isUser(this.props.state.data.event.members),
-                isAdmin:this.isUser(this.props.state.data.event.adminMembers)
-            })
+                isAdmin :this.isUser(this.props.state.data.event.adminMembers)
+            });
         }
         if (this.state.isCreator || this.state.isMember || this.state.isAdmin)
-            this.setState({isViewer:false})
+            this.setState({isViewer:false});
     }
     componentDidMount = () => {
         socket.on('updateEvent', (newEvent) => {
-            console.log('socket updateEvent receive data ', newEvent)
+            console.log('socket :  updateEvent receive data ', newEvent)
             this.props.state.data.event = newEvent
-            this.checkRight()
             this.props.updateParent({'data': this.props.state.data})
+            this.checkRight()
         })
         socket.on('createRoom', (tracks, msg) => {
-            console.log('socket createRoom receive data ', msg)
-            if (msg === 'err') joinRoom(this.props.state.data.event._id)
-            else console.log("ERROR OCCCURED JOIN ROOM")
-               
-        })
+            console.log('socket : createRoom receive data ', msg)
+            if (msg === 'err')
+                joinRoom(this.props.state.data.event._id)
+            else 
+                console.log("socket : createRoom receive error.")
+        });
         socket.on('joinRoom', (msg) => {
-            console.log('socket join room', msg)
-        })
+            console.log('socket : joinRoom receive message ->', msg)
+        });
         socket.on('leaveRoom', (msg) => {
-            console.log('socketleaveRoom ', msg)
-        })
-        let tracks = this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks ? this.props.state.data.event.playlist.tracks.data : []
-        createRoom(this.props.state.data.event._id, tracks, this.props.state.data.event)
-        this.checkRight()
+            console.log('socket : leaveRoom receive message ->', msg)
+        });
+        let tracks = this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks ? this.props.state.data.event.playlist.tracks.data : [];
+        createRoom(this.props.state.data.event._id, tracks, this.props.state.data.event);
+        this.checkRight();
     }
     componentWillUnmount = () => {
-
         //     leaveRoom(this.props.state.data.event._id)
     }
     updateMap = () => {
         let calc = geolib.getDistanceSimple(
-            {latitude: this.props.state.data.userCoord.lat, longitude: this.props.state.data.userCoord.lng},
-            {latitude: this.props.state.data.event.location.coord.lat, longitude:this.props.state.data.event.location.coord.lng}
+            { latitude: this.props.state.data.userCoord.lat,             longitude: this.props.state.data.userCoord.lng },
+            { latitude: this.props.state.data.event.location.coord.lat,  longitude: this.props.state.data.event.location.coord.lng }
         );
-        this.info("Vous êtes a " + calc/1000 + " km de l'event")
-        this.props.state.data.mapHeight = '25vh'
-        this.props.state.data.mapMargin = '0 0 0 0'
-        this.setState({'isHidden': !this.state.isHidden})
+        message.info("Vous êtes a " + calc/1000 + " km de l'event");
+        this.setState({'isHidden': !this.state.isHidden});
     }
     openLiveEvent = () => {
         this.props.state.data.right = this.state;
@@ -105,11 +97,7 @@ class cardEvent extends Component {
         else
             return false;
     }
-    info = text => {
-        message.info(text);
-    }
 	render() {
-        console.log(this.props);
         return  (
             <div>
                 <Row>
@@ -120,7 +108,14 @@ class cardEvent extends Component {
                 <CardHeader state={this.props.state} updateParent={this.props.updateParent} />
                 <Row>
                     <Col>
-                        {this.state.isHidden ? <div style={{height:'500px'}}><Map state={this.props.state} events={[this.props.state.data.event]}/></div> : null}
+                        {
+                            this.state.isHidden ? 
+                                <div style={{height:'500px'}}>
+                                    <Map state={this.props.state} events={[this.props.state.data.event]}/>
+                                </div> 
+                                : 
+                                null
+                        }
                     </Col>
                 </Row>
                 <Divider />
@@ -128,7 +123,13 @@ class cardEvent extends Component {
                 <BodyEvent right={this.state} state={this.props.state} updateParent={this.props.updateParent} updateMap={this.updateMap.bind(this)}/>
                 {
                     this.isToday(this.props.state.data.event.event_date) &&  this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks ?
-                        <Button   style={this.launchButton} type="primary" onClick={this.openLiveEvent}> <b> Start Event </b> </Button>
+                        <Button 
+                            style={this.launchButton}
+                            type="primary" 
+                            onClick={this.openLiveEvent}
+                        > 
+                            <b> Start Event </b> 
+                        </Button>
                         : 
                         null
                 }
@@ -136,5 +137,3 @@ class cardEvent extends Component {
         )
   }
 }
-
-export default cardEvent;

@@ -3,12 +3,13 @@ import { Card, Avatar, Icon, Divider, Modal, Row, Col, Button } from 'antd';
 import './styles.css';
 import Map from "../map"
 import axios from 'axios'
+import Error from '../../../other/errorController'
 
 export default class PreviewCardEvent extends Component {
 	constructor(props) {
         super(props);
         this.state = {
-            visible: false,
+            visible : false,
             distance: 0
         };
     }
@@ -25,30 +26,27 @@ export default class PreviewCardEvent extends Component {
         let d = R * c;
         return d.toFixed(0);
     }
-   toRad = (Value) => {
-        return Value * Math.PI / 180;
+   toRad = value => {
+        return value * Math.PI / 180;
     }
     componentDidMount = () => {
         if (!this.props.event.location.coord) {
-            this.props.event.location.coord = {
-                lat: 0,
-                lng:0
-            };
+            this.props.event.location.coord = { lat: 0, lng:0 };
         }
         let distance = this.getDistance(this.props.event.location.coord, this.props.state.data.userCoord);
         this.setState({distance:distance});
-        this.date = this.props.event.event_date ? this.formatDateAnnounce(this.props.event.event_date) : "Inconnue";
+        this.date = this.props.event.event_date ? this.formatDateAnnounce(this.props.event.event_date) : 'Inconnue';
     }
-    openMap(val){
+    openMap(){
         this.showModal();
     }
     showModal = () => {
         this.setState({visible: true});
     }
-    handleOk = (e) => {
+    handleOk = () => {
         this.setState({visible: false});
     }
-    handleCancel = (e) => {
+    handleCancel = () => {
         this.setState({visible: false});
     }
     formatDateAnnounce = (date) => {
@@ -85,22 +83,34 @@ export default class PreviewCardEvent extends Component {
     }
     delete = () => {
         axios.delete(process.env.REACT_APP_API_URL + '/event/'+ this.props.event._id, {headers:{Authorization: 'Bearer ' + localStorage.getItem('token')}})
-        .then(resp => {
-            console.log(resp);
-            this.props.getEvents();
-        })
-        .catch(err => {
-            console.log(err);
-        })
+        .then(resp => { this.props.getEvents(); })
+        .catch(err => { Error.display_error(err); })
     }
 	render() {
-        const userPicture = this.props.event.creator.picture.indexOf("https://") !== -1? this.props.event.creator.picture : process.env.REACT_APP_API_URL + "/userPicture/" + this.props.event.creator.picture
+        const userPicture = this.props.event.creator.picture.indexOf("https://") !== -1 ? 
+            this.props.event.creator.picture 
+            : 
+            process.env.REACT_APP_API_URL + "/userPicture/" + this.props.event.creator.picture;
         return (
             <Card
                 className="zoomCard"
                 style={{ width: 300, display: "inline-block", margin: "1% 2% 0 "}}
-                cover={ <img onClick={this.props.openCardEvent.bind(this, this.props.event)} alt="eventPicture" src={process.env.REACT_APP_API_URL + "/eventPicture/" +  this.props.event.picture} />}
-                actions={[<Icon type="setting" theme="outlined"/>, <Icon type="edit" theme="outlined"/>, <i onClick={this.openMap.bind(this)} className="fas fa-map-marker"></i>,<i onClick={this.delete} className="fas fa-trash-alt"></i>]}
+                cover={ 
+                    <img 
+                        onClick={this.props.openCardEvent.bind(this, this.props.event)} 
+                        alt="eventPicture" 
+                        src={process.env.REACT_APP_API_URL + "/eventPicture/" +  this.props.event.picture} 
+                    />
+                }
+                actions=
+                {
+                    [
+                        <Icon type="setting" theme="outlined"/>,
+                        <Icon type="edit" theme="outlined"/>, 
+                        <i onClick={this.openMap.bind(this)} className="fas fa-map-marker"></i>,
+                        <i onClick={this.delete} className="fas fa-trash-alt"></i>
+                    ]
+                }
             >
                 <Card.Meta
                     onClick={this.props.openCardEvent.bind(this, this.props.event)}
@@ -121,7 +131,11 @@ export default class PreviewCardEvent extends Component {
                     onOk={this.handleOk}
                     onCancel={this.handleCancel}
                 >  
-                    <Map state={this.props.state} openCardEvent={this.props.openCardEvent} events={[this.props.event]}/>
+                    <Map 
+                        state={this.props.state} 
+                        openCardEvent={this.props.openCardEvent} 
+                        events={[this.props.event]}
+                    />
                     <Row>
 					<Col span={11}/>
 					<Col span={4}>

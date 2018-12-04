@@ -43,7 +43,6 @@ class Front extends Component {
       {'headers':{'Authorization':'Bearer '+ localStorage.getItem('token')}})
       .then((resp) => {
         this.setState({user:resp.data, token:localStorage.getItem('token')});
-        console.log(resp);
       })
       .catch((err) => {
         console.log(err);
