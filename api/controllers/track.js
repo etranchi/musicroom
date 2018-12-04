@@ -13,8 +13,10 @@ module.exports = {
 	},
 	postTrack: async (req, res, next) => {
 		try {
-			let track = {}
-			if (req.body.id) {
+			if (!req.body.id)
+				throw new Error('Music id is missing')
+			let track = await trackModel.findOne({id: req.body.id})
+			if (!track) {
 				let options = {
 					method: 'GET',
 					uri: config.deezer.apiUrl + '/track/' + req.body.id,
@@ -27,16 +29,21 @@ module.exports = {
 				}
 				else
 					throw new Error('Track does not exist')
+			} else {
+				if (track.userId.indexOf(req.user._id) === -1)
+					track = await trackModel.findOneAndUpdate({id: req.body.id}, {$push: {userId: req.user._id}}, {new: true})
+				else
+					throw new Error('Already in your loved tracks')
 			}
 			return res.status(201).json(track);
 		} catch (err) {
 			console.log("Bad Request postTrack" + err)
-			next(new customError(err.message, err.code))
+			next(new customError(err.message, 400))
 		}
 	},
 	deleteTrackById: async (req, res, next) => {
 		try {
-			await trackModel.deleteOne({_id: req.params.id, userId: req.user._id})
+			await trackModel.updateOne({_id: req.params.id}, {$pull: {userId: req.user._id}})
 			res.status(204).send();
 		} catch (err) {
 			console.log(err)
