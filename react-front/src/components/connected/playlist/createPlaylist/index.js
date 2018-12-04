@@ -49,36 +49,42 @@ class CreatePlaylist extends Component {
 		<div>
 			<Row>
                 <Col span={8}>
-					<a href="#!" className="btn waves-effect waves-teal" onClick={() => this.props.updateParent({'currentComponent': 'playlist'})}>Back</a>
+					<a 
+						href="#!" 
+						className="btn waves-effect waves-teal" 
+						onClick={() => this.props.updateParent({'currentComponent': 'playlist'})}>Back
+					</a>
 				</Col>
 			</Row>
 			<Row>
-				<Col span={8}></Col>
-                <Col span={8}>
-                    <Input placeholder="title" value={this.state.title} name="title" onChange={this.handleChange}/>
+                <Col span={8} offset={8}>
+					<Input 
+						placeholder="title" 
+						value={this.state.title} 
+						name="title" 
+						onChange={this.handleChange}/>
                 </Col>
 			</Row>
             <Divider />
 			<Row>
-			<Col span={8}>
-					<SearchBar updateParent={this.props.updateParent} type="tracks" addTrack={this.addTrack}/>
+				<Col span={8} offset={8}>
+					<SearchBar 
+						updateParent={this.props.updateParent} 
+						type="tracks" 
+						addTrack={this.addTrack}/>
 				</Col>
-				</Row>
-			<Row>
-			{this.state.tracks.map((val, i) => {
-						return (
-							<Track order={i} track={val}/>
-						);
-					})}
 			</Row>
 			<Row>
-                <Col span={8}></Col>
-                <Col span={8}>
+			{this.state.tracks.map((val, i) => {
+				return (<Track order={i} track={val}/>);})
+			}
+			</Row>
+			<Row>
+                <Col span={8} offset={8}>
 				<Button onClick={this.save.bind(this)}>
             		Save
            		</Button>
                 </Col>
-                <Col span={8}></Col>
             </Row>
 		</div>
 	);
