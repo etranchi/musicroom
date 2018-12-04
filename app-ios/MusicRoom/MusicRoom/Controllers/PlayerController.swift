@@ -135,7 +135,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         } else {
             self.player?.play()
         }
-        minimizedPlayer?.update(isPlaying: true, title: tracks[index].title, artist: tracks[index].artist!.name)
+        minimizedPlayer?.update(isPlaying: true, title: tracks[index].title, artist: tracks[index].artist!.name!)
     }
     
    func handlePause() {
@@ -146,7 +146,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         isPlaying = false
         hasPaused = true
         firstPlay = false
-        minimizedPlayer?.update(isPlaying: false, title: tracks[index].title, artist: tracks[index].artist!.name)
+        minimizedPlayer?.update(isPlaying: false, title: tracks[index].title, artist: tracks[index].artist!.name!)
     }
     
     
@@ -166,7 +166,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
                 if self.isPlaying == true {
                     self.playerButtonView?.handlePlay()
                 }
-                self.minimizedPlayer?.update(isPlaying: self.isPlaying, title: self.tracks[self.index].title, artist: self.tracks[self.index].artist!.name)
+                self.minimizedPlayer?.update(isPlaying: self.isPlaying, title: self.tracks[self.index].title, artist: self.tracks[self.index].artist!.name!)
                 currentTrack = self.tracks[self.index]
                 self.reloadView()
             }

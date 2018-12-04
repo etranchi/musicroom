@@ -172,13 +172,12 @@ class APIManager: NSObject, URLSessionDelegate {
         })
     }
     
-    func createPlaylist(_ title: String, _ target: PlaylistController?) {
-        let postString = "title=\(title)"
+    func createPlaylist(_ string: String, _ target: PlaylistController?) {
         let playlistsUrl = self.url + "playlist"
         var createPlaylistRequest = URLRequest(url: URL(string: playlistsUrl)!)
         createPlaylistRequest.httpMethod = "POST"
         createPlaylistRequest.addValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
-        createPlaylistRequest.httpBody = postString.data(using: .utf8)
+        createPlaylistRequest.httpBody = string.data(using: .utf8)
         URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: createPlaylistRequest) { (data, response, error) in
             target?.reloadPlaylists()
         }.resume()
@@ -357,15 +356,16 @@ class APIManager: NSObject, URLSessionDelegate {
         request.httpMethod = "GET"
         request.setValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        searchAll(Event.self, request: request) { (res) in
+        searchAll(Event.self, request: request, completion: { res in
             completion(res)
-        }
+        })
     }
     
     func getEvents(completion : @escaping ((DataEvent) -> ())){
         let eventsUrl = self.url + "event"
         var request = URLRequest(url: URL(string: eventsUrl)!)
         request.httpMethod = "GET"
+        print(userManager.currentUser!.token!)
         request.setValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         self.searchAll(DataEvent.self, request: request) { (res) in

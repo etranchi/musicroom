@@ -11,6 +11,7 @@ import UIKit
 class SearchDeezerPlaylistController: UITableViewController {
     var searchController : UISearchController!
     var data : [SPlaylist] = []
+    var root : PlaylistController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +36,14 @@ class SearchDeezerPlaylistController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selected = data[indexPath.row]
+        apiManager.createPlaylist("id=\(selected.id)", self.root)
+        self.navigationController?.popViewController(animated: true)
+        
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

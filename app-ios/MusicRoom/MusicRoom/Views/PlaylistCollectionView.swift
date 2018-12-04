@@ -45,7 +45,7 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
             alert.addAction(UIAlertAction(title: "Create", style: .default, handler: { [weak alert] (_) in
                 let textField = alert!.textFields![0]
                 if let text = textField.text, text != "" {
-                    apiManager.createPlaylist(text, self.rootTarget)
+                    apiManager.createPlaylist("title=" + text, self.rootTarget)
                 }
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
@@ -105,6 +105,7 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
         }
         if indexPath.item == playlists.count + 1  && rootTarget != nil {
             let cell = dequeueReusableCell(withReuseIdentifier: buttonCellId, for: indexPath) as! CreatePlaylistButtonCell
+            cell.vc = self
             cell.root = rootTarget
             cell.isCreating = false
             cell.title = "IMPORT PLAYLIST"

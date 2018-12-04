@@ -49,6 +49,7 @@ class CreatePlaylistButtonCell: UICollectionViewCell {
         } else {
             print("yooo")
             let vc = SearchDeezerPlaylistController()
+            vc.root = self.root
             root!.navigationController?.pushViewController(vc, animated: true)
         }
         
