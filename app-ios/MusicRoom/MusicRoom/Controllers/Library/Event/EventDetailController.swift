@@ -8,7 +8,7 @@
 
 import UIKit
 
-class EventDetailController: UIViewController{
+class EventDetailController: UIViewController , UITextViewDelegate {
     var currentEvent : Event
     var headerImg : AlbumHeaderView?
     private let libraryCellId = "libraryCellId"
@@ -81,12 +81,14 @@ class EventDetailController: UIViewController{
         return label
     }()
     
-    var descriptionTextLabel : UILabel = {
-        let label = UILabel()
+    var descriptionTextLabel : UITextView = {
+        let label = UITextView()
+        label.backgroundColor = UIColor(white: 0.1, alpha: 1)
         label.font = UIFont.systemFont(ofSize: 13, weight: .medium)
-        label.textColor = .white
         label.textAlignment = .center
-        label.numberOfLines = 0
+        label.textColor = .white
+        label.isScrollEnabled = true
+        label.layer.cornerRadius = 8
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -102,7 +104,7 @@ class EventDetailController: UIViewController{
         creatorLabel.attributedText = NSAttributedString(string: "Created by \(currentEvent.creator!.login)")
         dateLabel.attributedText = NSAttributedString(string: "Date : \(currentEvent.date)")
         descriptionLabel.attributedText = NSAttributedString(string: "Description :")
-        descriptionTextLabel.attributedText = NSAttributedString(string: currentEvent.description)
+        descriptionTextLabel.text = currentEvent.description
         headerImg!.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(headerImg!)
         view.addSubview(creatorLabel)
@@ -131,15 +133,15 @@ class EventDetailController: UIViewController{
             descriptionLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 20),
             
             descriptionTextLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.6),
+            descriptionTextLabel.heightAnchor.constraint(equalToConstant: 120),
             descriptionTextLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             descriptionTextLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 20),
             
             tableView!.widthAnchor.constraint(equalTo: view.widthAnchor),
             tableView!.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             tableView!.heightAnchor.constraint(equalToConstant: 160),
-            tableView!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -140)
+            tableView!.topAnchor.constraint(equalTo: descriptionTextLabel.bottomAnchor, constant: 6.5)
             ])
-        
     }
     
     
@@ -149,7 +151,8 @@ class EventDetailController: UIViewController{
         currentEvent = event
         headerImg = nil
         super.init(nibName: nil, bundle: nil)
-        
+        descriptionTextLabel.delegate = self
+        descriptionTextLabel.textColor = .white
         tableView = UITableView()
         view.backgroundColor = UIColor(white: 0.1, alpha: 1)
         tableView!.backgroundColor = UIColor(white: 0.1, alpha: 1)
@@ -253,6 +256,6 @@ extension EventDetailController : UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 40.0
+        return 32.5
     }
 }

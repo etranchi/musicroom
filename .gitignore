@@ -6,6 +6,7 @@ api/package-lock.json
 react-front/package-lock.json
 react-front/node_modules
 api/public/
+api/logs/
 react-front/coverage
 
 react-front/build

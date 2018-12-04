@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import './styles.css';
 import PreviewCard from '../previewCardEvent'
-import { Layout } from 'antd';
+import { Layout, Spin } from 'antd';
 import axios from 'axios'
 
 export default class ListEvent extends Component {
@@ -25,7 +24,7 @@ export default class ListEvent extends Component {
 		});
 	}
 	getEvents = callback => {
-		axios.get(process.env.REACT_APP_API_URL + '/event')
+		axios.get(process.env.REACT_APP_API_URL + '/event', {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
 		.then(resp => {
 			if (callback)
 				callback(resp.data);
@@ -49,21 +48,8 @@ export default class ListEvent extends Component {
 		})
 	}
 	render() {
-		if (this.state.loading) {
-			return (
-				<div className="preloader-wrapper active loader">
-					<div className="spinner-layer spinner-red-only">
-					<div className="circle-clipper left">
-						<div className="circle"></div>
-					</div><div className="gap-patch">
-						<div className="circle"></div>
-					</div><div className="circle-clipper right">
-						<div className="circle"></div>
-					</div>
-					</div>
-				</div>
-			);
-		}
+		if (this.state.loading)
+			return <Spin tip=" Waiting events ..." size="large" > </Spin>
 		else {
 			return (
 				<Layout>
@@ -72,7 +58,7 @@ export default class ListEvent extends Component {
 							{ this.state.myEvents.length > 0 ? <h1 style={{fontSize:'36px'}}> Mes événements : </h1> : null }
 							{
 								this.state.myEvents.map((event, key) => {
-									return ( <PreviewCard key={key} event={event} state={this.props.state} updateParent={this.props.updateParent} getEvents={this.getEvents}/> )
+									return ( <PreviewCard key={key} event={event} state={this.props.state} updateParent={this.props.updateParent} getEvents={this.getEvents } openCardEvent={this.props.openCardEvent}/> )
 								})
 							}
 						</div>
@@ -80,7 +66,7 @@ export default class ListEvent extends Component {
 							{ this.state.friendEvents.length > 0 ? <h1 style={{fontSize:'36px'}}>  Evénement ou je participe : </h1> : null }
 							{
 								this.state.friendEvents.map((event, key) => {
-									return ( <PreviewCard key={key} event={event} state={this.props.state} updateParent={this.props.updateParent} getEvents={this.getEvents}/> )
+									return ( <PreviewCard key={key} event={event} state={this.props.state} updateParent={this.props.updateParent} getEvents={this.getEvents } openCardEvent={this.props.openCardEvent}/> )
 								})
 							}
 						</div>
@@ -88,7 +74,7 @@ export default class ListEvent extends Component {
 							{ this.state.allEvents.length > 0 ? <h1 style={{fontSize:'36px'}}> Tous les évenements : </h1> : null }
 							{
 								this.state.allEvents.map((event, key) => {
-									return ( <PreviewCard key={key} event={event} state={this.props.state} updateParent={this.props.updateParent} getEvents={this.getEvents}/> )
+									return ( <PreviewCard key={key} event={event} state={this.props.state} updateParent={this.props.updateParent} getEvents={this.getEvents } openCardEvent={this.props.openCardEvent}/> )
 								})
 							}
 						</div>

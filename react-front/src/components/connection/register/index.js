@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import axios from 'axios'
-import './styles.css';
 import { Icon, Button, Input, Upload, message, Layout, Col, Row, Divider} from 'antd';
+import Error from '../../other/errorController'
 
 
 class Register extends Component {
 	constructor(props) {
 		super(props);
-
 		this.state = {
 			email: "",
 			password: "",
@@ -15,7 +14,6 @@ class Register extends Component {
 			imageUrl: null,
 			infoFile: null,
 			loading: false
-
 		};
 	}
 
@@ -31,7 +29,7 @@ class Register extends Component {
 
 	handleSubmit = event => {
 		if (!this.validateForm)
-			this.info("Error invalid input.")
+			this.info("Error invalid input.")	
 		event.preventDefault();
 		let data = new FormData();
 		if (this.state.infoFile && this.state.infoFile.file && this.state.infoFile.file.originFileObj)
@@ -41,33 +39,21 @@ class Register extends Component {
 		delete this.state.infoFile
 		data.append('body', JSON.stringify(this.state));
 		axios.post(process.env.REACT_APP_API_URL + '/user', data)
-		.then((resp) => {
-			axios.put(process.env.REACT_APP_API_URL + '/user/confirm', null, {'headers':{'Authorization': 'Bearer '+ resp.data.token}})
-			.then((resp) => {
-				localStorage.setItem('token', resp.data.token);
-				console.log("confirm success");
-				this.props.updateParent({'token':resp.data.token, 'currentComponent': 'event', 'user': resp.data.user});
-			})
-			.catch((err) => {
-				console.log("confirm error -> " + err)
-			})
-
+		.then(() => {
+			message.success("Mail Send !")
+			this.props.updateParent({'currentComponent': 'login'})
 		})
 		.catch((err) => {
-			console.log(err);
+			Error.display_error(err);
 		})
 	}
 	handlePicture = (info) => {
         this.setState({infoFile: info})
-        if (info.file.status === 'uploading') {
-          this.setState({loading:true});
-          return;
-        }
-        this.getBase64(info.file.originFileObj, imageUrl => this.setState({ imageUrl, loading: false}));
+        if (info.file.status === 'uploading')
+			this.setState({loading:true});
+		else
+        	this.getBase64(info.file.originFileObj, imageUrl => this.setState({ imageUrl, loading: false}));
       }
-    info = (text) => {
-        message.info(text);
-      };
     getBase64 = (img, callback) => {
         const reader = new FileReader();
         reader.addEventListener('load', () => callback(reader.result));
@@ -94,42 +80,53 @@ class Register extends Component {
 				<Content>
 				<Divider/>
 				<Row>
-                    <Col span={10}></Col>
-                    <Col span={8}>
+                    <Col span={8} offset={10}>
 						<Upload
 							name="file"
 							listType="picture-card"
 							className="avatar-uploader"
 							showUploadList={false}
 							beforeUpload={this.beforeUpload}
-							onChange={this.handlePicture}
-						>
+							onChange={this.handlePicture}>
 							{this.state.imageUrl ? <img src={this.state.imageUrl} alt="avatar" /> : this.uploadButton}
 						</Upload>
                     </Col>
                 </Row>
 				<Row>
-                    <Col span={10}></Col>
-                    <Col span={4}>
-                    	<Input placeholder="Email" name= "email" value={this.state.email} onChange={this.handleChange}/>
+                    <Col span={4} offset={10}>
+						<Input 
+							placeholder="Email" 
+							name= "email" 
+							value={this.state.email} 
+							onChange={this.handleChange}/>
                     </Col>
                 </Row>
 				<Row>
-                    <Col span={10}></Col>
-                    <Col span={4}>
-                    	<Input placeholder="Login" name= "login" value={this.state.login} onChange={this.handleChange}/>
+                    <Col span={4} offset={10}>
+						<Input 
+							placeholder="Login" 
+							name= "login" 
+							value={this.state.login} 
+							onChange={this.handleChange}/>
                     </Col>
                 </Row>
 				<Row>
-                    <Col span={10}></Col>
-                    <Col span={4}>
-                    	<Input placeholder="Password" type="password" name= "password" value={this.state.password} onChange={this.handleChange}/>
+                    <Col span={4} offset={10}>
+						<Input 
+							placeholder="Password" 
+							type="password" 
+							name="password" 
+							value={this.state.password} 
+							onChange={this.handleChange}/>
                     </Col>
                 </Row>
 				<Row>
-					<Col span={11}></Col>
-					<Col span={2}>
-						<Button style={{'width':'100%'}}size="large"  onClick={this.handleSubmit.bind(this)}> Register </Button>
+					<Col span={4} offset={10}>
+						<Button 
+							style={{'width':'100%'}} 
+							size="large" 
+							onClick={this.handleSubmit.bind(this)}> Register 
+						</Button>
 					</Col>
 				</Row>
 				<Divider />

@@ -7,21 +7,7 @@ const customError = require('../modules/customError');
 const Joi 	= require('joi');
 const config = require('../config/config.json');
 const argon = require('argon2');
-
-// const nodemailer = require('nodemailer');
-// const transporter = nodemailer.createTransport({
-//     service: config.mail.service,
-//     auth: {
-//            user: config.mail.email,
-//            pass: config.mail.password
-//        }
-//    });
-// let mailOptions = {
-//     from: config.mail.email, // sender address
-//     to: config.mail.email, // list of receivers
-//     subject: 'Music room token', // Subject line
-//     html: '<p>Your html here</p>'// plain text body
-// };
+const mail = require('../modules/mail');
 
 exports.connect = (req, res) => {
 		return res.status(200).json({
@@ -91,15 +77,8 @@ exports.postUser = async (req, res, next) => {
 		user.email = Utils.normalize(user.email)
 		user.password = await argon.hash(user.password);
 		user = await model.create(user);
-		// MAIL -> FrontUrl/token and send response "User created"
-		// mailOptions.html = "click on <a href='FRONT ROUTE/confirm?token=" + Crypto.createToken(user) + "'>this link</a> to confirm your account"
-		// transporter.sendMail(mailOptions, function (err, info) {
-		// 	if(err)
-		// 	  console.log(err)
-		// 	else
-		// 	  console.log(info);
-		//  });
-		res.status(201).send({'token': Crypto.createToken(user)})
+		mail.sendMail("[MusicRoom] Confirm mail", "<a href='" + config.front_url + "/user/confirm/" + Crypto.createToken(user) + "'>click on this link to confirm</a>", user.email)
+		res.status(201).send();
 	} catch (err) {
 		console.error("Error postUser : " + err.toString());
 		if (err.code == 11000)
@@ -169,7 +148,7 @@ exports.modifyUserById = async (req, res, next) => {
 		} else {
 			delete userUpdate.password
 		}
-		const {error} = Joi.validate(userUpdate, {login: Joi.string().min(3).max(9), password: Joi.string(), picture: Joi.string()})
+		const {error} = Joi.validate(userUpdate, {login: Joi.string().min(3).max(50), password: Joi.string(), picture: Joi.string()})
 		if (error) {
 			throw new Error(error.details[0].message)
 		}
@@ -204,15 +183,31 @@ exports.resendMail = async (req, res, next) => {
 		if (user) {
 			let token =  Crypto.createToken(user);
 			// RESEND MAIL FrontUrl/token
-
+			mail.sendMail("[MusicRoom] Confirm mail", "<a href='" + config.front_url + "/user/confirm/" + token + "'>click on this link to confirm</a>", user.email)
 			// TO DEL WHEN MAIL OK
-			return res.status(200).send({token});
+			// return res.status(200).send({token});
 		}
 		res.status(202).send({message: "Mail send (if account exist and not already validate)"})
 	} catch (err) {
 		console.error("Error resend mail: %s", err);
 		next(new customError(err.message, 400))
 	}		
+}
+
+exports.forgotPassword = async (req, res, next) => {
+	try {
+		let newPass = Utils.randPassowrd()
+		console.log(newPass)
+		let user = await model.findOneAndUpdate({email: req.body.email, status: 'Active'}, {password: await argon.hash(newPass)}, {new: true})
+		if (user) {
+			console.log(user)
+			mail.sendMail("[MusicRoom] New password", "<p>Your new password is " + newPass + "</p>", user.email)
+		}
+		res.status(200).send({message: "Mail send (if account exist and already validate)"})
+	} catch (err) {
+		console.error("Error forgot password mail: %s", err);
+		next(new customError(err.message, 400))
+	}
 }
 
 function validateId(id)
@@ -226,7 +221,7 @@ function validateId(id)
 function validateUser(user) {
 
 	const schema = {
-		login: Joi.string().min(3).max(9).required(),
+		login: Joi.string().min(3).max(50).required(),
 		email: Joi.string().email({ minDomainAtoms: 2 }).required(),
 		password: Joi.string().min(8).max(30).required(),
 		picture: Joi.string()
