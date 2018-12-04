@@ -60,13 +60,13 @@ class EventsController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.row == 0 && events?.myEvents != nil && (events?.allEvents.count)! > 0  {
+        if indexPath.row == 0 && events?.myEvents != nil && (events?.myEvents.count)! > 0  {
             let cell = tableView.dequeueReusableCell(withIdentifier: eventCellId, for: indexPath) as! SearchEventsCell
             cell.rootTarget = self
             cell.title = sections[indexPath.section]
-            cell.event = events?.allEvents
+            cell.event = events?.myEvents
             return cell
-        } else if indexPath.row == 1 && events?.friendEvents != nil && (events?.friendEvents.count)! > 0 && numberOfRows > 1 {
+        } else if indexPath.row == 1 && events?.friendEvents != nil && (events?.friendEvents.count)! > 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: eventCellId, for: indexPath) as! SearchEventsCell
             cell.rootTarget = self
             cell.title = sections[indexPath.section]
@@ -80,13 +80,11 @@ class EventsController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        var height: CGFloat = 0
-        if indexPath.row == 0 && (events?.allEvents.count == 0 || events?.allEvents == nil){
+        let height: CGFloat = 0
+        if indexPath.row == 0 && (events?.myEvents.count == 0 || events?.myEvents == nil){
             return height
-        } else if indexPath.section == 1 && (events?.friendEvents.count == 0 || events?.friendEvents == nil){
+        } else if indexPath.row == 1 && (events?.friendEvents.count == 0 || events?.friendEvents == nil){
             return height
-        } else {
-            height = 240
         }
         return height
     }

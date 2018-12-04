@@ -22,6 +22,7 @@ class MapController: UIViewController {
     }()
     
     override func viewWillAppear(_ animated: Bool) {
+        mapView.removeAnnotations(mapView.annotations)
         getAllEvents()
     }
     
