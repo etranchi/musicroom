@@ -9,6 +9,12 @@
 import UIKit
 import Alamofire
 
+
+public func makeAlert(_ msg : String) {
+    let alert = UIAlertView(title: "Error", message: msg, delegate:nil, cancelButtonTitle:"Cancel")
+    alert.show()
+}
+
 class APIManager: NSObject, URLSessionDelegate {
     
     let ip: String = "www.come-over.com"
@@ -107,18 +113,52 @@ class APIManager: NSObject, URLSessionDelegate {
         req.setValue("Bearer " + user.token!, forHTTPHeaderField: "Authorization")
         URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: req) { (data, response, err) in
             if err != nil {
-                print("error while requesting")
+                makeAlert("No response from the server, try again..")
             }
             do {
                 let responseJSON = try JSONSerialization.jsonObject(with: data!, options: [])
                 if let responseJSON = responseJSON as? [String: Any] {
-                    print(responseJSON)
+                    if let error = responseJSON["error"] as? String {
+                        makeAlert(error)
+                    }
                 }
             }
-            catch (let err){
-                print(err.localizedDescription)
+            catch {
+                makeAlert("Error")
             }
         }.resume()
+    }
+    func deleteUserById() {
+        let url = self.url + "user/me"
+        var req = URLRequest(url : URL(string: url)!)
+        req.httpMethod = "DELETE"
+        req.addValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
+        URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: req) { (data, response, err) in
+            if err != nil {
+                makeAlert("No response from the server, try again..")
+            }
+            do {
+                let responseJSON = try JSONSerialization.jsonObject(with: data!, options: [])
+                if let responseJSON = responseJSON as? [String: AnyObject] {
+                    print(responseJSON)
+                    return
+                }
+            }
+            catch {
+                do {
+                    let responseJSON = try JSONSerialization.jsonObject(with: data!, options: [])
+                    if let responseJSON = responseJSON as? [String: Any] {
+                        if let error = responseJSON["error"] as? String {
+                            makeAlert(error)
+                        }
+                        return
+                    }
+                }
+                catch {
+                    return
+                }
+            }
+            }.resume()
     }
     
     func login(_ forg: String, _ token : String, completion: @escaping ( ([String: AnyObject]) -> ())) {
@@ -127,7 +167,7 @@ class APIManager: NSObject, URLSessionDelegate {
         loginRequest.httpMethod = "GET"
         URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: loginRequest) { (data, response, err) in
             if err != nil {
-                print("error while requesting")
+                makeAlert("No response from the server, try again..")
             }
             do {
                 let responseJSON = try JSONSerialization.jsonObject(with: data!, options: [])
@@ -135,8 +175,8 @@ class APIManager: NSObject, URLSessionDelegate {
                     completion(responseJSON)
                 }
             }
-            catch (let err){
-                print(err.localizedDescription)
+            catch {
+                makeAlert("Error")
             }
             }.resume()
     }
@@ -200,7 +240,7 @@ class APIManager: NSObject, URLSessionDelegate {
                 SocketIOManager.sharedInstance.socket.emit("updatePlaylist", pId)
             }.resume()
         } catch {
-            print("err")
+            makeAlert("Error")
         }
     }
     
@@ -283,14 +323,19 @@ class APIManager: NSObject, URLSessionDelegate {
             do {
                 let responseJSON = try JSONSerialization.jsonObject(with: data!, options: [])
                 if let responseJSON = responseJSON as? [String: Any] {
-                    print(responseJSON)
+                    if let error = responseJSON["error"] as? String {
+                        makeAlert(error)
+                    }
+                    
                 }
             }
-            catch (let err){
-                print(err.localizedDescription)
+            catch {
+                return
             }
         }.resume()
     }
+    
+
     
     func loginUser(_ json : Data?, completion : @escaping (DataUser?) -> ()) {
         let loginUrl = self.url + "user/login"
@@ -300,6 +345,7 @@ class APIManager: NSObject, URLSessionDelegate {
         loginRequest.httpBody = json
         URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: loginRequest) { (data, response, err) in
             if err != nil {
+                makeAlert("No response from the server, try again..")
                 completion(nil)
              }
             if let d = data {
@@ -307,8 +353,8 @@ class APIManager: NSObject, URLSessionDelegate {
                     let dic = try JSONDecoder().decode(DataUser.self, from: d)
                     completion(dic)
                 }
-                catch (let err){
-                    print(err.localizedDescription)
+                catch {
+                    makeAlert("Invalid credentials")
                 }
             }
             }.resume()
@@ -335,20 +381,17 @@ class APIManager: NSObject, URLSessionDelegate {
             req.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
             req.httpBody = json!.data(using: String.Encoding.utf8.rawValue)
             URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: req, completionHandler: { (data, resp, err) in
-        
                 if err != nil {
-                    print("error")
+                    makeAlert("No response from the server, try again..")
                     completion(false)
                 }
                 if let d = data {
                     let json = NSString(data: d, encoding: String.Encoding.utf8.rawValue)
-                    print("response puuuuut")
-                    print(json)
                     completion(true)
                 }
             }).resume()
         } catch {
-            print("err")
+            makeAlert("Error")
         }
     }
     
@@ -392,6 +435,7 @@ class APIManager: NSObject, URLSessionDelegate {
             completion(me)
         }
     }
+    
     func deleteEventById(_ id: String, completion: @escaping (() -> ())) {
         let url = self.url + "event/\(id)"
         var request = URLRequest(url: URL(string: url)!)
@@ -399,7 +443,7 @@ class APIManager: NSObject, URLSessionDelegate {
         request.setValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
         URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: request, completionHandler: { (data, resp, err) in
             if err != nil {
-                print("error")
+                makeAlert("No response from the server, try again..")
                 return
             }
             completion()
@@ -426,18 +470,19 @@ class APIManager: NSObject, URLSessionDelegate {
                 case .success(let upload, _, _):
                     upload.responseJSON { response in
                         if response.error != nil {
+                            makeAlert("Error from the server, try again")
                             onCompletion(false)
                             return
                         }
                         onCompletion(true)
                     }
                 case .failure(let error):
-                    print("Error in upload: \(error.localizedDescription)")
+                    makeAlert("Error during downloading file")
                     onCompletion(false)
                 }
             }
-        } catch (let err) {
-            print(err.localizedDescription)
+        } catch {
+            makeAlert("Error")
         }
     }
     
@@ -454,8 +499,7 @@ class APIManager: NSObject, URLSessionDelegate {
     {
         URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: request) { (data, response, err) in
             if err != nil {
-                print(err?.localizedDescription)
-                print("error while requesting")
+                makeAlert("No response from the server, try again..")
             }
             if let d = data {
                 do {
@@ -463,8 +507,19 @@ class APIManager: NSObject, URLSessionDelegate {
                     DispatchQueue.main.async {
                         completion(dic)
                     }
-                } catch let err {
-                    print("task dictionnary error: \(err)")
+                } catch {
+                    do {
+                        let responseJSON = try JSONSerialization.jsonObject(with: data!, options: [])
+                        if let responseJSON = responseJSON as? [String: Any] {
+                            if let error = responseJSON["error"] as? String {
+                                makeAlert(error)
+                            }
+                            
+                        }
+                    }
+                    catch {
+                        makeAlert("Can't connect to the server")
+                    }
                 }
             }
         }.resume()

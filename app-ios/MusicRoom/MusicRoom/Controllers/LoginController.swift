@@ -14,7 +14,6 @@ import GoogleToolboxForMac
 
 class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate ,GIDSignInUIDelegate, LoginButtonDelegate  {
     func loginButtonDidCompleteLogin(_ loginButton: LoginButton, result: LoginResult) {
-        
         switch result {
             case .failed(let error):
                 print(error)
@@ -78,10 +77,9 @@ class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate 
         GIDSignIn.sharedInstance().delegate = self
         GIDSignIn.sharedInstance().uiDelegate = self
 
+
         loginTF.delegate = self
-        loginTF.tag = 0
         passTF.delegate = self
-        passTF.tag = 1
         googleButton = GIDSignInButton()
         
         facebook = LoginButton(readPermissions: [ReadPermission.publicProfile, ReadPermission.email])
@@ -92,11 +90,7 @@ class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate 
     
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        switch textField.tag {
-        case 0 : passTF.becomeFirstResponder()
-        case 1 : handleLogin()
-        default : return true
-        }
+        textField.resignFirstResponder()
         return true
     }
     

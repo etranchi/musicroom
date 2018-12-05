@@ -38,7 +38,7 @@ class SettingsController: UIViewController, DeezerSessionDelegate {
         }
     }
     
-    @objc func deleteUser() {
+    @objc func disconnectUser() {
         if userManager.logedWith == .fb {
             let manager = LoginManager()
             FBSDKAccessToken.setCurrent(nil)
@@ -77,22 +77,33 @@ class SettingsController: UIViewController, DeezerSessionDelegate {
         view.backgroundColor = UIColor(white: 0.1, alpha: 1)
         
     }
+    @objc func deleteUser() {
+        apiManager.deleteUserById()
+        self.disconnectUser()
+    }
     
     func setupButton() {
         let logout = UIButton(type:.roundedRect)
         logout.backgroundColor = UIColor.gray
         logout.layer.cornerRadius = 8
         logout.setAttributedTitle(NSAttributedString(string: "Disconnect", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
+        let delete = UIButton(type:.roundedRect)
+        delete.backgroundColor = UIColor.red
+        delete.layer.cornerRadius = 8
+        delete.setAttributedTitle(NSAttributedString(string: "Delete your account", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
         deezerButton = UIButton(type: .roundedRect)
         deezerButton!.titleEdgeInsets = UIEdgeInsets(top: -10,left: -10,bottom: -10,right: -10)
         deezerButton!.backgroundColor = UIColor.gray
         deezerButton!.layer.cornerRadius = 8
         updateButton()
-        logout.addTarget(self, action: #selector(deleteUser), for: .touchUpInside)
+        logout.addTarget(self, action: #selector(disconnectUser), for: .touchUpInside)
         logout.translatesAutoresizingMaskIntoConstraints = false
+        delete.addTarget(self, action: #selector(deleteUser), for: .touchUpInside)
+        delete.translatesAutoresizingMaskIntoConstraints = false
         deezerButton!.addTarget(self, action: #selector(handleDeezer), for: .touchUpInside)
         view.addSubview(deezerButton!)
         view.addSubview(logout)
+        view.addSubview(delete)
         deezerButton!.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
@@ -102,7 +113,11 @@ class SettingsController: UIViewController, DeezerSessionDelegate {
             
             logout.topAnchor.constraint(equalTo: deezerButton!.bottomAnchor , constant: 20),
             logout.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
-            logout.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            logout.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            delete.topAnchor.constraint(equalTo: logout.bottomAnchor , constant: 20),
+            delete.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
+            delete.centerXAnchor.constraint(equalTo: view.centerXAnchor)
             ])
     }
 }
