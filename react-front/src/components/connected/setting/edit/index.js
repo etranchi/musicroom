@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Icon, Button, Input, Upload, message, Divider, Layout, Col, Row} from 'antd';
+import Error from '../../../other/errorController'
 
 const {Content, Footer, Header} = Layout
 
@@ -19,15 +20,17 @@ export default class EditSetting extends Component {
 		};
 		this.currentUser = props.state.user;
 	}
+
 	updateChange(e) {
 		this.setState({[e.target.name]: e.target.value});
 	}
+
 	checkInput = () => {
 		let err = 0;
 		if (this.state.login) {
 			if (this.state.login.length < 3) {
 				err++;
-				this.info("Password to short")
+				message.info("Password to short")
 			}
 			else
 				this.currentUser.login = this.state.login
@@ -35,17 +38,18 @@ export default class EditSetting extends Component {
 		if (this.state.password && this.state.cpypassword) {
 			if (this.state.password.length < 8) {
 				err++;
-				this.info("Password to short")
+				message.info("Password to short")
 			}
 			else if (this.state.password !== this.state.cpypassword) {
 				err++;
-				this.info("Pasword != Copy password")
+				message.info("Pasword != Copy password")
 			}
 			else
 				this.currentUser.password = this.state.password
 		}
 		return (err)
 	}
+
 	updateSave() {
 		let data = new FormData();
 
@@ -61,9 +65,7 @@ export default class EditSetting extends Component {
 				.catch(err => { console.log(err); })
 		}
 	}
-	info = text => {
-        message.info(text);
-    }
+	
 	handlePicture = info => {
 		this.setState({infoFile: info})
 		if (info.file.status === 'uploading') {
@@ -72,12 +74,14 @@ export default class EditSetting extends Component {
 		} 
 		if (info.file.originFileObj)
 			this.getBase64(info.file.originFileObj, newPicture => this.setState({ newPicture, loading: false}));
-	}    
+	}
+
     getBase64 = (img, callback) => {
         const reader = new FileReader();
         reader.addEventListener('load', () => callback(reader.result));
         reader.readAsDataURL(img);
-    }
+	}
+	
     beforeUpload = file => {
         const isJPG = file.type === 'image/jpeg';
         if (!isJPG) message.error('You can only upload JPG file!');
@@ -85,6 +89,19 @@ export default class EditSetting extends Component {
         if (!isLt2M) message.error('Image must smaller than 2MB!');
         return isJPG && isLt2M;
 	}
+
+	deleteUser = () => {
+		axios.delete(process.env.REACT_APP_API_URL + "/user/me",
+		{'headers' : {'Authorization': 'Bearer '+ localStorage.getItem('token')}})
+		.then(resp => {
+				message.success("Account successfully deleted");
+				this.props.logout();
+		})
+		.catch(err => {
+			Error.display_error(err);
+		})
+	}
+
 	render() {
 		this.uploadButton = (
             <div>
@@ -96,7 +113,24 @@ export default class EditSetting extends Component {
 		<Layout>
 			<Header> <h1>Modifier le profil : : </h1></Header>
 			<Content>
-				<Row style={{height:50}}/>
+				<Row style={{height:30}}/>
+				<Row>
+					<Col span={4} offset={1}>
+						<a 
+							href="#!" 
+							className="btn waves-effect waves-teal" 
+							onClick={() => this.props.updateParent({'currentComponent': 'setting'})}>Back
+						</a>
+					</Col>
+					<Col span={4} offset={15}>
+						<a 
+							href="#!" 
+							className="btn waves-effect waves-red"
+							style={{'backgroundColor':'red'}}
+							onClick={this.deleteUser}>Delete Account
+						</a>
+					</Col>
+				</Row>
 				<Row>
 					<Col span={4} offset={4}>
 						<div style={{'margin': '0 0 0 25% '}}>
@@ -112,9 +146,6 @@ export default class EditSetting extends Component {
 								{this.state.newPicture ? null : this.uploadButton}
 							</Upload>
                         </div>
-					</Col>
-					<Col span={1}>
-						<Button onClick={this.props.updateParent.bind(this,{'currentComponent': 'setting'})}>Back</Button>
 					</Col>
 				</Row>
 				<Divider />

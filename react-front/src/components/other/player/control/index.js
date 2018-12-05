@@ -102,7 +102,6 @@ export default class Player extends Component {
     }
 
 	render() {
-        console.log(this.state);
         return (
             <Row style={{height:'inherit', margin:'3% 0 0 0'}}>
                 <Col span={3}/>
