@@ -5,6 +5,9 @@ const Track = new Schema({
 	id: {
 		type: Number,
 	},
+	userId: {
+		type: [Schema.Types.ObjectId]
+	},
 	readable: {
 		type: Boolean,
 	},

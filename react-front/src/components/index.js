@@ -50,7 +50,7 @@ class Front extends Component {
     }
   }
 
-  deleteToken() {
+  logout = () => {
     localStorage.setItem('token', '');
     this.updateState({'token': '', 'currentComponent': 'login'})
   }
@@ -61,12 +61,12 @@ class Front extends Component {
           <Layout className="App">
             <Header className="HeaderApp">
               <img alt="headerImg" className="HeaderImage" src="/header.png"></img>
-              {token && <div className="disconnect"><Button className="disconnect" type="primary" onClick={this.deleteToken.bind(this)}>Disconnect</Button></div>}
+              {token && <div className="disconnect"><Button className="disconnect" type="primary" onClick={this.logout}>Disconnect</Button></div>}
               {token && <Menu  state={this.state} updateParent={this.updateState}/>}
             </Header>
             <Content style={{backgroundColor:'#263238 !important'}}>
               <div id="dz-root"></div>
-              {token && <Connected updateParent={this.updateState} state={this.state}/>}
+              {token && <Connected updateParent={this.updateState} state={this.state} logout={this.logout}/>}
               {!token && <Connection updateParent={this.updateState} state={this.state}/>}
             </Content>
             <Footer style={{backgroundColor:'#263238'}}>
