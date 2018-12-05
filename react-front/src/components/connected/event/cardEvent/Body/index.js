@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios'
-import { Divider, Icon, Col, Row, Modal, Input, DatePicker } from 'antd';
+import { Divider, Icon, Col, Row, Modal, Input, DatePicker, message } from 'antd';
 import './styles.css';
 import MemberList from './MemberList';
-import Player from '../../../../other/player'
 import Error from '../../../../other/errorController'
 import SearchBar from '../../../../other/searchbar';
 import LocationSearchInput from '../../locationSearchInput'
@@ -82,6 +81,8 @@ export default class Body extends Component {
     }
     removeMember = (type, item) => {
         let tab = [];
+        if ((this.props.right &&  !this.props.right.isAdmin && !this.props.right.isCreator ) && item._id !== this.props.state.user._id)
+            return message.error("Vous n'avez pas les bons droits pour cette action.")
         if (type === 'admin')
             tab = this.props.state.data.event.adminMembers;
         else  
@@ -153,15 +154,17 @@ export default class Body extends Component {
     }
     playerLoadTracksFromEvent = () => {
         let currentPlayerTracks = {
-            tracks: this.props.state.data.event.playlist.tracks.data || [],
-            id:  this.props.state.data.event.playlist.id ||  this.props.state.data.event.playlist._id
+            tracks: [],
+            id: 0
         };
-        
-        if (this.state.isPlaying)
-            this.props.updateParent({'currentPlayerTracks' : {tracks:[], id:0}})
-        else
-            this.props.updateParent({'currentPlayerTracks' : currentPlayerTracks})
-        this.setState({isPlaying:!this.state.isPlaying})
+        if (!this.state.isPlaying)  {
+            currentPlayerTracks.tracks = this.props.state.data.event.playlist.tracks.data || [];
+            currentPlayerTracks.id = this.props.state.data.event.playlist.id ||  this.props.state.data.event.playlist._id;
+        }
+        this.props.updateParent({'currentPlayerTracks' : currentPlayerTracks})
+        this.setState({isPlaying:!this.state.isPlaying}, () => {
+            window.scrollTo(2000, 2000)
+        })
     }
 	render() {
         return (
@@ -221,7 +224,7 @@ export default class Body extends Component {
                 {
                     this.props.right.isAdmin || this.props.right.isCreator ? 
                         <Row style={{height:'70px'}}>
-                            <Col span={5} offset={3}>
+                            <Col span={1} offset={5}>
                                 <i 
                                     onClick={ this.playerLoadTracksFromEvent.bind(this)} 
                                     className={ this.state.isPlaying ? "fas fa-pause-circle playerAction" : "fas fa-play-circle playerAction"}></i>  

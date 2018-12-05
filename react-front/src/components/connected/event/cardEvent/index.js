@@ -17,15 +17,6 @@ export default class cardEvent extends Component {
             isMember    : false,
             isViewer    : true
         };
-        this.launchButton = {
-            position    : 'fixed',
-            bottom      : '50px',
-            height      : '80px',
-            right       : '140px',
-            latitude    : 0,
-            longitude   : 0,
-            displayUser : false
-        };
     }
     isUser = tab => {
         tab.forEach(user => { 
@@ -69,6 +60,7 @@ export default class cardEvent extends Component {
         let tracks = this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks ? this.props.state.data.event.playlist.tracks.data : [];
         createRoom(this.props.state.data.event._id, tracks, this.props.state.data.event);
         this.checkRight();
+        window.scrollTo(1000, 1000)
     }
     componentWillUnmount = () => {
         //     leaveRoom(this.props.state.data.event._id)
@@ -101,9 +93,17 @@ export default class cardEvent extends Component {
         return  (
             <div>
                 <Row>
-                    <Col span={8}> 
+                    <Col span={2}> 
                         <a href="#!" className="btn waves-effect waves-teal" onClick={() => this.props.changeView('listEvent')}>Back</a> 
                     </Col>
+                    {
+                        this.isToday(this.props.state.data.event.event_date) &&  this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks ?
+                            <Col span={3} offset={19}> 
+                                <a href="#!" className="btn waves-effect waves-teal" onClick={this.openLiveEvent}>Start Event </a> 
+                            </Col>
+                            : 
+                            null
+                    }
                 </Row>
                 <CardHeader state={this.props.state} updateParent={this.props.updateParent} />
                 <Row>
@@ -121,18 +121,6 @@ export default class cardEvent extends Component {
                 <Divider />
                 <CreatorProfil right={this.state} state={this.props.state} updateParent={this.props.updateParent} />
                 <BodyEvent right={this.state} state={this.props.state} updateParent={this.props.updateParent} updateMap={this.updateMap.bind(this)}/>
-                {
-                    this.isToday(this.props.state.data.event.event_date) &&  this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks ?
-                        <Button 
-                            style={this.launchButton}
-                            type="primary" 
-                            onClick={this.openLiveEvent}
-                        > 
-                            <b> Start Event </b> 
-                        </Button>
-                        : 
-                        null
-                }
            </div>
         )
   }

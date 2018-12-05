@@ -17,7 +17,6 @@ export default class Player extends Component {
         this.setState(value)
     }
 	render() {
-        console.log("ENTER UN PLAYER")
         return ( 
             <Footer className='player' style={{backgroundColor:this.props.color ? this.props.color : 'white'}}>
                 <div className='defaultComponentProperty default'> 

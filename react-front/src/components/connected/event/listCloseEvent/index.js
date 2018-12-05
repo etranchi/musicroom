@@ -52,16 +52,16 @@ export default class listCloseEvent extends Component {
                             <Row >
                                 <Col span={14} offset={2}>
                                     { 
-                                        this.state.loading === true  ? 
+                                        this.state.loading === false  ? 
                                             <div style={{height:'650px', margin:'5% 0 0 0'}}>
-                                                < Map 
+                                                <Map 
                                                     updateCurrentEvent={this.updateCurrentEvent} 
                                                     state={this.props.state} 
                                                     events={this.state.events}
                                                 /> 
                                             </div>
                                             :
-                                            null 
+                                            null
                                     }
                                 </Col>
                                 <Col span={6} offset={2}>>
@@ -70,7 +70,8 @@ export default class listCloseEvent extends Component {
                                             <div style={{margin:'20% 0 0 0'}}> 
                                                 <PreviewCard 
                                                     event={this.state.currentEvent} 
-                                                    state={this.props.state} 
+                                                    state={this.props.state}
+                                                    openCardEvent={this.props.openCardEvent} 
                                                     updateParent={this.props.updateParent}
                                                 />
                                             </div> 
