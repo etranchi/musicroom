@@ -43,7 +43,7 @@ module.exports = {
 	},
 	deleteTrackById: async (req, res, next) => {
 		try {
-			await trackModel.updateOne({_id: req.params.id}, {$pull: {userId: req.user._id}})
+			await trackModel.updateOne({id: req.params.id}, {$pull: {userId: req.user._id}})
 			res.status(204).send();
 		} catch (err) {
 			console.log(err)
