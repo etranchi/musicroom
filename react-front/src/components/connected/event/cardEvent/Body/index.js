@@ -157,8 +157,10 @@ export default class Body extends Component {
             tracks: [],
             id: 0
         };
+        if (!this.props.state.data.event.playlist.tracks.data || this.props.state.data.event.playlist.tracks.data.length === 0)
+            return message.error("Error : aucune playlist charge.")
         if (!this.state.isPlaying)  {
-            currentPlayerTracks.tracks = this.props.state.data.event.playlist.tracks.data || [];
+            currentPlayerTracks.tracks = this.props.state.data.event.playlist.tracks.data;
             currentPlayerTracks.id = this.props.state.data.event.playlist.id ||  this.props.state.data.event.playlist._id;
         }
         this.props.updateParent({'currentPlayerTracks' : currentPlayerTracks})
