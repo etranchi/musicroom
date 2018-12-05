@@ -69,7 +69,7 @@ module.exports = {
 				throw new Error('No Location')
 			if (req.file && req.file.filename)
 				req.body.picture = req.file.filename
-			if (!req.body.playlist._id)
+			if (!req.body.playlist && !req.body.playlist._id)
 				req.body.playlist = await playlistController.getPlaylistDeezerById(req.body.playlist.id, req.user.deezerToken)
 			let event = await modelEvent.create(req.body)
 			res.status(200).send(event)

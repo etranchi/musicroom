@@ -13,11 +13,15 @@ export default class Body extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            playlistId : this.props.state.data.event.playlist && this.props.state.data.event.playlist.id ? this.props.state.data.event.playlist.id : null
+            playlistId : this.props.state.data.event.playlist && this.props.state.data.event.playlist.id ? this.props.state.data.event.playlist.id : null,
+            isPlaying:false
         };
         this.roomID =  this.props.state.data.event._id;
     }
     componentDidMount = () => {
+        if (this.props.state.data.event.playlist 
+            && (this.props.state.currentPlayerTracks.id === (this.props.state.data.event.playlist.id ||this.props.state.data.event.playlist._id)))
+                this.setState({isPlaying:true})
         this.setState({formatDate: this.formatDateAnnounce(this.props.state.data.event.event_date)})
     }
     updateLocation = val => {
@@ -61,13 +65,17 @@ export default class Body extends Component {
         if (playlist) {
             axios.get(process.env.REACT_APP_API_URL + '/playlist/' + playlist.id, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
             .then((resp) => { 
+                let currentPlayerTracks = {
+                    tracks: resp.data.tracks.data || [],
+                    id:  resp.data.id ||  resp.data._id
+                };
                 playlist = resp.data
                 this.props.state.data.event.playlist = playlist;
-                this.props.updateParent({'data' : this.props.state.data, 'playlistId':playlist.id})
+                this.props.updateParent({'currentPlayerTracks': currentPlayerTracks, 'data' : this.props.state.data, 'playlistId':playlist.id})
                 console.log("Playlist change, socket update Event")
                 updateEvent(this.roomID, this.props.state.data.event)
                 updateTracks(this.roomID, this.props.state.data.event.playlist.tracks.data)
-                this.setState({playlistId:playlist.id})         
+                this.setState({playlistId:playlist.id, isPlaying:true})         
             })
             .catch((err) => { Error.display_error(err); })  
         }
@@ -143,6 +151,18 @@ export default class Body extends Component {
                 return ("Dans " + day + ' jours')
         }
     }
+    playerLoadTracksFromEvent = () => {
+        let currentPlayerTracks = {
+            tracks: this.props.state.data.event.playlist.tracks.data || [],
+            id:  this.props.state.data.event.playlist.id ||  this.props.state.data.event.playlist._id
+        };
+        
+        if (this.state.isPlaying)
+            this.props.updateParent({'currentPlayerTracks' : {tracks:[], id:0}})
+        else
+            this.props.updateParent({'currentPlayerTracks' : currentPlayerTracks})
+        this.setState({isPlaying:!this.state.isPlaying})
+    }
 	render() {
         return (
             <div>
@@ -201,7 +221,12 @@ export default class Body extends Component {
                 {
                     this.props.right.isAdmin || this.props.right.isCreator ? 
                         <Row style={{height:'70px'}}>
-                            <Col span={3}  offset={5}>
+                            <Col span={5} offset={3}>
+                                <i 
+                                    onClick={ this.playerLoadTracksFromEvent.bind(this)} 
+                                    className={ this.state.isPlaying ? "fas fa-pause-circle playerAction" : "fas fa-play-circle playerAction"}></i>  
+                            </Col>
+                            <Col span={3} >
                                 <p  > Ajouter une playlist : </p>
                             </Col>
                             <Col span={3}>
@@ -214,12 +239,6 @@ export default class Body extends Component {
                         :
                         null
                 }
-                { 
-                    this.state.playlistId  && this.props.state.data.event.playlist.tracks.data.length > 0 ? 
-                        <Player  tracks={this.props.state.data.event.playlist.tracks.data} roomID={this.props.state.data.event._id}/> 
-                        : 
-                        null
-                } 
                 {/* Modal for description modification  */}
                 <Modal 
                     title="Description : "

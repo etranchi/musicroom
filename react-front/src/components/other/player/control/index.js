@@ -24,7 +24,6 @@ export default class Player extends Component {
         this.setState({'tracksID':tracksID, 'tracks':this.props.tracks}, () => {
             console.log(tracksID);
             DZ.player.playTracks(tracksID)
-
             // DZ.player.pause()
             DZ.player.setVolume(50)
         });

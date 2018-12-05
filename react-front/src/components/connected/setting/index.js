@@ -25,7 +25,7 @@ class Setting extends Component {
 		const that = this;
 		DZ.init({
 		    appId  		: '310224',
-		    channelUrl 	: 'https://localhost:3000',
+		    channelUrl 	: process.env.REACT_APP_FRONT_URL,
 		  });
         DZ.login(function(response) {
           if (response.authResponse) {
