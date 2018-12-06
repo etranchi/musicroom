@@ -144,13 +144,12 @@ class Tracks extends Component {
 	addTrack = (item) => {
 		var state = this.state;
 		state.playlist.tracks.data.push(item);
-		this.setState(state);
 		axios.put(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id,
 		this.state.playlist,
 		{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
 		.then(() => {
-			this.setState(state);
 			message.success("Music Successfully added");
+			this.setState(state);
 		})
 		.catch(err => {
 			Error.display_error(err);
