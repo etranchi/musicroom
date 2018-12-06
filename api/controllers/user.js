@@ -138,9 +138,6 @@ exports.modifyUserById = async (req, res, next) => {
 			req.body.picture = req.file.filename
 		let userUpdate = {}
 		let user = req.body
-		user = Utils.filter(model.schema.obj, user, 1)
-		userUpdate.login = user.login
-		userUpdate.picture = user.picture
 		if (user.password) {
 			if (user.password.length < 8 || user.password.length > 30)
 				throw new Error('Password does not fit (length between 8 and 30)')
@@ -149,10 +146,15 @@ exports.modifyUserById = async (req, res, next) => {
 		} else {
 			delete userUpdate.password
 		}
-		const {error} = Joi.validate(userUpdate, {login: Joi.string().min(3).max(50), password: Joi.string(), picture: Joi.string()})
+		const {error} = Joi.validate(user, {login: Joi.string().min(3).max(50), password: Joi.string(), picture: Joi.string()})
 		if (error) {
 			throw new Error(error.details[0].message)
 		}
+		user = Utils.filter(model.schema.obj, user, 1)
+		if (user.login)
+			userUpdate.login = user.login
+		if (user.picture)
+			userUpdate.picture = user.picture
 		user = await model.findOneAndUpdate({"_id": req.user._id}, userUpdate, {new: true});
 		return res.status(200).send(Utils.filter(model.schema.obj, user, 0));
 	} catch (err) {
