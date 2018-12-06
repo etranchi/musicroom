@@ -23,3 +23,7 @@ react-front/yarn-error.log*
 
 app-ios/MusicRoom/MusicRoom.xcodeproj/project.xcworkspace/xcuserdata/
 app-ios/MusicRoom/MusicRoom.xcworkspace/xcuserdata/
+
+app-ios/MusicRoom/Pods/
+app-ios/MusicRoom/Podfile.lock
+app-ios/MusicRoom/MusicRoom.xcworkspace/

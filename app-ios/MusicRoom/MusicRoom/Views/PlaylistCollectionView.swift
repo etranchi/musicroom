@@ -56,7 +56,7 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
     func setupView() {
         delegate = self
         dataSource = self
-        // alwaysBounceVertical = true
+        alwaysBounceVertical = true
         register(PlaylistCell.self, forCellWithReuseIdentifier: playlistCellId)
         register(CreatePlaylistButtonCell.self, forCellWithReuseIdentifier: buttonCellId)
         contentInset = UIEdgeInsets(top: 14, left: 14, bottom: 14, right: 14)

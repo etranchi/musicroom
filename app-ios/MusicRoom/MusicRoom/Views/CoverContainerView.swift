@@ -20,6 +20,7 @@ class CoverContainerView: UIView {
     let zoomingEffect: CGFloat = 40.0
     let transparencyEffect: CGFloat = 0.4
     let animationTime = 0.4
+    var pan: UIPanGestureRecognizer?
     
     init(target: UIViewController, _ underPreviousTrack: Track?, _ previousTrack: Track?, _ currentTrack: Track?, _ nextTrack: Track?, _ overNextTrack: Track?) {
         self.playerController = target as! PlayerController
@@ -31,6 +32,8 @@ class CoverContainerView: UIView {
         super.init(frame: .zero)
         
         if currentTrack != nil {
+            pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+            addGestureRecognizer(pan!)
             setupView()
         }
     }
@@ -79,6 +82,88 @@ class CoverContainerView: UIView {
         return iv
     }()
     
+    let                 menuHeight = UIScreen.main.bounds.height
+    @objc func          handlePan(gesture: UIPanGestureRecognizer) {
+        guard currentTrack != nil else { return }
+        let             translation = gesture.translation(in: self)
+        var             x = translation.x
+        let             max = offset
+        x = (abs(x) > max ? x < 0 ? -max : max : x) / max
+        if previousTrack == nil && x > 0 { return }
+        if nextTrack == nil && x < 0 { return }
+        if x < 0 {
+            currentLeadingAnchor?.constant = 25 + (offset - 30) * x
+            currentTrailingAnchor?.constant = -25 + (offset + 5) * x
+            nextTrailingAnchor?.constant = (offset - 30) + 35 * -x
+            nextCoverImageView.alpha = transparencyEffect + (1 - transparencyEffect) * -x
+            currentCoverImageView.alpha = 1 - (1 - transparencyEffect) * -x
+            playerController.backgroundCoverView?.previousImageView.alpha = 0
+            playerController.backgroundCoverView?.nextImageView.alpha = 1
+            playerController.backgroundCoverView?.currentImageView.alpha = 1 + x
+        } else {
+            currentLeadingAnchor?.constant = 25 + (offset + 5) * x
+            currentTrailingAnchor?.constant = -25 + (offset - 30) * x
+            previousLeadingAnchor?.constant = (-offset + 30) - 35 * x
+            previousCoverImageView.alpha = transparencyEffect + (1 - transparencyEffect) * x
+            currentCoverImageView.alpha = 1 - (1 - transparencyEffect) * x
+            playerController.backgroundCoverView?.previousImageView.alpha = 1
+            playerController.backgroundCoverView?.nextImageView.alpha = 0
+            playerController.backgroundCoverView?.currentImageView.alpha = 1 - x
+        }
+        if gesture.state == .ended {
+            handleEnded(x: x)
+        }
+    }
+    
+    func backToCurrentTrack(_ x: CGFloat) {
+        if x < 0 {
+            currentLeadingAnchor?.constant = 25
+            currentTrailingAnchor?.constant = -25
+            nextTrailingAnchor?.constant = offset - 30
+        } else {
+            currentLeadingAnchor?.constant = 25
+            currentTrailingAnchor?.constant = -25
+            previousLeadingAnchor?.constant = -offset + 30
+        }
+        let iv = x < 0 ? nextCoverImageView : previousCoverImageView
+        UIView.animate(withDuration: animationTime, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.currentCoverImageView.alpha = 1
+            self.playerController.backgroundCoverView?.currentImageView.alpha = 1
+            iv.alpha = self.transparencyEffect
+            self.layoutIfNeeded()
+        }){ (finished) in
+            self.pan = UIPanGestureRecognizer(target: self, action: #selector(self.handlePan))
+            self.addGestureRecognizer(self.pan!)
+        }
+    }
+    
+    func handleEnded(x: CGFloat) {
+        removeGestureRecognizer(pan!)
+        if x < 0.5 && x > -0.5 {
+            backToCurrentTrack(x)
+            return
+        }
+        if x < 0 {
+            currentLeadingAnchor?.constant = 25 + (offset - 30) * -1
+            currentTrailingAnchor?.constant = -25 + (offset + 5) * -1
+            nextTrailingAnchor?.constant = (offset - 30) + 35
+            playerController.backgroundCoverView?.handleNextAnimation()
+            playerController.handleNext(true)
+        } else {
+            currentLeadingAnchor?.constant = 25 + (offset + 5)
+            currentTrailingAnchor?.constant = -25 + (offset - 30)
+            previousLeadingAnchor?.constant = (-offset + 30) - 35
+            playerController.backgroundCoverView?.handlePreviousAnimation()
+            playerController.handlePrevious(true)
+        }
+        let iv = x < 0 ? nextCoverImageView : previousCoverImageView
+        UIView.animate(withDuration: animationTime, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            iv.alpha = 1
+            self.currentCoverImageView.alpha = self.transparencyEffect
+            self.layoutIfNeeded()
+        }) { (finished) in self.playerController.setupTrack(indexOffset: x < 0 ? 1 : -1) }
+    }
+    
     func handleAnimation(iv: UIImageView, isNext: Bool) {
         if isNext {
             currentLeadingAnchor?.constant -= offset - 30
@@ -112,6 +197,8 @@ class CoverContainerView: UIView {
     var nextLeadingAnchor: NSLayoutConstraint?
     var nextTrailingAnchor: NSLayoutConstraint?
     let offset = UIApplication.shared.keyWindow!.bounds.width - 50
+    
+    
     
     func setupView() {
         downLoadImagesIfNeeded()

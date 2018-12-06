@@ -14,7 +14,7 @@ class PlaylistDetailController: UITableViewController {
     var tracks: [Track]
     let playlistCover: UIImage
     var isUnlocked = true
-    
+    var isAdmin = true
     var headerView: AlbumHeaderView!
     let songCellId = "SongCellId"
     
@@ -150,6 +150,24 @@ class PlaylistDetailController: UITableViewController {
         updateHeaderView()
     }
     
+    fileprivate func setupAdmin(_ cell: AlbumTrackListCell) {
+        cell.dotsLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(edit)))
+        if tableView.isEditing {
+            cell.dotsLabel.isHidden = true
+        } else if isUnlocked == false {
+            cell.dotsLabel.isHidden = true
+            cell.lockedIcon.isHidden = false
+        } else {
+            cell.dotsLabel.isHidden = false
+            cell.lockedIcon.isHidden = true
+        }
+    }
+    
+    fileprivate func setupMember(_ cell: AlbumTrackListCell) {
+        cell.dotsLabel.isHidden = true
+        cell.lockedIcon.isHidden = true
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: songCellId, for: indexPath) as! AlbumTrackListCell
         cell.isInPlaylist = true
@@ -160,15 +178,10 @@ class PlaylistDetailController: UITableViewController {
         cell.rootController = self
         cell.indexPath = indexPath
         cell.dotsLabel.isUserInteractionEnabled = true
-        cell.dotsLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(edit)))
-        if tableView.isEditing {
-            cell.dotsLabel.isHidden = true
-        } else if isUnlocked == false {
-            cell.dotsLabel.isHidden = true
-            cell.lockedIcon.isHidden = false
+        if isAdmin {
+            setupAdmin(cell)
         } else {
-            cell.dotsLabel.isHidden = false
-            cell.lockedIcon.isHidden = true
+            setupMember(cell)
         }
         return cell
     }

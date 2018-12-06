@@ -29,7 +29,8 @@ class TabBarController: UITabBarController {
         view.backgroundColor = UIColor(white: 0.2, alpha: 1)
         setupBlurTabBar()
         setupTabBarController()
-        offsetY = tabBar.frame.size.height + 35
+        let size = view.bounds.height
+        offsetY = size > 800 ? tabBar.frame.size.height + 44 + 35 : tabBar.frame.size.height + 44
     }
     
     fileprivate func setupBlurTabBar() {
@@ -67,6 +68,7 @@ class TabBarController: UITabBarController {
         songDetail.root = self
         playerController.rootViewController = self
         playerController.minimizedPlayer = minimizedPlayer
+        
         addChildViewController(playerController)
         tabBar.removeFromSuperview()
         view.addSubview(playerView)
@@ -82,7 +84,8 @@ class TabBarController: UITabBarController {
             minimizedPlayer.leadingAnchor.constraint(equalTo: tabBar.leadingAnchor),
             minimizedPlayer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -43),
             
-            
+            playerView.topAnchor.constraint(equalTo: view.topAnchor),
+            playerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             playerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             playerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             
@@ -92,11 +95,7 @@ class TabBarController: UITabBarController {
             songDetail.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
         
-        playerView.transform = CGAffineTransform(translationX: 0, y: view.bounds.height - offsetY - 44)
-        playerViewTopConstraint = playerView.topAnchor.constraint(equalTo: view.topAnchor)
-        playerViewBottomConstrant = playerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        playerViewTopConstraint.isActive = true
-        playerViewBottomConstrant.isActive = true
+        playerView.transform = CGAffineTransform(translationX: 0, y: view.bounds.height - offsetY)
         tabViewController0.title = "Your Library"
         tabViewController1.title = "Search"
         tabViewController2.title = "Map"
@@ -112,9 +111,9 @@ class TabBarController: UITabBarController {
         let navi1 = CustomNavigationController(rootViewController: tabViewController1)
         let navi2 = CustomNavigationController(rootViewController: tabViewController2)
         
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
-        minimizedPlayer.addGestureRecognizer(panGesture)
-        
+        minimizedPlayer.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handlePan)))
+        playerController.view.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handlePan)))
+        playerController.downButton.alpha = 0
         viewControllers = [navi0, navi1, navi2]
     }
     
@@ -126,54 +125,10 @@ class TabBarController: UITabBarController {
             })
         }
     }
-    
-    let             menuHeight = UIScreen.main.bounds.height
-    var             playerViewTopConstraint: NSLayoutConstraint!
-    var             playerViewBottomConstrant: NSLayoutConstraint!
-    
-    @objc func          handlePan(gesture: UIPanGestureRecognizer) {
-        guard currentTrack != nil else { return }
-        let             translation = gesture.translation(in: view)
-        var             y = translation.y
-        
-        if isPlayerOpened {
-            print("opened")
-        } else {
-            y = y > 0 ? 0 : y
-            playerView.transform = CGAffineTransform(translationX: 0, y: self.view.bounds.height - self.offsetY + y)
-            tabBar.transform = CGAffineTransform(translationX: 0, y: -y * 0.1)
-            minimizedPlayer.transform = CGAffineTransform(translationX: 0, y: y)
-            if y > -100 {
-                minimizedPlayer.alpha = 1 + y / 100
-                playerController.downButton.alpha = y / 100
-            }
-        }
-        if gesture.state == .ended {
-            handleEnded(gesture)
-        }
-    }
-    
-    fileprivate func    handleEnded(_ gesture: UIPanGestureRecognizer) {
-        let             translation = gesture.translation(in: view)
-        let             velocity = gesture.velocity(in: view)
-        if isPlayerOpened {
-            print("opened")
-        } else {
-            if velocity.y < -700 {
-                animatedShowPlayer()
-                return
-            }
-            if abs(translation.y) > menuHeight * 0.1 {
-                animatedShowPlayer()
-            } else {
-                animatedHidePlayer()
-            }
-        }
-    }
 
-    
     func animatedShowPlayer() {
         animatedHideTabBar()
+        isPlayerOpened = true
         UIView.animate(withDuration: 0.25, delay: 0.1, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             playerController.downButton.alpha = 1
             self.minimizedPlayer.alpha = 0
@@ -187,6 +142,7 @@ class TabBarController: UITabBarController {
     }
     
     func animatedHidePlayer() {
+        isPlayerOpened = false
         UIView.animate(withDuration: 0.3, delay: 0.1, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             playerController.downButton.alpha = 0
             self.minimizedPlayer.alpha = 1
@@ -208,5 +164,73 @@ class TabBarController: UITabBarController {
         UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.tabBar.transform = CGAffineTransform(translationX: 0, y: self.offsetY)
         })
+    }
+    
+    
+    //pan gesture
+    let                 menuHeight = UIScreen.main.bounds.height
+    @objc func          handlePan(gesture: UIPanGestureRecognizer) {
+        guard currentTrack != nil else { return }
+        let             translation = gesture.translation(in: view)
+        var             y = translation.y
+        let             max = self.view.bounds.height - self.offsetY
+        
+        if isPlayerOpened {
+            y = y < 0 ? 0 : y
+            y = y > max ? max : y
+            playerView.transform = CGAffineTransform(translationX: 0, y: y)
+            minimizedPlayer.transform = CGAffineTransform(translationX: 0, y: -max + y)
+            tabBar.transform = CGAffineTransform(translationX: 0, y: self.offsetY - (y / max) * self.offsetY)
+            var malpha: CGFloat = 0
+            var dalpha: CGFloat = 1
+            if y >= max - 100 {
+                let a = max - y
+                if a > 50 {
+                    dalpha = (a - 50) / 50
+                } else {
+                    malpha = 1 - a / 50
+                    dalpha = 0
+                }
+            }
+            minimizedPlayer.alpha = malpha
+            playerController.downButton.alpha = dalpha
+        } else {
+            y = y > 0 ? 0 : y
+            y = y < -(self.view.bounds.height - self.offsetY) ? -max : y
+            playerView.transform = CGAffineTransform(translationX: 0, y: max + y)
+            tabBar.transform = CGAffineTransform(translationX: 0, y: -y * 0.1)
+            minimizedPlayer.transform = CGAffineTransform(translationX: 0, y: y)
+            minimizedPlayer.alpha = y >= -50 ? 1 + y / 50 : 0
+            playerController.downButton.alpha = y >= -100 && y < -50 ? -(y + 50) / 50 : playerController.downButton.alpha
+        }
+        if gesture.state == .ended {
+            handleEnded(gesture)
+        }
+    }
+    
+    fileprivate func    handleEnded(_ gesture: UIPanGestureRecognizer) {
+        let             translation = gesture.translation(in: view)
+        let             velocity = gesture.velocity(in: view)
+        if isPlayerOpened {
+            if velocity.y > 700 {
+                animatedHidePlayer()
+                return
+            }
+            if abs(translation.y) > menuHeight * 0.1 {
+                animatedHidePlayer()
+            } else {
+                animatedShowPlayer()
+            }
+        } else {
+            if velocity.y < -700 {
+                animatedShowPlayer()
+                return
+            }
+            if abs(translation.y) > menuHeight * 0.1 {
+                animatedShowPlayer()
+            } else {
+                animatedHidePlayer()
+            }
+        }
     }
 }

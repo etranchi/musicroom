@@ -78,21 +78,14 @@ class BackgroundCoverView: UIView {
         iv.alpha = 1
         UIView.animate(withDuration: animationTime, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.currentImageView.alpha = 0
-            self.layoutIfNeeded()
         })
     }
     
     func handleNextAnimation() {
-        if currentTrack!.album!.cover_big == nextTrack?.album!.cover_big {
-            return
-        }
         handleAnimation(iv: nextImageView)
     }
     
     func handlePreviousAnimation() {
-        if currentTrack!.album!.cover_big == previousTrack?.album!.cover_big {
-            return
-        }
         handleAnimation(iv: previousImageView)
     }
     

@@ -18,16 +18,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.0" contentMode="scaleAspectFit" insetsLayoutMarginsFromSafeArea="NO" image="iTunesArtwork" adjustsImageSizeForAccessibilityContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="psk-nz-jHZ">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.29999999999999999" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="deezer_logo" translatesAutoresizingMaskIntoConstraints="NO" id="xBm-SH-ys6">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" red="0.50855463990275718" green="0.50855463990275718" blue="0.50855463990275718" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.10194466263055801" green="0.10197005420923233" blue="0.10194308310747147" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="psk-nz-jHZ" firstAttribute="height" secondItem="Ze5-6b-2t3" secondAttribute="height" id="0YZ-eL-huE"/>
-                            <constraint firstItem="psk-nz-jHZ" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="966-lq-92o"/>
-                            <constraint firstItem="psk-nz-jHZ" firstAttribute="width" secondItem="Ze5-6b-2t3" secondAttribute="width" id="m5b-wi-EzV"/>
-                            <constraint firstItem="psk-nz-jHZ" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="t8G-jf-zDL"/>
+                            <constraint firstItem="xBm-SH-ys6" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="BcQ-fR-8Kn"/>
+                            <constraint firstItem="xBm-SH-ys6" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="W3X-yh-Bm8"/>
+                            <constraint firstItem="xBm-SH-ys6" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="g9h-Lc-UgM"/>
+                            <constraint firstItem="xBm-SH-ys6" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="sOC-hq-VsV"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -38,6 +38,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="iTunesArtwork" width="512" height="512"/>
+        <image name="deezer_logo" width="1250" height="653"/>
     </resources>
 </document>

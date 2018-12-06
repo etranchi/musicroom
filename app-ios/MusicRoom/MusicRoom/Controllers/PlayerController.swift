@@ -93,7 +93,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             playerButtonView?.progressCircle?.updateProgress(0)
         }
         if progress > 0.999 {
-            handleNext()
+            handleNext(false)
         }
     }
     
@@ -104,23 +104,41 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         playerButtonView?.handlePlay()
     }
     
-    func handleNext() {
+    func handleNext(_ byGesture: Bool) {
         if index + 1 < tracks.count, isChangingMusic == false {
             isChangingMusic = true
             index += 1
             loadTrackInplayer()
-            backgroundCoverView?.handleNextAnimation()
-            coverContainerView?.handleNextAnimation()
+            if byGesture == false {
+                backgroundCoverView?.handleNextAnimation()
+                coverContainerView?.handleNextAnimation()
+            }
         }
     }
     
-    func handlePrevious() {
+    func handlePrevious(_ byGesture: Bool) {
         if index - 1 >= 0, isChangingMusic == false {
             index -= 1
             loadTrackInplayer()
             isChangingMusic = true
-            backgroundCoverView?.handlePreviousAnimation()
-            coverContainerView?.handlePreviousAnimation()
+            if byGesture == false {
+                backgroundCoverView?.handlePreviousAnimation()
+                coverContainerView?.handlePreviousAnimation()
+            }
+        }
+    }
+    
+    func setupTrack(indexOffset: Int) {
+        backgroundCoverView?.removeFromSuperview()
+        coverContainerView?.removeFromSuperview()
+        titleLabel.removeFromSuperview()
+        authorLabel.removeFromSuperview()
+        playerButtonView?.removeFromSuperview()
+        setupUI()
+        hasPaused = false
+        self.isChangingMusic = false
+        if isPlaying {
+            playerButtonView?.handlePlay()
         }
     }
     
@@ -189,19 +207,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         rootViewController?.animatedHidePlayer()
     }
     
-    func setupTrack(indexOffset: Int) {
-        backgroundCoverView?.removeFromSuperview()
-        coverContainerView?.removeFromSuperview()
-        titleLabel.removeFromSuperview()
-        authorLabel.removeFromSuperview()
-        playerButtonView?.removeFromSuperview()
-        setupUI()
-        hasPaused = false
-        self.isChangingMusic = false
-        if isPlaying {
-            playerButtonView?.handlePlay()
-        }
-    }
+    
 
     fileprivate func setupUI() {
         if firstPlay {

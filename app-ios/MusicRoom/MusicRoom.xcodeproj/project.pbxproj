@@ -63,7 +63,8 @@
 		79B15ED0218C700C00B84BCB /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79B15ECF218C700C00B84BCB /* Album.swift */; };
 		79B4DE73218B4637001031D2 /* SearchBarCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79B4DE72218B4637001031D2 /* SearchBarCell.swift */; };
 		79C3064A21A2EE9900830093 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 79C3064921A2EE9900830093 /* Assets.xcassets */; };
-		79CDCF1F218870F70095CC63 /* LoadingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79CDCF1E218870F70095CC63 /* LoadingController.swift */; };
+		79C67CC021B933A600B277BD /* AuthenticationBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C67CBF21B933A600B277BD /* AuthenticationBackgroundView.swift */; };
+		79C67CC221B934B000B277BD /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C67CC121B934B000B277BD /* LoginView.swift */; };
 		79CDCF21218871A20095CC63 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79CDCF20218871A20095CC63 /* TabBarController.swift */; };
 		79CDCF27218874160095CC63 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79CDCF26218874160095CC63 /* SettingsController.swift */; };
 		79CDCF292188746D0095CC63 /* LibraryController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79CDCF282188746D0095CC63 /* LibraryController.swift */; };
@@ -157,7 +158,8 @@
 		79B15ECF218C700C00B84BCB /* Album.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
 		79B4DE72218B4637001031D2 /* SearchBarCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarCell.swift; sourceTree = "<group>"; };
 		79C3064921A2EE9900830093 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		79CDCF1E218870F70095CC63 /* LoadingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingController.swift; sourceTree = "<group>"; };
+		79C67CBF21B933A600B277BD /* AuthenticationBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationBackgroundView.swift; sourceTree = "<group>"; };
+		79C67CC121B934B000B277BD /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		79CDCF20218871A20095CC63 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		79CDCF26218874160095CC63 /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		79CDCF282188746D0095CC63 /* LibraryController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryController.swift; sourceTree = "<group>"; };
@@ -352,6 +354,8 @@
 				79FF7D13219D9BCC001DAE17 /* ArtistsCollectionView.swift */,
 				79938C8C21A314CD006D7281 /* PlaylistCollectionView.swift */,
 				773EBDA521AD95160073393F /* EventCollectionView.swift */,
+				79C67CBF21B933A600B277BD /* AuthenticationBackgroundView.swift */,
+				79C67CC121B934B000B277BD /* LoginView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -381,7 +385,6 @@
 		799C8BFA219029A3003868A2 /* UICustomisation */ = {
 			isa = PBXGroup;
 			children = (
-				79CDCF1E218870F70095CC63 /* LoadingController.swift */,
 				79CDCF2A218876ED0095CC63 /* CustomNavigationController.swift */,
 			);
 			path = UICustomisation;
@@ -657,6 +660,7 @@
 				"${BUILT_PRODUCTS_DIR}/FBSDKLoginKit/FBSDKLoginKit.framework",
 				"${BUILT_PRODUCTS_DIR}/FacebookCore/FacebookCore.framework",
 				"${BUILT_PRODUCTS_DIR}/FacebookLogin/FacebookLogin.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMOAuth2/GTMOAuth2.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
 				"${BUILT_PRODUCTS_DIR}/Socket.IO-Client-Swift/SocketIO.framework",
@@ -670,6 +674,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKLoginKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FacebookCore.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FacebookLogin.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMOAuth2.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketIO.framework",
@@ -736,7 +741,6 @@
 				7743C2472190A03A002CC508 /* MyUser+CoreDataClass.swift in Sources */,
 				79DD4A79219C3F04005578EB /* SearchController.swift in Sources */,
 				773EBDA821AD96400073393F /* EventCell.swift in Sources */,
-				79CDCF1F218870F70095CC63 /* LoadingController.swift in Sources */,
 				77DAE48C21AEAD1000427173 /* EventDetailController.swift in Sources */,
 				77F2F50C219F431800CC9E8D /* ToastMsg.swift in Sources */,
 				7743C24A2190A23C002CC508 /* UserManager.swift in Sources */,
@@ -754,9 +758,11 @@
 				799DA43D218D3ED300C803E3 /* AlbumCell.swift in Sources */,
 				77F5157E21A2FA9300A12148 /* Event.swift in Sources */,
 				77FA6AF4219DDC6200884428 /* EventController.swift in Sources */,
+				79C67CC221B934B000B277BD /* LoginView.swift in Sources */,
 				79B4DE73218B4637001031D2 /* SearchBarCell.swift in Sources */,
 				773EBDA621AD95160073393F /* EventCollectionView.swift in Sources */,
 				791C770F21A6FF27006FCBDF /* SongDetailView.swift in Sources */,
+				79C67CC021B933A600B277BD /* AuthenticationBackgroundView.swift in Sources */,
 				79A3F9A92193E602007CEB86 /* PlayerManager.swift in Sources */,
 				799DA43B218D3E7F00C803E3 /* SongCell.swift in Sources */,
 				79CDCF21218871A20095CC63 /* TabBarController.swift in Sources */,

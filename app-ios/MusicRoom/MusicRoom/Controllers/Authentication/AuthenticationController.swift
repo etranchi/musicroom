@@ -9,55 +9,6 @@
 import UIKit
 
 class AuthenticationController: UIViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        view.backgroundColor = .black
-        setupView()
-        setupButton()
-    }
-    
-    
-    func setupButton() {
-        let button = UIButton(type: .roundedRect)
-        button.titleEdgeInsets = UIEdgeInsets(top: -10,left: -10,bottom: -10,right: -10)
-        button.backgroundColor = UIColor.gray
-        button.layer.cornerRadius = 8
-        button.setAttributedTitle(NSAttributedString(string: "Login", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
-        button.addTarget(self, action: #selector(handleLoginView), for: .touchUpInside)
-        view.addSubview(button)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            button.topAnchor.constraint(equalTo: welcomeTF.bottomAnchor, constant: 10),
-            button.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
-            button.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-            ])
-        
-        let button1 = UIButton(type: .roundedRect)
-        button1.titleEdgeInsets = UIEdgeInsets(top: -10,left: -10,bottom: -10,right: -10)
-        button1.setTitle("Register", for: .normal)
-        button1.backgroundColor = UIColor.gray
-        button1.layer.cornerRadius = 8
-        button1.setAttributedTitle(NSAttributedString(string: "Register", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
-        button1.addTarget(self, action: #selector(handleRegisterView), for: .touchUpInside)
-        view.addSubview(button1)
-        button1.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            button1.topAnchor.constraint(equalTo: button.bottomAnchor, constant: 10),
-            button1.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
-            button1.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-            ])
-    }
-    let welcomeTF : UILabel = {
-        let tf = UILabel()
-        tf.font = UIFont.systemFont(ofSize: 50, weight: .bold)
-        tf.textAlignment = .center
-        tf.text = "Music Room"
-        tf.textColor = .white
-        tf.translatesAutoresizingMaskIntoConstraints = false
-        return tf
-    }()
     
     let imageDeezer : UIImageView = {
         let iv = UIImageView()
@@ -65,9 +16,98 @@ class AuthenticationController: UIViewController {
         iv.contentMode = .scaleAspectFit
         iv.translatesAutoresizingMaskIntoConstraints = false
         iv.layer.masksToBounds = true
-        
+        iv.image = #imageLiteral(resourceName: "deezer_logo")
         return iv
     }()
+    
+    let backgroundImage : UIImageView = {
+        let iv = UIImageView()
+        
+        iv.contentMode = .scaleToFill
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        iv.layer.masksToBounds = true
+        iv.image = #imageLiteral(resourceName: "deezer_logo")
+        return iv
+    }()
+    
+    let blurEffectView: UIVisualEffectView = {
+        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
+        visualEffectView.isUserInteractionEnabled = false
+        visualEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        visualEffectView.translatesAutoresizingMaskIntoConstraints = false
+        return visualEffectView
+    }()
+    
+    let darkView: UIView = {
+        let view = UIView()
+        
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor(white: 0, alpha: 0.7)
+        return view
+    }()
+    
+    let loginButton: UIButton = {
+        let button = UIButton(type: .system)
+        
+        button.backgroundColor = UIColor(red: 40 / 255, green: 210 / 255, blue: 40 / 255, alpha: 1)
+        button.layer.cornerRadius = 17
+        button.setAttributedTitle(NSAttributedString(string: "Login", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    let registerButton: UIButton = {
+        let button = UIButton(type: .system)
+        
+        button.backgroundColor = UIColor.gray
+        button.layer.cornerRadius = 17
+        button.setAttributedTitle(NSAttributedString(string: "Register", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.backgroundColor = UIColor(white: 0.1, alpha: 1)
+        let nav = navigationController as? CustomNavigationController
+        nav?.animatedHideNavigationBar()
+        setupView()
+        
+    }
+    
+    let welcomeTF : UILabel = {
+        let tf = UILabel()
+        tf.font = UIFont.systemFont(ofSize: 28, weight: .heavy)
+        tf.textAlignment = .left
+        tf.text = "Music Room"
+        tf.textColor = .white
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        return tf
+    }()
+    
+    let maskView: UIView = {
+        let view = UIView()
+        
+        view.backgroundColor = .clear
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.masksToBounds = true
+        return view
+    }()
+    
+    let separatorView : UIView = {
+        let view = UIView()
+        
+        view.backgroundColor = UIColor(white: 0.9, alpha: 0.7)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        animateTitle()
+    }
     
     @objc func handleLoginView() {
         self.navigationController?.pushViewController(LoginController(), animated: true)
@@ -77,19 +117,87 @@ class AuthenticationController: UIViewController {
         self.navigationController?.pushViewController(RegisterController(), animated: true)
     }
     
+    func animateTitle() {
+        UIView.animate(withDuration: 1.4, delay: 0.3, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseInOut, animations: {
+            self.view.layoutIfNeeded()
+            self.imageDeezer.transform = .identity
+            self.separatorView.transform = .identity
+            self.maskView.transform = .identity
+            self.separatorView.alpha = 1
+        })
+        UIView.animate(withDuration: 1, delay: 0.7, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.welcomeTF.transform = .identity
+            self.registerButton.alpha = 1
+            self.loginButton.alpha = 1
+        })
+    }
+
     func setupView() {
-        self.view.addSubview(welcomeTF)
-        self.view.addSubview(imageDeezer)
-        imageDeezer.image = #imageLiteral(resourceName: "deezer_logo")
+        view.addSubview(backgroundImage)
+        view.addSubview(blurEffectView)
+        view.addSubview(darkView)
+        view.addSubview(maskView)
+        maskView.addSubview(welcomeTF)
+        view.addSubview(imageDeezer)
+        view.addSubview(separatorView)
+        view.addSubview(loginButton)
+        view.addSubview(registerButton)
+        
+        loginButton.addTarget(self, action: #selector(handleLoginView), for: .touchUpInside)
+        registerButton.addTarget(self, action: #selector(handleRegisterView), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
-            imageDeezer.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
-            imageDeezer.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
-            imageDeezer.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.3),
-            imageDeezer.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            welcomeTF.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier : 0.9),
-            welcomeTF.topAnchor.constraint(equalTo: imageDeezer.bottomAnchor, constant: 0),
-            welcomeTF.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-            ])
+            backgroundImage.topAnchor.constraint(equalTo: view.topAnchor),
+            backgroundImage.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            backgroundImage.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            backgroundImage.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            blurEffectView.topAnchor.constraint(equalTo: view.topAnchor),
+            blurEffectView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            blurEffectView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            blurEffectView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            darkView.topAnchor.constraint(equalTo: view.topAnchor),
+            darkView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            darkView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            darkView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            imageDeezer.topAnchor.constraint(equalTo: view.topAnchor, constant: 200),
+            imageDeezer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: view.bounds.width * 0.14),
+            imageDeezer.widthAnchor.constraint(equalToConstant: view.bounds.width * 0.25),
+            imageDeezer.heightAnchor.constraint(equalToConstant: view.bounds.width * 0.25),
+            
+            separatorView.leadingAnchor.constraint(equalTo: imageDeezer.trailingAnchor, constant: 4),
+            separatorView.topAnchor.constraint(equalTo: imageDeezer.topAnchor, constant: 15),
+            separatorView.heightAnchor.constraint(equalTo: imageDeezer.heightAnchor, constant: -30),
+            separatorView.widthAnchor.constraint(equalToConstant: 1),
+            
+            maskView.topAnchor.constraint(equalTo: imageDeezer.topAnchor),
+            maskView.bottomAnchor.constraint(equalTo: imageDeezer.bottomAnchor),
+            maskView.leadingAnchor.constraint(equalTo: separatorView.trailingAnchor),
+            maskView.widthAnchor.constraint(equalToConstant: view.bounds.width * (0.45)),
+            
+            welcomeTF.leadingAnchor.constraint(equalTo: maskView.leadingAnchor, constant: 4),
+            welcomeTF.widthAnchor.constraint(lessThanOrEqualToConstant: 500),
+            welcomeTF.topAnchor.constraint(equalTo: maskView.topAnchor),
+            welcomeTF.bottomAnchor.constraint(equalTo: maskView.bottomAnchor),
+            
+            loginButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -200),
+            loginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: view.bounds.width * 0.16),
+            loginButton.heightAnchor.constraint(equalToConstant: 34),
+            loginButton.widthAnchor.constraint(equalToConstant: view.bounds.width * 0.25),
+            
+            registerButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -200),
+            registerButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -view.bounds.width * 0.16),
+            registerButton.heightAnchor.constraint(equalToConstant: 34),
+            registerButton.widthAnchor.constraint(equalToConstant: view.bounds.width * 0.25)
+        ])
+        welcomeTF.transform = CGAffineTransform(translationX: -view.bounds.width * (0.45), y: 0)
+        imageDeezer.transform = CGAffineTransform(translationX: view.bounds.width * (0.5 - 0.125 - 0.14), y: 0)
+        separatorView.transform = CGAffineTransform(translationX: view.bounds.width * (0.5 - 0.125 - 0.14), y: 0)
+        maskView.transform = CGAffineTransform(translationX: view.bounds.width * (0.5 - 0.125 - 0.14), y: 0)
+        registerButton.alpha = 0
+        loginButton.alpha = 0
+        separatorView.alpha = 0
     }
 }

@@ -23,7 +23,6 @@ class                   SocketIOManager: NSObject
     }
     
     func                socketConnect() {
-        
         socket.connect()
     }
     
