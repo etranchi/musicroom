@@ -45,7 +45,7 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
             alert.addAction(UIAlertAction(title: "Create", style: .default, handler: { [weak alert] (_) in
                 let textField = alert!.textFields![0]
                 if let text = textField.text, text != "" {
-                    apiManager.createPlaylist(text, self.rootTarget)
+                    apiManager.createPlaylist("title=" + text, self.rootTarget)
                 }
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
@@ -90,15 +90,26 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
     
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return rootTarget != nil ? playlists.count + 1 : playlists.count
+        return rootTarget != nil ? playlists.count + 2 : playlists.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if indexPath.item == playlists.count  && rootTarget != nil {
             let cell = dequeueReusableCell(withReuseIdentifier: buttonCellId, for: indexPath) as! CreatePlaylistButtonCell
-            cell.title = "CREATE PLAYLIST"
             cell.vc = self
-
+            cell.isCreating = true
+            cell.title = "CREATE PLAYLIST"
+            cell.createButton.backgroundColor = UIColor(red: 40 / 255, green: 180 / 255, blue: 40 / 255, alpha: 1)
+            
+            return cell
+        }
+        if indexPath.item == playlists.count + 1  && rootTarget != nil {
+            let cell = dequeueReusableCell(withReuseIdentifier: buttonCellId, for: indexPath) as! CreatePlaylistButtonCell
+            cell.vc = self
+            cell.root = rootTarget
+            cell.isCreating = false
+            cell.title = "IMPORT PLAYLIST"
+            cell.createButton.backgroundColor = UIColor(red: 140 / 255, green: 180 / 255, blue: 140 / 255, alpha: 1)
             return cell
         }
         let cell = dequeueReusableCell(withReuseIdentifier: playlistCellId, for: indexPath) as! PlaylistCell
@@ -112,7 +123,7 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if indexPath.item == playlists.count {
+        if indexPath.item == playlists.count  || indexPath.item == playlists.count + 1{
             return CGSize(width: bounds.width - 28, height: 40)
         }
         return CGSize(width: bounds.width / 2 - 21, height: 200)

@@ -30,7 +30,6 @@ class SearchMemberController: UITableViewController{
                             }
                         })
                         self.filteredData = self.dataUsers
-                        print(self.filteredData)
                         self.tableView.reloadData()
                     }
                 })

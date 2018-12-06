@@ -2,6 +2,7 @@
   "images" : [
     {
       "idiom" : "universal",
+<<<<<<< HEAD:app-ios/MusicRoom/MusicRoom/Assets.xcassets/upvote_icon.imageset/Contents.json
       "scale" : "1x"
     },
     {
@@ -12,6 +13,10 @@
     {
       "idiom" : "universal",
       "scale" : "3x"
+=======
+      "filename" : "trash.png",
+      "scale" : "1x"
+>>>>>>> etranchiv2:app-ios/MusicRoom/MusicRoom/Assets.xcassets/trash.imageset/Contents.json
     }
   ],
   "info" : {

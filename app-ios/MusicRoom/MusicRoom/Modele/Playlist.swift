@@ -22,6 +22,15 @@ struct Playlist: Codable {
     var id: Int?
 }
 
+struct SPlaylist : Codable {
+    var id : Int
+    var title : String
+}
+
+struct SearchPlaylist : Codable{
+    let data : [SPlaylist]
+}
+
 struct PlaylistToPut: Codable {
     var creator: Creator?
     var tracks: [Track]?

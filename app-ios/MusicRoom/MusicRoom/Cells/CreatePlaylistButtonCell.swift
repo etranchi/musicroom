@@ -10,14 +10,19 @@ import UIKit
 
 class CreatePlaylistButtonCell: UICollectionViewCell {
     var vc : UICollectionView?
-    var title : String?
+    var isCreating : Bool?
+    var root: PlaylistController?
+    var title : String {
+        didSet {
+            setupView()
+        }
+    }
     
     let createButton: UIButton = {
         let createButton = UIButton(type: .system)
         
         createButton.translatesAutoresizingMaskIntoConstraints = false
         createButton.setTitleColor(.white, for: .normal)
-        createButton.backgroundColor = UIColor(red: 40 / 255, green: 180 / 255, blue: 40 / 255, alpha: 1)
         // createButton.setAttributedTitle(NSAttributedString(string: t"CREATE PLAYLIST", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white, .font: UIFont.systemFont(ofSize: 15, weight: .heavy)]), for: .normal)
         createButton.layer.masksToBounds = true
         createButton.layer.cornerRadius = 40 / 2
@@ -25,9 +30,10 @@ class CreatePlaylistButtonCell: UICollectionViewCell {
     }()
     
     override init(frame: CGRect) {
+        title = ""
+        root = nil
         super.init(frame: .zero)
         
-        setupView()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -36,15 +42,23 @@ class CreatePlaylistButtonCell: UICollectionViewCell {
     
     @objc func      handleCreate()
     {
-        if let vc = vc as? PlaylistCollectionView {
+        print("plouf")
+        if isCreating != nil && isCreating! == true {
+            guard let vc = self.vc as? PlaylistCollectionView else { return }
             vc.createPlaylistPopUp()
+        } else {
+            print("yooo")
+            let vc = SearchDeezerPlaylistController()
+            vc.root = self.root
+            root!.navigationController?.pushViewController(vc, animated: true)
         }
+        
     }
     
     
     
     func setupView() {
-        createButton.setAttributedTitle(NSAttributedString(string: title != nil ? title! : "CREATE", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white, .font: UIFont.systemFont(ofSize: 15, weight: .heavy)]), for: .normal)
+        createButton.setAttributedTitle(NSAttributedString(string: title , attributes: [NSAttributedStringKey.foregroundColor: UIColor.white, .font: UIFont.systemFont(ofSize: 15, weight: .heavy)]), for: .normal)
         createButton.addTarget(self, action: #selector(handleCreate), for: .touchUpInside)
         addSubview(createButton)
         NSLayoutConstraint.activate([

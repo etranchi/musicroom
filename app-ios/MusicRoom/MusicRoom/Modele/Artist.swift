@@ -9,11 +9,11 @@
 import Foundation
 
 struct Artist : Codable {
-    var id : Int
+    var id : Int?
     var picture : String?
     var picture_medium : String?
-    var name : String
-    var tracklist : String
+    var name : String?
+    var tracklist : String?
     var nb_fan : Int?
 }
 

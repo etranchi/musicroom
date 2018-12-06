@@ -14,7 +14,6 @@ import GoogleToolboxForMac
 
 class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate ,GIDSignInUIDelegate, LoginButtonDelegate  {
     func loginButtonDidCompleteLogin(_ loginButton: LoginButton, result: LoginResult) {
-        
         switch result {
             case .failed(let error):
                 print(error)
@@ -78,10 +77,9 @@ class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate 
         GIDSignIn.sharedInstance().delegate = self
         GIDSignIn.sharedInstance().uiDelegate = self
 
+
         loginTF.delegate = self
-        loginTF.tag = 0
         passTF.delegate = self
-        passTF.tag = 1
         googleButton = GIDSignInButton()
         
         facebook = LoginButton(readPermissions: [ReadPermission.publicProfile, ReadPermission.email])
@@ -92,11 +90,7 @@ class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate 
     
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        switch textField.tag {
-        case 0 : passTF.becomeFirstResponder()
-        case 1 : handleLogin()
-        default : return true
-        }
+        textField.resignFirstResponder()
         return true
     }
     
@@ -183,18 +177,27 @@ class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate 
     }()
     
     @objc func handleLogin() {
-        print("Login")
         let apiManager = APIManager()
+        guard let pass = passTF.text as? String, let mail = loginTF.text as? String else { return }
         let json = [
-            "email" : "toto@yopmail.fr",
-            "password" : "totototo"
-        ]
+            "email" : mail,
+            "password" : pass
+            ]
         let data = try? JSONSerialization.data(withJSONObject: json, options: [])
-        print(JSONSerialization.isValidJSONObject(json))
-        apiManager.loginUser(data) { (user) in
-            print(user ?? "GPALUSER")
-            if user != nil {
+        apiManager.loginUser(data) { (res) in
+            if res != nil {
+                let user = userManager.newUser()
+                user.token = res?.token
+                user.login = res?.user.login
+                userManager.currentUser = user
                 userManager.logedWith = .local
+                userManager.save()
+                let kwin = UIApplication.shared.keyWindow
+        
+                let nav = TabBarController()
+                UIView.transition(with: kwin!, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                    kwin?.rootViewController = nav
+                })
             }
         }
     }

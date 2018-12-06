@@ -33,9 +33,9 @@ struct Event : Codable {
     let description : String
     let location : Location
     let visibility : Int?
-    let shared : Bool
-    let creationDate : String
-    let date : String
+    let shared : Bool?
+    let creationDate : String?
+    let date : String?
     let playlist : Playlist?
     var members : [User]
     var adminMembers : [User]
@@ -49,6 +49,7 @@ struct Event : Codable {
     }
 
 }
+
 
 struct DataEvent : Codable {
     let myEvents : [Event]
