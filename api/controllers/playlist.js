@@ -38,7 +38,21 @@ let self = module.exports = {
 		try {
 			let playlist = {}
 			if (!Number(req.params.id))
-				playlist = await playlistModel.findOne({'_id': req.params.id})
+				playlist = await playlistModel
+					.findOne({'_id': req.params.id,
+						$or:
+						[
+							{'idUser':
+								{$eq: req.user._id}
+							},
+							{'members':
+								{$in: req.user._id}
+							},
+							{
+								public: true
+							}
+						]
+					})
 			else
 				playlist = await self.getPlaylistDeezerById(req.params.id, req.user.deezerToken)
 			res.status(200).json(playlist || {});
