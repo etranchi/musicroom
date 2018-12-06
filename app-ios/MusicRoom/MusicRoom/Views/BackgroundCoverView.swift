@@ -9,7 +9,7 @@
 import UIKit
 
 class BackgroundCoverView: UIView {
-
+    
     let previousTrack: Track?
     let currentTrack: Track?
     let nextTrack: Track?
@@ -34,7 +34,7 @@ class BackgroundCoverView: UIView {
         iv.clipsToBounds = true
         return iv
     }()
-
+    
     let nextImageView: UIImageView = {
         let iv = UIImageView()
         
@@ -59,7 +59,7 @@ class BackgroundCoverView: UIView {
         view.backgroundColor = UIColor(white: 0, alpha: 0.7)
         return view
     }()
-
+    
     init(_ previousTrack: Track?, _ currentTrack: Track?, _ nextTrack: Track?) {
         self.previousTrack = previousTrack
         self.currentTrack = currentTrack
@@ -78,21 +78,14 @@ class BackgroundCoverView: UIView {
         iv.alpha = 1
         UIView.animate(withDuration: animationTime, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             self.currentImageView.alpha = 0
-            self.layoutIfNeeded()
         })
     }
     
     func handleNextAnimation() {
-        if currentTrack!.album!.cover_big == nextTrack?.album!.cover_big {
-            return
-        }
         handleAnimation(iv: nextImageView)
     }
     
     func handlePreviousAnimation() {
-        if currentTrack!.album!.cover_big == previousTrack?.album!.cover_big {
-            return
-        }
         handleAnimation(iv: previousImageView)
     }
     
@@ -108,7 +101,7 @@ class BackgroundCoverView: UIView {
         
         previousImageView.alpha = 0
         nextImageView.alpha = 0
-    
+        
         NSLayoutConstraint.activate([
             currentImageView.topAnchor.constraint(equalTo: topAnchor),
             currentImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
@@ -129,12 +122,12 @@ class BackgroundCoverView: UIView {
             blurEffectView.bottomAnchor.constraint(equalTo: bottomAnchor),
             blurEffectView.leadingAnchor.constraint(equalTo: leadingAnchor),
             blurEffectView.trailingAnchor.constraint(equalTo: trailingAnchor),
-
+            
             darkView.topAnchor.constraint(equalTo: topAnchor),
             darkView.bottomAnchor.constraint(equalTo: bottomAnchor),
             darkView.leadingAnchor.constraint(equalTo: leadingAnchor),
             darkView.trailingAnchor.constraint(equalTo: trailingAnchor),
-        ])
+            ])
     }
     
     fileprivate func downLoadImagesIfNeeded() {
@@ -160,3 +153,4 @@ class BackgroundCoverView: UIView {
         }
     }
 }
+
