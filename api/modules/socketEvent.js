@@ -120,23 +120,34 @@ module.exports = function (io) {
                 });
             }
         });
-        socket.on('updateScore', (roomID, trackID, points, userID) => {
+        socket.on('updateScore', (roomID, trackID, points, userID, userCoord) => {
             console.log("[Socket] -> updateScore")
 
             let room = ftSocket.getRoom(roomID)
+
             if (room) {
-                console.log("[Socket] -> updateScore ", room.tracks.length)
+                let isClose = ftSocket.checkDistance(room.data, userCoord)
+                console.log("IS CLOSE : ", room.data.public, isClose)
+                if (!room.data.public && room.data.distance_required && !isClose)
+                    return io.sockets.in(room.id).emit('updateScore', 'Vous n\'êtes pas asser proche');
                 room = ftSocket.updateScore(room, trackID, points, userID)
                 room = ftSocket.updateRoom(room)
                 io.sockets.in(room.id).emit('updateScore', room.tracks)
-            } else
-            {
+            } 
+            else {
                 console.log("[Socket] -> updateScore fail")
                 return io.sockets.in(room.id).emit('updateScore', 'fail');
             }
         });
         /* Socket for update socket and send new value */
         socket.on('updateEvent', (roomID, newEvent) => {
+            let room = ftSocket.getRoom(roomID)
+
+            if (newEvent._id && room)
+            {
+                room.data = newEvent
+                room = ftSocket.updateRoom(room)
+            }
             console.log("[Socket] -> updateEvent")
             console.log(io.sockets.adapter.rooms)
             ftSocket.saveNewEvent(newEvent);

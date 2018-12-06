@@ -132,22 +132,15 @@ class SearchBar extends Component {
 	}
 
 	addTrack = (item) => {
-		axios.get(process.env.REACT_APP_API_URL + '/track/' + item.id)
-		.then(resp => {
-			this.setState({
-				value: '',
-				list: [],
-				glbUserList: [],
-				position: 0
-			}, () => {
-				this.props.addTrack(resp.data);
-			})
-		})
-		.catch(err => {
-			console.log("searchbar get track error");
-			console.log(err);
-		})
-		
+		console.log(item);
+		this.setState({
+			value: '',
+			list: [],
+			glbUserList: [],
+			position: 0
+		}, () => {
+			this.props.addTrack(item);
+		})		
 	}
 
 	render() {
