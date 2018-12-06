@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import defaultTrackImg from '../../../../assets/track.png'
 import moment from 'moment'
 import axios from 'axios'
-import { Col, Row, Icon, Layout, Select } from 'antd'
+import { Col, Row, Icon, Layout, Select, message } from 'antd'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Player from '../../../other/player'
+import SearchBar from '../../../other/searchbar'
+import Error from '../../../other/errorController'
 import { leavePlaylist, joinPlaylist, updatePlaylist, socket, blockSocketEvent } from '../../../other/sockets';
 
 const reorder = (list, startIndex, endIndex) => {
@@ -143,6 +145,16 @@ class Tracks extends Component {
 		var state = this.state;
 		state.playlist.tracks.data.push(item);
 		this.setState(state);
+		axios.put(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id,
+		this.state.playlist,
+		{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
+		.then(() => {
+			this.setState(state);
+			message.success("Music Successfully added");
+		})
+		.catch(err => {
+			Error.display_error(err);
+		})
 	}
 
 	onDragStart = () => {
@@ -260,6 +272,7 @@ class Tracks extends Component {
 						)}
 					</Droppable>
       			</DragDropContext>
+				<SearchBar type="tracks" updateParent={this.props.updateParent} addTrack={this.addTrack}/>
 				{this.state.playlist.tracks.data.length > 0 && 
 					<Player  tracks={this.state.playlist.tracks.data}/>
 				}
