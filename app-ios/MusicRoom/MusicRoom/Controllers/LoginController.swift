@@ -13,29 +13,29 @@ import GoogleSignIn
 import GoogleToolboxForMac
 
 class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate ,GIDSignInUIDelegate, LoginButtonDelegate  {
+    var googleButton : GIDSignInButton?
+    var facebook : LoginButton?
     func loginButtonDidCompleteLogin(_ loginButton: LoginButton, result: LoginResult) {
         switch result {
-            case .failed(let error):
-                print(error)
-            case .cancelled:
-                print("User cancelled login.")
-            case .success(_,_, let accessToken):
-                apiManager.login("facebook", accessToken.authenticationToken, completion: { (data) in
-                    if let d = data as? [String : AnyObject] {
-                        let user = userManager.newUser()
-                        user.token = d["token"] as! String
-                        user.login = (d["user"] as! [String : String])["login"] as! String
-                        userManager.currentUser = user
-                        userManager.logedWith = .fb
-                        userManager.save()
-                        let kwin = UIApplication.shared.keyWindow
-                        
-                        let nav = TabBarController()
-                        UIView.transition(with: kwin!, duration: 0.3, options: .transitionCrossDissolve, animations: {
-                            kwin?.rootViewController = nav
-                        })
-                    }
+        case .failed(let error):
+            print(error)
+        case .cancelled:
+            print("User cancelled login.")
+        case .success(_,_, let accessToken):
+            apiManager.login("facebook", accessToken.authenticationToken, completion: { (data) in
+                let d = data as [String : AnyObject]
+                let user = userManager.newUser()
+                user.token = d["token"] as? String
+                user.login = (d["user"] as! [String : String])["login"]
+                userManager.currentUser = user
+                userManager.logedWith = .fb
+                userManager.save()
+                let kwin = UIApplication.shared.keyWindow
+                let nav = TabBarController()
+                UIView.transition(with: kwin!, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                    kwin?.rootViewController = nav
                 })
+            })
         }
     }
     
@@ -43,27 +43,25 @@ class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate 
         print("logout")
     }
     
-    var googleButton : GIDSignInButton?
-    var facebook : LoginButton?
+    
     
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
         if let error = error {
             print("\(error.localizedDescription)")
         } else {
             apiManager.login("google", user.authentication.accessToken, completion:  { (data) in
-                if let d = data as? [String : AnyObject] {
-                    let user = userManager.newUser()
-                    user.token = d["token"] as! String
-                    user.login = (d["user"] as! [String : String])["login"] as! String
-                    userManager.currentUser = user
-                    userManager.logedWith = .google
-                    userManager.save()
-                    let kwin = UIApplication.shared.keyWindow
-                    let nav = TabBarController()
-                    UIView.transition(with: kwin!, duration: 0.3, options: .transitionCrossDissolve, animations: {
-                        kwin?.rootViewController = nav
-                    })
-                }
+                let d = data as [String : AnyObject]
+                let user = userManager.newUser()
+                user.token = d["token"] as? String
+                user.login = (d["user"] as! [String : String])["login"]
+                userManager.currentUser = user
+                userManager.logedWith = .google
+                userManager.save()
+                let kwin = UIApplication.shared.keyWindow
+                let nav = TabBarController()
+                UIView.transition(with: kwin!, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                    kwin?.rootViewController = nav
+                })
             })
         }
     }
@@ -178,7 +176,7 @@ class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate 
     
     @objc func handleLogin() {
         let apiManager = APIManager()
-        guard let pass = passTF.text as? String, let mail = loginTF.text as? String else { return }
+        guard let pass = passTF.text, let mail = loginTF.text else { return }
         let json = [
             "email" : mail,
             "password" : pass
@@ -226,8 +224,6 @@ class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate 
             passTF.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.6),
             passTF.topAnchor.constraint(equalTo: loginTF.bottomAnchor, constant: 10),
             passTF.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            
-            
-            ])
+        ])
     }
 }
