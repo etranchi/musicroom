@@ -13,13 +13,13 @@ enum Status : String, Codable {
 }
 
 struct User : Codable {
-    let login : String
-    let email : String
-    let password : String?
-    let status : Status
-    let creationDate : String
-    let id : String
-    let picture : String
+    var login : String
+    var email : String
+    var password : String?
+    var status : Status
+    var creationDate : String
+    var id : String
+    var picture : String
     enum CodingKeys: String, CodingKey {
         case id = "_id"
         case login, email, password, status, creationDate, picture

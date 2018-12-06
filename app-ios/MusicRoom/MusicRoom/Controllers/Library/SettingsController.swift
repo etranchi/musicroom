@@ -11,7 +11,7 @@ import FacebookLogin
 import GoogleSignIn
 import FBSDKLoginKit
 class SettingsController: UIViewController, DeezerSessionDelegate {
-
+    var user : User?
     var deezerButton : UIButton?
 
     @objc func handleDeezer() {
@@ -37,6 +37,51 @@ class SettingsController: UIViewController, DeezerSessionDelegate {
             
         }
     }
+    
+    
+    let loginTF : UITextField = {
+        let tf = UITextField()
+        tf.font = UIFont.systemFont(ofSize: 14, weight: .light)
+        tf.textAlignment = .center
+        tf.borderStyle = .roundedRect
+        tf.textColor = .white
+        tf.returnKeyType = .done
+        tf.enablesReturnKeyAutomatically = true
+        tf.backgroundColor = UIColor.gray
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        return tf
+    }()
+    
+    let passTF : UITextField = {
+        let tf = UITextField()
+        tf.font = UIFont.systemFont(ofSize: 14, weight: .light)
+        tf.textAlignment = .center
+        tf.borderStyle = .roundedRect
+        tf.textColor = .white
+        tf.returnKeyType = .done
+        tf.enablesReturnKeyAutomatically = true
+        tf.attributedPlaceholder = NSAttributedString(string: "Change your password", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white])
+        tf.backgroundColor = UIColor.gray
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        tf.isSecureTextEntry = true
+        return tf
+    }()
+    
+    let passBisTF : UITextField = {
+        let tf = UITextField()
+        tf.font = UIFont.systemFont(ofSize: 14, weight: .light)
+        tf.textAlignment = .center
+        tf.borderStyle = .roundedRect
+        tf.textColor = .white
+        tf.returnKeyType = .done
+        tf.enablesReturnKeyAutomatically = true
+        tf.attributedPlaceholder = NSAttributedString(string: "Verify your password", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white])
+        tf.backgroundColor = UIColor.gray
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        tf.isSecureTextEntry = true
+        return tf
+    }()
+    
     
     @objc func disconnectUser() {
         if userManager.logedWith == .fb {
@@ -67,15 +112,46 @@ class SettingsController: UIViewController, DeezerSessionDelegate {
         
     }
     
+    @objc func updateUser() {
+        let log = loginTF.text! == user!.login
+        let pass = passTF.text! == passBisTF.text! && passTF.text! != ""
+        var ret : [String : String] = [:]
+        if !log && !pass {
+            ret = ["login" : loginTF.text!]
+        } else if pass && !log {
+            ret = ["login": loginTF.text!, "password": passTF.text!]
+        }
+        else if pass && log {
+            ret = ["password": passTF.text!]
+        }
+        if ret != [:] {
+            print(ret)
+            let data = try? JSONSerialization.data(withJSONObject: ret, options: [])
+            apiManager.updateUser(data!, completion: { (ret) in
+                if ret != nil && ret!.count > 0 {
+                    print(ret)
+                }
+            })
+        }
+        return
+    }
+    
     func updateButton() {
         let text = userManager.currentUser?.deezer_token == nil ? "Link with Deezer" : "Unlink with Deezer"
         deezerButton!.setAttributedTitle(NSAttributedString(string: text, attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupButton()
         view.backgroundColor = UIColor(white: 0.1, alpha: 1)
-        
+        let button = UIButton()
+        button.setAttributedTitle(NSAttributedString(string: "Save", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
+        button.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
+        button.addTarget(self, action: #selector(updateUser), for: .touchUpInside)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
+        apiManager.getMe(userManager.currentUser!.token!) { (user) in
+            self.user = user
+            self.setupButton()
+        }
     }
     @objc func deleteUser() {
         apiManager.deleteUserById()
@@ -91,6 +167,11 @@ class SettingsController: UIViewController, DeezerSessionDelegate {
         delete.backgroundColor = UIColor.red
         delete.layer.cornerRadius = 8
         delete.setAttributedTitle(NSAttributedString(string: "Delete your account", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
+        
+        loginTF.text = user?.login ?? "bouh"
+        view.addSubview(loginTF)
+        view.addSubview(passTF)
+        view.addSubview(passBisTF)
         deezerButton = UIButton(type: .roundedRect)
         deezerButton!.titleEdgeInsets = UIEdgeInsets(top: -10,left: -10,bottom: -10,right: -10)
         deezerButton!.backgroundColor = UIColor.gray
@@ -117,7 +198,20 @@ class SettingsController: UIViewController, DeezerSessionDelegate {
             
             delete.topAnchor.constraint(equalTo: logout.bottomAnchor , constant: 20),
             delete.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
-            delete.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            delete.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            loginTF.topAnchor.constraint(equalTo: delete.bottomAnchor , constant: 20),
+            loginTF.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
+            loginTF.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            passTF.topAnchor.constraint(equalTo: loginTF.bottomAnchor , constant: 20),
+            passTF.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
+            passTF.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            passBisTF.topAnchor.constraint(equalTo: passTF.bottomAnchor , constant: 20),
+            passBisTF.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
+            passBisTF.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
             ])
     }
 }
