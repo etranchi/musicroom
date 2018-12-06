@@ -23,18 +23,17 @@ class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate 
             print("User cancelled login.")
         case .success(_,_, let accessToken):
             apiManager.login("facebook", accessToken.authenticationToken, completion: { (data) in
-                let d = data as [String : AnyObject]
-                let user = userManager.newUser()
-                user.token = d["token"] as? String
-                user.login = (d["user"] as! [String : String])["login"]
-                userManager.currentUser = user
-                userManager.logedWith = .fb
-                userManager.save()
-                let kwin = UIApplication.shared.keyWindow
-                let nav = TabBarController()
-                UIView.transition(with: kwin!, duration: 0.3, options: .transitionCrossDissolve, animations: {
-                    kwin?.rootViewController = nav
-                })
+                    let user = userManager.newUser()
+                    user.token = data["token"] as? String
+                    user.login = (data["user"] as! [String : String])["login"]
+                    userManager.currentUser = user
+                    userManager.logedWith = .fb
+                    userManager.save()
+                    let kwin = UIApplication.shared.keyWindow
+                    let nav = TabBarController()
+                    UIView.transition(with: kwin!, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                        kwin?.rootViewController = nav
+                    })
             })
         }
     }

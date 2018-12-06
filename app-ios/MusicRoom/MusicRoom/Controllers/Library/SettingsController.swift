@@ -27,6 +27,8 @@ class SettingsController: UIViewController, DeezerSessionDelegate {
             updateButton()
         }
     }
+    
+    
     func deezerDidLogin() {
         let user = userManager.currentUser
         if user != nil {
@@ -67,6 +69,73 @@ class SettingsController: UIViewController, DeezerSessionDelegate {
         
     }
     
+    let loginTF : UITextField = {
+        let tf = UITextField()
+        tf.font = UIFont.systemFont(ofSize: 14, weight: .light)
+        tf.textAlignment = .center
+        tf.borderStyle = .roundedRect
+        tf.textColor = .white
+        tf.returnKeyType = .done
+        tf.enablesReturnKeyAutomatically = true
+        tf.attributedPlaceholder = NSAttributedString(string: "Change your login", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white])
+        tf.backgroundColor = UIColor.gray
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        return tf
+    }()
+    
+    let mailTF : UITextField = {
+        let tf = UITextField()
+        tf.font = UIFont.systemFont(ofSize: 14, weight: .light)
+        tf.textAlignment = .center
+        tf.borderStyle = .roundedRect
+        tf.textColor = .white
+        tf.returnKeyType = .done
+        tf.enablesReturnKeyAutomatically = true
+        tf.attributedPlaceholder = NSAttributedString(string: "Change your email", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white])
+        tf.backgroundColor = UIColor.gray
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        return tf
+    }()
+    
+    let passTF : UITextField = {
+        let tf = UITextField()
+        tf.font = UIFont.systemFont(ofSize: 14, weight: .light)
+        tf.textAlignment = .center
+        tf.borderStyle = .roundedRect
+        tf.textColor = .white
+        tf.returnKeyType = .done
+        tf.enablesReturnKeyAutomatically = true
+        tf.attributedPlaceholder = NSAttributedString(string: "Change your password", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white])
+        tf.backgroundColor = UIColor.gray
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        tf.isSecureTextEntry = true
+        return tf
+    }()
+    
+    let verifyPassTF : UITextField = {
+        let tf = UITextField()
+        tf.font = UIFont.systemFont(ofSize: 14, weight: .light)
+        tf.textAlignment = .center
+        tf.borderStyle = .roundedRect
+        tf.textColor = .white
+        tf.returnKeyType = .done
+        tf.enablesReturnKeyAutomatically = true
+        tf.attributedPlaceholder = NSAttributedString(string: "Change your password", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white])
+        tf.backgroundColor = UIColor.gray
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        tf.isSecureTextEntry = true
+        return tf
+    }()
+    
+    
+    @objc func saveProfil() {
+        if passTF.text! != verifyPassTF.text! {
+            ToastView.shared.short(self.view, txt_msg: "Not same password", color: UIColor.red)
+        }
+        
+        
+    }
+    
     func updateButton() {
         let text = userManager.currentUser?.deezer_token == nil ? "Link with Deezer" : "Unlink with Deezer"
         deezerButton!.setAttributedTitle(NSAttributedString(string: text, attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
@@ -75,11 +144,23 @@ class SettingsController: UIViewController, DeezerSessionDelegate {
         super.viewDidLoad()
         setupButton()
         view.backgroundColor = UIColor(white: 0.1, alpha: 1)
+        let button = UIButton()
+        button.setAttributedTitle(NSAttributedString(string: "Save", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
+        button.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
+        button.addTarget(self, action: #selector(saveProfil), for: .touchUpInside)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
         
     }
     @objc func deleteUser() {
-        apiManager.deleteUserById()
-        self.disconnectUser()
+        let alert = UIAlertController(title: "Sure?", message: "Are you sure to delete your account?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Sure", style: .destructive, handler: { (_) in
+            apiManager.deleteUserById()
+            self.disconnectUser()
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+        
+        
     }
     
     func setupButton() {
@@ -96,6 +177,10 @@ class SettingsController: UIViewController, DeezerSessionDelegate {
         deezerButton!.backgroundColor = UIColor.gray
         deezerButton!.layer.cornerRadius = 8
         updateButton()
+        mailTF.text = userManager.currentUser?.login
+        view.addSubview(mailTF)
+        view.addSubview(passTF)
+        view.addSubview(verifyPassTF)
         logout.addTarget(self, action: #selector(disconnectUser), for: .touchUpInside)
         logout.translatesAutoresizingMaskIntoConstraints = false
         delete.addTarget(self, action: #selector(deleteUser), for: .touchUpInside)
@@ -117,7 +202,20 @@ class SettingsController: UIViewController, DeezerSessionDelegate {
             
             delete.topAnchor.constraint(equalTo: logout.bottomAnchor , constant: 20),
             delete.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
-            delete.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            delete.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            mailTF.topAnchor.constraint(equalTo: delete.bottomAnchor , constant: 20),
+            mailTF.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
+            mailTF.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            passTF.topAnchor.constraint(equalTo: mailTF.bottomAnchor , constant: 20),
+            passTF.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
+            passTF.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            verifyPassTF.topAnchor.constraint(equalTo: passTF.bottomAnchor , constant: 20),
+            verifyPassTF.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
+            verifyPassTF.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
             ])
     }
 }

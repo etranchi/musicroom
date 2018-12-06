@@ -406,6 +406,18 @@ class APIManager: NSObject, URLSessionDelegate {
         })
     }
     
+    func getPlaylists(completion : @escaping ((DataPlaylist) -> ())){
+        let eventsUrl = self.url + "playlist"
+        var request = URLRequest(url: URL(string: eventsUrl)!)
+        request.httpMethod = "GET"
+        print(userManager.currentUser!.token!)
+        request.setValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        self.searchAll(DataPlaylist.self, request: request) { (res) in
+            completion(res)
+        }
+    }
+    
     func getEvents(completion : @escaping ((DataEvent) -> ())){
         let eventsUrl = self.url + "event"
         var request = URLRequest(url: URL(string: eventsUrl)!)

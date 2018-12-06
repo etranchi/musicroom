@@ -12,6 +12,11 @@ struct Creator: Codable {
     var id: Int?
     var name: String
 }
+struct DataPlaylist : Codable {
+    var allPlaylist : [Playlist]
+    var friendsPlaylist : [Playlist]
+    var myPlaylist : [Playlist]
+}
 
 struct Playlist: Codable {
     var creator: Creator?
