@@ -59,7 +59,6 @@ module.exports = function () {
 				}
 				return done(null, user);
 			}
-			return done(null, false);
 		});
 	}));
 
@@ -68,8 +67,6 @@ module.exports = function () {
 		clientSecret: config.google.clientSecret
 	},
 	function(accessToken, refreshToken, profile, done) {
-		console.log("COUCOU")
-		console.log(profile)
 		if (!profile.emails[0] || !profile.emails[0].value)
 			return done(null, false);
 		modelUser.findOne({
@@ -113,7 +110,6 @@ module.exports = function () {
 				}
 				return done(null, user);
 			}
-			return done(null, false);
 		});
 	}));
 
