@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Divider, Card, Avatar, Modal, Icon, Col, Row, Input} from 'antd';
-import {updateEvent} from '../../../../other/sockets';
+import { Checkbox, Divider, Card, Avatar, Modal, Icon, Col, Row, Input, InputNumber} from 'antd';
+import { updateEvent} from '../../../../other/sockets';
 
 export default class CreatorProfil extends Component {
     constructor(props) {
@@ -15,6 +15,17 @@ export default class CreatorProfil extends Component {
         this.props.state.data.event.public = !this.props.state.data.event.public;
         this.setState({iconPrivacy: this.props.state.data.event.public ? 'unlock' : 'lock'});
         updateEvent(this.roomID, this.props.state.data.event);
+    }
+    handleChangeDistanceRequired = () => {
+        this.props.state.data.event.distance_required = !this.props.state.data.event.distance_required;
+        updateEvent(this.props.state.data.event._id, this.props.state.data.event);
+    }
+    handleChangeDistance = (val) => {
+       if  (val > 1 && val < 9999)
+       {
+            this.props.state.data.event.distance_max = val;
+            updateEvent(this.props.state.data.event._id, this.props.state.data.event);
+       }
     }
     showModal = () => {
         this.setState({visible: true});
@@ -34,7 +45,7 @@ export default class CreatorProfil extends Component {
         return (
             <div>
             <Row >
-                <Col span={12} offset={4}>
+                <Col span={9} offset={4}>
                     <Card.Meta
                         avatar={<Avatar size={116} src={userPicture}/>}
                         title= { this.props.state.data.event.creator && this.props.state.data.event.creator.login ? 
@@ -69,10 +80,31 @@ export default class CreatorProfil extends Component {
                             this.props.state.data.event.members.length || this.props.state.data.event.adminMembers.length ?
                                 this.props.state.data.event.members.length + this.props.state.data.event.adminMembers.length + " participants" 
                                 :
-                                 "0 participant" 
+                                "0 participant" 
                         }
                         </b>
                 </Col>
+                { 
+                    this.props.state.data.event.public ? 
+                        null 
+                        :
+                        <Col span={10}>
+                            <Row style={{margin:'22% 0 0 0'}}>
+                                <Col span={9} >
+                                <b> Distance maximum pour participer : </b>
+                                </Col>
+                                <Col span={4}>
+                                    <InputNumber  disabled={(!this.props.right.isAdmin && !this.props.right.isCreator) } size="small" min={0} max={999}  name="distance_max" value={this.props.state.data.event.distance_max} onChange={(this.handleChangeDistance)}/>
+                                </Col>
+                                <Col span={2}>
+                                    <b> km . :  </b>
+                                </Col>
+                                <Col span={5}>
+                                    <b>Aucune</b> <Checkbox name="public"  onChange={this.handleChangeDistanceRequired}/>
+                                </Col>
+                            </Row>
+                        </Col>
+                }
             </Row>
             <Modal
                 title="Liste des participants : "

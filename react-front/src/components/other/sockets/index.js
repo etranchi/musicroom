@@ -43,8 +43,8 @@ function updateTracks (roomID, tracks) {
 function updateTrack (roomID, track) {
     socket.emit("updateTrack", roomID, track)
 }
-function updateScore (roomID, tracksID, pointsD, userID) {
-    socket.emit("updateScore", roomID, tracksID, pointsD, userID)
+function updateScore (roomID, tracksID, pointsD, userID, userCoord) {
+    socket.emit("updateScore", roomID, tracksID, pointsD, userID, userCoord)
 }
 
 function updatePlayer (roomID, event) {
