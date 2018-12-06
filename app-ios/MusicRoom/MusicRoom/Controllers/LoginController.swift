@@ -75,7 +75,8 @@ class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate 
         case .failed(let error):
             print(error)
         case .cancelled:
-            print("User cancelled login.")
+            view.transform = CGAffineTransform(translationX: 0, y: view.bounds.height)
+            rootController?.animateDownLogoView()
         case .success(_,_, let accessToken):
             apiManager.login("facebook", accessToken.authenticationToken, completion: { (data) in
                 let d = data as [String : AnyObject]
