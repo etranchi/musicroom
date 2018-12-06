@@ -25,7 +25,7 @@ class Setting extends Component {
 		const that = this;
 		DZ.init({
 		    appId  		: '310224',
-		    channelUrl 	: 'https://localhost:3000',
+		    channelUrl 	: process.env.REACT_APP_FRONT_URL,
 		  });
         DZ.login(function(response) {
           if (response.authResponse) {
@@ -56,7 +56,7 @@ class Setting extends Component {
 		if (!this.state.loading)
 			return <Spin tip=" Waiting user information ..." size="large" > </Spin>
 		if (this.props.state.currentComponent === 'editSetting')
-			return (<EditSetting state={this.props.state} updateState={this.updateState} updateParent={this.props.updateParent}/>)
+			return (<EditSetting state={this.props.state} updateState={this.updateState} updateParent={this.props.updateParent} logout={this.props.logout}/>)
 		else
 		{
 			let userPicture = this.state.user.picture.indexOf("https://") !== -1 ?  this.state.user.picture : process.env.REACT_APP_API_URL + "/userPicture/" + this.state.user.picture
