@@ -135,8 +135,8 @@ module.exports = {
 
 	deleteEventsUser: async (userId) => {
 		try {
-			await modelEvent.remove({creator: userId})
-			await modelEvent.update({$or:
+			await modelEvent.deleteMany({creator: userId})
+			await modelEvent.updateMany({$or:
 				[
 					{'members':
 						{$in: userId}
