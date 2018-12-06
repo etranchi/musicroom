@@ -3,12 +3,17 @@ const Schema 		= mongoose.Schema;
 const Track 		= require('../models/track');
 
 const Playlist = new Schema({
-	idUser: {type: Schema.Types.ObjectId},
+	idUser: {
+		type: Schema.Types.ObjectId,
+		ref: 'user'
+	},
 	id: {type: Number},
 	title: {type: String},
 	description: {type: String},
 	duration: {type: Number},
-	public: {type: Boolean},
+	public: {
+		type: Boolean,
+		default: true},
 	is_loved_track: {type: Boolean},
 	collaborative: {type: Boolean},
 	nb_tracks: {type: Number},
@@ -35,7 +40,11 @@ const Playlist = new Schema({
 			Track.schema
 		],
 		checksum: {type: String}
-	}
+	},
+	members : [{
+		type: Schema.Types.ObjectId,
+		ref: 'user'
+	}]
 });
 
 module.exports = mongoose.model('playlist', Playlist);
