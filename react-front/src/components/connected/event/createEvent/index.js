@@ -54,6 +54,7 @@ export default class CreateEvent extends Component {
                 playlist.tracks         = {};
                 playlist.tracks.data    = [];
                 playlist.tracks.data    = resp.data.data;
+                
                 this.setState({playlist:playlist});
             })
             .catch((err) => { Error.display_error(err); })  

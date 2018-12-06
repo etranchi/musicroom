@@ -24,7 +24,6 @@ export default class Player extends Component {
         this.setState({'tracksID':tracksID, 'tracks':this.props.tracks}, () => {
             console.log(tracksID);
             DZ.player.playTracks(tracksID)
-
             // DZ.player.pause()
             DZ.player.setVolume(50)
         });
@@ -102,7 +101,6 @@ export default class Player extends Component {
     }
 
 	render() {
-        console.log(this.state);
         return (
             <Row style={{height:'inherit', margin:'3% 0 0 0'}}>
                 <Col span={3}/>

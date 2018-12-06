@@ -13,7 +13,7 @@ module.exports = {
 				.populate('members')
 				.populate('adminMembers')
 
-			let allEvents = events.reduce((acc, elem) => {
+			let retEvents = events.reduce((acc, elem) => {
 				if (elem.creator._id.toString() === req.user._id.toString())
 					acc['myEvents'].push(elem)
 				else if (elem.members.filter((e) => e._id.toString() === req.user._id.toString()).length > 0)
@@ -21,11 +21,11 @@ module.exports = {
 				else if (elem.adminMembers.filter((e) => e._id.toString() === req.user._id.toString()).length > 0)
 					acc['friendEvents'].push(elem)
 				else if (elem.public === true)
-					acc['all'].push(elem)
+					acc['allEvents'].push(elem)
 				return acc
-			}, {myEvents: [], friendEvents: [], all: []})
+			}, {myEvents: [], friendEvents: [], allEvents: []})
 
-			res.status(200).json({myEvents: allEvents.myEvents, friendEvents: allEvents.friendEvents, allEvents: allEvents.all});
+			res.status(200).json(retEvents);
 		} catch (err) {
 			console.log("Error getEvents: " + err)
 			next(new customError(err.message, 400))
@@ -69,7 +69,7 @@ module.exports = {
 				throw new Error('No Location')
 			if (req.file && req.file.filename)
 				req.body.picture = req.file.filename
-			if (!req.body.playlist._id)
+			if (req.body.playlist && !req.body.playlist._id)
 				req.body.playlist = await playlistController.getPlaylistDeezerById(req.body.playlist.id, req.user.deezerToken)
 			let event = await modelEvent.create(req.body)
 			res.status(200).send(event)
@@ -111,11 +111,45 @@ module.exports = {
 	},
 	deleteEventById: async (req, res, next) => {
 		try {
-			await modelEvent.deleteOne({'_id': req.params.id})
+			let del = await modelEvent
+				.deleteOne(
+					{_id: req.params.id,
+						$or:
+							[
+								{'creator':
+									{$eq: req.user._id}
+								},
+								{'adminMembers':
+									{$in: req.user._id}
+								}
+							]
+					})
+			if (del.n === 0)
+				throw new Error('you are not authorize to del this event')
 			res.status(204).send();
 		} catch (err) {
 			console.log(err)
 			next(new customError(err.message, 400))
+		}
+	},
+
+	deleteEventsUser: async (userId) => {
+		try {
+			await modelEvent.deleteMany({creator: userId})
+			await modelEvent.updateMany({$or:
+				[
+					{'members':
+						{$in: userId}
+					},
+					{'adminMembers':
+						{$in: userId}
+					}
+				]},
+				{$pull: {adminMembers: userId, members: userId}},
+				{ multi: true }
+			)
+		} catch (err) {
+			throw err
 		}
 	}
 };
