@@ -111,7 +111,21 @@ module.exports = {
 	},
 	deleteEventById: async (req, res, next) => {
 		try {
-			await modelEvent.deleteOne({'_id': req.params.id})
+			let del = await modelEvent
+				.deleteOne(
+					{_id: req.params.id,
+						$or:
+							[
+								{'creator':
+									{$eq: req.user._id}
+								},
+								{'adminMembers':
+									{$in: req.user._id}
+								}
+							]
+					})
+			if (del.n === 0)
+				throw new Error('you are not authorize to del this event')
 			res.status(204).send();
 		} catch (err) {
 			console.log(err)
