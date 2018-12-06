@@ -26,7 +26,7 @@ export default class CreateEvent extends Component {
             infoFile         : '',
             loading          : false,
             distance_max     : 3,
-            distance_required:true,
+            distance_required:false,
         };
     }
     updateLocation = val => {
@@ -206,18 +206,22 @@ export default class CreateEvent extends Component {
                                 :
                                 <Col span={10}>
                                     <Row >
+                                        <Col span={1}>
+                                            <Checkbox name="public"  onChange={() => {this.setState({distance_required:!this.state.distance_required})}}/>
+                                        </Col>
                                         <Col span={9} >
                                         <b> Distance maximum pour participer : </b>
                                         </Col>
-                                        <Col span={4}>
-                                            <InputNumber size="small" min={0} max={999}  name="distance_max" value={this.state.distance_max} onChange={(this.handleChangeDistance)}/>
-                                        </Col>
-                                        <Col span={2}>
-                                            <b> km . :  </b>
-                                        </Col>
-                                        <Col span={5}>
-                                            <b>Aucune</b> <Checkbox name="public"  onChange={() => {this.setState({distance_required:!this.state.distance_required})}}/>
-                                        </Col>
+                                        {
+                                            this.state.distance_required ?
+                                            <Col span={4}>
+                                                <InputNumber size="small" min={0} max={999}  name="distance_max" value={this.state.distance_max} onChange={(this.handleChangeDistance)}/> <b> km </b>
+                                            </Col>
+    
+                                            :
+                                            null
+                                        }
+
                                     </Row>
                                 </Col>
                         }

@@ -143,7 +143,7 @@ module.exports = function (io) {
         socket.on('updateEvent', (roomID, newEvent) => {
             let room = ftSocket.getRoom(roomID)
 
-            if (newEvent._id)
+            if (newEvent._id && room)
             {
                 room.data = newEvent
                 room = ftSocket.updateRoom(room)

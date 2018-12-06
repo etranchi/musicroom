@@ -89,21 +89,24 @@ export default class CreatorProfil extends Component {
                         null 
                         :
                         <Col span={10}>
-                            <Row style={{margin:'22% 0 0 0'}}>
+                            <Row style={{margin:'17% 0 0 0'}} >
+                                <Col span={1}>
+                                    <Checkbox name="public"  checked={this.props.state.data.event.distance_required} onChange={this.handleChangeDistanceRequired}/>
+                                </Col>
                                 <Col span={9} >
-                                <b> Distance maximum pour participer : </b>
+                                <b> Distance maximum pour participer ? </b>
                                 </Col>
-                                <Col span={4}>
-                                    <InputNumber  disabled={(!this.props.right.isAdmin && !this.props.right.isCreator) } size="small" min={0} max={999}  name="distance_max" value={this.props.state.data.event.distance_max} onChange={(this.handleChangeDistance)}/>
-                                </Col>
-                                <Col span={2}>
-                                    <b> km . :  </b>
-                                </Col>
-                                <Col span={5}>
-                                    <b>Aucune</b> <Checkbox name="public"  onChange={this.handleChangeDistanceRequired}/>
-                                </Col>
+                                {
+                                    this.props.state.data.event.distance_required ?
+                                    <Col span={4}>
+                                        <InputNumber  disabled={(!this.props.right.isAdmin && !this.props.right.isCreator) } size="small" min={0} max={999}  name="distance_max" value={this.props.state.data.event.distance_max} onChange={(this.handleChangeDistance)}/> <b> km </b>
+                                    </Col>
+                                    :
+                                    null
+                                }
                             </Row>
                         </Col>
+                      
                 }
             </Row>
             <Modal
