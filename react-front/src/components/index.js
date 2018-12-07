@@ -29,11 +29,11 @@ class Front extends Component {
     };
 	}
   updateState = (val) => {
-    // console.log("old state ->");
-    // console.log(this.state);
-    // console.log("new state ->");
-    // console.log(val);
-    // console.log('end update parent');
+    console.log("old state ->");
+    console.log(this.state);
+    console.log("new state ->");
+    console.log(val);
+    console.log('end update parent');
     this.setState(val);
   }
   componentWillMount() {
@@ -46,6 +46,8 @@ class Front extends Component {
         this.setState({user:resp.data, token:localStorage.getItem('token')});
       })
       .catch((err) => {
+        this.logout();
+
         console.log(err);
     })
     }
