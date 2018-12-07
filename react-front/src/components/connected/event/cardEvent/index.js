@@ -15,7 +15,8 @@ export default class cardEvent extends Component {
             isCreator   : false,
             isAdmin     : false,
             isMember    : false,
-            isViewer    : true
+            isViewer    : true,
+            existRoom   : false,
         };
     }
     isUser = tab => {
@@ -46,15 +47,12 @@ export default class cardEvent extends Component {
         })
         socket.on('createRoom', (tracks, msg) => {
             console.log('socket : createRoom receive data ', msg)
-            if (msg === 'err')
-                joinRoom(this.props.state.data.event._id)
-            else 
-                console.log("socket : createRoom receive error.")
         });
         socket.on('joinRoom', (msg) => {
             console.log('socket : joinRoom receive message ->', msg)
         });
         socket.on('closeRoom', (msg) => {
+            this.setState({existRoom: false})
             console.log('socket : closeRoom receive message ->', msg)
         });
         socket.on('leaveRoom', (msg) => {
@@ -103,17 +101,21 @@ export default class cardEvent extends Component {
                     <Col span={2}> 
                         <a href="#!" className="btn waves-effect waves-teal" onClick={() => this.props.changeView('listEvent')}>Back</a> 
                     </Col >
-                    <Col span={3} offset={10} > 
-                        <a href="#!" className="btn waves-effect waves-red" onClick={() => closeRoom(this.props.state.data.event._id) }>Quit Event</a> 
-                    </Col>
-
                     {
-                        (this.state.isAdmin || this.state.isCreator) ? 
-                        <Col span={3} offset={1}> 
-                            <a href="#!" className="btn waves-effect waves-red" onClick={this.finishEvent}>Finish Event</a> 
-                        </Col>
-                        :
-                        null
+                        this.state.existRoom ?
+                            <Col span={3} offset={10} > 
+                                <a href="#!" className="btn waves-effect waves-red" onClick={() => closeRoom(this.props.state.data.event._id) }>Quit Event</a> 
+                            </Col>
+                            :
+                            null
+                    }
+                    {
+                        (this.state.isAdmin || this.state.isCreator)  && this.state.existRoom ? 
+                            <Col span={3} offset={1}> 
+                                <a href="#!" className="btn waves-effect waves-red" onClick={this.finishEvent}>Finish Event</a> 
+                            </Col>
+                            :
+                            null
                     }
                     {
                         this.isToday(this.props.state.data.event.event_date) &&  this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks ?
