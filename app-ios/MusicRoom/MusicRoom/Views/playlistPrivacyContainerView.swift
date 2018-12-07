@@ -97,7 +97,7 @@ class playlistPrivacyContainerView: UIView {
     
     @objc func valueChanged(_ sender: UISwitch) {
         playlist?.public = sender.isOn
-        
+        print(sender.isOn)
     }
     
     func setupView() {
