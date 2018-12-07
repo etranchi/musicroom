@@ -46,6 +46,8 @@ class Front extends Component {
         this.setState({user:resp.data, token:localStorage.getItem('token')});
       })
       .catch((err) => {
+        this.logout();
+
         console.log(err);
     })
     }
