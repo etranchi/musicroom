@@ -10,6 +10,7 @@ import UIKit
 
 class PlaylistCell: UICollectionViewCell {
     var vc : PlaylistCollectionView?
+    var isEditable: Bool = false
     var playlist: Playlist! {
         didSet {
             titleLabel.text = playlist.title

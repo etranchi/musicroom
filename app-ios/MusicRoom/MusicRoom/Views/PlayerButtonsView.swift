@@ -73,11 +73,11 @@ class PlayerButtonsView: UIView {
     }
     
     @objc func handlePrevious() {
-        playerController.handlePrevious()
+        playerController.handlePrevious(false)
     }
     
     @objc func handleNext() {
-        playerController.handleNext()
+        playerController.handleNext(false)
     }
     
     @objc func handlePlay() {
@@ -111,7 +111,7 @@ class PlayerButtonsView: UIView {
             nextButton.centerYAnchor.constraint(equalTo: playButton.centerYAnchor),
             nextButton.widthAnchor.constraint(equalToConstant: 35),
             nextButton.heightAnchor.constraint(equalToConstant: 35)
-        ])
+            ])
         setupProgressCircle()
     }
     
@@ -126,9 +126,10 @@ class PlayerButtonsView: UIView {
             progressCircle!.centerYAnchor.constraint(equalTo: playButton.centerYAnchor),
             progressCircle!.widthAnchor.constraint(equalToConstant: 90),
             progressCircle!.heightAnchor.constraint(equalToConstant: 90)
-        ])
+            ])
     }
 }
+
 
 
 

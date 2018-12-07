@@ -11,6 +11,14 @@ import UIKit
 class AlbumHeaderView: UIView {
     let albumCover: UIImage
     let title: String
+    var playlist: Playlist?
+    var isEditable: Bool = false {
+        didSet {
+            if isEditable {
+                addEditableFeature()
+            }
+        }
+    }
     
     init(frame: CGRect, albumCover: UIImage, title: String) {
         self.albumCover = albumCover
@@ -71,7 +79,71 @@ class AlbumHeaderView: UIView {
         return visualEffectView
     }()
     
+    let dotsLabel: UILabel = {
+        let label = UILabel()
+        
+        label.font = UIFont.systemFont(ofSize: 30, weight: .heavy)
+        label.textColor = .lightGray
+        label.textAlignment = .right
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "..."
+        label.isUserInteractionEnabled = true
+        return label
+    }()
+    
+    let editableContainer: playlistPrivacyContainerView = {
+        let view = playlistPrivacyContainerView()
+        
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        view.layer.masksToBounds = true
+        return view
+    }()
+    
+    
+    
     var titleBottomConstraint: NSLayoutConstraint?
+    
+    @objc func managePlaylistPrivacy() {
+        UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseInOut, animations: {
+            self.albumImageView.transform = CGAffineTransform(translationX: -self.frame.width, y: 0)
+            self.titleLabel.transform = CGAffineTransform(translationX: -self.frame.width, y: 0)
+            self.dotsLabel.transform = CGAffineTransform(translationX: -self.frame.width, y: 0)
+            self.editableContainer.transform = .identity
+        })
+    }
+    
+    func backToDetails() {
+        UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseInOut, animations: {
+            self.albumImageView.transform = .identity
+            self.titleLabel.transform = .identity
+            self.dotsLabel.transform = .identity
+            self.editableContainer.transform = CGAffineTransform(translationX: self.frame.width, y: 0)
+        })
+    }
+    
+    
+    func addEditableFeature() {
+        guard let pl = playlist else { return }
+        addSubview(dotsLabel)
+        addSubview(editableContainer)
+        NSLayoutConstraint.activate([
+            dotsLabel.centerYAnchor.constraint(equalTo: albumImageView.centerYAnchor),
+            dotsLabel.leadingAnchor.constraint(equalTo: albumImageView.trailingAnchor, constant: 10),
+            dotsLabel.heightAnchor.constraint(equalToConstant: 50),
+            dotsLabel.widthAnchor.constraint(equalToConstant: 50),
+            
+            editableContainer.centerXAnchor.constraint(equalTo: centerXAnchor),
+            editableContainer.bottomAnchor.constraint(equalTo: titleLabel.topAnchor, constant: 20),
+            editableContainer.heightAnchor.constraint(equalToConstant: 220),
+            editableContainer.widthAnchor.constraint(equalToConstant: frame.width * 0.8),
+        ])
+        dotsLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(managePlaylistPrivacy)))
+        editableContainer.transform = CGAffineTransform(translationX: self.frame.width, y: 0)
+        editableContainer.rootView = self
+        editableContainer.frame = frame
+        editableContainer.playlist = pl
+    }
     
     func setupView() {
         titleLabel.text = title

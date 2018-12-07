@@ -13,16 +13,16 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
     var selectedPlaylist : Playlist?
     var eventCreation : Bool = false
     var isAddingSong = false
-    var playlists: [Playlist]
+    var myPlaylists: [Playlist]
     let rootTarget: PlaylistController?
     var selectedCell : PlaylistCell?
     
     private let playlistCellId = "playlistCellId"
     private let buttonCellId = "buttonCellId"
     
-    init(_ playlists: [Playlist], _ scrollDirection: UICollectionViewScrollDirection, _ rootTarget: PlaylistController?) {
+    init(_ myPlaylists: [Playlist], _ scrollDirection: UICollectionViewScrollDirection, _ rootTarget: PlaylistController?) {
         self.rootTarget = rootTarget
-        self.playlists = playlists
+        self.myPlaylists = myPlaylists
         let layout = AlignedCollectionViewFlowLayout(horizontalAlignment: .left, verticalAlignment: .top)
         layout.scrollDirection = scrollDirection
         layout.minimumInteritemSpacing = 14
@@ -56,7 +56,6 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
     func setupView() {
         delegate = self
         dataSource = self
-        // alwaysBounceVertical = true
         register(PlaylistCell.self, forCellWithReuseIdentifier: playlistCellId)
         register(CreatePlaylistButtonCell.self, forCellWithReuseIdentifier: buttonCellId)
         contentInset = UIEdgeInsets(top: 14, left: 14, bottom: 14, right: 14)
@@ -70,7 +69,7 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
                 selectedCell!.layer.borderColor = nil
                 selectedCell!.layer.borderWidth = 0
             }
-            selectedPlaylist = playlists[indexPath.row]
+            selectedPlaylist = myPlaylists[indexPath.row]
             selectedCell = cell
             selectedCell!.layer.borderColor = UIColor.gray.cgColor
             selectedCell!.layer.borderWidth = 2
@@ -84,17 +83,20 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
             rootTarget?.addSongToPlaylist(cell.playlist)
             return
         }
-        let vc = PlaylistDetailController(playlists[indexPath.item], cell.imageView.image!)
+        let vc = PlaylistDetailController(myPlaylists[indexPath.item], cell.imageView.image!)
+        if cell.isEditable {
+            vc.isEditable = true
+        }
         rootTarget?.navigationController?.pushViewController(vc, animated: true)
     }
     
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return rootTarget != nil ? playlists.count + 2 : playlists.count
+        return rootTarget != nil ? myPlaylists.count + 2 : myPlaylists.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if indexPath.item == playlists.count  && rootTarget != nil {
+        if indexPath.item == myPlaylists.count  && rootTarget != nil {
             let cell = dequeueReusableCell(withReuseIdentifier: buttonCellId, for: indexPath) as! CreatePlaylistButtonCell
             cell.vc = self
             cell.isCreating = true
@@ -103,7 +105,7 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
             
             return cell
         }
-        if indexPath.item == playlists.count + 1  && rootTarget != nil {
+        if indexPath.item == myPlaylists.count + 1  && rootTarget != nil {
             let cell = dequeueReusableCell(withReuseIdentifier: buttonCellId, for: indexPath) as! CreatePlaylistButtonCell
             cell.vc = self
             cell.root = rootTarget
@@ -113,7 +115,8 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
             return cell
         }
         let cell = dequeueReusableCell(withReuseIdentifier: playlistCellId, for: indexPath) as! PlaylistCell
-        cell.playlist = playlists[indexPath.item]
+        cell.playlist = myPlaylists[indexPath.item]
+        cell.isEditable = true
         if isEditing && !eventCreation {
             cell.deleteView.isHidden = false
         } else {
@@ -123,7 +126,7 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if indexPath.item == playlists.count  || indexPath.item == playlists.count + 1{
+        if indexPath.item == myPlaylists.count  || indexPath.item == myPlaylists.count + 1{
             return CGSize(width: bounds.width - 28, height: 40)
         }
         return CGSize(width: bounds.width / 2 - 21, height: 200)

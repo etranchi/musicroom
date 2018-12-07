@@ -37,7 +37,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     var coverContainerView: CoverContainerView?
     var backgroundCoverView: BackgroundCoverView?
     var playerButtonView: PlayerButtonsView?
-
+    
     let titleLabel: UILabel = {
         let label = UILabel()
         
@@ -79,11 +79,11 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         _player.shouldUpdateNowPlayingInfo = true
         return _player
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-
+    
     func player(_ player: DZRPlayer!, didPlay playedBytes: Int64, outOf totalBytes: Int64) {
         guard totalBytes > 0 else { return }
         let progress = CGFloat(playedBytes) / CGFloat(totalBytes)
@@ -93,7 +93,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             playerButtonView?.progressCircle?.updateProgress(0)
         }
         if progress > 0.999 {
-            handleNext()
+            handleNext(false)
         }
     }
     
@@ -104,23 +104,41 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         playerButtonView?.handlePlay()
     }
     
-    func handleNext() {
+    func handleNext(_ byGesture: Bool) {
         if index + 1 < tracks.count, isChangingMusic == false {
             isChangingMusic = true
             index += 1
             loadTrackInplayer()
-            backgroundCoverView?.handleNextAnimation()
-            coverContainerView?.handleNextAnimation()
+            if byGesture == false {
+                backgroundCoverView?.handleNextAnimation()
+                coverContainerView?.handleNextAnimation()
+            }
         }
     }
     
-    func handlePrevious() {
+    func handlePrevious(_ byGesture: Bool) {
         if index - 1 >= 0, isChangingMusic == false {
             index -= 1
             loadTrackInplayer()
             isChangingMusic = true
-            backgroundCoverView?.handlePreviousAnimation()
-            coverContainerView?.handlePreviousAnimation()
+            if byGesture == false {
+                backgroundCoverView?.handlePreviousAnimation()
+                coverContainerView?.handlePreviousAnimation()
+            }
+        }
+    }
+    
+    func setupTrack(indexOffset: Int) {
+        backgroundCoverView?.removeFromSuperview()
+        coverContainerView?.removeFromSuperview()
+        titleLabel.removeFromSuperview()
+        authorLabel.removeFromSuperview()
+        playerButtonView?.removeFromSuperview()
+        setupUI()
+        hasPaused = false
+        self.isChangingMusic = false
+        if isPlaying {
+            playerButtonView?.handlePlay()
         }
     }
     
@@ -138,7 +156,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         minimizedPlayer?.update(isPlaying: true, title: tracks[index].title, artist: tracks[index].artist!.name!)
     }
     
-   func handlePause() {
+    func handlePause() {
         playerButtonView?.playButton.removeTarget(playerButtonView, action: #selector(playerButtonView?.handlePause), for: .touchUpInside)
         playerButtonView?.playButton.addTarget(playerButtonView, action: #selector(playerButtonView?.handlePlay), for: .touchUpInside)
         playerButtonView?.setPlayIcon()
@@ -189,20 +207,8 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         rootViewController?.animatedHidePlayer()
     }
     
-    func setupTrack(indexOffset: Int) {
-        backgroundCoverView?.removeFromSuperview()
-        coverContainerView?.removeFromSuperview()
-        titleLabel.removeFromSuperview()
-        authorLabel.removeFromSuperview()
-        playerButtonView?.removeFromSuperview()
-        setupUI()
-        hasPaused = false
-        self.isChangingMusic = false
-        if isPlaying {
-            playerButtonView?.handlePlay()
-        }
-    }
-
+    
+    
     fileprivate func setupUI() {
         if firstPlay {
             cancelable?.cancel()
@@ -257,7 +263,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
             playerButtonView!.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             playerButtonView!.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -size * bestMult),
             playerButtonView!.heightAnchor.constraint(equalToConstant: 120)
-        ])
+            ])
     }
 }
 
