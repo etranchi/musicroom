@@ -12,6 +12,7 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
     var isEditing = false
     var selectedPlaylist : Playlist?
     var eventCreation : Bool = false
+    var isEditable = false
     var isAddingSong = false
     var myPlaylists: [Playlist]
     let rootTarget: PlaylistsController?
@@ -67,6 +68,7 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
             return
         }
         let vc = PlaylistDetailController(myPlaylists[indexPath.item], cell.imageView.image!)
+        print(cell.isEditable)
         if cell.isEditable {
             vc.isEditable = true
         }
@@ -99,7 +101,7 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
 //        }
         let cell = dequeueReusableCell(withReuseIdentifier: playlistCellId, for: indexPath) as! PlaylistCell
         cell.playlist = myPlaylists[indexPath.row]
-        cell.isEditable = true
+        cell.isEditable = self.isEditable
         if isEditing && !eventCreation {
             cell.deleteView.isHidden = false
         } else {

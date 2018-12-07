@@ -92,12 +92,14 @@ class PlaylistsController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == 0 && playlists?.myPlaylists != nil {
             let cell = tableView.dequeueReusableCell(withIdentifier: playlistCellId, for: indexPath) as! SearchPlaylistCell
+            cell.isEditable = true
             cell.rootTarget = self
             cell.title = sections[indexPath.row]
             cell.playlist = playlists?.myPlaylists
             return cell
         } else if indexPath.row == 1 && playlists?.friendPlaylists != nil {
             let cell = tableView.dequeueReusableCell(withIdentifier: playlistCellId, for: indexPath) as! SearchPlaylistCell
+            cell.isEditable = false
             cell.rootTarget = self
             cell.title = sections[indexPath.row]
             cell.playlist = playlists?.friendPlaylists

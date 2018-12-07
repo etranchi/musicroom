@@ -17,12 +17,9 @@ class SearchMemberController: UITableViewController{
     var admins : Bool?
     var event : Event? {
         didSet {
-            print("set")
             if let _ = event {
-                print("getAllUsers")
-                apiManager.getAllUsers(userManager.currentUser!.token!, completion: { (res) in
+                apiManager.getAllUsers("", completion: { (res) in
                     
-                    print(res)
                         res.forEach({ (user) in
                             if (self.members != nil && (self.members?.index(where: { (ur) -> Bool in
                                 return user.id == ur.id
@@ -70,6 +67,7 @@ class SearchMemberController: UITableViewController{
         button.addTarget(self, action: #selector(updateEvent), for: .touchUpInside)
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
         searchController = UISearchController(searchResultsController: nil)
+        searchController.searchBar.delegate = self
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
         
@@ -203,16 +201,34 @@ class SearchMemberController: UITableViewController{
     
 }
 
+extension SearchMemberController : UISearchBarDelegate {
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        self.updateSearchResults(for: self.searchController)
+    }
+}
 
 extension SearchMemberController : UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        
         if let searchText = searchController.searchBar.text {
-            filteredData = searchText.isEmpty ? dataUsers : dataUsers.filter({(arg) -> Bool in
-                let (user, _) = arg
-                return (user.login.range(of: searchText, options: .caseInsensitive) != nil)
-            })
-            tableView.reloadData()
+            if !searchText.isEmpty {
+                apiManager.getAllUsers(searchText, completion: { (res) in
+                    self.filteredData = []
+                    res.forEach({ (user) in
+                        if (self.members != nil && (self.members?.index(where: { (ur) -> Bool in
+                            return user.id == ur.id
+                        })) != nil) {
+                            self.filteredData.append((user, true))
+                        } else {
+                            self.filteredData.append((user, false))
+                        }
+                    })
+                    self.tableView.reloadData()
+                })
+            }
+            else {
+                filteredData = dataUsers
+                tableView.reloadData()
+            }
         }
     }
 }

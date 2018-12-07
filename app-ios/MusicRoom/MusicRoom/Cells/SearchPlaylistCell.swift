@@ -11,6 +11,7 @@ import UIKit
 class SearchPlaylistCell: UITableViewCell {
     var rootTarget: PlaylistsController?
     var title : String?
+    var isEditable : Bool = false
     var playlist: [Playlist]? {
         didSet {
             setupView()
@@ -36,6 +37,7 @@ class SearchPlaylistCell: UITableViewCell {
         label.text = title != nil ? title! : ""
         backgroundColor = .clear
         let eventsCollectionView = PlaylistCollectionView(playlist!, .horizontal, rootTarget)
+        eventsCollectionView.isEditable = isEditable
         eventsCollectionView.eventCreation = false
         eventsCollectionView.removeFromSuperview()
         eventsCollectionView.translatesAutoresizingMaskIntoConstraints = false

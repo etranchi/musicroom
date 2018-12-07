@@ -463,11 +463,13 @@ class APIManager: NSObject, URLSessionDelegate {
         }
     }
     
-    func getAllUsers(_ token : String, completion : @escaping (([User]) -> ())) {
-        let allUserUrl = self.url + "user"
+    func getAllUsers(_ search : String, completion : @escaping (([User]) -> ())) {
+        let w = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+        let allUserUrl = self.url + "user?criteria=\(w)"
+        print(allUserUrl)
         var request = URLRequest(url: URL(string: allUserUrl)!)
         request.httpMethod = "GET"
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
         searchAll([User].self, request: request) { (me) in
             completion(me)
         }
@@ -535,35 +537,24 @@ class APIManager: NSObject, URLSessionDelegate {
     func searchAll<T: Decodable>(_ myType: T.Type, request: URLRequest, completion: @escaping (T) -> ())
     {
         URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: request) { (data, response, err) in
-            print("ALO")
             if err != nil {
                 makeAlert("No response from the server, try again..")
             }
             if let d = data {
-                print("ALO1")
                 do {
-                    print("ALO2")
                     let dic = try JSONDecoder().decode(myType.self, from: d)
-                    print("ALO3")
                     DispatchQueue.main.async {
-                        print("ALO4")
                         completion(dic)
                     }
                 } catch {
                     do {
-                        print("ALO5")
                         let responseJSON = try JSONSerialization.jsonObject(with: data!, options: [])
-                        print("ALO6")
                         if let responseJSON = responseJSON as? [String: Any] {
-                            print("ALO7")
                             if let error = responseJSON["error"] as? String {
-                                print("ALO8")
                                 makeAlert(error)
                             }
-                            print("ALO9")
                             print(responseJSON)
                         }
-                        print("ALO10")
                     }
                     catch {
                         makeAlert("Can't connect to the server")
