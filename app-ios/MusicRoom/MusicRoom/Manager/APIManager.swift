@@ -221,12 +221,12 @@ class APIManager: NSObject, URLSessionDelegate {
         })
     }
     
-    func getUserPlaylists(completion: @escaping ([Playlist]) -> ()) {
+    func getPlaylists(completion: @escaping (AllPlaylist) -> ()) {
         let playlistsUrl = self.url + "playlist"
         var playlistsRequest = URLRequest(url: URL(string: playlistsUrl)!)
         playlistsRequest.httpMethod = "GET"
         playlistsRequest.addValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
-        self.searchAll([Playlist].self, request: playlistsRequest, completion: { (playlists) in
+        self.searchAll(AllPlaylist.self, request: playlistsRequest, completion: { (playlists) in
             completion(playlists)
         })
     }
