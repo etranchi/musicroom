@@ -132,7 +132,6 @@ module.exports = {
 			next(new customError(err.message, 400))
 		}
 	},
-
 	deleteEventsUser: async (userId) => {
 		try {
 			await modelEvent.deleteMany({creator: userId})

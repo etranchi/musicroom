@@ -287,5 +287,19 @@ let self = module.exports = {
 		} catch (err) {
 			throw err
 		}
+	},
+	deletePlaylistsUser: async (idUser) => {
+		try {
+			await playlistModel.deleteMany({idUser})
+			await playlistModel.updateMany(
+					{'members':
+						{$in: idUser}
+					},
+				{$pull: {members: idUser}},
+				{ multi: true }
+			)
+		} catch (err) {
+			throw err
+		}
 	}
 };
