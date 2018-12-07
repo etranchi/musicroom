@@ -4,16 +4,20 @@ const request 			= require('request-promise');
 const customError = require('../modules/customError');
 
 let self = module.exports = { 
-	getPlaylists: async (req, res, next) => {
-		try {
-			res.status(200).json(await playlistModel.find())
-		} catch (err) {
-			next(new customError(err.message, 400))
-		}
-	},
 	getPlaylistsByUser: async (req, res, next) => {
 		try {
-			let localPlaylists = await playlistModel.find({idUser: req.user._id})
+			let localPlaylists = await playlistModel.find()
+
+			let retPlaylist = localPlaylists.reduce((acc, elem) => {
+				if (elem.idUser.toString() === req.user._id.toString())
+					acc['myPlaylists'].push(elem)
+				else if (elem.members.filter((e) => e._id.toString() === req.user._id.toString()).length > 0)
+					acc['friendPlaylists'].push(elem)
+				else if (elem.public === true)
+					acc['allPlaylists'].push(elem)
+				return acc
+			}, {myPlaylists: [], friendPlaylists: [], allPlaylists: []})
+
 			let options = {
 				method: 'GET',
 				uri: config.deezer.apiUrl + '/user/me/playlists',
@@ -24,8 +28,8 @@ let self = module.exports = {
 			};
 			let deezerPlaylists = await request(options)
 			if (deezerPlaylists.data)
-				localPlaylists = [...localPlaylists, ...deezerPlaylists.data]
-			res.status(200).json(localPlaylists)
+				localPlaylists = [...retPlaylist.myPlaylists, ...deezerPlaylists.data]
+			res.status(200).json(retPlaylist)
 		} catch (err) {
 			next(new customError(err.message, 400))
 		}
@@ -34,7 +38,21 @@ let self = module.exports = {
 		try {
 			let playlist = {}
 			if (!Number(req.params.id))
-				playlist = await playlistModel.findOne({'_id': req.params.id})
+				playlist = await playlistModel
+					.findOne({'_id': req.params.id,
+						$or:
+						[
+							{'idUser':
+								{$eq: req.user._id}
+							},
+							{'members':
+								{$in: req.user._id}
+							},
+							{
+								public: true
+							}
+						]
+					})
 			else
 				playlist = await self.getPlaylistDeezerById(req.params.id, req.user.deezerToken)
 			res.status(200).json(playlist || {});
@@ -46,9 +64,25 @@ let self = module.exports = {
 	getPlaylistUserById: async (req, res, next) => {
 		try {
 			let playlist = {}
-			if (!Number(req.params.id))
-				playlist = await playlistModel.findOne({'_id': req.params.id, idUser: req.user._id})
-			else {
+			if (!Number(req.params.id)) {
+				playlist = await playlistModel.findOne(
+					{_id: req.params.id,
+						$or:
+							[
+								{'idUser':
+									{$eq: req.user._id}
+								},
+								{'members':
+									{$in: req.user._id}
+								},
+								{
+									public: true
+								}
+							]
+					})
+				if (!playlist)
+					throw new Error('Id playlist error (bad id or private playlist)')
+			} else {
 				let options = {
 					method: 'GET',
 					uri: config.deezer.apiUrl + '/playlist/' + req.params.id,
@@ -102,7 +136,27 @@ let self = module.exports = {
 	},
 	putPlaylistById: async (req, res, next) => {
 		try {
-			playlist = await playlistModel.findOneAndUpdate({_id: req.params.id, idUser: req.user._id}, req.body, {new: true})
+			playlist = await playlistModel
+				.findOneAndUpdate(
+					{_id: req.params.id,
+					$or:
+						[
+							{'idUser':
+								{$eq: req.user._id}
+							},
+							{'members':
+								{$in: req.user._id}
+							},
+							{
+								public: true
+							}
+						]
+					},
+					req.body,
+					{new: true}
+				)
+			if (!playlist)
+					throw new Error('You can not modify this playlist')
 			res.status(200).json(playlist);
 		} catch (err) {
 			console.log("Bad Request putPlaylistById" + err)
@@ -120,10 +174,40 @@ let self = module.exports = {
 				let track = await request(options)
 				if (!track.id)
 					throw Error('No track found')
-				if (!await playlistModel.findOne({_id: req.params.id, idUser: req.user._id, 'tracks.data': {$elemMatch: {id: track.id}}})) {
-					await playlistModel.updateOne({_id: req.params.id, idUser: req.user._id},
-						{$push: {'tracks.data': track}}
-					)
+				if (!await playlistModel.findOne({
+					_id: req.params.id,
+					$or:
+						[
+							{'idUser':
+								{$eq: req.user._id}
+							},
+							{'members':
+								{$in: req.user._id}
+							},
+							{
+								public: true
+							}
+						],
+					'tracks.data': {$elemMatch: {id: track.id}}})) {
+						let playlist = await playlistModel.updateOne({
+							_id: req.params.id,
+							$or:
+								[
+									{'idUser':
+										{$eq: req.user._id}
+									},
+									{'members':
+										{$in: req.user._id}
+									},
+									{
+										public: true
+									}
+								]
+							},
+							{$push: {'tracks.data': track}}
+						)
+						if (playlist.n === 0)
+							throw Error('You can not modify this playlist')
 				} else {
 					throw Error('This song already exists in this playlist')
 				}
@@ -158,7 +242,6 @@ let self = module.exports = {
 		}
 	},
 	deleteTrackPlaylistById: async (req, res, next) => {
-		
 		try {
 			console.log("Body SWIFT -> ")
 			console.log(req.body)
