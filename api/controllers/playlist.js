@@ -105,12 +105,25 @@ let self = module.exports = {
 		try {
 			let playlist = {}
 			if (req.body.id) {
+				if (!Number(req.params.id)) {
+					console.log("COUCOU")
+					playlist = await playlistModel
+						.findOneAndUpdate({$and: [{
+							_id: req.body.id,
+							idUser: {$ne: req.user._id},
+							members: {$ne: req.user._id},
+							public: true}]},
+							{$push: {members: req.user._id}},
+							{new: true}
+						)
+				} else {
 				req.body = await self.getPlaylistDeezerById(req.body.id, req.user.deezerToken)
 				req.body.idUser = req.user._id
 				if (req.body.id)
 					playlist = await playlistModel.create(req.body);
 				else
 					throw new Error('Deezer playlist not exist')
+				}
 			}
 			else {
 				req.body.idUser = req.user._id
