@@ -29,7 +29,6 @@ const middlewares = {
 		req.meta = {
 			date: moment().format('LLL'),
 			ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
-			deviceVersion: agent.device.toVersion(),
 			device: agent.device.toString(),
 			platform: agent.os.toString(),
 			on: agent.toAgent(),
@@ -37,7 +36,7 @@ const middlewares = {
 			method: req.method,
 			body: req.body
 		}
-		let message = "[" + req.meta.date + "][" + req.meta.on + "][" + req.meta.platform + "][" + req.meta.device + "][" + req.meta.deviceVersion + "][" + req.meta.ip + "] Request method " + req.meta.method + " on " + req.meta.route
+		let message = "[" + req.meta.date + "][" + req.meta.on + "][Platform " + req.meta.platform + "][Device " + req.meta.device + "][" + req.meta.ip + "] Request method " + req.meta.method + " on " + req.meta.route
 		logger.info(message)
 		next();
 	}
