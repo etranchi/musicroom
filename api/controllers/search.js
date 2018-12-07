@@ -66,7 +66,11 @@ module.exports = {
 			if (playlist.total > 0) {
 				allPlaylist = allPlaylist.concat(playlist.data)
 			}
-			res.status(200).send(allPlaylist)
+			let ret = allPlaylist.map((elem) => {
+				const {_id, id, title, ...other} = elem
+				return {_id, id, title}
+			})
+			res.status(200).send(ret)
 		} catch (err) {
 			next(new customError(err.message, 400))
 		}
