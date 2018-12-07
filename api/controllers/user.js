@@ -9,6 +9,7 @@ const config = require('../config/config.json');
 const argon = require('argon2');
 const mail = require('../modules/mail');
 const event = require('./event');
+const playlist = require('./playlist');
 
 exports.connect = (req, res) => {
 		return res.status(200).json({
@@ -120,6 +121,7 @@ exports.getUserById = async (req, res, next) => {
 exports.deleteUserById = async (req, res, next) => {
 	try {
 		console.info("deleteUserById : delete _id -> %s", req.user._id);
+		await playlist.deletePlaylistsUser(req.user._id)
 		await event.deleteEventsUser(req.user._id)
 		await model.deleteOne({"_id": req.user._id})
 		res.status(204).send();
