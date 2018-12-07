@@ -80,9 +80,10 @@ class APIManager: NSObject, URLSessionDelegate {
         var playlistsRequest = URLRequest(url: URL(string: playlistsUrl)!)
         playlistsRequest.httpMethod = "GET"
         playlistsRequest.setValue("Bearer " + userManager.currentUser!.token!, forHTTPHeaderField: "Authorization")
-        playlistsRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        self.searchAll(SearchPlaylist.self, request: playlistsRequest, completion: { (res) in
-            completion(res.data)
+        print("plouf")
+        self.searchAll([SPlaylist].self, request: playlistsRequest, completion: { (res) in
+            print("plaaf")
+            completion(res)
         })
     }
     
@@ -543,9 +544,8 @@ class APIManager: NSObject, URLSessionDelegate {
             if let d = data {
                 do {
                     let dic = try JSONDecoder().decode(myType.self, from: d)
-                    DispatchQueue.main.async {
-                        completion(dic)
-                    }
+                    completion(dic)
+
                 } catch {
                     do {
                         let responseJSON = try JSONSerialization.jsonObject(with: data!, options: [])
@@ -555,6 +555,7 @@ class APIManager: NSObject, URLSessionDelegate {
                             }
                             print(responseJSON)
                         }
+                        
                     }
                     catch {
                         makeAlert("Can't connect to the server")

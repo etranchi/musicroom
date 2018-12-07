@@ -39,7 +39,9 @@ class SearchDeezerPlaylistController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selected = data[indexPath.row]
-        apiManager.createPlaylist("id=\(selected.id)", self.root)
+        let id = selected.id != nil ? String(describing: selected.id!) : selected._id!
+        print(id)
+        apiManager.createPlaylist("id=" + id, self.root)
         self.navigationController?.popViewController(animated: true)
         
     }
@@ -123,7 +125,11 @@ extension SearchDeezerPlaylistController : UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         if let searchText = searchController.searchBar.text {
             if !searchText.isEmpty {
+                print("yoyooooooo")
+                
                 apiManager.searchPlaylists(searchText, completion: { res in
+                    print(res)
+                    print(res)
                     self.data = res
                     self.tableView.reloadData()
                 })
