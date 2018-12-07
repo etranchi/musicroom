@@ -65,6 +65,12 @@ module.exports = {
 			req.body = JSON.parse(req.body.body);
 			console.log("post event");
 			console.log(req.body);
+			if (!req.body.creator)
+				throw new Error('No creator')
+			if (!req.body.title)
+				throw new Error('No title')
+			if (!req.body.description)
+				throw new Error('No description')
 			if (!req.body.location)
 				throw new Error('No Location')
 			if (req.file && req.file.filename)
