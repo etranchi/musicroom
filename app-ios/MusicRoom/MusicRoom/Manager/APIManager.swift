@@ -106,6 +106,35 @@ class APIManager: NSObject, URLSessionDelegate {
         })
     }
 
+    
+    func updateUser(_ data : Data?, completion : @escaping (([String:Any]?) -> ())) {
+        let url = self.url + "user/me"
+        var req = URLRequest(url: URL(string: url)!)
+        req.httpMethod = "PUT"
+        req.setValue("Bearer " + userManager.currentUser!.token!, forHTTPHeaderField: "Authorization")
+        req.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        req.httpBody = data
+        URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: req){ (data, res, err) in
+            if err != nil {
+                makeAlert("No response from the server, try again..")
+            }
+            print(res)
+            do {
+                let responseJSON = try JSONSerialization.jsonObject(with: data!, options: [])
+                if let responseJSON = responseJSON as? [String: Any] {
+                    if let error = responseJSON["error"] as? String {
+                        makeAlert(error)
+                        completion(nil)
+                    }
+                    completion(responseJSON)
+                }
+            }
+            catch {
+                makeAlert("Error")
+            }
+        }.resume()
+    }
+    
     func giveDeezerToken(_ user : MyUser) {
         let url = self.url + "user/login/deezer?deezerToken=\(user.deezer_token!)"
         var req = URLRequest(url : URL(string : url)!)
