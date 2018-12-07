@@ -140,7 +140,7 @@ export default class CreateEvent extends Component {
     }    
     disabledDate = current => {
         // Can not select days before today and today
-        return current && current <= moment().endOf('day');
+        return current && current  <  moment().startOf('day');
     }
 	render = () => {
         this.uploadButton = ( <div> <Icon type={this.state.loading ? 'loading' : 'plus'} /> <div className="ant-upload-text">Upload</div> </div> );
