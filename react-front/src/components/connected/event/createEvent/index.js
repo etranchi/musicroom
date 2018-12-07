@@ -5,6 +5,7 @@ import axios from 'axios'
 import SearchBar from '../../../other/searchbar'
 import { Avatar, Card, Icon, Button, Input, DatePicker, Upload, message, Divider, Layout, Col, Row, Checkbox, InputNumber} from 'antd';
 import Error from '../../../other/errorController'
+import moment from 'moment';
 
 export default class CreateEvent extends Component {
 	constructor(props) {
@@ -136,6 +137,10 @@ export default class CreateEvent extends Component {
         let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         let ret = "Le : " + new Date(date).toLocaleDateString('fr-Fr', options) + ' à ' + date.split(" ")[1];
         return ret;
+    }    
+    disabledDate = current => {
+        // Can not select days before today and today
+        return current && current <= moment().endOf('day');
     }
 	render = () => {
         this.uploadButton = ( <div> <Icon type={this.state.loading ? 'loading' : 'plus'} /> <div className="ant-upload-text">Upload</div> </div> );
@@ -236,6 +241,7 @@ export default class CreateEvent extends Component {
                                             format="YYYY-MM-DD HH:mm:ss"
                                             placeholder="Select Time"
                                             onChange={this.handleChangeDate}
+                                            disabledDate={this.disabledDate}
                                         />
                                 </Col>
                                 <Col span={12} style={{margin: '3% 0 0 0'}}>

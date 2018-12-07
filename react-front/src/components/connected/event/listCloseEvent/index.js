@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Layout, Row, Col, Divider, Spin } from 'antd';
+import { Layout, Row, Col, Divider, Spin, message} from 'antd';
 import axios from 'axios'
 import PreviewCard from '../previewCardEvent'
 import List from '../listEvent'
@@ -18,10 +18,18 @@ export default class listCloseEvent extends Component {
     }
     componentWillMount = () => {
         window.scrollTo(700, 700);
-		axios.get(process.env.REACT_APP_API_URL + '/event', {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
+        axios.get(process.env.REACT_APP_API_URL + '/event', {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
 		.then((resp) => {
-            this.setState({events: resp.data.allEvents.reverse()}, () => {
+            let result = [];
+            if (resp.data.myEvents && resp.data.myEvents.length != 0)
+                result = result.concat(resp.data.myEvents)
+            if (resp.data.friendEvent && resp.data.friendEvent.length != 0)
+                result = result.concat(resp.data.friendEvent)
+            if (resp.data.allEvents && resp.data.allEvents.length != 0)
+                result = result.concat(resp.data.allEvents)
+            this.setState({events: result.reverse()}, () => {
                 this.setState({loading:false});
+                console.log(this.state.events)
             });
 		})
 		.catch((err) => { Error.display_error(err); });
