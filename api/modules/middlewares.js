@@ -39,7 +39,7 @@ const middlewares = {
 			method: req.method,
 			body: req.body
 		}
-		let message = "[" + req.meta.date + "][" + req.meta.on + version + "][" + req.meta.platform + "][" + req.meta.platformVersion + "][" + req.meta.device + "][" + req.meta.deviceVersion + "][" + req.meta.ip + "] Request method " + req.meta.method + " on " + req.meta.route
+		let message = "[" + req.meta.date + "][" + req.meta.on + req.meta.version + "][" + req.meta.platform + "][" + req.meta.platformVersion + "][" + req.meta.device + "][" + req.meta.deviceVersion + "][" + req.meta.ip + "] Request method " + req.meta.method + " on " + req.meta.route
 		logger.info(message)
 		next();
 	}

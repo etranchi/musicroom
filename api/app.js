@@ -66,7 +66,7 @@ app.use(function(req, res, next) {
   next();
 });
 app.use(function(err, req, res, next) {
-  let message = "[Error][" + req.meta.date + "][" + req.meta.on + version + "][" + req.meta.platform + "][" + req.meta.platformVersion + "][" + req.meta.device + "][" + req.meta.deviceVersion + "][" + req.meta.ip + "] Request method " + req.meta.method + " on " + req.meta.route + "body -> " + JSON.stringify(req.meta.body) + " -> Status " + (err.status || 500) + " Error: " + (err.message || "Server crash")
+  let message = "[Error][" + req.meta.date + "][" + req.meta.on + req.meta.version + "][" + req.meta.platform + "][" + req.meta.platformVersion + "][" + req.meta.device + "][" + req.meta.deviceVersion + "][" + req.meta.ip + "] Request method " + req.meta.method + " on " + req.meta.route + "body -> " + JSON.stringify(req.meta.body) + " -> Status " + (err.status || 500) + " Error: " + (err.message || "Server crash")
   logger.error(message)
     console.log("Je suis dans le gestionnaire d'erreur -> " + err.message)
     if (err.message)
