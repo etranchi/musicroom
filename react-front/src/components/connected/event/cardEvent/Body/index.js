@@ -135,7 +135,7 @@ export default class Body extends Component {
         else
             hours = date.split(' ')[4]
         
-        if (timeBeforeEvent < 0.0 && curTime > moment.endOf('day')) {
+        if (timeBeforeEvent < 0.0 && curTime > moment().endOf('day')) {
             return "Déja passée"
         }
         if (timeBeforeEvent > weekTimeStamp)
@@ -172,7 +172,7 @@ export default class Body extends Component {
     }
     disabledDate = current => {
         // Can not select days before today and today
-        return current && current <= moment().endOf('day');
+        return current && current <= moment().startOf('day');
     }
 	render() {
         return (

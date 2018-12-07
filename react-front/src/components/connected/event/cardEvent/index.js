@@ -5,7 +5,7 @@ import CreatorProfil from './creatorProfil'
 import BodyEvent from './Body'
 import Map from '../map'
 import geolib from 'geolib'
-import {socket, createRoom, joinRoom} from '../../../other/sockets';
+import {socket, createRoom, joinRoom, closeRoom, leaveRoom} from '../../../other/sockets';
 
 export default class cardEvent extends Component {
 	constructor(props) {
@@ -54,6 +54,9 @@ export default class cardEvent extends Component {
         socket.on('joinRoom', (msg) => {
             console.log('socket : joinRoom receive message ->', msg)
         });
+        socket.on('closeRoom', (msg) => {
+            console.log('socket : closeRoom receive message ->', msg)
+        });
         socket.on('leaveRoom', (msg) => {
             console.log('socket : leaveRoom receive message ->', msg)
         });
@@ -63,7 +66,7 @@ export default class cardEvent extends Component {
         window.scrollTo(1000, 1000)
     }
     componentWillUnmount = () => {
-        //     leaveRoom(this.props.state.data.event._id)
+            leaveRoom(this.props.state.data.event._id)
     }
     updateMap = () => {
         let calc = geolib.getDistanceSimple(
@@ -89,19 +92,37 @@ export default class cardEvent extends Component {
         else
             return false;
     }
+    finishEvent = () => {
+        message.info("ROOM FINISH")
+        closeRoom(this.props.state.data.event._id)
+    }  
 	render() {
         return  (
             <div>
                 <Row>
                     <Col span={2}> 
                         <a href="#!" className="btn waves-effect waves-teal" onClick={() => this.props.changeView('listEvent')}>Back</a> 
+                    </Col >
+                    <Col span={3} offset={10} > 
+                        <a href="#!" className="btn waves-effect waves-red" onClick={() => closeRoom(this.props.state.data.event._id) }>Quit Event</a> 
                     </Col>
+
+                    {
+                        (this.state.isAdmin || this.state.isCreator) ? 
+                        <Col span={3} offset={1}> 
+                            <a href="#!" className="btn waves-effect waves-red" onClick={this.finishEvent}>Finish Event</a> 
+                        </Col>
+                        :
+                        null
+                    }
                     {
                         this.isToday(this.props.state.data.event.event_date) &&  this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks ?
-                            <Col span={3} offset={19}> 
-                                <a href="#!" className="btn waves-effect waves-teal" onClick={this.openLiveEvent}>Start Event </a> 
+                            <Col span={3} offset={1}> 
+                                <a href="#!" className="btn waves-effect waves-teal" onClick={this.openLiveEvent}>
+                                { (this.state.isAdmin || this.state.isCreator) ?  "Start Event"  : "Join Event" }
+                                </a> 
                             </Col>
-                            : 
+                            :
                             null
                     }
                 </Row>

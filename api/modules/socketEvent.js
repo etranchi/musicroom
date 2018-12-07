@@ -90,10 +90,8 @@ module.exports = function (io) {
                 io.sockets.in(room.id).emit('joinRoom', true)
             } else sockets.emit('joinRoom', false)
         });
-        socket.on('leaveRoom', (roomID) => {
-            console.log("Leaving Room")
-            io.sockets.in(roomID).emit('leaveRoom', 'someone leave room')
-            socket.leave(roomID)
+        socket.on('closeRoom', (roomID) => {
+            socket.disconnectRoom(roomID)
         });
         socket.on('updateTracks', (roomID, tracks) => {
             console.log("[Socket] -> updateTracks")

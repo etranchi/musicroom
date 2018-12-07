@@ -28,7 +28,7 @@ class SearchBar extends Component {
 
 	fetchTracks = (value) => {
 		this.setState({value:value}, () => {
-				axios.get(process.env.REACT_APP_API_URL + '/search/track?q='+ value)
+				axios.get(process.env.REACT_APP_API_URL + '/search/track?q='+ value, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
 				.then((resp) => {
 
 					this.setState({'list': resp.data.data || []});
@@ -46,7 +46,7 @@ class SearchBar extends Component {
 		else
 		{
 			this.setState({'value': value});
-			axios.get(process.env.REACT_APP_API_URL + '/search/playlist?q='+ value)
+			axios.get(process.env.REACT_APP_API_URL + '/search/playlist?q='+ value, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
 			.then((resp) => {
 				let myPlaylist = []
 				if (resp.data.data)
@@ -86,7 +86,6 @@ class SearchBar extends Component {
 			}
 		})
 	}
-
 	removeMember = (global, sub) => {
 
 		for (let i = 0; i < global.length; i++)
