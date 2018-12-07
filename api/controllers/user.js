@@ -48,9 +48,11 @@ exports.deleteDeezerToken = async (req, res, next) => {
 exports.getUsers = async (req, res, next) => {
 	try {
 		console.info("getUser: getting all users ...");
-		let users = await model.find({_id: {$ne: req.user._id}})
-		users.map((user) => {
-			return Utils.filter(model.schema.obj, user, 0)
+		let criteria = new RegExp(req.query.criteria || "", 'i')
+		let users = await model.find({_id: {$ne: req.user._id}, login: {$regex: criteria}})
+		users = users.map((user) => {
+			const {login, _id, picture, ...other} = user
+			return {login, _id, picture}
 		})
 		res.status(200).send(users);
 	} catch (err) {
