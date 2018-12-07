@@ -57,6 +57,16 @@ app.use('/', middleware.logs, routes);
 app.get('/', ( req, res) =>  {
 	res.status(200).json({"message":"Welcome to Music vroom!"});
 });
+
+let httpsServer = https.createServer(credentials, app);
+const io = socketIo(httpsServer)
+require('./modules/socketEvent')(io);
+
+let options = config.swagger
+options.basedir = __dirname
+options.files = ["./routes/**/*.js"]
+expressSwagger(options)
+
 app.use(function(req, res, next) {
   if (!req.route) {
     let err = new Error('Page not found')
@@ -73,15 +83,6 @@ app.use(function(err, req, res, next) {
       return res.status(err.status || err.code || 500).send({error: err.message})
     return res.status(500).send({error: "Le serveur a mal"})
 });
-
-let httpsServer = https.createServer(credentials, app);
-const io = socketIo(httpsServer)
-require('./modules/socketEvent')(io);
-
-let options = config.swagger
-options.basedir = __dirname
-options.files = ["./routes/**/*.js"]
-expressSwagger(options)
 
 httpsServer.listen(config.port, config.host);
 
