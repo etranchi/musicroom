@@ -46,9 +46,9 @@ class PlaylistController: UIViewController {
         super.viewDidLoad()
 
         view.backgroundColor = UIColor(white: 0.1, alpha: 1)
-        playlistCollectionView?.alwaysBounceVertical = true
         print(userManager.currentUser!.token!)
         setupView()
+        playlistCollectionView?.alwaysBounceVertical = true
     }
     
     
@@ -59,7 +59,10 @@ class PlaylistController: UIViewController {
                 self.firstLoad = false
             }
             guard let myPlaylists = playlists.myPlaylists else { return }
-            self.playlistCollectionView?.playlists = myPlaylists
+//            myPlaylists.forEach({ (play) in
+//                print(play.public)
+//            })
+            self.playlistCollectionView?.myPlaylists = myPlaylists
             self.playlistCollectionView?.reloadData()
         }
     }

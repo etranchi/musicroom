@@ -115,7 +115,7 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
         apiManager.getPlaylists(completion: { (res) in
             self.playlistView?.eventCreation = true
             guard let myPlaylists = res.myPlaylists else { return }
-            self.playlistView!.playlists = myPlaylists
+            self.playlistView!.myPlaylists = myPlaylists
             self.playlistView!.reloadData()
         })
         // Do any additional setup after loading the view.

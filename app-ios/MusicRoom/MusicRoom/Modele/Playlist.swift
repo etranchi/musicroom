@@ -14,6 +14,7 @@ struct Creator: Codable {
 }
 
 struct Playlist: Codable {
+    var `public`: Bool?
     var creator: Creator?
     var tracks: PlaylistTrackData?
     var title: String
