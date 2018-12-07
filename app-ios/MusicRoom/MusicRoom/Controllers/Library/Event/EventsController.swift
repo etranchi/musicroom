@@ -18,6 +18,7 @@ class EventsController: UITableViewController {
         view.backgroundColor = UIColor(white: 0.1, alpha: 1)
         navigationController?.navigationBar.topItem?.title = "Your Events"
         tableView.separatorStyle = .none
+        tableView.allowsSelection = false
         tableView.register(SearchEventsCell.self, forCellReuseIdentifier: eventCellId)
         tableView.register(CreateButtonCell.self, forCellReuseIdentifier: createCellId)
         apiManager.getEvents { (res) in
