@@ -96,7 +96,11 @@ class EventDetailController: UIViewController , UITextViewDelegate {
     
     func addMembersAdmins(_ event: Event) {
         currentEvent = event
-        root!.reloadEvent()
+        if root != nil {
+            root!.reloadEvent()
+        } else {
+            rootMap?.getAllEvents()
+        }
     }
     
     func setupView() {
