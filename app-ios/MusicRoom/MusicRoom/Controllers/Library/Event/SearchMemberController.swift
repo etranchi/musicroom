@@ -17,9 +17,12 @@ class SearchMemberController: UITableViewController{
     var admins : Bool?
     var event : Event? {
         didSet {
+            print("set")
             if let _ = event {
+                print("getAllUsers")
                 apiManager.getAllUsers(userManager.currentUser!.token!, completion: { (res) in
-                    DispatchQueue.main.async {
+                    
+                    print(res)
                         res.forEach({ (user) in
                             if (self.members != nil && (self.members?.index(where: { (ur) -> Bool in
                                 return user.id == ur.id
@@ -31,7 +34,6 @@ class SearchMemberController: UITableViewController{
                         })
                         self.filteredData = self.dataUsers
                         self.tableView.reloadData()
-                    }
                 })
             }
         }
@@ -204,6 +206,7 @@ class SearchMemberController: UITableViewController{
 
 extension SearchMemberController : UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
+        
         if let searchText = searchController.searchBar.text {
             filteredData = searchText.isEmpty ? dataUsers : dataUsers.filter({(arg) -> Bool in
                 let (user, _) = arg

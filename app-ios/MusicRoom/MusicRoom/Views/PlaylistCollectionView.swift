@@ -14,13 +14,13 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
     var eventCreation : Bool = false
     var isAddingSong = false
     var myPlaylists: [Playlist]
-    let rootTarget: PlaylistController?
+    let rootTarget: PlaylistsController?
     var selectedCell : PlaylistCell?
     
     private let playlistCellId = "playlistCellId"
     private let buttonCellId = "buttonCellId"
     
-    init(_ myPlaylists: [Playlist], _ scrollDirection: UICollectionViewScrollDirection, _ rootTarget: PlaylistController?) {
+    init(_ myPlaylists: [Playlist], _ scrollDirection: UICollectionViewScrollDirection, _ rootTarget: PlaylistsController?) {
         self.rootTarget = rootTarget
         self.myPlaylists = myPlaylists
         let layout = AlignedCollectionViewFlowLayout(horizontalAlignment: .left, verticalAlignment: .top)
@@ -35,23 +35,6 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
         fatalError("init(coder:) has not been implemented")
     }
     
-    func createPlaylistPopUp() {
-        if !eventCreation {
-            let alert = UIAlertController(title: "Playlist creation", message: "What's your playlist's name?", preferredStyle: .alert)
-            alert.addTextField { (textField) in
-                textField.placeholder = "playlist's name"
-            }
-            
-            alert.addAction(UIAlertAction(title: "Create", style: .default, handler: { [weak alert] (_) in
-                let textField = alert!.textFields![0]
-                if let text = textField.text, text != "" {
-                    apiManager.createPlaylist("title=" + text, self.rootTarget)
-                }
-            }))
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-            rootTarget?.present(alert, animated: true, completion: nil)
-        }
-    }
     
     func setupView() {
         delegate = self
@@ -92,30 +75,30 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
     
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return rootTarget != nil ? myPlaylists.count + 2 : myPlaylists.count
+        return myPlaylists.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if indexPath.item == myPlaylists.count  && rootTarget != nil {
-            let cell = dequeueReusableCell(withReuseIdentifier: buttonCellId, for: indexPath) as! CreatePlaylistButtonCell
-            cell.vc = self
-            cell.isCreating = true
-            cell.title = "CREATE PLAYLIST"
-            cell.createButton.backgroundColor = UIColor(red: 40 / 255, green: 180 / 255, blue: 40 / 255, alpha: 1)
-            
-            return cell
-        }
-        if indexPath.item == myPlaylists.count + 1  && rootTarget != nil {
-            let cell = dequeueReusableCell(withReuseIdentifier: buttonCellId, for: indexPath) as! CreatePlaylistButtonCell
-            cell.vc = self
-            cell.root = rootTarget
-            cell.isCreating = false
-            cell.title = "IMPORT PLAYLIST"
-            cell.createButton.backgroundColor = UIColor(red: 140 / 255, green: 180 / 255, blue: 140 / 255, alpha: 1)
-            return cell
-        }
+//        if indexPath.item == myPlaylists.count  && rootTarget != nil {
+//            let cell = dequeueReusableCell(withReuseIdentifier: buttonCellId, for: indexPath) as! CreatePlaylistButtonCell
+//            cell.vc = self
+//            cell.isCreating = true
+//            cell.title = "CREATE PLAYLIST"
+//            cell.createButton.backgroundColor = UIColor(red: 40 / 255, green: 180 / 255, blue: 40 / 255, alpha: 1)
+//
+//            return cell
+//        }
+//        if indexPath.item == myPlaylists.count + 1  && rootTarget != nil {
+//            let cell = dequeueReusableCell(withReuseIdentifier: buttonCellId, for: indexPath) as! CreatePlaylistButtonCell
+//            cell.vc = self
+//            cell.root = rootTarget
+//            cell.isCreating = false
+//            cell.title = "IMPORT PLAYLIST"
+//            cell.createButton.backgroundColor = UIColor(red: 140 / 255, green: 180 / 255, blue: 140 / 255, alpha: 1)
+//            return cell
+//        }
         let cell = dequeueReusableCell(withReuseIdentifier: playlistCellId, for: indexPath) as! PlaylistCell
-        cell.playlist = myPlaylists[indexPath.item]
+        cell.playlist = myPlaylists[indexPath.row]
         cell.isEditable = true
         if isEditing && !eventCreation {
             cell.deleteView.isHidden = false

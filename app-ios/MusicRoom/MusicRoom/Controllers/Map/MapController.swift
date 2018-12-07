@@ -15,6 +15,8 @@ class MapController: UIViewController {
     var resultSearchController:UISearchController? = nil
     var selectedPin:MKPlacemark? = nil
     var events : [Event]?
+    var searchBar : UISearchBar?
+    var creating : Bool?
     
     let mapView : MKMapView = {
         let mk = MKMapView()
@@ -23,6 +25,11 @@ class MapController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         mapView.removeAnnotations(mapView.annotations)
+        if creating != nil && creating! {
+            print("yoooo")
+            resultSearchController?.becomeFirstResponder()
+            // searchBar?.becomeFirstResponder()
+        }
         getAllEvents()
     }
     
@@ -63,9 +70,9 @@ class MapController: UIViewController {
         let locationSearchTable = LocationSearchController()
         resultSearchController = UISearchController(searchResultsController: locationSearchTable)
         resultSearchController?.searchResultsUpdater = locationSearchTable as UISearchResultsUpdating
-        let searchBar = resultSearchController!.searchBar
-        searchBar.sizeToFit()
-        searchBar.placeholder = "Search for places"
+        searchBar = resultSearchController!.searchBar
+        searchBar!.sizeToFit()
+        searchBar!.placeholder = "Search for places"
         resultSearchController?.isActive = true
         navigationItem.titleView = resultSearchController?.searchBar
 
@@ -76,6 +83,12 @@ class MapController: UIViewController {
         locationSearchTable.mapView = mapView
         
         locationSearchTable.handleMapSearchDelegate = self
+        if creating != nil && creating! {
+            print("yoooo")
+            resultSearchController?.becomeFirstResponder()
+            searchBar?.becomeFirstResponder()
+        }
+        
         setupButton()
         // Do any additional setup after loading the view.
     }

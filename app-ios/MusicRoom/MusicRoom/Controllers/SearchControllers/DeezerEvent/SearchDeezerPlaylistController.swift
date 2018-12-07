@@ -11,7 +11,7 @@ import UIKit
 class SearchDeezerPlaylistController: UITableViewController {
     var searchController : UISearchController!
     var data : [SPlaylist] = []
-    var root : PlaylistController?
+    var root : PlaylistsController?
     
     override func viewDidLoad() {
         super.viewDidLoad()

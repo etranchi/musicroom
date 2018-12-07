@@ -33,7 +33,7 @@ struct SearchPlaylist : Codable{
     let data : [SPlaylist]
 }
 
-struct AllPlaylist: Codable {
+struct DataPlaylist: Codable {
     var myPlaylists: [Playlist]?
     var friendPlaylists: [Playlist]?
     var allPlaylists: [Playlist]?
