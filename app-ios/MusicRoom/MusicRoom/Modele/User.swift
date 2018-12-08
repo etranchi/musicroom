@@ -14,10 +14,10 @@ enum Status : String, Codable {
 
 struct User : Codable {
     var login : String
-    var email : String
+    var email : String?
     var password : String?
-    var status : Status
-    var creationDate : String
+    var status : Status?
+    var creationDate : String?
     var id : String
     var picture : String
     enum CodingKeys: String, CodingKey {

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PlaylistController: UIViewController {
+/*class PlaylistController: UIViewController {
     
     var playlistCollectionView: PlaylistCollectionView?
     var firstLoad = true
@@ -80,7 +80,7 @@ class PlaylistController: UIViewController {
     
     func setupView() {
         cancelButton.addTarget(self, action: #selector(handleCancel), for: .touchUpInside)
-        playlistCollectionView = PlaylistCollectionView([], .vertical, self)
+        playlistCollectionView = PlaylistCollectionView([], .horizontal, self)
         playlistCollectionView?.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(playlistCollectionView!)
         view.addSubview(cancelButton)
@@ -101,4 +101,4 @@ class PlaylistController: UIViewController {
             playlistCollectionView?.isAddingSong = true
         }
     }
-}
+}*/

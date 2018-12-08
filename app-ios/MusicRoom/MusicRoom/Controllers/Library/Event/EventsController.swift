@@ -11,7 +11,6 @@ import UIKit
 class EventsController: UITableViewController {
     let sections = ["My Events", "Friend's Event"]
     var events : DataEvent?
-    var numberOfRows = 1
     private let eventCellId = "eventCellId"
     private let createCellId = "createCellId"
     override func viewDidLoad() {
@@ -19,11 +18,13 @@ class EventsController: UITableViewController {
         view.backgroundColor = UIColor(white: 0.1, alpha: 1)
         navigationController?.navigationBar.topItem?.title = "Your Events"
         tableView.separatorStyle = .none
+        tableView.allowsSelection = false
         tableView.register(SearchEventsCell.self, forCellReuseIdentifier: eventCellId)
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: createCellId)
+        tableView.register(CreateButtonCell.self, forCellReuseIdentifier: createCellId)
         apiManager.getEvents { (res) in
             self.events = res
-            self.numberOfRows = self.sections.count
+            print(res.myEvents.count)
+            print(res.friendEvents.count)
             self.tableView.reloadData()
         }
     }
@@ -42,13 +43,12 @@ class EventsController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 1
+        return self.sections.count + 1
     }
 
     func reloadEvent() {
         apiManager.getEvents { (res) in
             self.events = res
-            self.numberOfRows = self.sections.count
             self.tableView.reloadData()
         }
     }
@@ -63,18 +63,22 @@ class EventsController: UITableViewController {
         if indexPath.row == 0 && events?.myEvents != nil {
             let cell = tableView.dequeueReusableCell(withIdentifier: eventCellId, for: indexPath) as! SearchEventsCell
             cell.rootTarget = self
-            cell.title = sections[indexPath.section]
+            cell.title = sections[indexPath.row]
             cell.event = events?.myEvents
             return cell
         } else if indexPath.row == 1 && events?.friendEvents != nil {
             let cell = tableView.dequeueReusableCell(withIdentifier: eventCellId, for: indexPath) as! SearchEventsCell
             cell.rootTarget = self
-            cell.title = sections[indexPath.section]
+            cell.title = sections[indexPath.row]
             cell.event = events?.friendEvents
             return cell
         } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: createCellId, for: indexPath) as UITableViewCell
-            cell.textLabel?.text = "CREATE EVENT"
+            let cell = tableView.dequeueReusableCell(withIdentifier: createCellId, for: indexPath) as! CreateButtonCell
+            cell.isCreating = true
+            cell.rootEvents = self
+            cell.backgroundColor = UIColor(white: 0.1, alpha: 1)
+            cell.createButton.backgroundColor = UIColor(red: 40 / 255, green: 180 / 255, blue: 40 / 255, alpha: 1)
+            cell.title = "CREATE EVENT"
             return cell
         }
     }
@@ -85,6 +89,8 @@ class EventsController: UITableViewController {
             return height
         } else if indexPath.row == 1 && (events?.friendEvents.count == 0 || events?.friendEvents == nil){
             return height
+        } else if (indexPath.row == sections.count) {
+            return 60
         }
         return 240
     }

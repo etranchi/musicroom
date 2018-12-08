@@ -37,7 +37,7 @@ class EventDetailController: UIViewController , UITextViewDelegate {
     
     func reloadLabel() {
         creatorLabel.attributedText = NSAttributedString(string: "Created by \(currentEvent.creator!.login)")
-        dateLabel.attributedText = NSAttributedString(string: "Date : \(currentEvent.date)")
+        dateLabel.attributedText = NSAttributedString(string: "Date : \(String(describing:currentEvent.date))")
         descriptionLabel.attributedText = NSAttributedString(string: "Description :")
         descriptionTextLabel.attributedText = NSAttributedString(string: currentEvent.description)
     }
@@ -96,7 +96,11 @@ class EventDetailController: UIViewController , UITextViewDelegate {
     
     func addMembersAdmins(_ event: Event) {
         currentEvent = event
-        root!.reloadEvent()
+        if root != nil {
+            root!.reloadEvent()
+        } else {
+            rootMap?.getAllEvents()
+        }
     }
     
     func setupView() {
@@ -221,6 +225,7 @@ extension EventDetailController : UITableViewDelegate, UITableViewDataSource {
         switch indexPath.row {
         case 0:
             let vc = SearchMemberController()
+            print(currentEvent.members)
             vc.root = self
             vc.event = currentEvent
             vc.admins = false
@@ -230,6 +235,7 @@ extension EventDetailController : UITableViewDelegate, UITableViewDataSource {
             let vc = SearchMemberController()
             vc.root = self
             vc.event = currentEvent
+            print(currentEvent.adminMembers)
             vc.admins = true
             vc.members = currentEvent.adminMembers
             self.navigationController?.pushViewController(vc, animated: true)

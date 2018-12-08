@@ -120,7 +120,7 @@ class SongDetailView: UIView {
     }()
     
     @objc func handleAddToPlaylist() {
-        let vc = PlaylistController()
+        let vc = PlaylistsController()
         hideView()
         vc.isAddingSong = true
         vc.track = track
