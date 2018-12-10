@@ -80,6 +80,32 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
         tv.translatesAutoresizingMaskIntoConstraints = false
         return tv
     }()
+
+   var localizeLabel : UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 13, weight: .medium)
+        label.textColor = .white
+        label.textAlignment = .center
+        label.numberOfLines = 1
+        label.text = "Localize this event (optional)"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let localizeTF : UITextField = {
+        let tf = UITextField()
+        tf.font = UIFont.systemFont(ofSize: 14, weight: .light)
+        tf.textAlignment = .center
+        tf.backgroundColor = UIColor.gray
+        tf.borderStyle = .roundedRect
+        tf.textColor = .white
+        tf.returnKeyType = .done
+        tf.enablesReturnKeyAutomatically = true
+        tf.attributedPlaceholder = NSAttributedString(string: "Distance in km", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white])
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        return tf
+    }()
+
     let mapView : MKMapView = {
         let mv = MKMapView()
         return mv
@@ -141,6 +167,9 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
         scrollView!.addSubview(descriptionTV)
         scrollView!.addSubview(playlistView!)
         scrollView!.addSubview(descriptionLabel)
+        scrollView!.addSubview(localizeLabel)
+        scrollView!.addSubview(localizeTF)
+        
         NSLayoutConstraint.activate([
             
             titleTF.topAnchor.constraint(equalTo: scrollView!.topAnchor, constant: 20),
@@ -160,9 +189,18 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
             segmentedBar.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
             segmentedBar.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 20),
             
+            localizeLabel.widthAnchor.constraint(equalTo: scrollView!.widthAnchor, multiplier: 0.9),
+            localizeLabel.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
+            localizeLabel.topAnchor.constraint(equalTo: segmentedBar.bottomAnchor, constant: 20),
+            
+            localizeTF.widthAnchor.constraint(equalTo: scrollView!.widthAnchor, multiplier: 0.9),
+            localizeTF.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
+            localizeTF.topAnchor.constraint(equalTo: localizeLabel.bottomAnchor, constant: 20),
+            
+            
             descriptionLabel.widthAnchor.constraint(equalTo: scrollView!.widthAnchor, multiplier: 0.9),
             descriptionLabel.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
-            descriptionLabel.topAnchor.constraint(equalTo: segmentedBar.bottomAnchor, constant: 20),
+            descriptionLabel.topAnchor.constraint(equalTo: localizeTF.bottomAnchor, constant: 20),
             
             descriptionTV.widthAnchor.constraint(equalTo: scrollView!.widthAnchor, multiplier: 0.9),
             descriptionTV.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
@@ -196,11 +234,15 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
     
     @objc func createEvent() {
         // if data is good
+        var distance_required = false
         let vc = self.navigationController?.viewControllers[0] as! MapController
         guard let _ = selectedPin, let _ = selectedPin?.coordinate, let _ = selectedPin?.coordinate.latitude, let _ = selectedPin?.coordinate.longitude, let _ = selectedPin?.administrativeArea, let _ = selectedPin?.locality, let _ = selectedPin?.isoCountryCode, let _ = selectedPin?.thoroughfare, let _ = selectedPin?.subThoroughfare else {
             self.navigationController?.popViewController(animated: true)
             ToastView.shared.short(vc.view, txt_msg: "Can't create an event here", color: UIColor.red)
             return
+        }
+        if self.segmentedBar.selectedSegmentIndex == 1 {
+           distance_required = true
         }
         if titleTF.text != nil && imageView.image != nil && playlistView?.selectedPlaylist != nil {
             let myUser = userManager.currentUser
@@ -208,10 +250,9 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
             let address = Address(p: (selectedPin?.administrativeArea)!, v: (selectedPin?.locality)!, cp: (selectedPin?.isoCountryCode)!, r: (selectedPin?.thoroughfare)!, n: (selectedPin?.subThoroughfare)!)
             let location = Location(address: address, coord: coord)
             apiManager.getMe((myUser?.token)!, completion: { (user) in
-                let event = Event(_id : nil, creator : user, title: self.titleTF.text!, description: self.descriptionTV.text!, location: location, visibility: self.segmentedBar.selectedSegmentIndex, shared: self.segmentedBar.selectedSegmentIndex == 0 ? true : false , creationDate: String(describing: Date()), date: String(describing: Date()), playlist: self.playlistView?.selectedPlaylist!, members: [], adminMembers: [], picture : nil)
+                let event = Event(_id : nil, creator : user, title: self.titleTF.text!, description: self.descriptionTV.text!, location: location, visibility: self.segmentedBar.selectedSegmentIndex, shared: self.segmentedBar.selectedSegmentIndex == 0 ? true : false , distance_required : distance_required, distance_max: distance_required && self.localizeTF.text != nil && Int(self.localizeTF.text!) != nil ? Int(self.localizeTF.text!) : nil, creationDate: String(describing: Date()), date: String(describing: Date()), playlist: self.playlistView?.selectedPlaylist!, members: [], adminMembers: [], picture : nil)
                 apiManager.postEvent((myUser?.token)!, event: event, img: self.imageView.image!) { (resp) in
                     if resp {
-            
                         vc.selectedPin = nil
                         vc.mapView.removeAnnotations(vc.mapView.annotations)
                         vc.printToastMsg()
