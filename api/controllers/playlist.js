@@ -6,9 +6,14 @@ const customError = require('../modules/customError');
 let self = module.exports = { 
 	getPlaylistsByUser: async (req, res, next) => {
 		try {
-			let localPlaylists = await playlistModel.find()
+			let localPlaylists = await playlistModel.find().populate('members')
 
 			let retPlaylist = localPlaylists.reduce((acc, elem) => {
+				elem.members = elem.members.map((user) => {
+					console.log(user)
+					const {password, ...other} = user
+					return other
+				})
 				if (elem.idUser.toString() === req.user._id.toString())
 					acc['myPlaylists'].push(elem)
 				else if (elem.members.filter((e) => e._id.toString() === req.user._id.toString()).length > 0)
