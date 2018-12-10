@@ -43,6 +43,7 @@ const Playlist = new Schema({
 	},
 	members : [{
 		type: Schema.Types.ObjectId,
+		unique: true,
 		ref: 'user'
 	}]
 });

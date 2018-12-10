@@ -52,7 +52,7 @@ let self = module.exports = {
 								public: true
 							}
 						]
-					})
+					}).populate('members')
 			else
 				playlist = await self.getPlaylistDeezerById(req.params.id, req.user.deezerToken)
 			res.status(200).json(playlist);
@@ -149,7 +149,7 @@ let self = module.exports = {
 	},
 	putPlaylistById: async (req, res, next) => {
 		try {
-			playlist = await playlistModel
+			let playlist = await playlistModel
 				.findOneAndUpdate(
 					{_id: req.params.id,
 					$or:
@@ -167,9 +167,9 @@ let self = module.exports = {
 					},
 					req.body,
 					{new: true}
-				)
+				).populate('members')
 			if (!playlist)
-					throw new Error('You can not modify this playlist')
+				throw new Error('You can not modify this playlist')
 			res.status(200).json(playlist);
 		} catch (err) {
 			console.log("Bad Request putPlaylistById" + err)
