@@ -84,9 +84,14 @@ class EditPlaylist extends Component {
 		
 	}
 
-	removeMember = (type, item) => {
+	removeMember = (item) => {
 		let state = this.state
-		state.playlist.members.splice(item, 1);
+		let newMembers = this.state.playlist.members.filter( (elem) => {
+			if (elem['_id'] !== item._id)
+				return elem;
+			return null
+		})		
+		state.playlist.members = newMembers;
 		axios.put(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id || this.state.playlist.id, 
 		state.playlist,
 		{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
@@ -99,7 +104,6 @@ class EditPlaylist extends Component {
 	}
 
 	render() {
-		console.log(this.state.playlist)
 		if( this.state.isloading === true ) {
 			return (
 				<div>
@@ -160,7 +164,7 @@ class EditPlaylist extends Component {
                                         <div 
                                             className="zoomCard" 
                                             style={{width:'5%', margin:'-10% 0 0 40%'}}
-                                            onClick={this.removeMember}
+                                            onClick={() => this.removeMember(item)}
                                         >
                                             <Icon style={{color:'#B71C1C'}}  type="close" theme="outlined"/>
                                         </div>
