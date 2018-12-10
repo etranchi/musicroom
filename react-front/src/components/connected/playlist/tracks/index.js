@@ -61,7 +61,7 @@ class Tracks extends Component {
 			this.setState({
 			  initLoading: false,
 			  playlist: res.data,
-			  isBlocked: !res.data.id
+			  isBlocked: !res.data._id
 			});
 		});	
 	}
@@ -147,12 +147,13 @@ class Tracks extends Component {
 	
 	addTrack = (item) => {
 		var state = this.state;
-		state.playlist.tracks.data.push(item);
-		axios.put(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id,
-		this.state.playlist,
+		
+		axios.put(process.env.REACT_APP_API_URL + '/playlist/' + (this.state.playlist._id || this.state.playlist.id) + '/track',
+		{"id":item.id},
 		{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
 		.then(() => {
 			message.success("Music Successfully added");
+			state.playlist.tracks.data.push(item);
 			this.setState(state);
 		})
 		.catch(err => {
@@ -170,6 +171,7 @@ class Tracks extends Component {
 		if (!result.destination) {
 		  return;
 		}
+		console.log('after drag end')
 		var state = this.state;
 		const items = reorder(
 		  this.state.playlist.tracks.data,
