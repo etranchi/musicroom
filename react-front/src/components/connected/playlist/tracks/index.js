@@ -52,16 +52,16 @@ class Tracks extends Component {
 		})
 		this.getPlaylists((res) => {
 			this.setState({
-			  playlists: res.data,
+			  playlists: [...res.data.myPlaylists , ...res.data.allPlaylists , ...res.data.friendPlaylists],
 			});
 		});
 
 		this.getPlaylist((res) => {
-			res.data._id && joinPlaylist(res.data._id)
+			res.data._id && joinPlaylist(res.data.id)
 			this.setState({
 			  initLoading: false,
 			  playlist: res.data,
-			  isBlocked: !res.data._id
+			  isBlocked: !res.data.id
 			});
 		});	
 	}
@@ -93,7 +93,7 @@ class Tracks extends Component {
 		})
 		.catch((err) => {
 			this.setState({playlists: [], loading:false})
-			console.log('Playlist error');
+			console.log('Playlists error');
 			console.log(err);
 		})
 	}
@@ -257,7 +257,7 @@ class Tracks extends Component {
 									</span>
 									<Select style={{ width: 120 }} onChange={this.handleChange}>
 										{this.state.playlists.map((playlist, i) => {
-											return ( <Select.Option value={[i, item]} >{playlist.title} </Select.Option> )})
+											return ( <Select.Option value={[i, item]} key={i}>{playlist.title} </Select.Option> )})
 										}
 									</Select>
 									</div>
