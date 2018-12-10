@@ -41,6 +41,7 @@ class SearchBar extends Component {
 	}
 
 	fetchListPlaylist = (value) => {
+		
 		if (value === '')
 			this.setState({'value': value, 'list': []})
 		else
@@ -66,18 +67,15 @@ class SearchBar extends Component {
 		}
 	}
 	fetchListUser = (value) => {
+		console.log("fetch list user");
 		this.setState({value:value}, () => {
-			if (this.state.list.length > 0) 
-				this.searchUser();
-			else {
 				axios.get(process.env.REACT_APP_API_URL + "/user?criteria=" + value, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
 				.then((resp) => {
 					console.log(resp.data);
 					this.setState({list: resp.data || []});
-					// this.searchUser();
+
 				})
 				.catch((err) => { console.log('User List error : ', err); })
-			}
 		})
 	}
 	removeMember = (global, sub) => {
@@ -93,35 +91,6 @@ class SearchBar extends Component {
 		}
 		return (global)
 
-	}
-	searchUser = () => {
-
-		let listUserValid = [];
-
-		if (this.props.state.data.event)
-		{
-			this.setState({'glbUserList': this.removeMember(this.state.glbUserList, [this.props.state.data.event.creator])})
-			this.setState({'glbUserList': this.removeMember(this.state.glbUserList, this.props.state.data.event.members)})
-			this.setState({'glbUserList': this.removeMember(this.state.glbUserList, this.props.state.data.event.adminMembers)})
-		}
-		
-
-		if (this.state.value.length < this.state.position)
-			this.setState({position:0})
-		for (var i = 0; i < this.state.glbUserList.length; i++)
-		{
-			for (var j = this.state.position; j < this.state.glbUserList[i].login.length; j++)
-			{
-				if (this.state.glbUserList[i].login[j] !== this.state.value[j])
-					break;
-				if (j + 1 === this.state.value.length)
-				{
-					listUserValid.push(this.state.glbUserList[i]);
-					break;
-				}
-			}
-		}
-		this.setState({position: this.state.value.length, list: listUserValid, glbUserList: listUserValid})
 	}
 
 	updateEventMember = (item) => {
@@ -143,6 +112,7 @@ class SearchBar extends Component {
 
 	render() {
 		const { list } = this.state;
+		console.log(this.state);
 		const children = list.map((item, key) => 
 		{
 			console.log(item)
