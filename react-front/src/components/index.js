@@ -4,7 +4,7 @@ import '../App.css'
 import Connection from './connection'
 import Connected from './connected'
 import Menu from './other/menu'
-import FooterLegacy from './other/footerLegacy'
+import FooterPlayer from './other/footerLegacy'
 import "antd/dist/antd.css";
 import axios from 'axios'
 import {Button, Layout} from 'antd';
@@ -21,20 +21,21 @@ class Front extends Component {
       'id': null,
       'user': null,
       'playlistId': null,
+      'currentPlayerTracks': {
+        'tracks':[],
+        'id' : 0
+      },
       'selected':'event'
-    }
-    
+    };
 	}
-
   updateState = (val) => {
-    // console.log("old state ->");
-    // console.log(this.state);
-    // console.log("new state ->");
-    // console.log(val);
-    // console.log('end update parent');
+    console.log("old state ->");
+    console.log(this.state);
+    console.log("new state ->");
+    console.log(val);
+    console.log('end update parent');
     this.setState(val);
   }
-  
   componentWillMount() {
     const token = localStorage.getItem('token');
     if (token && !this.state.user)
@@ -45,16 +46,16 @@ class Front extends Component {
         this.setState({user:resp.data, token:localStorage.getItem('token')});
       })
       .catch((err) => {
+        this.logout();
+
         console.log(err);
     })
     }
   }
-
   logout = () => {
     localStorage.setItem('token', '');
     this.updateState({'token': '', 'currentComponent': 'login'})
   }
-
 	render() {
         const token = localStorage.getItem('token')
 		return (
@@ -69,9 +70,7 @@ class Front extends Component {
               {token && <Connected updateParent={this.updateState} state={this.state} logout={this.logout}/>}
               {!token && <Connection updateParent={this.updateState} state={this.state}/>}
             </Content>
-            <Footer style={{backgroundColor:'#263238'}}>
-              <FooterLegacy />
-            </Footer>
+              <FooterPlayer  state={this.state}  updateParent={this.updateState}/>
           </Layout>
 		);
 	}

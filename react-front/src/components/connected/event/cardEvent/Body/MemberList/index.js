@@ -31,11 +31,10 @@ export default class MemberList extends Component {
                                         <Card.Meta
                                             avatar={ <Avatar 
                                                         size={116} 
-                                                        src={item.picturepicture ? item.picture : process.env.REACT_APP_API_URL + "/userPicture/" + item.picture} 
+                                                        src={item.picture} 
                                                         />
                                                     }
                                             title={item.login}
-                                            description={item.email}
                                         />
                                         <div 
                                             className="zoomCard" 

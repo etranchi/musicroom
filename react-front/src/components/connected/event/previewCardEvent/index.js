@@ -105,8 +105,6 @@ export default class PreviewCardEvent extends Component {
                 actions=
                 {
                     [
-                        <Icon type="setting" theme="outlined"/>,
-                        <Icon type="edit" theme="outlined"/>, 
                         <i onClick={this.openMap.bind(this)} className="fas fa-map-marker"></i>,
                         <i onClick={this.delete} className="fas fa-trash-alt"></i>
                     ]

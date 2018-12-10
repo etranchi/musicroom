@@ -1,23 +1,27 @@
 import React, { Component } from 'react';
 import axios from 'axios'
-import { Divider, Icon, Col, Row, Modal, Input, DatePicker } from 'antd';
+import { Divider, Icon, Col, Row, Modal, Input, DatePicker, message } from 'antd';
 import './styles.css';
 import MemberList from './MemberList';
-import Player from '../../../../other/player'
 import Error from '../../../../other/errorController'
 import SearchBar from '../../../../other/searchbar';
 import LocationSearchInput from '../../locationSearchInput'
 import { updateEvent, updateTracks } from '../../../../other/sockets';
+import moment from 'moment';
 
 export default class Body extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            playlistId : this.props.state.data.event.playlist && this.props.state.data.event.playlist.id ? this.props.state.data.event.playlist.id : null
+            playlistId : this.props.state.data.event.playlist && this.props.state.data.event.playlist.id ? this.props.state.data.event.playlist.id : null,
+            isPlaying:false
         };
         this.roomID =  this.props.state.data.event._id;
     }
     componentDidMount = () => {
+        if (this.props.state.data.event.playlist 
+            && (this.props.state.currentPlayerTracks.id === (this.props.state.data.event.playlist.id ||this.props.state.data.event.playlist._id)))
+                this.setState({isPlaying:true})
         this.setState({formatDate: this.formatDateAnnounce(this.props.state.data.event.event_date)})
     }
     updateLocation = val => {
@@ -61,19 +65,25 @@ export default class Body extends Component {
         if (playlist) {
             axios.get(process.env.REACT_APP_API_URL + '/playlist/' + playlist.id, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
             .then((resp) => { 
+                let currentPlayerTracks = {
+                    tracks: resp.data.tracks.data || [],
+                    id:  resp.data.id ||  resp.data._id
+                };
                 playlist = resp.data
                 this.props.state.data.event.playlist = playlist;
-                this.props.updateParent({'data' : this.props.state.data, 'playlistId':playlist.id})
+                this.props.updateParent({'currentPlayerTracks': currentPlayerTracks, 'data' : this.props.state.data, 'playlistId':playlist.id})
                 console.log("Playlist change, socket update Event")
                 updateEvent(this.roomID, this.props.state.data.event)
                 updateTracks(this.roomID, this.props.state.data.event.playlist.tracks.data)
-                this.setState({playlistId:playlist.id})         
+                this.setState({playlistId:playlist.id, isPlaying:true})         
             })
             .catch((err) => { Error.display_error(err); })  
         }
     }
     removeMember = (type, item) => {
         let tab = [];
+        if ((this.props.right &&  !this.props.right.isAdmin && !this.props.right.isCreator ) && item._id !== this.props.state.user._id)
+            return message.error("Vous n'avez pas les bons droits pour cette action.")
         if (type === 'admin')
             tab = this.props.state.data.event.adminMembers;
         else  
@@ -124,9 +134,10 @@ export default class Body extends Component {
         }
         else
             hours = date.split(' ')[4]
-
-        if (timeBeforeEvent < 0.0)
+        
+        if (timeBeforeEvent < 0.0 && curTime > moment().endOf('day')) {
             return "Déja passée"
+        }
         if (timeBeforeEvent > weekTimeStamp)
             return ret
         else if (timeBeforeEvent === weekTimeStamp)
@@ -142,6 +153,26 @@ export default class Body extends Component {
             else 
                 return ("Dans " + day + ' jours')
         }
+    }
+    playerLoadTracksFromEvent = () => {
+        let currentPlayerTracks = {
+            tracks: [],
+            id: 0
+        };
+        if (!this.props.state.data.event.playlist.tracks.data || this.props.state.data.event.playlist.tracks.data.length === 0)
+            return message.error("Error : aucune playlist charge.")
+        if (!this.state.isPlaying)  {
+            currentPlayerTracks.tracks = this.props.state.data.event.playlist.tracks.data;
+            currentPlayerTracks.id = this.props.state.data.event.playlist.id ||  this.props.state.data.event.playlist._id;
+        }
+        this.props.updateParent({'currentPlayerTracks' : currentPlayerTracks})
+        this.setState({isPlaying:!this.state.isPlaying}, () => {
+            window.scrollTo(2000, 2000)
+        })
+    }
+    disabledDate = current => {
+        // Can not select days before today and today
+        return current && current <= moment().startOf('day');
     }
 	render() {
         return (
@@ -201,7 +232,12 @@ export default class Body extends Component {
                 {
                     this.props.right.isAdmin || this.props.right.isCreator ? 
                         <Row style={{height:'70px'}}>
-                            <Col span={3}  offset={5}>
+                            <Col span={1} offset={5}>
+                                <i 
+                                    onClick={ this.playerLoadTracksFromEvent.bind(this)} 
+                                    className={ this.state.isPlaying ? "fas fa-pause-circle playerAction" : "fas fa-play-circle playerAction"}></i>  
+                            </Col>
+                            <Col span={3} >
                                 <p  > Ajouter une playlist : </p>
                             </Col>
                             <Col span={3}>
@@ -214,12 +250,6 @@ export default class Body extends Component {
                         :
                         null
                 }
-                { 
-                    this.state.playlistId  && this.props.state.data.event.playlist.tracks.data.length > 0 ? 
-                        <Player  tracks={this.props.state.data.event.playlist.tracks.data} roomID={this.props.state.data.event._id}/> 
-                        : 
-                        null
-                } 
                 {/* Modal for description modification  */}
                 <Modal 
                     title="Description : "
@@ -266,6 +296,7 @@ export default class Body extends Component {
                         <Col span={8}  offset={8}>
                             <DatePicker
                                 name="event_date"
+                                disabledDate={this.disabledDate}
                                 showTime
                                 format="YYYY-MM-DD HH:mm:ss"
                                 placeholder="Select Time"

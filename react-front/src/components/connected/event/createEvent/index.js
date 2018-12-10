@@ -3,28 +3,31 @@ import LocationSearchInput from '../locationSearchInput'
 import './styles.css';
 import axios from 'axios'
 import SearchBar from '../../../other/searchbar'
-import { Avatar, Card, Icon, Button, Input, DatePicker, Upload, message, Divider, Layout, Col, Row, Checkbox} from 'antd';
+import { Avatar, Card, Icon, Button, Input, DatePicker, Upload, message, Divider, Layout, Col, Row, Checkbox, InputNumber} from 'antd';
 import Error from '../../../other/errorController'
+import moment from 'moment';
 
 export default class CreateEvent extends Component {
 	constructor(props) {
         super(props);
         this.state = {
-            creator     : null,
-            members     : [],
-            adminMembers: [],
-            title       : '',
-            description : '',
-            picture     : '',
-            playlist    : null,
-            event_date  : new Date(),
-            date        : '',
-            format_date : '',
-            public      : true,
-            location    : {},
-            imageUrl    : '',
-            infoFile    : '',
-            loading     : false
+            creator          : null,
+            members          : [],
+            adminMembers     : [],
+            title            : '',
+            description      : '',
+            picture          : '',
+            playlist         : null,
+            event_date       : new Date(),
+            date             : '',
+            format_date      : '',
+            public           : false,
+            location         : {},
+            imageUrl         : '',
+            infoFile         : '',
+            loading          : false,
+            distance_max     : 3,
+            distance_required:false,
         };
     }
     updateLocation = val => {
@@ -54,6 +57,7 @@ export default class CreateEvent extends Component {
                 playlist.tracks         = {};
                 playlist.tracks.data    = [];
                 playlist.tracks.data    = resp.data.data;
+                
                 this.setState({playlist:playlist});
             })
             .catch((err) => { Error.display_error(err); })  
@@ -70,16 +74,18 @@ export default class CreateEvent extends Component {
         axios.get(process.env.REACT_APP_API_URL + '/user/me', {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
         .then((resp) => {
             this.event = {
-                creator       : resp.data,
-                title         : this.state.title,
-                description   : this.state.description,
-                playlist      : this.state.playlist,
-                event_date    : this.state.event_date,
-                date          : new Date(),
-                public        : this.state.public,
-                location      : this.state.location,
-                members       : [],
-                adminMembers  : []
+                creator             : resp.data,
+                title               : this.state.title,
+                description         : this.state.description,
+                playlist            : this.state.playlist,
+                event_date          : this.state.event_date,
+                date                : new Date(),
+                public              : this.state.public,
+                location            : this.state.location,
+                members             : [],
+                adminMembers        : [],
+                distance_max        : this.state.distance_max,
+                distance_required   : this.state.distance_required
             }
             data.append('body', JSON.stringify(this.event));
             axios.post(process.env.REACT_APP_API_URL + '/event/',  data, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
@@ -90,6 +96,9 @@ export default class CreateEvent extends Component {
             .catch((err) => { Error.display_error(err); }) 
         })
         .catch((err) => { Error.display_error(err); }) 
+    }
+    handleChangeDistance = value => { 
+        this.setState({distance_max: value});
     }
     handleChange = event => { 
         this.setState({[event.target.name]: event.target.value});
@@ -128,6 +137,10 @@ export default class CreateEvent extends Component {
         let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         let ret = "Le : " + new Date(date).toLocaleDateString('fr-Fr', options) + ' à ' + date.split(" ")[1];
         return ret;
+    }    
+    disabledDate = current => {
+        // Can not select days before today and today
+        return current && current  <  moment().startOf('day');
     }
 	render = () => {
         this.uploadButton = ( <div> <Icon type={this.state.loading ? 'loading' : 'plus'} /> <div className="ant-upload-text">Upload</div> </div> );
@@ -186,12 +199,37 @@ export default class CreateEvent extends Component {
                         </Col>
                     </Row>
                     <Row>
-                        <Col span={2} offset={11}>
+                        <Col span={2} offset={10}>
                             <div style={{'margin': '0 0 0 12% '}}>
-                                <Checkbox onChange={this.handleChange}>Public</Checkbox>
+                                <Checkbox name="public"  onChange={() => {this.setState({public:!this.state.public})}}>Public</Checkbox>
                             </div>
                             <Divider />
                         </Col>
+                        { 
+                            this.state.public ? 
+                                null 
+                                :
+                                <Col span={10}>
+                                    <Row >
+                                        <Col span={1}>
+                                            <Checkbox name="public"  onChange={() => {this.setState({distance_required:!this.state.distance_required})}}/>
+                                        </Col>
+                                        <Col span={9} >
+                                        <b> Distance maximum pour participer : </b>
+                                        </Col>
+                                        {
+                                            this.state.distance_required ?
+                                            <Col span={4}>
+                                                <InputNumber size="small" min={0} max={999}  name="distance_max" value={this.state.distance_max} onChange={(this.handleChangeDistance)}/> <b> km </b>
+                                            </Col>
+    
+                                            :
+                                            null
+                                        }
+
+                                    </Row>
+                                </Col>
+                        }
                     </Row>
                     <Row>
                         <Col span={10} offset={8}>
@@ -203,6 +241,7 @@ export default class CreateEvent extends Component {
                                             format="YYYY-MM-DD HH:mm:ss"
                                             placeholder="Select Time"
                                             onChange={this.handleChangeDate}
+                                            disabledDate={this.disabledDate}
                                         />
                                 </Col>
                                 <Col span={12} style={{margin: '3% 0 0 0'}}>

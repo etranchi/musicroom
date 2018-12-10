@@ -28,10 +28,10 @@ class SearchBar extends Component {
 
 	fetchTracks = (value) => {
 		this.setState({value:value}, () => {
-				axios.get(process.env.REACT_APP_API_URL + '/search/track?q='+ value)
+				axios.get(process.env.REACT_APP_API_URL + '/search/track?q='+ value, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
 				.then((resp) => {
 
-					this.setState({'list': resp.data.data || []});
+					this.setState({'list': resp.data || []});
 				})
 				.catch((err) => {
 					console.log('tracks error');
@@ -46,21 +46,15 @@ class SearchBar extends Component {
 		else
 		{
 			this.setState({'value': value});
-			axios.get(process.env.REACT_APP_API_URL + '/search/playlist?q='+ value)
+			axios.get(process.env.REACT_APP_API_URL + '/search/playlist?q='+ value, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
 			.then((resp) => {
 				let myPlaylist = []
-				if (resp.data.data)
+				if (resp.data)
 				{
-					resp.data.data.forEach(playlist => {
+					resp.data.forEach(playlist => {
 						if (!playlist.id)
-						{
 							playlist.id = playlist._id
-							console.log(playlist, this.props.state.user.email)
-							// if (playlist.creator.email === this.props.state.user.email)
-								myPlaylist.push(playlist)
-						}
-						else
-							myPlaylist.push(playlist)
+						myPlaylist.push(playlist)
 					});
 				}
 				this.setState({'list': myPlaylist});
@@ -76,16 +70,16 @@ class SearchBar extends Component {
 			if (this.state.list.length > 0) 
 				this.searchUser();
 			else {
-				axios.get(process.env.REACT_APP_API_URL + "/user/", {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
+				axios.get(process.env.REACT_APP_API_URL + "/user?criteria=" + value, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
 				.then((resp) => {
-					this.setState({glbUserList: resp.data || []});
-					this.searchUser();
+					console.log(resp.data);
+					this.setState({list: resp.data || []});
+					// this.searchUser();
 				})
 				.catch((err) => { console.log('User List error : ', err); })
 			}
 		})
 	}
-
 	removeMember = (global, sub) => {
 
 		for (let i = 0; i < global.length; i++)
@@ -132,32 +126,25 @@ class SearchBar extends Component {
 	}
 
 	addTrack = (item) => {
-		axios.get(process.env.REACT_APP_API_URL + '/track/' + item.id)
-		.then(resp => {
-			this.setState({
-				value: '',
-				list: [],
-				glbUserList: [],
-				position: 0
-			}, () => {
-				this.props.addTrack(resp.data);
-			})
-		})
-		.catch(err => {
-			console.log("searchbar get track error");
-			console.log(err);
-		})
-		
+		console.log(item);
+		this.setState({
+			value: '',
+			list: [],
+			glbUserList: [],
+			position: 0
+		}, () => {
+			this.props.addTrack(item);
+		})		
 	}
 
 	render() {
 		const { list } = this.state;
 		const children = list.map((item, key) => 
 		{
-			let userPicture = item.facebookId ? item.picture : process.env.REACT_APP_API_URL + "/eventPicture/" + item.picture
+			console.log(item)
 			return (
 				this.props.type === 'member' || this.props.type === 'admin' ? 
-					<AutoComplete.Option  onClick={(e) => this.updateEventMember(item)}  key={key}> <Card.Meta className= "cardMemberList" avatar={<Avatar src={userPicture} />} title= {item.login} /> </AutoComplete.Option>
+					<AutoComplete.Option  onClick={(e) => this.updateEventMember(item)}  key={key}> <Card.Meta className= "cardMemberList" avatar={<Avatar src={item.picture} />} title= {item.login} /> </AutoComplete.Option>
 					: 
 					this.props.type === 'playlist' ?
 						<AutoComplete.Option  onClick={(e) => this.props.updateEventPlaylist(item)} key={item.id}>{item.title}</AutoComplete.Option>

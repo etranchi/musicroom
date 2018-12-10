@@ -57,26 +57,6 @@ app.use('/', middleware.logs, routes);
 app.get('/', ( req, res) =>  {
 	res.status(200).json({"message":"Welcome to Music vroom!"});
 });
-app.use(function(req, res, next) {
-  if (!req.route) {
-    let err = new Error('Page not found')
-    err.status = 404
-    return next (err);
-  }
-  next();
-});
-app.use(function(err, req, res, next) {
-  let message
-  if (req.meta.user_agent === "MusicRoom")
-    message = "[Error][" + req.meta.date + "][from Swift App " + req.meta.user_agent + " ip " + req.meta.ip + "] Request method " + req.meta.method + " on " + req.meta.route + " body -> " + req.meta.body + " -> Status " + (err.status || 500) + " Error: " + (err.message || "Server crash")
-  else
-    message = "[Error][" + req.meta.date + "][from " + req.meta.user_agent + " " + req.meta.ip + "] Request method " + req.meta.method + " on " + req.meta.route + " body -> " + JSON.stringify(req.meta.body) + " -> Status " + (err.status || 500) + " Error: " + (err.message || "Server crash")
-  logger.error(message)
-    console.log("Je suis dans le gestionnaire d'erreur -> " + err.message)
-    if (err.message)
-      return res.status(err.status || err.code || 500).send({error: err.message})
-    return res.status(500).send({error: "Le serveur a mal"})
-});
 
 let httpsServer = https.createServer(credentials, app);
 const io = socketIo(httpsServer)
@@ -86,6 +66,23 @@ let options = config.swagger
 options.basedir = __dirname
 options.files = ["./routes/**/*.js"]
 expressSwagger(options)
+
+app.use(function(req, res, next) {
+  if (!req.route) {
+    let err = new Error('Page not found')
+    err.status = 404
+    return next (err);
+  }
+  next();
+});
+app.use(function(err, req, res, next) {
+  let message = "[Error][" + req.meta.date + "][" + req.meta.on + "][Platform " + req.meta.platform + "][Device " + req.meta.device + "][" + req.meta.ip + "] Request method " + req.meta.method + " on " + req.meta.route + " body -> " + JSON.stringify(req.meta.body) + " -> Status " + (err.status || 500) + " Error: " + (err.message || "Server crash")
+  logger.error(message)
+    console.log("Je suis dans le gestionnaire d'erreur -> " + err.message)
+    if (err.message)
+      return res.status(err.status || err.code || 500).send({error: err.message})
+    return res.status(500).send({error: "Le serveur a mal"})
+});
 
 httpsServer.listen(config.port, config.host);
 

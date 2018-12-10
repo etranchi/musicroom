@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './styles.css';
 import Track from '../../../templates/track'
-import { Col, Row } from 'antd'
+import { Col, Row, message} from 'antd'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Player from '../../../other/player'
 import {socket, getRoomPlaylist, updateScore, updateTracks, updateTrack, blockSocketEvent} from '../../../other/sockets';;
@@ -40,9 +40,13 @@ export default class LiveEvent extends Component {
             console.log("socket : receive message from updateTrack -> ", msg);
         });
         socket.on('updateScore', (tracks) => {
-            console.log("socket : receive data from updateScore : ", tracks);
-            this.setState({rotate: {active:false, id:0, liked: false}});
-            this.savePlaylist(tracks);
+            console.log("socket : receive data from updateScore : ", typeof tracks);
+            if (typeof tracks === 'object') {
+                this.savePlaylist(tracks);
+                this.setState({rotate: {active:false, id:0, liked: false}});
+            }
+            else
+                message.error(tracks)
         });
         /**************************************/
         if (this.props.state.data.event.creator.email === this.props.state.user.email)
@@ -83,9 +87,8 @@ export default class LiveEvent extends Component {
             OldTrack.userUnLike.splice(0, index);
         updateTrack(this.roomID,  OldTrack);
         this.setState({rotate: {active:true, id:OldTrack._id, liked: value > 0 ? true : false}}, () => {
-            updateScore(this.roomID, OldTrack._id, value, this.props.state.user._id);
+            updateScore(this.roomID, OldTrack._id, value, this.props.state.user._id, this.props.state.data.userCoord);
         })
-
     }
     onDragStart = () => {
         blockSocketEvent(this.roomID);

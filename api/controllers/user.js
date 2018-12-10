@@ -8,6 +8,8 @@ const Joi 	= require('joi');
 const config = require('../config/config.json');
 const argon = require('argon2');
 const mail = require('../modules/mail');
+const event = require('./event');
+const playlist = require('./playlist');
 
 exports.connect = (req, res) => {
 		return res.status(200).json({
@@ -47,9 +49,11 @@ exports.deleteDeezerToken = async (req, res, next) => {
 exports.getUsers = async (req, res, next) => {
 	try {
 		console.info("getUser: getting all users ...");
-		let users = await model.find({_id: {$ne: req.user._id}})
-		users.map((user) => {
-			return Utils.filter(model.schema.obj, user, 0)
+		let criteria = new RegExp(req.query.criteria || "", 'i')
+		let users = await model.find({_id: {$ne: req.user._id}, login: {$regex: criteria}})
+		users = users.map((user) => {
+			const {login, _id, picture, ...other} = user
+			return {login, _id, picture}
 		})
 		res.status(200).send(users);
 	} catch (err) {
@@ -117,13 +121,14 @@ exports.getUserById = async (req, res, next) => {
 exports.deleteUserById = async (req, res, next) => {
 	try {
 		console.info("deleteUserById : delete _id -> %s", req.user._id);
+		await playlist.deletePlaylistsUser(req.user._id)
+		await event.deleteEventsUser(req.user._id)
 		await model.deleteOne({"_id": req.user._id})
 		res.status(204).send();
 	} catch (err) {
 		console.error("Error deleteUserById: %s", err);
 		next(new customError(err.message, 400))
 	}
-
 }
 
 exports.modifyUserById = async (req, res, next) => {
@@ -137,9 +142,6 @@ exports.modifyUserById = async (req, res, next) => {
 			req.body.picture = req.file.filename
 		let userUpdate = {}
 		let user = req.body
-		user = Utils.filter(model.schema.obj, user, 1)
-		userUpdate.login = user.login
-		userUpdate.picture = user.picture
 		if (user.password) {
 			if (user.password.length < 8 || user.password.length > 30)
 				throw new Error('Password does not fit (length between 8 and 30)')
@@ -148,10 +150,15 @@ exports.modifyUserById = async (req, res, next) => {
 		} else {
 			delete userUpdate.password
 		}
-		const {error} = Joi.validate(userUpdate, {login: Joi.string().min(3).max(50), password: Joi.string(), picture: Joi.string()})
+		const {error} = Joi.validate(user, {login: Joi.string().min(3).max(50), password: Joi.string(), picture: Joi.string()})
 		if (error) {
 			throw new Error(error.details[0].message)
 		}
+		user = Utils.filter(model.schema.obj, user, 1)
+		if (user.login)
+			userUpdate.login = user.login
+		if (user.picture)
+			userUpdate.picture = user.picture
 		user = await model.findOneAndUpdate({"_id": req.user._id}, userUpdate, {new: true});
 		return res.status(200).send(Utils.filter(model.schema.obj, user, 0));
 	} catch (err) {

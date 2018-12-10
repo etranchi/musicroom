@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Layout, Row, Col, Divider, Spin } from 'antd';
+import { Layout, Row, Col, Divider, Spin, message} from 'antd';
 import axios from 'axios'
 import PreviewCard from '../previewCardEvent'
 import List from '../listEvent'
@@ -18,10 +18,18 @@ export default class listCloseEvent extends Component {
     }
     componentWillMount = () => {
         window.scrollTo(700, 700);
-		axios.get(process.env.REACT_APP_API_URL + '/event', {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
+        axios.get(process.env.REACT_APP_API_URL + '/event', {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
 		.then((resp) => {
-            this.setState({events: resp.data.allEvents.reverse()}, () => {
+            let result = [];
+            if (resp.data.myEvents && resp.data.myEvents.length != 0)
+                result = result.concat(resp.data.myEvents)
+            if (resp.data.friendEvent && resp.data.friendEvent.length != 0)
+                result = result.concat(resp.data.friendEvent)
+            if (resp.data.allEvents && resp.data.allEvents.length != 0)
+                result = result.concat(resp.data.allEvents)
+            this.setState({events: result.reverse()}, () => {
                 this.setState({loading:false});
+                console.log(this.state.events)
             });
 		})
 		.catch((err) => { Error.display_error(err); });
@@ -52,16 +60,16 @@ export default class listCloseEvent extends Component {
                             <Row >
                                 <Col span={14} offset={2}>
                                     { 
-                                        this.state.loading === true  ? 
+                                        this.state.loading === false  ? 
                                             <div style={{height:'650px', margin:'5% 0 0 0'}}>
-                                                < Map 
+                                                <Map 
                                                     updateCurrentEvent={this.updateCurrentEvent} 
                                                     state={this.props.state} 
                                                     events={this.state.events}
                                                 /> 
                                             </div>
                                             :
-                                            null 
+                                            null
                                     }
                                 </Col>
                                 <Col span={6} offset={2}>>
@@ -70,7 +78,8 @@ export default class listCloseEvent extends Component {
                                             <div style={{margin:'20% 0 0 0'}}> 
                                                 <PreviewCard 
                                                     event={this.state.currentEvent} 
-                                                    state={this.props.state} 
+                                                    state={this.props.state}
+                                                    openCardEvent={this.props.openCardEvent} 
                                                     updateParent={this.props.updateParent}
                                                 />
                                             </div> 

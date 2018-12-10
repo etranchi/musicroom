@@ -43,8 +43,8 @@ function updateTracks (roomID, tracks) {
 function updateTrack (roomID, track) {
     socket.emit("updateTrack", roomID, track)
 }
-function updateScore (roomID, tracksID, pointsD, userID) {
-    socket.emit("updateScore", roomID, tracksID, pointsD, userID)
+function updateScore (roomID, tracksID, pointsD, userID, userCoord) {
+    socket.emit("updateScore", roomID, tracksID, pointsD, userID, userCoord)
 }
 
 function updatePlayer (roomID, event) {
@@ -56,6 +56,10 @@ function leaveRoom (roomID) {
     socket.emit("leaveRoom", roomID)
 }
 
+function closeRoom (roomID) {
+    socket.emit("closeRoom", roomID)
+}
+
 /* TEST socket */
 
 function testJoinRoom (roomID, userName) {
@@ -64,4 +68,4 @@ function testJoinRoom (roomID, userName) {
 function message (roomID, msg) {
     socket.emit("message", roomID, msg)
 }
-export {message, testJoinRoom, updatePlayer, joinPlaylist, leavePlaylist, updatePlaylist, socket, blockSocketEvent, getRoomPlaylist, updateTrack, updateScore, joinRoom, createRoom, createEventLive, updateEvent, updateTracks, leaveRoom};
+export {message, testJoinRoom, updatePlayer, joinPlaylist, leavePlaylist, updatePlaylist, socket, blockSocketEvent, getRoomPlaylist, updateTrack, updateScore, joinRoom, createRoom, createEventLive, updateEvent, updateTracks, leaveRoom, closeRoom};

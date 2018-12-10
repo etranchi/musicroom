@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PreviewCard from '../previewCardEvent'
-import { Layout, Spin } from 'antd';
+import { Layout, Spin, message } from 'antd';
 import axios from 'axios'
 import Error from '../../../other/errorController'
 
@@ -27,8 +27,14 @@ export default class ListEvent extends Component {
 	getEvents = callback => {
 		axios.get(process.env.REACT_APP_API_URL + '/event', {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
 		.then(resp => {
-			if (callback)
+			if (resp.data.myEvents.length < 1 && resp.data.friendEvents.length < 1 && resp.data.allEvents.length < 1) {
+				this.props.changeView('createEvent');
+				message.error("Aucun évènenements disponible.")
+				callback([])
+			}
+			else if (callback) {
 				callback(resp.data);
+			}
 			else
 			{
 				this.setState({
