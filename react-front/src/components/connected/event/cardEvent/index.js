@@ -5,7 +5,7 @@ import CreatorProfil from './creatorProfil'
 import BodyEvent from './Body'
 import Map from '../map'
 import geolib from 'geolib'
-import {socket, createRoom, joinRoom, closeRoom, leaveRoom, updateEvent} from '../../../other/sockets';
+import {socket, createRoom, joinRoom, closeRoom, leaveRoom, updateEvent, updateTracks} from '../../../other/sockets';
 
 export default class cardEvent extends Component {
 	constructor(props) {
@@ -46,6 +46,9 @@ export default class cardEvent extends Component {
         })
         socket.on('createRoom', (tracks, msg) => {
             console.log('socket : createRoom receive data ', msg)
+        });
+        socket.on('updateTracks', (tracks, msg) => {
+            console.log('socket : updateTracks receive data ', msg)
         });
         socket.on('joinRoom', (msg) => {
             console.log('socket : joinRoom receive message ->', msg)
@@ -100,65 +103,64 @@ export default class cardEvent extends Component {
                 closeEvent
     */
    openLiveEvent = () => {
-        let tracks = this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks ? this.props.state.data.event.playlist.tracks.data : [];
-        createRoom(this.props.state.data.event._id, tracks, this.props.state.data.event);
-        if (!this.props.state.data.event.is_start && (!this.state.isAdmin && !this.state.isCreator)) {
-            message.info('Levent na pas demare')
-            return;
-        }
-        if (this.props.state.data.event.is_start && !this.props.state.data.event.is_finish  && !this.state.isAdmin && !this.state.isCreator)
-        {
-            this.props.state.data.right = this.state;
-            this.props.updateParent({currentComponent:'liveEvent'})
-        }
-        if (!this.props.state.data.event.is_start && (this.state.isAdmin || this.state.isCreator)) {
-            this.props.state.data.event.is_start = true;
-            this.props.state.data.event.is_finish = false;
+        const is_start = this.props.state.data.event.is_start
+        const is_finish = this.props.state.data.event.is_finish
+        const tracks = this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks ? this.props.state.data.event.playlist.tracks.data : [];
+
+        if ((!(is_start) || (is_start && is_finish)) && this.state.isCreator) {
+            console.log("OpenLiveEvent : 1")
+            updateTracks(this.props.state.data.event._id, tracks)
             updateEvent(this.props.state.data.event._id, this.props.state.data.event)
         }
-        if (this.props.state.data.event.is_finish && (this.state.isAdmin || this.state.isCreator)) {
-            createRoom(this.props.state.data.event._id, tracks, this.props.state.data.event);
-            this.props.state.data.event.is_finish = false;
-            this.props.state.data.event.is_start = true;
-            updateEvent(this.props.state.data.event._id, this.props.state.data.event)
-        }
-        else  if (this.props.state.data.event.is_finish && (!this.state.isAdmin && !this.state.isCreator)) {
-            message.info('Levent est finis')
-            return;
-        }
-        this.props.state.data.right = this.state;
+        this.props.state.data.event.is_start    = true;
+        this.props.state.data.event.is_finish   = false;
+        this.props.state.data.right             = this.state;
+        updateEvent(this.props.state.data.event._id, this.props.state.data.event)
         this.props.updateParent({currentComponent:'liveEvent'})
     }
     finishEvent = () => {
         this.props.state.data.event.is_finish = true;
         updateEvent(this.props.state.data.event._id, this.props.state.data.event)
         closeRoom(this.props.state.data.event._id)
+        this.props.updateParent({data:this.props.state.data})
     }
 	render() {
-        console.log(this.props.state.data.event.is_start)
+        let openLive = '';
+        const is_start = this.props.state.data.event.is_start
+        const is_finish = this.props.state.data.event.is_finish
+        if (this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks && this.props.state.data.event.playlist.tracks.data.length > 0 ) {
+            if (!is_start && this.state.isCreator) {
+                openLive =  <Col span={3} offset={1}>
+                                <a href="#!" className="btn waves-effect waves-teal" onClick={this.openLiveEvent}>Start live</a> 
+                            </Col>
+            }
+            else if (is_start && is_finish && this.state.isCreator) {
+                openLive =  <Col span={3} offset={1}>
+                                <a href="#!" className="btn waves-effect waves-teal" onClick={this.openLiveEvent}>Restart live</a> 
+                            </Col>
+            }
+            else if (is_start && !is_finish) {
+               openLive =  <Col span={3} offset={1}>
+                                <a href="#!" className="btn waves-effect waves-teal" onClick={this.openLiveEvent}>Open live</a> 
+                            </Col>
+            }
+        }
         return  (
             <div>
-            <Row>
-                <Col span={3} offset={1}>
-                        <a href="#!" className="btn waves-effect waves-teal" onClick={() => this.props.changeView('listEvent')}>Back</a> 
-                </Col>
-                {
-                    this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks && this.props.state.data.event.playlist.tracks.data.length > 0?
+                <Row>
                     <Col span={3} offset={1}>
-                        <a href="#!" className="btn waves-effect waves-teal" onClick={this.openLiveEvent}>Open live Event</a> 
+                            <a href="#!" className="btn waves-effect waves-teal" onClick={() => this.props.changeView('listEvent')}>Back</a> 
                     </Col>
-                    :
-                    null
-                }
-                { 
-                    this.state.isAdmin || this.state.isCreator ? 
-                    <Col span={3} offset={1}>
-                            <a href="#!" className="btn waves-effect waves-teal" onClick={this.finishEvent}>Finish Event</a> 
-                    </Col>
-                    :
-                    null
-                }
-            </Row>
+                    { openLive }
+                    { 
+                        this.state.isCreator  && (this.props.state.data.event.is_start && !this.props.state.data.event.is_finish)? 
+                        <Col span={3} offset={1}>
+                                <a href="#!" className="btn waves-effect waves-teal" onClick={this.finishEvent}>Finish live</a> 
+                        </Col>
+                        :
+                        null
+                    }
+                </Row>
                 <CardHeader state={this.props.state} updateParent={this.props.updateParent} />
                 <Row>
                     <Col>
