@@ -59,10 +59,9 @@ export default class Player extends Component {
         console.log("play/pause");
     }
     nextTrack = () => {
-        console.log("NEXT TRACK")
         let index = this.state.currentTracksID + 1;
-        if (index > this.state.tracks.length)
-            return ;
+        if (index >= this.state.tracks.length)
+            return ;            
         this.setState({currentTracksID:index});
         this.props.updateParentState({currentTracksID:index});
         DZ.player.next();

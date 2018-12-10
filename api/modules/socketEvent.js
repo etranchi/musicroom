@@ -31,7 +31,6 @@ module.exports = function (io) {
             }
             socket.to(playlistId).emit('blockPlaylist')
         });
-
         socket.on('joinPlaylist', (playlistId) => {
             console.log("[Socket] -> joinPlaylist", playlistId)
             socket.join(playlistId);
@@ -45,41 +44,38 @@ module.exports = function (io) {
             else
                 console.log("No more room for " + playlistId)
         });
-
-
         /* Socket For LiveEvent */
-        /* Store array of track object, store like, unlike in */
-
         socket.on('getRoomPlaylist', (roomID) => {
             console.log("[Socket] -> getRoomPlaylist")
 
             let room = ftSocket.getRoom(roomID);
             if (room)
-            {
-                console.log("[Socket] -> getRoomPlaylist ", room.tracks.length)
                 io.sockets.in(room.id).emit('getRoomPlaylist', room.tracks)
-            }
             else
-            {
-                console.log("[Socket] -> getRoomPlaylist fail ")
                 return;
-            }
         });
 
         socket.on('createRoom', (roomID, tracks, event) => {
             console.log("[Socket] -> createRoom")
-
             let room = ftSocket.getRoom(roomID);
+
+
             if (!room) {
-                console.log("[Socket] ->  Room Created")
+                // console.log("[Socket] ->  createRoom : Room Created")
                 room = ftSocket.createRoom(roomID, tracks, event)
+                // console.log("Before : ", io.sockets.adapter.rooms[room.id], Object.keys(io.sockets.adapter.rooms).length)
                 socket.join(room.id);
                 io.sockets.in(room.id).emit('createRoom', room.tracks, "ok")
+                // console.log("After 1 : ", io.sockets.adapter.rooms[room.id], Object.keys(io.sockets.adapter.rooms).length)
+                console.log(socket.username)
             } else {
+                // console.log("[Socket] ->  createRoom : Room Joined")
+                // console.log("Before : ", io.sockets.adapter.rooms[room.id],Object.keys(io.sockets.adapter.rooms).length)
                 socket.join(room.id);
+                // console.log("After 2 : ", io.sockets.adapter.rooms[room.id], Object.keys(io.sockets.adapter.rooms).length)
+                console.log(socket.username)
             }
         });
-
         // socket.on('joinRoom', (roomID) => {
         //     console.log("[Socket] -> joinRoom", roomID)
 
@@ -90,6 +86,8 @@ module.exports = function (io) {
         //     } else sockets.emit('joinRoom', false)
         // });
         socket.on('closeRoom', (roomID) => {
+            console.log("[Socket] -> closeRoom")
+
             let room = ftSocket.getRoom(roomID)
             if (room) {
                 io.sockets.in(room.id).emit('closeRoom');
@@ -101,61 +99,47 @@ module.exports = function (io) {
             let room = ftSocket.getRoom(roomID)
             if (room) {
                 room.tracks = tracks
-                console.log(tracks[0], tracks[1])
-                // room = ftSocket.updateRoom(room)
                 io.sockets.in(room.id).emit('updateScore', room.tracks)
             } else
                 return io.sockets.in(room.id).emit('updateTracks', 'fail');
         });
         socket.on('updateTrack', (roomID, track) => {
+            console.log("[Socket] -> updateTrack")
+
             let room = ftSocket.getRoom(roomID)
             if (room) {
                 room.tracks.forEach(music => {
                     if (music._id === track._id)
-                    {
-                        console.log("track Updated")
                         music = track
-                    }
-                    
                 });
             }
         });
         socket.on('updateScore', (roomID, trackID, points, userID, userCoord) => {
             console.log("[Socket] -> updateScore")
-
             let room = ftSocket.getRoom(roomID)
 
             if (room) {
                 let isClose = ftSocket.checkDistance(room.data, userCoord)
-                console.log("IS CLOSE : ", room.data.public, isClose)
                 if (!room.data.public && room.data.distance_required && !isClose)
-                    return io.sockets.in(room.id).emit('updateScore', 'Vous n\'êtes pas asser proche');
+                    return io.sockets.in(room.id).emit('updateScore', 'Vous n\'êtes pas assé proche');
                 room = ftSocket.updateScore(room, trackID, points, userID)
                 room = ftSocket.updateRoom(room)
                 io.sockets.in(room.id).emit('updateScore', room.tracks)
             } 
-            else {
-                console.log("[Socket] -> updateScore fail")
+            else
                 return io.sockets.in(room.id).emit('updateScore', 'fail');
-            }
         });
-        /* Socket for update socket and send new value */
         socket.on('updateEvent', (roomID, newEvent) => {
+            console.log("[Socket] -> updateEvent")
             let room = ftSocket.getRoom(roomID)
 
-            if (newEvent._id && room)
-            {
+            if (newEvent._id && room) {
                 room.data = newEvent
                 room = ftSocket.updateRoom(room)
             }
-            console.log("[Socket] -> updateEvent")
-            console.log(io.sockets.adapter.rooms)
             ftSocket.saveNewEvent(newEvent);
-            console.log("Event Updated")
-            
             io.sockets.in(roomID).emit('updateEvent', newEvent);
         });
-
         socket.on('updatePlayer', (roomID, newEvent) => {
             console.log("[Socket] -> updatePlayer");
             io.sockets.in(roomID).emit('updatePlayer', newEvent);
