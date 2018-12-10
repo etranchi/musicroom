@@ -41,16 +41,18 @@ module.exports = {
         this.rooms.forEach((room) => {
             if (room.id === tmpRoom.id) {
                 room.tracks = this.sortTracksByScore(tmpRoom.tracks)
+                room.users  = tmpRoom.users;
                 ret = room;
             }
         })
         return ret
     },
-    createRoom: (roomID, tracks, event) => {
+    createRoom: (roomID, tracks, event, userID) => {
         let room = {
             id: roomID,
-            tracks: this.sortTracksByScore(tracks),
+            tracks: tracks,
             data: event,
+            users: [userID]
         };
         room.tracks.forEach((track) => {
             track.like = 0;
@@ -59,6 +61,33 @@ module.exports = {
         })
         this.rooms.push(room);
         return room
+    },
+    joinRoom: (roomID, userID) => {
+        if (this.rooms) {
+            let ret;
+            this.rooms.forEach((room) => {
+                 if (room.id === roomID) {
+                     ret = room
+                     return;
+                 }
+             });
+             if (ret.users && (ret.users.indexOf(userID) == -1)) {
+                ret.users.push(userID)
+                return true;
+             }
+         }
+         return false;
+    },
+    deleteRoom: (roomID, userID) => {
+        if (this.rooms && this.rooms.length > 0) {
+            let ret = -1 ;
+            for (let i = 0; i < this.rooms.length; i++) {
+                if (this.rooms[i].id === roomID)
+                    ret = i
+                    break;
+            }
+            ret == -1  ? null : delete this.rooms.splice(ret, 1);
+        }
     },
     getRoom: (roomID) => {
         if (this.rooms) {

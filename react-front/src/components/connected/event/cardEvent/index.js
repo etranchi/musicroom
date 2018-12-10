@@ -54,19 +54,15 @@ export default class cardEvent extends Component {
             console.log('socket : joinRoom receive message ->', msg)
         });
         socket.on('closeRoom', (msg) => {
-           leaveRoom(this.props.state.data.event._id)
            this.props.updateParent({currentComponent:'cardEvent'})
         });
         socket.on('leaveRoom', (msg) => {
             console.log('socket : leaveRoom receive message ->', msg)
         });
         let tracks = this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks ? this.props.state.data.event.playlist.tracks.data : [];
-        createRoom(this.props.state.data.event._id, tracks, this.props.state.data.event);
+        createRoom(this.props.state.data.event._id, tracks, this.props.state.data.event, this.props.state.user._id);
         this.checkRight();
         window.scrollTo(1000, 1000)
-    }
-    componentWillUnmount = () => {
-            leaveRoom(this.props.state.data.event._id)
     }
     updateMap = () => {
         let calc = geolib.getDistanceSimple(
@@ -88,34 +84,22 @@ export default class cardEvent extends Component {
         else
             return false;
     }
-    /*
-
-        startEvent :  Display si event pas Start
-                CreateRoom - Update State - Change view
-
-        joinEvent : Si event started
-                joinRoom - Change view
-
-        quitEvent: Si eventstarted
-                leaveRoom
-        
-        finishEvent: Si event started
-                closeEvent
-    */
    openLiveEvent = () => {
         const is_start = this.props.state.data.event.is_start
         const is_finish = this.props.state.data.event.is_finish
         const tracks = this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks ? this.props.state.data.event.playlist.tracks.data : [];
 
-        if ((!(is_start) || (is_start && is_finish)) && this.state.isCreator) {
-            console.log("OpenLiveEvent : 1")
-            updateTracks(this.props.state.data.event._id, tracks)
+        if (((!is_start) || (is_start && is_finish)) && this.state.isCreator)
+        {
+            console.log("Enter and update Tracks")
+            if (!is_start)
+                updateTracks(this.props.state.data.event._id, tracks)
+            this.props.state.data.event.is_start    = true;
+            this.props.state.data.event.is_finish   = false;
+            this.props.state.data.right             = this.state;
             updateEvent(this.props.state.data.event._id, this.props.state.data.event)
         }
-        this.props.state.data.event.is_start    = true;
-        this.props.state.data.event.is_finish   = false;
         this.props.state.data.right             = this.state;
-        updateEvent(this.props.state.data.event._id, this.props.state.data.event)
         this.props.updateParent({currentComponent:'liveEvent'})
     }
     finishEvent = () => {
@@ -123,6 +107,12 @@ export default class cardEvent extends Component {
         updateEvent(this.props.state.data.event._id, this.props.state.data.event)
         closeRoom(this.props.state.data.event._id)
         this.props.updateParent({data:this.props.state.data})
+        let tracks = this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks ? this.props.state.data.event.playlist.tracks.data : [];
+        createRoom(this.props.state.data.event._id, tracks, this.props.state.data.event, this.props.state.user._id);
+    }
+    quitpage = () => {
+        this.props.changeView('listEvent')
+        leaveRoom(this.props.state.data.event._id, this.props.state.user._id)
     }
 	render() {
         let openLive = '';
@@ -149,7 +139,7 @@ export default class cardEvent extends Component {
             <div>
                 <Row>
                     <Col span={3} offset={1}>
-                            <a href="#!" className="btn waves-effect waves-teal" onClick={() => this.props.changeView('listEvent')}>Back</a> 
+                            <a href="#!" className="btn waves-effect waves-teal" onClick={this.quitpage}>Back</a> 
                     </Col>
                     { openLive }
                     { 

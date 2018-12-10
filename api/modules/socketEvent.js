@@ -4,7 +4,6 @@ const ftSocket = require('./socket');
 
 module.exports = function (io) {
     let playlistBlocked = []
-
     io.on('connection', (socket) => {
 
         /* Socket For Playlist */
@@ -55,41 +54,44 @@ module.exports = function (io) {
                 return;
         });
 
-        socket.on('createRoom', (roomID, tracks, event) => {
+        socket.on('createRoom', (roomID, tracks, event, userID) => {
             console.log("[Socket] -> createRoom")
             let room = ftSocket.getRoom(roomID);
 
-
             if (!room) {
-                // console.log("[Socket] ->  createRoom : Room Created")
-                room = ftSocket.createRoom(roomID, tracks, event)
-                // console.log("Before : ", io.sockets.adapter.rooms[room.id], Object.keys(io.sockets.adapter.rooms).length)
+                console.log('room created')
+                room = ftSocket.createRoom(roomID, tracks, event, userID)
                 socket.join(room.id);
-                io.sockets.in(room.id).emit('createRoom', room.tracks, "ok")
-                // console.log("After 1 : ", io.sockets.adapter.rooms[room.id], Object.keys(io.sockets.adapter.rooms).length)
-                console.log(socket.username)
+                io.sockets.in(room.id).emit('createRoom', room.tracks, true)
+            } else if (ftSocket.joinRoom(roomID, userID)) {
+                console.log('room joined')
+                socket.join(room.id);
+                io.sockets.in(room.id).emit('createRoom', room.tracks, true)
             } else {
-                // console.log("[Socket] ->  createRoom : Room Joined")
-                // console.log("Before : ", io.sockets.adapter.rooms[room.id],Object.keys(io.sockets.adapter.rooms).length)
-                socket.join(room.id);
-                // console.log("After 2 : ", io.sockets.adapter.rooms[room.id], Object.keys(io.sockets.adapter.rooms).length)
-                console.log(socket.username)
+                console.log('room user exist')
+                io.sockets.in(room.id).emit('createRoom', room.tracks, false)
             }
         });
-        // socket.on('joinRoom', (roomID) => {
-        //     console.log("[Socket] -> joinRoom", roomID)
+        socket.on('leaveRoom', (roomID, userID) => {
+            console.log("[Socket] -> leaveRoom")
+            let room = ftSocket.getRoom(roomID);
+            let index = 0;
 
-        //     let room = ftSocket.getRoom(roomID)
-        //     if (room) {
-        //         socket.join(room.id);
-        //         io.sockets.in(room.id).emit('joinRoom', true)
-        //     } else sockets.emit('joinRoom', false)
-        // });
+            if (room) {
+                console.log(room.users, userID)
+                if ((index = room.users.indexOf(userID)) != -1) {
+                room.users.splice(index, 1)
+                room = ftSocket.updateRoom(room)
+            }
+                socket.leave(roomID);
+            }
+        });
         socket.on('closeRoom', (roomID) => {
             console.log("[Socket] -> closeRoom")
 
             let room = ftSocket.getRoom(roomID)
             if (room) {
+                ftSocket.deleteRoom(roomID);
                 io.sockets.in(room.id).emit('closeRoom');
             }
         });
@@ -144,5 +146,8 @@ module.exports = function (io) {
             console.log("[Socket] -> updatePlayer");
             io.sockets.in(roomID).emit('updatePlayer', newEvent);
         })
+    });
+    io.on('disconnect', (socket) => {
+        console.log("IN SOCKET DISCONNECT", socket)
     });
 };

@@ -4,7 +4,7 @@ import Track from '../../../templates/track'
 import { Col, Row, message} from 'antd'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Player from '../../../other/player'
-import {socket, getRoomPlaylist, updateScore, updateTracks, updateTrack, blockSocketEvent} from '../../../other/sockets';;
+import {socket, getRoomPlaylist, updateScore, updateTracks, updateTrack, blockSocketEvent} from '../../../other/sockets';
 
 const reorder = (list, startIndex, endIndex) => {
 	const result = Array.from(list);
@@ -100,7 +100,8 @@ export default class LiveEvent extends Component {
 		const items = reorder( this.state.playlist.tracks.data, result.source.index, result.destination.index );
         state.playlist.tracks.data = items;
         updateTracks(this.roomID, items);
-	}
+    }
+
     render() {
         return (
             <div>

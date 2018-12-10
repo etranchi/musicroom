@@ -24,8 +24,8 @@ function createEventLive (tracks) {
     socket.emit("createEventLive", tracks)
 }
 
-function createRoom (roomID, tracks, event) {
-    socket.emit("createRoom", roomID, tracks, event)
+function createRoom (roomID, tracks, event, userID) {
+    socket.emit("createRoom", roomID, tracks, event, userID)
 }
 function joinRoom (roomID) {
     socket.emit("joinRoom", roomID)
@@ -33,7 +33,6 @@ function joinRoom (roomID) {
 function getRoomPlaylist (roomID) {
     socket.emit("getRoomPlaylist", roomID)
 }
-
 function updateEvent (roomID, newEvent) {
     socket.emit("updateEvent", roomID, newEvent)
 }
@@ -46,22 +45,17 @@ function updateTrack (roomID, track) {
 function updateScore (roomID, tracksID, pointsD, userID, userCoord) {
     socket.emit("updateScore", roomID, tracksID, pointsD, userID, userCoord)
 }
-
 function updatePlayer (roomID, event) {
     console.log("trying to update player with params [roomId -> " + roomID + ", event -> " + event + "]");
     socket.emit("updatePlayer", roomID, event)
 }
-
-function leaveRoom (roomID) {
-    socket.emit("leaveRoom", roomID)
+function leaveRoom (roomID, userID) {
+    socket.emit("leaveRoom", roomID, userID)
 }
-
 function closeRoom (roomID) {
     socket.emit("closeRoom", roomID)
 }
-
 /* TEST socket */
-
 function testJoinRoom (roomID, userName) {
     socket.emit("testJoinRoom", roomID, userName)
 }
