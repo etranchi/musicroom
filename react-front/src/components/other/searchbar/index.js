@@ -98,9 +98,13 @@ class SearchBar extends Component {
 
 		let listUserValid = [];
 
-		this.setState({'glbUserList': this.removeMember(this.state.glbUserList, [this.props.state.data.event.creator])})
-		this.setState({'glbUserList': this.removeMember(this.state.glbUserList, this.props.state.data.event.members)})
-		this.setState({'glbUserList': this.removeMember(this.state.glbUserList, this.props.state.data.event.adminMembers)})
+		if (this.props.state.data.event)
+		{
+			this.setState({'glbUserList': this.removeMember(this.state.glbUserList, [this.props.state.data.event.creator])})
+			this.setState({'glbUserList': this.removeMember(this.state.glbUserList, this.props.state.data.event.members)})
+			this.setState({'glbUserList': this.removeMember(this.state.glbUserList, this.props.state.data.event.adminMembers)})
+		}
+		
 
 		if (this.state.value.length < this.state.position)
 			this.setState({position:0})
@@ -121,9 +125,9 @@ class SearchBar extends Component {
 	}
 
 	updateEventMember = (item) => {
-		
 		this.props.updateEventMember(item, this.props.type);
 	}
+
 
 	addTrack = (item) => {
 		console.log(item);
