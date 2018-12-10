@@ -267,11 +267,12 @@ class Tracks extends Component {
 										ref={provided.innerRef}
 										{...provided.draggableProps}
 										{...provided.dragHandleProps}>
-									{<Icon 
+									{this.isOurPlaylist() ? 
+									<Icon 
 										type="close" 
 										style={{'float':'right', 'color':'red','cursor':'pointer'}} 
 										onClick={() => this.deleteTrack(index)}>
-									</Icon>}
+									</Icon> : null}
 									<span>
 										<img 
 											src={item.album ? item.album.cover_small || defaultTrackImg : defaultTrackImg} 

@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import axios from 'axios'
-import { Input, Button, Col, Row, List, Icon, Card, Avatar, message } from 'antd'
+import { Input, Button, Col, Row, List, Icon, Card, Avatar, message, Checkbox, Divider } from 'antd'
 import SearchBar from '../../../other/searchbar'
 
 class EditPlaylist extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			playlist: {title:'', members:[], tracks:{data:[]}},
+			playlist: {title:'', members:[],public:true, tracks:{data:[]}},
 			isloading: false
 		}
 	}
@@ -19,13 +19,14 @@ class EditPlaylist extends Component {
 		this.setState({isloading: true});
 		axios.get(process.env.REACT_APP_API_URL + '/playlist/' + this.props.state.id, {'headers':{'Authorization': 'Bearer ' + localStorage.getItem('token')}})
 		.then((resp) => {
+			console.log(resp.data)
 			if (callback)
 				callback(resp)
 			else
 				this.setState({playlist:resp.data, isloading:false})
 		})
 		.catch((err) => {
-			this.setState({playlist:{title:'', members:[], tracks:{data:[]}}, isloading:false})
+			this.setState({playlist:{title:'', members:[],public:true, tracks:{data:[]}}, isloading:false})
 			console.log(err);
 		})
 	}
@@ -103,6 +104,12 @@ class EditPlaylist extends Component {
 		})
 	}
 
+	setPublic = () => {
+		let state = this.state;
+		state.playlist.public = !state.playlist.public
+		this.setState(state);
+	}
+
 	render() {
 		if( this.state.isloading === true ) {
 			return (
@@ -135,6 +142,14 @@ class EditPlaylist extends Component {
 							style={{'backgroundColor': 'red'}} 
 							onClick={this.delete}>Delete
 						</a>
+					</Col>
+				</Row>
+				<Row>
+					<Col span={2} offset={10}>
+						<div style={{'margin': '0 0 0 12% '}}>
+							<Checkbox name="public" checked={this.state.playlist.public} onChange={() => {this.setPublic()}}>Public</Checkbox>
+						</div>
+						<Divider />
 					</Col>
 				</Row>
 				<Row style={{height:'80px'}}>

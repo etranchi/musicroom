@@ -272,14 +272,7 @@ export default class CreateEvent extends Component {
                     </Row>
                     <Row>
                         <Col span={13} offset={6}>
-                        {
-                            this.state.playlist && this.state.playlist.id ? 
-                                <iframe title="deezerplayer" scrolling="no" frameBorder="0" allowtransparency="true" src={"https://www.deezer.com/plugins/player?format=classic&autoplay=false&playlist=true&width=700&height=350&color=007FEB&layout=dark&size=medium&type=playlist&id="
-                                    + this.state.playlist.id
-                                    + "&app_id=1"} width="700" height="350"></iframe> 
-                                : 
-                                null
-                        }
+                        {this.state.playlist && this.state.playlist.title}
                         <Divider />
                         </Col>
                     </Row>
