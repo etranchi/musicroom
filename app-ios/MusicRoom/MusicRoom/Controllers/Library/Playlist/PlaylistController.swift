@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PlaylistController: UIViewController {
+/*class PlaylistController: UIViewController {
     
     var playlistCollectionView: PlaylistCollectionView?
     var firstLoad = true
@@ -48,17 +48,22 @@ class PlaylistController: UIViewController {
         view.backgroundColor = UIColor(white: 0.1, alpha: 1)
         print(userManager.currentUser!.token!)
         setupView()
+        playlistCollectionView?.alwaysBounceVertical = true
     }
     
     
     func reloadPlaylists() {
-        apiManager.getUserPlaylists { (playlists) in
-            self.playlistCollectionView?.playlists = playlists
-            self.playlistCollectionView?.reloadData()
+        apiManager.getPlaylists { (playlists) in
             if self.firstLoad {
                 self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "edit", style: .done, target: self, action: #selector(self.handleEdit))
                 self.firstLoad = false
             }
+            guard let myPlaylists = playlists.myPlaylists else { return }
+//            myPlaylists.forEach({ (play) in
+//                print(play.public)
+//            })
+            self.playlistCollectionView?.myPlaylists = myPlaylists
+            self.playlistCollectionView?.reloadData()
         }
     }
     
@@ -75,7 +80,7 @@ class PlaylistController: UIViewController {
     
     func setupView() {
         cancelButton.addTarget(self, action: #selector(handleCancel), for: .touchUpInside)
-        playlistCollectionView = PlaylistCollectionView([], .vertical, self)
+        playlistCollectionView = PlaylistCollectionView([], .horizontal, self)
         playlistCollectionView?.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(playlistCollectionView!)
         view.addSubview(cancelButton)
@@ -96,4 +101,4 @@ class PlaylistController: UIViewController {
             playlistCollectionView?.isAddingSong = true
         }
     }
-}
+}*/

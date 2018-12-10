@@ -112,9 +112,10 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
         view.backgroundColor = UIColor(white: 0.1, alpha: 1)
         setupView()
-        apiManager.getUserPlaylists(completion: { (res) in
+        apiManager.getPlaylists(completion: { (res) in
             self.playlistView?.eventCreation = true
-            self.playlistView!.playlists = res
+            guard let myPlaylists = res.myPlaylists else { return }
+            self.playlistView!.myPlaylists = myPlaylists
             self.playlistView!.reloadData()
         })
         // Do any additional setup after loading the view.

@@ -14,6 +14,7 @@ struct Creator: Codable {
 }
 
 struct Playlist: Codable {
+    var `public`: Bool?
     var creator: Creator?
     var tracks: PlaylistTrackData?
     var title: String
@@ -22,33 +23,19 @@ struct Playlist: Codable {
     var id: Int?
 }
 
+
 struct SPlaylist : Codable {
-    var id : Int
+    var id : Int?
     var title : String
+    var _id : String?
 }
 
 struct SearchPlaylist : Codable{
     let data : [SPlaylist]
 }
 
-struct PlaylistToPut: Codable {
-    var creator: Creator?
-    var tracks: [Track]?
-    var title: String
-    var picture_medium: String?
-    var _id : String?
-    var id: Int?
-    
-    enum CodingKeys: String, CodingKey {
-        case creator
-        case tracks
-        case title
-        case picture_medium
-        case _id
-        case id
-    }
-    
-    enum ProductKeys: String, CodingKey {
-        case PlaylistToPut
-    }
+struct DataPlaylist: Codable {
+    var myPlaylists: [Playlist]?
+    var friendPlaylists: [Playlist]?
+    var allPlaylists: [Playlist]?
 }

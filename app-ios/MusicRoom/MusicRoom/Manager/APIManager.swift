@@ -79,8 +79,11 @@ class APIManager: NSObject, URLSessionDelegate {
         let playlistsUrl = self.url + "search/playlist?q=\(w)"
         var playlistsRequest = URLRequest(url: URL(string: playlistsUrl)!)
         playlistsRequest.httpMethod = "GET"
-        self.searchAll(SearchPlaylist.self, request: playlistsRequest, completion: { (res) in
-            completion(res.data)
+        playlistsRequest.setValue("Bearer " + userManager.currentUser!.token!, forHTTPHeaderField: "Authorization")
+        print("plouf")
+        self.searchAll([SPlaylist].self, request: playlistsRequest, completion: { (res) in
+            print("plaaf")
+            completion(res)
         })
     }
     
@@ -90,6 +93,8 @@ class APIManager: NSObject, URLSessionDelegate {
         let albumsUrl = self.url + "search/album?q=\(w)"
         var albumsRequest = URLRequest(url: URL(string: albumsUrl)!)
         albumsRequest.httpMethod = "GET"
+        albumsRequest.setValue("Bearer " + userManager.currentUser!.token!, forHTTPHeaderField: "Authorization")
+        albumsRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         self.searchAll(AlbumData.self, request: albumsRequest, completion: { (albumData) in
             completion(albumData.data)
         })
@@ -101,11 +106,42 @@ class APIManager: NSObject, URLSessionDelegate {
         let tracksUrl = self.url + "search/track?q=\(w)"
         var tracksRequest = URLRequest(url: URL(string: tracksUrl)!)
         tracksRequest.httpMethod = "GET"
+        tracksRequest.setValue("Bearer " + userManager.currentUser!.token!, forHTTPHeaderField: "Authorization")
+        tracksRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         self.searchAll(TrackData.self, request: tracksRequest, completion: { (trackData) in
             completion(trackData.data)
         })
     }
 
+    
+    func updateUser(_ data : Data?, completion : @escaping (([String:Any]?) -> ())) {
+        let url = self.url + "user/me"
+        var req = URLRequest(url: URL(string: url)!)
+        req.httpMethod = "PUT"
+        req.setValue("Bearer " + userManager.currentUser!.token!, forHTTPHeaderField: "Authorization")
+        req.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        req.httpBody = data
+        URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: req){ (data, res, err) in
+            if err != nil {
+                makeAlert("No response from the server, try again..")
+            }
+            print(res)
+            do {
+                let responseJSON = try JSONSerialization.jsonObject(with: data!, options: [])
+                if let responseJSON = responseJSON as? [String: Any] {
+                    if let error = responseJSON["error"] as? String {
+                        makeAlert(error)
+                        completion(nil)
+                    }
+                    completion(responseJSON)
+                }
+            }
+            catch {
+                makeAlert("Error")
+            }
+        }.resume()
+    }
+    
     func giveDeezerToken(_ user : MyUser) {
         let url = self.url + "user/login/deezer?deezerToken=\(user.deezer_token!)"
         var req = URLRequest(url : URL(string : url)!)
@@ -187,17 +223,19 @@ class APIManager: NSObject, URLSessionDelegate {
         let artistsUrl = self.url + "search/artist?q=\(w)"
         var artistsRequest = URLRequest(url: URL(string: artistsUrl)!)
         artistsRequest.httpMethod = "GET"
+        artistsRequest.setValue("Bearer " + userManager.currentUser!.token!, forHTTPHeaderField: "Authorization")
+        artistsRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         self.searchAll(ArtistData.self, request: artistsRequest, completion: { (artistData) in
             completion(artistData.data)
         })
     }
     
-    func getUserPlaylists(completion: @escaping ([Playlist]) -> ()) {
+    func getPlaylists(completion: @escaping (DataPlaylist) -> ()) {
         let playlistsUrl = self.url + "playlist"
         var playlistsRequest = URLRequest(url: URL(string: playlistsUrl)!)
         playlistsRequest.httpMethod = "GET"
         playlistsRequest.addValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
-        self.searchAll([Playlist].self, request: playlistsRequest, completion: { (playlists) in
+        self.searchAll(DataPlaylist.self, request: playlistsRequest, completion: { (playlists) in
             completion(playlists)
         })
     }
@@ -212,7 +250,7 @@ class APIManager: NSObject, URLSessionDelegate {
         })
     }
     
-    func createPlaylist(_ string: String, _ target: PlaylistController?) {
+    func createPlaylist(_ string: String, _ target: PlaylistsController?) {
         let playlistsUrl = self.url + "playlist"
         var createPlaylistRequest = URLRequest(url: URL(string: playlistsUrl)!)
         createPlaylistRequest.httpMethod = "POST"
@@ -244,7 +282,7 @@ class APIManager: NSObject, URLSessionDelegate {
         }
     }
     
-    func deletePlaylist(_ id: String, _ target: PlaylistController?) {
+    func deletePlaylist(_ id: String, _ target: PlaylistsController?) {
         let playlistsUrl = self.url + "playlist/\(id)"
         var createPlaylistRequest = URLRequest(url: URL(string: playlistsUrl)!)
         createPlaylistRequest.httpMethod = "DELETE"
@@ -426,11 +464,13 @@ class APIManager: NSObject, URLSessionDelegate {
         }
     }
     
-    func getAllUsers(_ token : String, completion : @escaping (([User]) -> ())) {
-        let allUserUrl = self.url + "user"
+    func getAllUsers(_ search : String, completion : @escaping (([User]) -> ())) {
+        let w = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+        let allUserUrl = self.url + "user?criteria=\(w)"
+        print(allUserUrl)
         var request = URLRequest(url: URL(string: allUserUrl)!)
         request.httpMethod = "GET"
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
         searchAll([User].self, request: request) { (me) in
             completion(me)
         }
@@ -504,9 +544,8 @@ class APIManager: NSObject, URLSessionDelegate {
             if let d = data {
                 do {
                     let dic = try JSONDecoder().decode(myType.self, from: d)
-                    DispatchQueue.main.async {
-                        completion(dic)
-                    }
+                    completion(dic)
+
                 } catch {
                     do {
                         let responseJSON = try JSONSerialization.jsonObject(with: data!, options: [])
@@ -514,8 +553,9 @@ class APIManager: NSObject, URLSessionDelegate {
                             if let error = responseJSON["error"] as? String {
                                 makeAlert(error)
                             }
-                            
+                            print(responseJSON)
                         }
+                        
                     }
                     catch {
                         makeAlert("Can't connect to the server")
