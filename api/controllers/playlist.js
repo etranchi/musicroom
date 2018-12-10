@@ -94,7 +94,7 @@ let self = module.exports = {
 				}
 				playlist = {}
 			}
-			res.status(200).json(playlist || {});
+			res.status(200).json(playlist);
 		} catch (err) {
 			console.log("Bad Request getPlaylistUserById" + err)
 			next(new customError(err.message, 400))
