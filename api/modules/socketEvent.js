@@ -76,24 +76,24 @@ module.exports = function (io) {
                 socket.join(room.id);
                 io.sockets.in(room.id).emit('createRoom', room.tracks, "ok")
             } else {
-                console.log("[Socket] ->  Room Exist")
-                socket.emit('createRoom', room.tracks, "err")
+                socket.join(room.id);
             }
         });
 
-        socket.on('joinRoom', (roomID) => {
-            console.log("[Socket] -> joinRoom", roomID)
+        // socket.on('joinRoom', (roomID) => {
+        //     console.log("[Socket] -> joinRoom", roomID)
 
+        //     let room = ftSocket.getRoom(roomID)
+        //     if (room) {
+        //         socket.join(room.id);
+        //         io.sockets.in(room.id).emit('joinRoom', true)
+        //     } else sockets.emit('joinRoom', false)
+        // });
+        socket.on('closeRoom', (roomID) => {
             let room = ftSocket.getRoom(roomID)
             if (room) {
-                socket.join(room.id);
-                io.sockets.in(room.id).emit('joinRoom', true)
-            } else sockets.emit('joinRoom', false)
-        });
-        socket.on('leaveRoom', (roomID) => {
-            console.log("Leaving Room")
-            io.sockets.in(roomID).emit('leaveRoom', 'someone leave room')
-            socket.leave(roomID)
+                io.sockets.in(room.id).emit('closeRoom');
+            }
         });
         socket.on('updateTracks', (roomID, tracks) => {
             console.log("[Socket] -> updateTracks")
@@ -152,6 +152,7 @@ module.exports = function (io) {
             console.log(io.sockets.adapter.rooms)
             ftSocket.saveNewEvent(newEvent);
             console.log("Event Updated")
+            
             io.sockets.in(roomID).emit('updateEvent', newEvent);
         });
 
