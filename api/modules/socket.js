@@ -1,7 +1,7 @@
 'use strict';
 
 const playlistModel = require('../models/playlist');
-const eventModel = require('../models/event');
+const eventModel    = require('../models/event');
 
 this.rooms = [];
 
@@ -74,20 +74,13 @@ module.exports = {
         return null;
     },
     saveNewEvent: async (newEvent) => {
-
         if (newEvent._id)
-        {
             return await eventModel.updateOne({_id: newEvent._id}, newEvent, {new: true})
-        }
-
     },
     checkDistance: (event, userCoord) => {
-
-        console.log("ICI : ", event.location.coord, userCoord, event.distance_max)
         this.toRad = value => {
             return value * Math.PI / 180;
         }
-
         this.getDistance = (coordA, coordB) => {
             let R     = 6371; // km
             let dLat  = this.toRad(coordB.lat - coordA.lat);
@@ -101,9 +94,7 @@ module.exports = {
             let d = R * c;
             return d.toFixed(0);
         }
-
         let distance = this.getDistance(event.location.coord, userCoord);
-        console.log("DISTANCE : ", distance)
         return distance < event.distance_max;
         
     }
