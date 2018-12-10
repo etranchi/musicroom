@@ -21,7 +21,6 @@ class PlaylistsController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(white: 0.1, alpha: 1)
-        navigationController?.navigationBar.topItem?.title = "Playlists"
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
         tableView.register(ListPlaylistCell.self, forCellReuseIdentifier: playlistCellId)
@@ -29,13 +28,24 @@ class PlaylistsController: UITableViewController {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: defaultCellId)
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        title = ""
+        navigationController?.navigationBar.topItem?.title = ""
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        title = "Playlists"
+        navigationController?.navigationBar.topItem?.title = ""
         playlists?.myPlaylists?.removeAll()
         playlists?.friendPlaylists?.removeAll()
         tableView.reloadData()
         reloadPlaylists()
     }
+    
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var count = 2

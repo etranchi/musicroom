@@ -257,7 +257,7 @@ class APIManager: NSObject, URLSessionDelegate {
         }.resume()
     }
     
-    func updatePlaylist(_ playlist: Playlist) {
+    func updatePlaylist(_ playlist: Playlist, completion : @escaping((String) -> ())) {
         guard let pId = playlist._id else { return }
         let playlistURL = self.url + "playlist/\(pId)"
         do {
@@ -272,6 +272,7 @@ class APIManager: NSObject, URLSessionDelegate {
             request(req)
             URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: req) { (data, response, err) in
                 SocketIOManager.sharedInstance.socket.emit("updatePlaylist", pId)
+                completion("ok")
             }.resume()
         } catch {
             makeAlert("Error")

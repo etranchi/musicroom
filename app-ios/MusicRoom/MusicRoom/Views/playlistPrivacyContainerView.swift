@@ -118,12 +118,15 @@ class playlistPrivacyContainerView: UIView {
     }
     
     @objc func valueChanged(_ sender: UISwitch) {
-        playlist?.public = sender.isOn
-        print(sender.isOn)
+        if var p = playlist {
+            p.public = sender.isOn
+            apiManager.updatePlaylist(p, completion: { (done) in })
+        }
+        
     }
     
     @objc func handleAddFriend() {
-        print("go to friend page")
+        rootView?.playlistDetailController?.displayFriendsList()
     }
     
     

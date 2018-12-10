@@ -247,7 +247,7 @@ class AuthenticationController: UIViewController {
             loginView!.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             loginView!.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             loginView!.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            ])
+        ])
         initialTransform()
     }
     
