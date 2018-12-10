@@ -49,7 +49,9 @@ module.exports = function (io) {
 
             let room = ftSocket.getRoom(roomID);
             if (room)
+            {
                 io.sockets.in(room.id).emit('getRoomPlaylist', room.tracks)
+            }
             else
                 return;
         });
@@ -69,6 +71,7 @@ module.exports = function (io) {
                 io.sockets.in(room.id).emit('createRoom', room.tracks, true)
             } else {
                 console.log('room user exist')
+                socket.join(room.id);
                 io.sockets.in(room.id).emit('createRoom', room.tracks, false)
             }
         });
@@ -101,7 +104,7 @@ module.exports = function (io) {
             let room = ftSocket.getRoom(roomID)
             if (room) {
                 room.tracks = tracks
-                io.sockets.in(room.id).emit('updateScore', room.tracks)
+                io.sockets.in(room.id).emit('updateTracks', room.tracks)
             } else
                 return io.sockets.in(room.id).emit('updateTracks', 'fail');
         });

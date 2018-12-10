@@ -31,7 +31,8 @@ export default class LiveEvent extends Component {
         };
         this.roomID = this.props.roomID;
     }
-    componentDidMount = () => {
+    componentWillMount = () => {
+        console.log("LIVE EVENT COMPONENTDIDMOUNT")
         socket.on('getRoomPlaylist', (tracks) => {
             console.log("socket : receive data from getRoomPlaylist : ", tracks);
             this.savePlaylist(tracks);
@@ -54,18 +55,19 @@ export default class LiveEvent extends Component {
         else  {
             this.setState({ isAdmin:this.isUser(this.props.state.data.event.adminMembers) });
         }
-    }
-    componentWillMount = () => {
         this.setState({
             initLoading : false,
             playlist    : this.props.playlist
         }, () => {
+            console.log(" 1 LIVE EVENT : ", this.state.playlist, this.props.roomID)
             getRoomPlaylist(this.props.roomID);
+            console.log("CALL END ")
         });
     }
     savePlaylist = tracks => {
         let playlist            = this.state.playlist;
         playlist.tracks.data    = tracks;
+        console.log(" 2 LIVE EVENT : ", tracks)
         this.setState({playlist:playlist});
     }
     isUser = tab => 
