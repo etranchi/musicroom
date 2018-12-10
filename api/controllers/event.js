@@ -76,10 +76,9 @@ module.exports = {
 				throw new Error('No Location')
 			if (req.file && req.file.filename)
 				req.body.picture = req.file.filename
-			if (req.body.playlist && !req.body.playlist._id)
-				req.body.playlist = await playlistController.getPlaylistDeezerById(req.body.playlist.id, req.user.deezerToken)
-			else if (req.body.playlist && req.body.playlist._id) {
-				req.body.playlist = await modelPlaylist.findOne({_id: req.body.playlist._id})
+			if (req.body.playlist) {
+				if (!req.body.playlist._id)
+					req.body.playlist = await playlistController.getPlaylistDeezerById(req.body.playlist.id, req.user.deezerToken)
 				delete req.body.playlist._id
 				req.body.playlist.members = []
 			}
