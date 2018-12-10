@@ -25,7 +25,7 @@ var userManager = UserManager()
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
     var window: UIWindow?
-    var orientationLock = UIInterfaceOrientationMask.all
+    var orientationLock = UIInterfaceOrientationMask.portrait
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
         
@@ -44,17 +44,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         window = UIWindow()
         window?.makeKeyAndVisible()
+        UNUserNotificationCenter.current().delegate = self
+        registerForPushNotifications()
+        deezerManager.startDeezer()
+        SocketIOManager.sharedInstance.socketConnect()
         let user = userManager.getAllUsers()
         if user.count == 0 {
             let nav = CustomNavigationController(rootViewController: AuthenticationController())
             window?.rootViewController = nav
         }
         else {
-            UNUserNotificationCenter.current().delegate = self
-            registerForPushNotifications()
-            
-            deezerManager.startDeezer()
-            SocketIOManager.sharedInstance.socketConnect()
             userManager.currentUser = user[0]
             let nav = TabBarController()
             window?.rootViewController = nav
