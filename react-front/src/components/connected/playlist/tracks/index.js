@@ -57,7 +57,7 @@ class Tracks extends Component {
 		});
 
 		this.getPlaylist((res) => {
-			res.data._id && joinPlaylist(res.data.id)
+			res.data._id && joinPlaylist(res.data._id)
 			this.setState({
 			  initLoading: false,
 			  playlist: res.data,
