@@ -9,6 +9,7 @@ const config = require('../config/config.json');
 const argon = require('argon2');
 const mail = require('../modules/mail');
 const event = require('./event');
+const playlist = require('./playlist');
 
 exports.connect = (req, res) => {
 		return res.status(200).json({
@@ -48,9 +49,11 @@ exports.deleteDeezerToken = async (req, res, next) => {
 exports.getUsers = async (req, res, next) => {
 	try {
 		console.info("getUser: getting all users ...");
-		let users = await model.find({_id: {$ne: req.user._id}})
-		users.map((user) => {
-			return Utils.filter(model.schema.obj, user, 0)
+		let criteria = new RegExp(req.query.criteria || "", 'i')
+		let users = await model.find({_id: {$ne: req.user._id}, login: {$regex: criteria}})
+		users = users.map((user) => {
+			const {login, _id, picture, ...other} = user
+			return {login, _id, picture}
 		})
 		res.status(200).send(users);
 	} catch (err) {
@@ -118,6 +121,7 @@ exports.getUserById = async (req, res, next) => {
 exports.deleteUserById = async (req, res, next) => {
 	try {
 		console.info("deleteUserById : delete _id -> %s", req.user._id);
+		await playlist.deletePlaylistsUser(req.user._id)
 		await event.deleteEventsUser(req.user._id)
 		await model.deleteOne({"_id": req.user._id})
 		res.status(204).send();

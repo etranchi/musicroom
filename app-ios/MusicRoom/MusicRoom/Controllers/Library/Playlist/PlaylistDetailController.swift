@@ -142,6 +142,7 @@ class PlaylistDetailController: UITableViewController {
     fileprivate func setupHeader() {
         headerView = AlbumHeaderView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: headerHeight), albumCover: playlistCover, title: playlist.title)
         headerView.isUserInteractionEnabled = true
+        headerView.playlistDetailController = self
         headerView.playlist = playlist
         headerView.isEditable = isEditable
         tableView.register(AlbumTrackListCell.self, forCellReuseIdentifier: songCellId)

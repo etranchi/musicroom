@@ -88,6 +88,7 @@ export default class Event extends Component {
 				{
 					this.state.currentSubView 			=== 'listEvent' 		&& <List 
 																						state={this.props.state}
+																						changeView={this.changeView}
 																						updateParent={this.props.updateParent}
 																						openCardEvent={this.openCardEvent}
 																					/>
@@ -95,6 +96,7 @@ export default class Event extends Component {
 				{
 					this.state.currentSubView 			=== 'listcloseEvent' 	&& <ListCloseEvent 
 																						state={this.props.state} 
+																						changeView={this.changeView}
 																						updateParent={this.props.updateParent} 
 																						openCardEvent={this.openCardEvent}
 																					/>

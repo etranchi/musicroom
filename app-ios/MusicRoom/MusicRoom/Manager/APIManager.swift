@@ -65,7 +65,7 @@ class APIManager: NSObject, URLSessionDelegate {
         let tracksUrl = self.url + "album/\(album.id)"
         var request = URLRequest(url: URL(string: tracksUrl)!)
         request.httpMethod = "GET"
-        
+        request.setValue("Bearer " + userManager.currentUser!.token!, forHTTPHeaderField: "Authorization")
         searchAll(Album.self, request: request) { (tracksData) in
             var album = album
             album = tracksData
@@ -125,7 +125,6 @@ class APIManager: NSObject, URLSessionDelegate {
             if err != nil {
                 makeAlert("No response from the server, try again..")
             }
-            print(res)
             do {
                 let responseJSON = try JSONSerialization.jsonObject(with: data!, options: [])
                 if let responseJSON = responseJSON as? [String: Any] {
@@ -282,13 +281,13 @@ class APIManager: NSObject, URLSessionDelegate {
         }
     }
     
-    func deletePlaylist(_ id: String, _ target: PlaylistsController?) {
+    func deletePlaylist(_ id: String, _ target: PlaylistDetailController?) {
         let playlistsUrl = self.url + "playlist/\(id)"
         var createPlaylistRequest = URLRequest(url: URL(string: playlistsUrl)!)
         createPlaylistRequest.httpMethod = "DELETE"
         createPlaylistRequest.addValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
         URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: createPlaylistRequest) { (data, response, error) in
-            target?.reloadPlaylists()
+            target?.navigationController?.popViewController(animated: true)
         }.resume()
     }
     
@@ -364,7 +363,6 @@ class APIManager: NSObject, URLSessionDelegate {
                     if let error = responseJSON["error"] as? String {
                         makeAlert(error)
                     }
-                    
                 }
             }
             catch {
