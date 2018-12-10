@@ -9,10 +9,6 @@ let self = module.exports = {
 			let localPlaylists = await playlistModel.find().populate('members')
 
 			let retPlaylist = localPlaylists.reduce((acc, elem) => {
-				elem.members = elem.members.map((user) => {
-					const {password, ...other} = user
-					return other
-				})
 				if (elem.idUser.toString() === req.user._id.toString())
 					acc['myPlaylists'].push(elem)
 				else if (elem.members.filter((e) => e._id.toString() === req.user._id.toString()).length > 0)
