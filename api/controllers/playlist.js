@@ -10,7 +10,6 @@ let self = module.exports = {
 
 			let retPlaylist = localPlaylists.reduce((acc, elem) => {
 				elem.members = elem.members.map((user) => {
-					console.log(user)
 					const {password, ...other} = user
 					return other
 				})
