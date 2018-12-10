@@ -41,31 +41,26 @@ class SearchBar extends Component {
 	}
 
 	fetchListPlaylist = (value) => {
-		
-		if (value === '')
-			this.setState({'value': value, 'list': []})
-		else
-		{
-			this.setState({'value': value});
-			axios.get(process.env.REACT_APP_API_URL + '/search/playlist?q='+ value, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
-			.then((resp) => {
-				let myPlaylist = []
-				if (resp.data)
-				{
-					resp.data.forEach(playlist => {
-						if (!playlist.id)
-							playlist.id = playlist._id
-						myPlaylist.push(playlist)
-					});
-				}
-				this.setState({'list': myPlaylist});
-			})
-			.catch((err) => {
-				console.log('Playlist error');
-				console.log(err);
-			})
-		}
+		this.setState({value:value})
+		axios.get(process.env.REACT_APP_API_URL + '/search/playlist?all=on&q='+ value, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
+		.then((resp) => {
+			let myPlaylist = []
+			if (resp.data)
+			{
+				resp.data.forEach(playlist => {
+					if (!playlist.id)
+						playlist.id = playlist._id
+					myPlaylist.push(playlist)
+				});
+			}
+			this.setState({'list': myPlaylist});
+		})
+		.catch((err) => {
+			console.log('Playlist error');
+			console.log(err);
+		})
 	}
+
 	fetchListUser = (value) => {
 		console.log("fetch list user");
 		this.setState({value:value}, () => {
@@ -78,6 +73,7 @@ class SearchBar extends Component {
 				.catch((err) => { console.log('User List error : ', err); })
 		})
 	}
+
 	removeMember = (global, sub) => {
 
 		for (let i = 0; i < global.length; i++)

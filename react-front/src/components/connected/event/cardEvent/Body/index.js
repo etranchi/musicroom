@@ -18,12 +18,14 @@ export default class Body extends Component {
         };
         this.roomID =  this.props.state.data.event._id;
     }
+
     componentDidMount = () => {
         if (this.props.state.data.event.playlist 
             && (this.props.state.currentPlayerTracks.id === (this.props.state.data.event.playlist.id ||this.props.state.data.event.playlist._id)))
                 this.setState({isPlaying:true})
         this.setState({formatDate: this.formatDateAnnounce(this.props.state.data.event.event_date)})
     }
+
     updateLocation = val => {
         let location = {
                 address : {
@@ -41,6 +43,7 @@ export default class Body extends Component {
         this.props.state.data.event.location = location
         this.props.updateParent({'data':this.props.state.data})
     }
+
     handleChangeDateModal = (value, dateString) => {
         let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         let ret     = "Le : " + new Date(dateString).toLocaleDateString('fr-Fr', options) + ' à ' + dateString.split(" ")[1];
@@ -49,10 +52,12 @@ export default class Body extends Component {
         this.props.updateParent({'data':this.props.state.data});
         this.setState({formatDate:ret});
     }
+
     handleChangeModal = (e) => {
         this.props.state.data.event[e.target.name] = e.target.value;
         this.props.updateParent({'data': this.props.state.data});
     }
+
     updateEventMember = (value, type) => {
         if (value && type === 'member')
             this.props.state.data.event.members.push(value);
@@ -61,6 +66,7 @@ export default class Body extends Component {
         this.props.updateParent({'data': this.props.state.data});
         updateEvent(this.roomID, this.props.state.data.event);
     }
+
     updateEventPlaylist = playlist => {
         if (playlist) {
             axios.get(process.env.REACT_APP_API_URL + '/playlist/' + playlist.id, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
@@ -80,6 +86,7 @@ export default class Body extends Component {
             .catch((err) => { Error.display_error(err); })  
         }
     }
+
     removeMember = (type, item) => {
         let tab = [];
         if ((this.props.right &&  !this.props.right.isAdmin && !this.props.right.isCreator ) && item._id !== this.props.state.user._id)
@@ -103,17 +110,21 @@ export default class Body extends Component {
         this.props.updateParent({'data': this.props.state.data});
         updateEvent(this.roomID, this.props.state.data.event);
     }
+
     showModal = value => {
         if (this.props.right.isCreator || this.props.right.isAdmin)
             this.setState({[value]: true});
     }
+
     handleOk = value => {
         updateEvent(this.roomID, this.props.state.data.event);
         this.setState({[value]: false});
     }
+
     handleCancel = value => {
         this.setState({[value]: false});
     }
+
     formatDateAnnounce = date => {
         date                    = date.toString()
         let hours               = '';
@@ -154,6 +165,7 @@ export default class Body extends Component {
                 return ("Dans " + day + ' jours')
         }
     }
+
     playerLoadTracksFromEvent = () => {
         let currentPlayerTracks = {
             tracks: [],
@@ -170,10 +182,12 @@ export default class Body extends Component {
             window.scrollTo(2000, 2000)
         })
     }
+
     disabledDate = current => {
         // Can not select days before today and today
         return current && current <= moment().startOf('day');
     }
+
 	render() {
         return (
             <div>
@@ -233,9 +247,9 @@ export default class Body extends Component {
                     this.props.right.isAdmin || this.props.right.isCreator ? 
                         <Row style={{height:'70px'}}>
                             <Col span={1} offset={5}>
-                                <i 
+                                {this.props.state.data.event.playlist ? <i 
                                     onClick={ this.playerLoadTracksFromEvent.bind(this)} 
-                                    className={ this.state.isPlaying ? "fas fa-pause-circle playerAction" : "fas fa-play-circle playerAction"}></i>  
+                                    className={ this.state.isPlaying ? "fas fa-pause-circle playerAction" : "fas fa-play-circle playerAction"}></i> : null }
                             </Col>
                             <Col span={3} >
                                 <p  > Ajouter une playlist : </p>
