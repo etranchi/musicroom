@@ -84,6 +84,20 @@ class EditPlaylist extends Component {
 		
 	}
 
+	removeMember = (type, item) => {
+		let state = this.state
+		state.playlist.members.splice(item, 1);
+		axios.put(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id || this.state.playlist.id, 
+		state.playlist,
+		{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
+		.then(() => {
+			this.getPlaylist()
+		})
+		.catch(err => {
+			console.log(err);
+		})
+	}
+
 	render() {
 		console.log(this.state.playlist)
 		if( this.state.isloading === true ) {
