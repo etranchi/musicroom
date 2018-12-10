@@ -128,7 +128,7 @@ class playlistPrivacyContainerView: UIView {
     
     
     @objc func handleDeletePlaylist() {
-        let alert = UIAlertController(title: "Delete", message: "Are you sure you whant to delete \(playlist!.title)?\nthis action is irreversible.", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Delete", message: "Are you sure you whant to delete \"\(playlist!.title)\"?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { (action) in
             apiManager.deletePlaylist(self.playlist!._id!, self.rootView?.playlistDetailController)
         }))
