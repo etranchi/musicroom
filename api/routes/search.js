@@ -34,7 +34,7 @@ router.get('/track',
     searchController.searchTrack);
 
 /**
- * @route GET /search
+ * @route GET /search/album
  * @group search - Operations about search
  * @security - Bearer: []
  * @returns {object} 200 - albums
@@ -47,7 +47,7 @@ router.get('/album',
     searchController.searchAlbum);
 
 /**
- * @route GET /search
+ * @route GET /search/playlist
  * @group search - Operations about search
  * @security - Bearer: []
  * @returns {object} 200 - playlists
@@ -60,7 +60,7 @@ router.get('/playlist',
     searchController.searchPlaylist);
 
 /**
- * @route GET /search
+ * @route GET /search/artist
  * @group search - Operations about search
  * @security - Bearer: []
  * @returns {object} 200 - artists
