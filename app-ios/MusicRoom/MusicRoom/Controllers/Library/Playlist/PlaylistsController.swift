@@ -90,16 +90,18 @@ class PlaylistsController: UITableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: playlistCellId, for: indexPath) as! ListPlaylistCell
             cell.isEditable = true
             cell.rootTarget = self
+            cell.type = .mine
             cell.isAddingSong = isAddingSong
-            cell.title = playlists?.myPlaylists?.count != 0 ? "my playlists" : "friends playlists"
+            cell.title = playlists?.myPlaylists?.count != 0 ? "My Playlists" : "Friends Playlists"
             cell.playlist = playlists?.myPlaylists
             return cell
         } else if indexPath.row == 1 && globalCount == 4 {
             let cell = tableView.dequeueReusableCell(withIdentifier: playlistCellId, for: indexPath) as! ListPlaylistCell
             cell.isEditable = false
             cell.rootTarget = self
+            cell.type = .friends
             cell.isAddingSong = isAddingSong
-            cell.title = "friends playlists"
+            cell.title = "Friends Playlists"
             cell.playlist = playlists?.friendPlaylists
             return cell
         } else if indexPath.row == globalCount - 2 {

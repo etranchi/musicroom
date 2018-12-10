@@ -168,24 +168,29 @@ class PlaylistDetailController: UITableViewController {
         cell.selectionStyle = .none
         cell.rootController = self
         cell.indexPath = indexPath
-        
-        
-        cell.dotsLabel.isUserInteractionEnabled = !isEditable
-        cell.dotsLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(edit)))
-        if tableView.isEditing {
-            cell.dotsLabel.isHidden = true
-        } else if isUnlocked == false {
-            cell.dotsLabel.isHidden = true
-            cell.lockedIcon.isHidden = false
-        } else {
-            cell.dotsLabel.isHidden = false
-            cell.lockedIcon.isHidden = true
+        cell.isUserInteractionEnabled = true
+        cell.dotsLabel.isHidden = true
+        cell.dotsLabel.isUserInteractionEnabled = false
+        if iAmAdmin || type == .mine {
+            print("je suis admin")
+            cell.isUserInteractionEnabled = true
+            cell.dotsLabel.isUserInteractionEnabled = true
+            cell.dotsLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(edit)))
+            if tableView.isEditing {
+                cell.dotsLabel.isHidden = true
+            } else if isUnlocked == false {
+                cell.dotsLabel.isHidden = true
+                cell.lockedIcon.isHidden = false
+            } else {
+                cell.dotsLabel.isHidden = false
+                cell.lockedIcon.isHidden = true
+            }
         }
         return cell
     }
     
     func deleteTrackFromPlaylist(track: Track, index: IndexPath) {
-        if iAmAdmin || type != .mine {
+        if type != .mine {
             if playlist._id != nil {
                 apiManager.deleteTrackFromPlaylist(String(describing: playlist._id!), track, target: self)
                 tracks.remove(at: index.row)

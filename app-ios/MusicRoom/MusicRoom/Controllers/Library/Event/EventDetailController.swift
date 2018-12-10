@@ -67,7 +67,7 @@ class EventDetailController: UIViewController , UITextViewDelegate {
             self.saveButton.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
             self.saveButton.addTarget(self, action: #selector(self.updateEvent), for: .touchUpInside)
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: self.saveButton)
-            if (!self.iAmMember && !self.iAmAdmin) {
+            if (!self.iAmMember && !self.iAmAdmin && self.type != .mine) {
                 self.saveButton.isHidden = true
                 self.descriptionTextLabel.isEditable = false
             }
@@ -122,7 +122,7 @@ class EventDetailController: UIViewController , UITextViewDelegate {
 
 
     func addMembersAdmins(_ event: Event) {
-        if iAmAdmin || type == .others {
+        if iAmAdmin || type == .mine {
             currentEvent = event
             if root != nil {
                 root!.reloadEvent()

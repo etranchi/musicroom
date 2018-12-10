@@ -11,6 +11,7 @@ import UIKit
 class ListPlaylistCell: UITableViewCell {
     var rootTarget: PlaylistsController?
     var title : String?
+    var type : EventType?
     var isEditable : Bool = false
     var isAddingSong = false
     var playlist: [Playlist]? {
@@ -40,6 +41,7 @@ class ListPlaylistCell: UITableViewCell {
         let playlistCollectionView = PlaylistCollectionView(playlist!, .horizontal, rootTarget)
         playlistCollectionView.isEditable = isEditable
         playlistCollectionView.eventCreation = false
+        playlistCollectionView.type = type
         playlistCollectionView.removeFromSuperview()
         playlistCollectionView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(label)
