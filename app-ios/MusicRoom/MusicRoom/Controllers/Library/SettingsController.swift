@@ -154,8 +154,18 @@ class SettingsController: UIViewController, DeezerSessionDelegate {
         }
     }
     @objc func deleteUser() {
-        apiManager.deleteUserById()
-        self.disconnectUser()
+        var deleteAlert = UIAlertController(title: "Delete", message: "All data will be lost.", preferredStyle: UIAlertControllerStyle.alert)
+        
+        deleteAlert.addAction(UIAlertAction(title: "Ok", style: .destructive, handler: { (action: UIAlertAction!) in
+            apiManager.deleteUserById()
+            self.disconnectUser()
+        }))
+        
+        deleteAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
+            return ;
+        }))
+        self.present(deleteAlert, animated: true, completion: nil)
+        
     }
     
     func setupButton() {
