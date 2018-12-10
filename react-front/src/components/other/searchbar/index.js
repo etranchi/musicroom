@@ -31,7 +31,7 @@ class SearchBar extends Component {
 				axios.get(process.env.REACT_APP_API_URL + '/search/track?q='+ value, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
 				.then((resp) => {
 
-					this.setState({'list': resp.data.data || []});
+					this.setState({'list': resp.data || []});
 				})
 				.catch((err) => {
 					console.log('tracks error');
@@ -49,18 +49,12 @@ class SearchBar extends Component {
 			axios.get(process.env.REACT_APP_API_URL + '/search/playlist?q='+ value, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
 			.then((resp) => {
 				let myPlaylist = []
-				if (resp.data.data)
+				if (resp.data)
 				{
-					resp.data.data.forEach(playlist => {
+					resp.data.forEach(playlist => {
 						if (!playlist.id)
-						{
 							playlist.id = playlist._id
-							console.log(playlist, this.props.state.user.email)
-							// if (playlist.creator.email === this.props.state.user.email)
-								myPlaylist.push(playlist)
-						}
-						else
-							myPlaylist.push(playlist)
+						myPlaylist.push(playlist)
 					});
 				}
 				this.setState({'list': myPlaylist});

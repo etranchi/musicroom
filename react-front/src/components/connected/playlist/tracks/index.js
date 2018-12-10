@@ -92,7 +92,6 @@ class Tracks extends Component {
 		{'headers':{'Authorization': 'Bearer ' + localStorage.getItem('token')}})
 		.then((resp) => {
 			console.log("get playlists");
-			console.log(resp.data);
 			callback(resp)
 		})
 		.catch((err) => {
@@ -198,10 +197,30 @@ class Tracks extends Component {
 			console.log("[error] add track to playlist");
 			console.log(err);
 		})
-	  }
+	}
+
+	 isOurPlaylist = () => {
+		 console.log("isOurPlaylist start");
+		 console.log("id ->");
+		 let ret = false;
+		 console.log(this.state.playlist);
+		 if (this.state.playlist._id)
+		 	return true
+		 this.state.playlists.forEach((item, index) => {
+			 console.log(item);
+			 console.log("itemid -> " + item.id + "playlistid -> " + this.state.playlist.id)
+			 if (item.id === this.state.playlist.id)
+			 {
+				 console.log("ca devrait return true")
+				ret = true;
+			 }
+			 	
+		 })
+		 console.log("isOurPlaylist end");
+		 return ret
+	 }
 
 	render() {
-		console.log(this.state);
 		return(
 		<div>
 			
@@ -277,7 +296,7 @@ class Tracks extends Component {
 						)}
 					</Droppable>
       			</DragDropContext>
-				<SearchBar type="tracks" updateParent={this.props.updateParent} addTrack={this.addTrack}/>
+				{this.isOurPlaylist() ? <SearchBar type="tracks" updateParent={this.props.updateParent} addTrack={this.addTrack}/> : null}
 				{this.state.playlist.tracks.data.length > 0 && 
 					<Player  tracks={this.state.playlist.tracks.data}/>
 				}
