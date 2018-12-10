@@ -28,7 +28,7 @@ let self = module.exports = {
 			};
 			let deezerPlaylists = await request(options)
 			if (deezerPlaylists.data)
-				localPlaylists = [...retPlaylist.myPlaylists, ...deezerPlaylists.data]
+				retPlaylist.myPlaylists = [...retPlaylist.myPlaylists, ...deezerPlaylists.data]
 			res.status(200).json(retPlaylist)
 		} catch (err) {
 			next(new customError(err.message, 400))
