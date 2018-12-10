@@ -105,7 +105,7 @@ let self = module.exports = {
 		try {
 			let playlist = {}
 			if (req.body.id) {
-				if (!Number(req.params.id)) {
+				if (!Number(req.body.id)) {
 					console.log("COUCOU")
 					playlist = await playlistModel
 						.findOneAndUpdate({$and: [{
