@@ -55,13 +55,27 @@ module.exports = {
 			if (Object.keys(req.query).length === 0 || req.query.q === "")
 				res.status(200).send([])
 			let criteria = new RegExp(req.query.q || "", 'i')
-			let allPlaylist = await playlistModel
-				.find({$and: [{
-					idUser: {$ne: req.user._id},
-					members: {$ne: req.user._id},
-					public: true,
-					"title" : {$regex: criteria}}
-				]})
+			let allPlaylist = []
+			if (req.query.all) {
+				console.log("on search au bon endroit")
+				allPlaylist = await playlistModel
+				.find({
+					"title" : {$regex: criteria},
+					$or:[
+						{'idUser': {$eq: req.user._id}},
+						{'members': {$in: req.user._id}},
+						{public: true}
+					]}
+				)
+			} else {
+				allPlaylist = await playlistModel
+					.find({$and: [{
+						idUser: {$ne: req.user._id},
+						members: {$ne: req.user._id},
+						public: true,
+						"title" : {$regex: criteria}}
+					]})
+				}
 			let options = {
 				method: 'GET',
 				uri: config.deezer.apiUrl  + moduleUrl + '/playlist?q=' + encodeURIComponent(req.query.q),
