@@ -70,12 +70,10 @@ class CreateButtonCell: UITableViewCell {
         createButton.addTarget(self, action: #selector(handleCreate), for: .touchUpInside)
         addSubview(createButton)
         NSLayoutConstraint.activate([
-            createButton.topAnchor.constraint(equalTo: topAnchor, constant: 7),
+            createButton.topAnchor.constraint(equalTo: topAnchor, constant: 10),
             createButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 28),
             createButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -28),
-            createButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 7),
-            createButton.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.7),
-            createButton.centerYAnchor.constraint(equalTo: self.centerYAnchor)
-            ])
+            createButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10)
+        ])
     }
 }
