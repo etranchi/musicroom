@@ -55,7 +55,7 @@ let self = module.exports = {
 					})
 			else
 				playlist = await self.getPlaylistDeezerById(req.params.id, req.user.deezerToken)
-			res.status(200).json(playlist || {});
+			res.status(200).json(playlist);
 		} catch (err) {
 			console.log("Bad Request getPlaylistUserById" + err)
 			next(new customError(err.message, 400));

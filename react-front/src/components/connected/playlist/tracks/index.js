@@ -71,9 +71,13 @@ class Tracks extends Component {
 	}
 
 	getPlaylist = (callback) => {
+		console.log('id');
+		console.log(this.props.state.id);
 		axios.get(process.env.REACT_APP_API_URL + '/playlist/' + this.props.state.id, 
 		{'headers':{'Authorization': 'Bearer ' + localStorage.getItem('token')}})
 		.then((resp) => {
+			console.log("get playlist")
+			console.log(resp.data);
 			callback(resp);
 		})
 		.catch((err) => {
@@ -255,7 +259,7 @@ class Tracks extends Component {
 										<span className="title">{item.title} - Duration: {moment.utc(item.duration * 1000).format('mm:ss')}</span>
 										<p style={{'fontStyle':'italic'}}>{item.album ? item.album.title : ""}</p>
 									</span>
-									<Select style={{ width: 120 }} onChange={this.handleChange}>
+									<Select style={{ width: 120 }} onChange={this.handleChange	}>
 										{this.state.playlists.map((playlist, i) => {
 											return ( <Select.Option value={[i, item]} key={i}>{playlist.title} </Select.Option> )})
 										}
