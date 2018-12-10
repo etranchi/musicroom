@@ -60,7 +60,7 @@ class LibraryController: UITableViewController {
                 self.navigationController?.pushViewController(vc, animated: true)
             })
         case 1:
-            let vc = PlaylistController()
+            let vc = PlaylistsController()
             self.navigationController?.pushViewController(vc, animated: true)
         case 2 :
             let vc = EventsController()
