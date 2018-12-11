@@ -128,7 +128,7 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
         scrollView = UIScrollView(frame: self.view.frame)
         scrollView!.delegate = self
         scrollView!.alwaysBounceVertical = true
-        scrollView?.contentInset = UIEdgeInsets(top: 14, left: 0, bottom: 1130, right: 0)
+        scrollView?.contentInset = UIEdgeInsets(top: 14, left: 0, bottom: 1355, right: 0)
         self.view.addSubview(scrollView!)
         imagePicker.delegate = self
         let button = UIButton()
@@ -154,7 +154,7 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
         button.backgroundColor = UIColor.gray
         button.layer.cornerRadius = 8
         button.setAttributedTitle(NSAttributedString(string: "Add a picture", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
-        button.addTarget(self, action: #selector(imagePick), for: .touchUpInside)
+        button.addTarget(self, action: #selector(handleSelectProfileImage), for: .touchUpInside)
         
         button.translatesAutoresizingMaskIntoConstraints = false
         playlistView = PlaylistCollectionView([], .horizontal, nil)
@@ -182,6 +182,7 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
             
             imageView.widthAnchor.constraint(equalTo: scrollView!.widthAnchor, multiplier: 0.9),
             imageView.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
+            imageView.heightAnchor.constraint(equalTo: scrollView!.widthAnchor, multiplier: 0.9),
             imageView.topAnchor.constraint(equalTo: button.bottomAnchor, constant: 20),
             
             
@@ -216,8 +217,7 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
             playlistView!.widthAnchor.constraint(equalTo: scrollView!.widthAnchor, multiplier: 0.9),
             playlistView!.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
             playlistView!.heightAnchor.constraint(equalToConstant: 200)
-            
-            ])
+        ])
     }
     
     @objc func imagePick() {
@@ -233,7 +233,6 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
     }
     
     @objc func createEvent() {
-        // if data is good
         var distance_required = false
         let vc = self.navigationController?.viewControllers[0] as! MapController
         guard let _ = selectedPin, let _ = selectedPin?.coordinate, let _ = selectedPin?.coordinate.latitude, let _ = selectedPin?.coordinate.longitude, let _ = selectedPin?.administrativeArea, let _ = selectedPin?.locality, let _ = selectedPin?.isoCountryCode, let _ = selectedPin?.thoroughfare, let _ = selectedPin?.subThoroughfare else {
@@ -290,16 +289,27 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
 }
 
 extension EventController : UIImagePickerControllerDelegate {
+    @objc func          handleSelectProfileImage()
+    {
+        let             picker = UIImagePickerController()
+        
+        picker.delegate = self
+        picker.allowsEditing = true
+        present(picker, animated: true, completion: nil)
+    }
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        print(info)
-        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage , let urlImage = info[UIImagePickerControllerImageURL] as? URL{
-            urlImageToString = urlImage
-            imageView.image = pickedImage
-            NSLayoutConstraint.activate([
-                imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.6)
-                ])
+        var             selectedImageFromPicker: UIImage!
+        
+        if let          edit = info[UIImagePickerControllerEditedImage] as? UIImage {
+            selectedImageFromPicker = edit
+        } else if let   ori = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            selectedImageFromPicker = ori
         }
-        dismiss(animated: true, completion: nil)
+        if let selectedImage = selectedImageFromPicker {
+            imageView.image  = selectedImage
+        }
+        dismiss(animated: true)
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
