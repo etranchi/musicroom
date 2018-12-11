@@ -55,6 +55,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }
         else {
             userManager.currentUser = user[0]
+            print(userManager.currentUser!.token!)
             let nav = TabBarController()
             window?.rootViewController = nav
         }

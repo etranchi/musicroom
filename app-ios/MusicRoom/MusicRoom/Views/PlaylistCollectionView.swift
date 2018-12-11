@@ -62,7 +62,6 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
             return
         }
         let vc = PlaylistDetailController(myPlaylists[indexPath.item], cell.imageView.image!)
-        print(cell.isEditable)
         if cell.isEditable {
             vc.isEditable = true
         }

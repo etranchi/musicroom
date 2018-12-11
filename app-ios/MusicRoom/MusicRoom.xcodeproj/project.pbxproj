@@ -75,6 +75,7 @@
 		79DD4A7D219C51B7005578EB /* AlbumCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79DD4A7C219C51B7005578EB /* AlbumCollectionView.swift */; };
 		79DD4A7F219C6D55005578EB /* SearchTrackCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79DD4A7E219C6D55005578EB /* SearchTrackCell.swift */; };
 		79E6E06721A577B900165832 /* PlaylistDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E6E06621A577B900165832 /* PlaylistDetailController.swift */; };
+		79F7B6AD21BEB2D40039D4BB /* ListFriendsToAdd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F7B6AC21BEB2D40039D4BB /* ListFriendsToAdd.swift */; };
 		79FF7D10219D795A001DAE17 /* SeeAllSongsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79FF7D0F219D7959001DAE17 /* SeeAllSongsController.swift */; };
 		79FF7D12219D9B11001DAE17 /* SearchArtistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79FF7D11219D9B11001DAE17 /* SearchArtistCell.swift */; };
 		79FF7D14219D9BCC001DAE17 /* ArtistsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79FF7D13219D9BCC001DAE17 /* ArtistsCollectionView.swift */; };
@@ -171,6 +172,7 @@
 		79DD4A7C219C51B7005578EB /* AlbumCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumCollectionView.swift; sourceTree = "<group>"; };
 		79DD4A7E219C6D55005578EB /* SearchTrackCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTrackCell.swift; sourceTree = "<group>"; };
 		79E6E06621A577B900165832 /* PlaylistDetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistDetailController.swift; sourceTree = "<group>"; };
+		79F7B6AC21BEB2D40039D4BB /* ListFriendsToAdd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListFriendsToAdd.swift; sourceTree = "<group>"; };
 		79FF7D0F219D7959001DAE17 /* SeeAllSongsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeeAllSongsController.swift; sourceTree = "<group>"; };
 		79FF7D11219D9B11001DAE17 /* SearchArtistCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchArtistCell.swift; sourceTree = "<group>"; };
 		79FF7D13219D9BCC001DAE17 /* ArtistsCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistsCollectionView.swift; sourceTree = "<group>"; };
@@ -327,6 +329,7 @@
 			children = (
 				79E6E06621A577B900165832 /* PlaylistDetailController.swift */,
 				77B4775121BA8FD10052B62C /* PlaylistsController.swift */,
+				79F7B6AC21BEB2D40039D4BB /* ListFriendsToAdd.swift */,
 			);
 			path = Playlist;
 			sourceTree = "<group>";
@@ -765,6 +768,7 @@
 				773EBDA621AD95160073393F /* EventCollectionView.swift in Sources */,
 				7936A59321BE5A6000367F4B /* ListPlaylistCell.swift in Sources */,
 				77B4775221BA8FD10052B62C /* PlaylistsController.swift in Sources */,
+				79F7B6AD21BEB2D40039D4BB /* ListFriendsToAdd.swift in Sources */,
 				791C770F21A6FF27006FCBDF /* SongDetailView.swift in Sources */,
 				7966E6A121BE79C000723982 /* PlaylistCell.swift in Sources */,
 				79A3F9A92193E602007CEB86 /* PlayerManager.swift in Sources */,

@@ -73,8 +73,6 @@ class PlaylistDetailController: UITableViewController {
         
         let navi = navigationController as? CustomNavigationController
         navi?.animatedShowNavigationBar()
-        navigationController?.navigationBar.topItem?.title = "Search"
-        //SocketIOManager.sharedInstance.leavePlaylist(playlist._id!)
     }
     
     override func viewWillLayoutSubviews() {
@@ -151,6 +149,11 @@ class PlaylistDetailController: UITableViewController {
         tableView.contentInset = UIEdgeInsets(top: headerHeight, left: 0, bottom: 45, right: 0)
         tableView.contentOffset = CGPoint(x: 0, y: -headerHeight)
         updateHeaderView()
+    }
+    
+    func displayFriendsList() {
+        let vc = ListFriendsToAdd(playlist: playlist, root: self)
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
