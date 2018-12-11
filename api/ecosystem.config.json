@@ -1,8 +1,6 @@
 {
   "apps" : {
       "name"        : "token",
-      "instances" : 0,
-      "exec_mode" : "cluster",
       "script"      : "./app.js",
       "watch"       : true,
       "ignore_watch" : ["./public", "public", "/public", "./logs"],
