@@ -14,9 +14,10 @@ require('./db/mongo.js');
 const config = require('./config/config.json');
 const bodyParser = require('body-parser');
 const expressSwagger = require('express-swagger-generator')(app);
-const socketIo = require('socket.io');
+// const socketIo = require('socket.io');
 const middleware = require('./modules/middlewares');
 const winston = require('winston');
+
 
 const dir = './logs';
 if (!fs.existsSync(dir)){
@@ -59,7 +60,10 @@ app.get('/', ( req, res) =>  {
 });
 
 let httpsServer = https.createServer(credentials, app);
-const io = socketIo(httpsServer)
+// const io = socketIo(httpsServer)
+const io = require('socket.io')(httpsServer);
+const redisAdapter = require('socket.io-redis');
+io.adapter(redisAdapter({ host: 'localhost', port: 6379 }));
 require('./modules/socketEvent')(io);
 
 let options = config.swagger
