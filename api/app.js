@@ -61,7 +61,9 @@ app.get('/', ( req, res) =>  {
 
 let httpsServer = https.createServer(credentials, app);
 // const io = socketIo(httpsServer)
-const io = require('socket.io')(httpsServer);
+const io = require('socket.io')(httpsServer, {
+  transports: [ 'websocket', 'polling' ]
+});
 const redisAdapter = require('socket.io-redis');
 io.adapter(redisAdapter({ host: 'localhost', port: 6379 }));
 require('./modules/socketEvent')(io);
