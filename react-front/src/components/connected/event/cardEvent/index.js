@@ -45,6 +45,10 @@ export default class cardEvent extends Component {
             this.checkRight()
         })
         socket.on('createRoom', (tracks, msg) => {
+            if (tracks && tracks.length > 0) {
+                this.props.state.data.event.playlist.tracks.data = tracks;
+                this.props.updateParent({data:this.props.state.data})
+            }
             console.log('socket : createRoom receive data ', msg)
         });
         socket.on('updateTracks', (tracks, msg) => {

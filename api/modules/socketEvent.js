@@ -65,10 +65,12 @@ module.exports = function (io) {
                 room = ftSocket.createRoom(roomID, tracks, event, userID)
                 socket.join(room.id);
                 io.sockets.in(room.id).emit('createRoom', room.tracks, true)
+
             } else if (ftSocket.joinRoom(roomID, userID)) {
                 console.log('room joined')
                 socket.join(room.id);
                 io.sockets.in(room.id).emit('createRoom', room.tracks, true)
+
             } else {
                 console.log('room user exist')
                 socket.join(room.id);
@@ -145,8 +147,19 @@ module.exports = function (io) {
             ftSocket.saveNewEvent(newEvent);
             io.sockets.in(roomID).emit('updateEvent', newEvent);
         });
+        socket.on('updateStatus', (roomID, status, trackID, secondTrackID) => {
+            console.log("[Socket] -> updateStatus");
+            let room    = ftSocket.getRoom(roomID)
+            let tracks  = [];
+            if (room) {
+                tracks = ftSocket.updateStatus(room, status, trackID, secondTrackID);
+                io.sockets.in(roomID).emit('updateStatus', tracks);
+            }
+        })
+        /* Socket for Player */
         socket.on('updatePlayer', (roomID, newEvent) => {
             console.log("[Socket] -> updatePlayer");
+            console.log(newEvent)
             io.sockets.in(roomID).emit('updatePlayer', newEvent);
         })
     });

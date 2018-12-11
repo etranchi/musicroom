@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './styles.css';
 import {Row, Col} from 'antd';
-import {socket, updatePlayer} from '../../sockets'
+import {socket, updatePlayer, updateStatus} from '../../sockets'
 
 const { DZ } = window
 
@@ -19,17 +19,21 @@ export default class Player extends Component {
         };
     }
     componentWillMount = () => {
-        let tracksID    = []
-        this.props.tracks.forEach(track => { tracksID.push(track.id) });
-        this.setState({'tracksID':tracksID, 'tracks':this.props.tracks}, () => {
-            console.log(tracksID);
-            DZ.player.playTracks(tracksID)
-            // DZ.player.pause()
+        let tracksID    = [];
+        let getPlay     = 0;
+        this.props.tracks.forEach(track => { 
+            if (track.status === 1) getPlay = tracksID.length;
+            tracksID.push(track.id) 
+        });
+        this.props.updateParentState({currentTracksID:getPlay})
+        this.setState({tracksID:tracksID, tracks:this.props.tracks, currentTracksID:getPlay}, () => {
+            DZ.player.playTracks(tracksID, getPlay)
             DZ.player.setVolume(50)
         });
     }
     componentDidMount = () => {
         socket.on('updatePlayer', (event) => {
+            console.log("Socket : updatePlayer receive data : ", event)
             switch (event){
                 case "next":
                     this.nextTrack();
@@ -40,15 +44,31 @@ export default class Player extends Component {
                 case "play":
                     this.playTrack();
                     break;
+                case "changePosition":
+                    this.setState({isPlaying:true});
+                    DZ.player.play();
+                    break;
                 default:
                     break;
             }     
         })
+        socket.on('updateStatus', (tracksNew) => {
+            console.log("Socket : updateStatus receive data : ", tracksNew)
+            this.setState({tracks:tracksNew}, () => {
+                console.log(tracksNew)
+            })  
+        });
+        socket.on('updateScore', (tracksNew) => {
+            console.log("Socket : updateScore receive data : ", tracksNew)
+            this.setState({tracks:tracksNew}, () => {
+                console.log(tracksNew)
+            })  
+        });
     }
     updateState = value =>
     {
-        if (value === 'repeat' && this.state.random) this.setState({repeat:true, random:false})
-        else if (value === 'random' && this.state.repeat) this.setState({random:true, repeat:false})
+        if (value === 'repeat' && this.state.random && (this.props.isAdmin || this.props.isCreator)) this.setState({repeat:true, random:false})
+        else if (value === 'random' && this.state.repeat && (this.props.isAdmin || this.props.isCreator)) this.setState({random:true, repeat:false})
         else this.setState({[value]:!this.state[value]})
     }
     playTrack = () => {
@@ -61,7 +81,9 @@ export default class Player extends Component {
     nextTrack = () => {
         let index = this.state.currentTracksID + 1;
         if (index >= this.state.tracks.length)
-            return ;            
+            return ;     
+        if (index - 1 >= 0)
+            updateStatus(this.props.roomID, -1, this.state.tracks[index]._id, this.state.tracks[index-1]._id)  
         this.setState({currentTracksID:index});
         this.props.updateParentState({currentTracksID:index});
         DZ.player.next();
@@ -72,6 +94,8 @@ export default class Player extends Component {
         let index = this.state.currentTracksID - 1;
         if (index < 0)
             return ;
+        if (index + 1 < this.state.tracks.length)
+            updateStatus(this.props.roomID, 1, this.state.tracks[index]._id, this.state.tracks[index + 1]._id)
         this.setState({currentTracksID:index})
         this.props.updateParentState({currentTracksID:index})
         DZ.player.prev();
@@ -79,23 +103,26 @@ export default class Player extends Component {
     }
 
     playerUpdate = (event) => {
-        if (this.props.roomID)
-            updatePlayer(this.props.roomID, event);
-        else
-        {
-            switch (event){
-                case "next":
-                    this.nextTrack();
-                    break;
-                case "prev":
-                    this.prevTrack();
-                    break;
-                case "play":
-                    this.playTrack();
-                    break;
-                default:
-                    break;
-            } 
+        console.log("PLayer update : ", this.props)
+        if (this.props.isCreator || this.props.isAdmin) {
+            if (this.props.roomID)
+                updatePlayer(this.props.roomID, event);
+            else
+            {
+                switch (event){
+                    case "next":
+                        this.nextTrack();
+                        break;
+                    case "prev":
+                        this.prevTrack();
+                        break;
+                    case "play":
+                        this.playTrack();
+                        break;
+                    default:
+                        break;
+                } 
+            }
         }
     }
 

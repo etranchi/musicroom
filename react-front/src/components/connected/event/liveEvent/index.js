@@ -19,8 +19,6 @@ export default class LiveEvent extends Component {
         super(props);
         this.state = {
             playlist    : [],
-            initLoading : true,
-            loading     : false,
             isBlocked   : false,
             rotate      : {
                     active: false,
@@ -32,13 +30,16 @@ export default class LiveEvent extends Component {
         this.roomID = this.props.roomID;
     }
     componentWillMount = () => {
-        console.log("LIVE EVENT COMPONENTDIDMOUNT")
         socket.on('getRoomPlaylist', (tracks) => {
             console.log("socket : receive data from getRoomPlaylist : ", tracks);
             this.savePlaylist(tracks);
         });
         socket.on('updateTrack', (msg) => {
             console.log("socket : receive message from updateTrack -> ", msg);
+        });
+        socket.on('updateStatus', (tracks) => {
+            console.log("socket : receive message from updateStatus -> ", tracks);
+            this.savePlaylist(tracks);
         });
         socket.on('updateScore', (tracks) => {
             console.log("socket : receive data from updateScore : ", typeof tracks);
@@ -49,25 +50,18 @@ export default class LiveEvent extends Component {
             else
                 message.error(tracks)
         });
-        /**************************************/
         if (this.props.state.data.event.creator.email === this.props.state.user.email)
             this.setState({isCreator:true});
         else  {
-            this.setState({ isAdmin:this.isUser(this.props.state.data.event.adminMembers) });
+            this.setState({isAdmin:this.isUser(this.props.state.data.event.adminMembers) });
         }
-        this.setState({
-            initLoading : false,
-            playlist    : this.props.playlist
-        }, () => {
-            console.log(" 1 LIVE EVENT : ", this.state.playlist, this.props.roomID)
+        this.setState({ playlist : this.props.playlist }, () => {
             getRoomPlaylist(this.props.roomID);
-            console.log("CALL END ")
         });
     }
     savePlaylist = tracks => {
         let playlist            = this.state.playlist;
         playlist.tracks.data    = tracks;
-        console.log(" 2 LIVE EVENT : ", tracks)
         this.setState({playlist:playlist});
     }
     isUser = tab => 
@@ -103,7 +97,6 @@ export default class LiveEvent extends Component {
         state.playlist.tracks.data = items;
         updateTracks(this.roomID, items);
     }
-
     render() {
         return (
             <div>
@@ -114,7 +107,7 @@ export default class LiveEvent extends Component {
                 </Row>
                 <Row>
                     <Col span={24}>
-                        { this.state.playlist.tracks.data.length > 0 && <Player  tracks={this.state.playlist.tracks.data} roomID={this.props.roomID}/> }
+                        { this.state.playlist.tracks.data.length > 0 && <Player  isCreator={this.state.isCreator} isAdmin={this.state.isAdmin} tracks={this.state.playlist.tracks.data} roomID={this.props.roomID}/> }
                     </Col>
                 </Row>
                 <br/>
