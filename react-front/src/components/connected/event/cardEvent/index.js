@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { message, Button, Divider, Row, Col} from 'antd';
+import { message, Divider, Row, Col} from 'antd';
 import CardHeader from './Header'
 import CreatorProfil from './creatorProfil'
 import BodyEvent from './Body'
 import Map from '../map'
 import geolib from 'geolib'
-import {socket, createRoom, joinRoom, closeRoom, leaveRoom, updateEvent, updateTracks} from '../../../other/sockets';
+import {socket, createRoom, closeRoom, leaveRoom, updateEvent, updateTracks} from '../../../other/sockets';
 
 export default class cardEvent extends Component {
 	constructor(props) {

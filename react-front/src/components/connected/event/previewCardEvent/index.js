@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Avatar, Icon, Divider, Modal, Row, Col, Button } from 'antd';
+import { Card, Avatar, Divider, Modal, Row, Col, Button } from 'antd';
 import './styles.css';
 import Map from "../map"
 import axios from 'axios'

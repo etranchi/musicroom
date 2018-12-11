@@ -9,7 +9,7 @@ export default class FooterLegacy extends Component {
         }
     }
   render() {
-    if ( this.props.state.currentPlayerTracks && this.props.state.currentPlayerTracks.tracks.length > 0 && this.props.state.currentComponent != 'liveEvent') {
+    if ( this.props.state.currentPlayerTracks && this.props.state.currentPlayerTracks.tracks.length > 0 && this.props.state.currentComponent !== 'liveEvent') {
       return (
         <Player  tracks={this.props.state.currentPlayerTracks.tracks}/> 
       )
