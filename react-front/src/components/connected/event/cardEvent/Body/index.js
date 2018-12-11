@@ -243,8 +243,6 @@ export default class Body extends Component {
                 />
                 
                 <Divider />
-                {
-                    this.props.right.isAdmin || this.props.right.isCreator ? 
                         <Row style={{height:'70px'}}>
                             <Col span={1} offset={5}>
                                 {this.props.state.data.event.playlist ? <i 
@@ -254,16 +252,23 @@ export default class Body extends Component {
                             <Col span={3} >
                                 <p  > Ajouter une playlist : </p>
                             </Col>
-                            <Col span={3}>
-                                <SearchBar 
-                                    state={this.props.state} 
-                                    type="playlist" 
-                                    updateEventPlaylist={this.updateEventPlaylist}/>
-                            </Col>
+                            {
+                                this.props.right.isAdmin || this.props.right.isCreator ? 
+                                    <Col span={3}>
+                                        <SearchBar 
+                                            state={this.props.state} 
+                                            type="playlist" 
+                                            updateEventPlaylist={this.updateEventPlaylist}/>
+                                    </Col>
+                                    :
+                                    <Col span={3}>
+                                        {this.props.state.data.event.playlist ? this.props.state.data.event.playlist.title : 'Titre Inconnue'}
+                                    </Col>
+                            }
+                            {
+                                console.log("Playlist : ", this.props.state.data.event.playlist)
+                            }
                         </Row>
-                        :
-                        null
-                }
                 {/* Modal for description modification  */}
                 <Modal 
                     title="Description : "

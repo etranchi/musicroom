@@ -11,7 +11,7 @@ export default class FooterLegacy extends Component {
   render() {
     if ( this.props.state.currentPlayerTracks && this.props.state.currentPlayerTracks.tracks.length > 0 && this.props.state.currentComponent !== 'liveEvent') {
       return (
-        <Player  tracks={this.props.state.currentPlayerTracks.tracks}/> 
+        <Player  isAdmin={true} isCreator={false} tracks={this.props.state.currentPlayerTracks.tracks}/> 
       )
     }
     else return ( <div></div> );

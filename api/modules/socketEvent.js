@@ -58,6 +58,16 @@ module.exports = function (io) {
 
         socket.on('createRoom', (roomID, tracks, event, userID) => {
             console.log("[Socket] -> createRoom")
+            /* For Swift Team */
+            if (typeof roomID === 'object') {
+                let obj = JSON.parse(roomID);
+                roomID = obj.roomID
+                tracks = obj.tracks
+                event = obj.event
+                userID = obj.userID
+            }
+            /* =============== */
+
             let room = ftSocket.getRoom(roomID);
 
             if (!room) {
@@ -79,6 +89,13 @@ module.exports = function (io) {
         });
         socket.on('leaveRoom', (roomID, userID) => {
             console.log("[Socket] -> leaveRoom")
+              /* For Swift Team */
+            if (typeof roomID === 'object') {
+                let obj = JSON.parse(roomID);
+                roomID = obj.roomID
+                userID = obj.userID
+            }
+            /* =============== */
             let room = ftSocket.getRoom(roomID);
             let index = 0;
 
@@ -102,7 +119,13 @@ module.exports = function (io) {
         });
         socket.on('updateTracks', (roomID, tracks) => {
             console.log("[Socket] -> updateTracks")
-
+              /* For Swift Team */
+            if (typeof roomID === 'object') {
+                let obj = JSON.parse(roomID);
+                roomID = obj.roomID
+                tracks = obj.tracks
+            }
+            /* =============== */
             let room = ftSocket.getRoom(roomID)
             if (room) {
                 room.tracks = tracks
@@ -112,7 +135,15 @@ module.exports = function (io) {
         });
         socket.on('updateTrack', (roomID, track) => {
             console.log("[Socket] -> updateTrack")
-
+              /* For Swift Team */
+            if (typeof roomID === 'object') {
+                let obj = JSON.parse(roomID);
+                roomID = obj.roomID
+                tracks = obj.tracks
+                event = obj.event
+                userID = obj.userID
+            }
+            /* =============== */
             let room = ftSocket.getRoom(roomID)
             if (room) {
                 room.tracks.forEach(music => {
@@ -123,6 +154,16 @@ module.exports = function (io) {
         });
         socket.on('updateScore', (roomID, trackID, points, userID, userCoord) => {
             console.log("[Socket] -> updateScore")
+              /* For Swift Team */
+            if (typeof roomID === 'object') {
+                let obj = JSON.parse(roomID);
+                roomID = obj.roomID
+                trackID = obj.trackID
+                points = obj.points
+                userID = obj.userID
+                userCoord = obj.userCoord
+            }
+            /* =============== */
             let room = ftSocket.getRoom(roomID)
 
             if (room) {
@@ -138,6 +179,13 @@ module.exports = function (io) {
         });
         socket.on('updateEvent', (roomID, newEvent) => {
             console.log("[Socket] -> updateEvent")
+              /* For Swift Team */
+            if (typeof roomID === 'object') {
+                let obj = JSON.parse(roomID);
+                roomID = obj.roomID
+                newEvent = obj.newEvent
+            }
+            /* =============== */
             let room = ftSocket.getRoom(roomID)
 
             if (newEvent._id && room) {
@@ -149,6 +197,15 @@ module.exports = function (io) {
         });
         socket.on('updateStatus', (roomID, status, trackID, secondTrackID) => {
             console.log("[Socket] -> updateStatus");
+            /* For Swift Team */
+            if (typeof roomID === 'object') {
+                let obj = JSON.parse(roomID);
+                roomID = obj.roomID
+                status = obj.status
+                trackID = obj.trackID
+                secondTrackID = obj.secondTrackID
+            }
+            /* =============== */
             let room    = ftSocket.getRoom(roomID)
             let tracks  = [];
             if (room) {
@@ -159,6 +216,13 @@ module.exports = function (io) {
         /* Socket for Player */
         socket.on('updatePlayer', (roomID, newEvent) => {
             console.log("[Socket] -> updatePlayer");
+            /* For Swift Team */
+            if (typeof roomID === 'object') {
+                let obj = JSON.parse(roomID);
+                roomID = obj.roomID
+                newEvent = obj.newEvent
+            }
+            /* =============== */
             console.log(newEvent)
             io.sockets.in(roomID).emit('updatePlayer', newEvent);
         })
