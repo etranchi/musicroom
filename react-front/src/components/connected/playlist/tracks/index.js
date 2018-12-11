@@ -299,7 +299,7 @@ class Tracks extends Component {
       			</DragDropContext>
 				{this.isOurPlaylist() ? <SearchBar type="tracks" updateParent={this.props.updateParent} addTrack={this.addTrack}/> : null}
 				{this.state.playlist.tracks.data.length > 0 && 
-					<Player  tracks={this.state.playlist.tracks.data}/>
+					<Player  isAdmin={true} isCreator={true} tracks={this.state.playlist.tracks.data}/>
 				}
 				</Layout.Content>
 		</div>
