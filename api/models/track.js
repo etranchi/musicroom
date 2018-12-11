@@ -4,9 +4,11 @@ var Schema = mongoose.Schema;
 const Track = new Schema({
 	id: {
 		type: Number,
+		index: true
 	},
 	userId: {
-		type: [Schema.Types.ObjectId]
+		type: [Schema.Types.ObjectId],
+		index: true
 	},
 	readable: {
 		type: Boolean,
