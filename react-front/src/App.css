@@ -12,9 +12,13 @@
 
 .HeaderImage {
     width: 100%;
+    background-color:black;
     height: inherit;
 }
 
+iframe {
+    background-color:black;
+}
 
 .ant-menu.ant-menu-dark .ant-menu-item-selected, .ant-menu-submenu-popup.ant-menu-dark .ant-menu-item-selected {
     background-color: #00695c !important;

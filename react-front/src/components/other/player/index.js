@@ -4,8 +4,8 @@ import Control from "./control"
 import Options from "./options"
 import TrackInformation from "./trackInformation"
 import './styles.css';
-import {Row, Col, Layout} from 'antd';
-const { Header, Content, Footer } = Layout
+import {Layout} from 'antd';
+
 export default class Player extends Component {
 	constructor(props) {
         super(props);
@@ -19,7 +19,7 @@ export default class Player extends Component {
 	render() {
         console.log("CREATOR : ", this.props.isCreator) 
         return ( 
-            <Footer className='player' style={{backgroundColor:this.props.color ? this.props.color : 'white'}}>
+            <Layout.Footer className='player' style={{backgroundColor:this.props.color ? this.props.color : 'white'}}>
                 <div className='defaultComponentProperty default'> 
                     <TrackInformation  updateParentState={this.updateState} track={this.props.tracks[this.state.currentTracksID]}/>
                 </div>
@@ -30,7 +30,7 @@ export default class Player extends Component {
                 <div className='defaultComponentProperty default'> 
                     <Options strokesColor={this.props.strokesColor} tracks={this.props.tracks}/>  
                 </div>
-            </Footer>
+            </Layout.Footer>
         )
     }
 }
