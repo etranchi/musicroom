@@ -174,8 +174,8 @@ class PlaylistDetailController: UITableViewController {
         cell.isUserInteractionEnabled = true
         cell.dotsLabel.isHidden = true
         cell.dotsLabel.isUserInteractionEnabled = false
+        cell.lockedIcon.isHidden = true
         if iAmAdmin || type == .mine {
-            cell.isUserInteractionEnabled = true
             cell.dotsLabel.isUserInteractionEnabled = true
             cell.dotsLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(edit)))
             if tableView.isEditing {
