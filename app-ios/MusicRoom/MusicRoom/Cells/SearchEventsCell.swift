@@ -11,6 +11,7 @@ import UIKit
 class SearchEventsCell: UITableViewCell {
     var rootTarget: UITableViewController?
     var title : String?
+    var type : EventType = .others
     var event: [Event]? {
         didSet {
             setupView()
@@ -35,7 +36,7 @@ class SearchEventsCell: UITableViewCell {
         label.removeFromSuperview()
         label.text = title != nil ? title! : ""
         backgroundColor = .clear
-        let eventsCollectionView = EventCollectionView(event!, .horizontal, rootTarget)
+        let eventsCollectionView = EventCollectionView(event!, .horizontal, rootTarget, type)
         eventsCollectionView.removeFromSuperview()
         eventsCollectionView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(label)

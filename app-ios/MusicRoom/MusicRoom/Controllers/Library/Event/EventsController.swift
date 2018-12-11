@@ -53,9 +53,10 @@ class EventsController: UITableViewController {
         }
     }
     
-    func presentSelectedEvent(_ event : Event, img : UIImage) {
+    func presentSelectedEvent(_ event : Event, img : UIImage, type : EventType) {
         let vc = EventDetailController(event)
         vc.root = self
+        vc.type = type
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -63,6 +64,7 @@ class EventsController: UITableViewController {
         if indexPath.row == 0 && events?.myEvents != nil {
             let cell = tableView.dequeueReusableCell(withIdentifier: eventCellId, for: indexPath) as! SearchEventsCell
             cell.rootTarget = self
+            cell.type = .mine
             cell.title = sections[indexPath.row]
             cell.event = events?.myEvents
             return cell
@@ -70,6 +72,7 @@ class EventsController: UITableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: eventCellId, for: indexPath) as! SearchEventsCell
             cell.rootTarget = self
             cell.title = sections[indexPath.row]
+            cell.type = .friends
             cell.event = events?.friendEvents
             return cell
         } else {

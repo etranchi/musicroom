@@ -15,9 +15,14 @@ class EventDetailController: UIViewController , UITextViewDelegate {
     var tableView : UITableView?
     var root : EventsController?
     var rootMap : MapController?
-
+    var type : EventType = .others
+    var saveButton = UIButton()
+    var iAmMember : Bool = false
+    var iAmAdmin : Bool = false
+    var me : User?
     
     @objc func updateEvent() {
+        currentEvent.description = descriptionTextLabel.text
         apiManager.putEvent(currentEvent) { (res) in
             if (res) {
                 ToastView.shared.short(self.view, txt_msg: "Event Updated", color: UIColor.green)
@@ -37,20 +42,42 @@ class EventDetailController: UIViewController , UITextViewDelegate {
     
     func reloadLabel() {
         creatorLabel.attributedText = NSAttributedString(string: "Created by \(currentEvent.creator!.login)")
-        dateLabel.attributedText = NSAttributedString(string: "Date : \(String(describing:currentEvent.date))")
+        dateLabel.attributedText = NSAttributedString(string: "Date : \(String(describing:currentEvent.date!))")
         descriptionLabel.attributedText = NSAttributedString(string: "Description :")
         descriptionTextLabel.attributedText = NSAttributedString(string: currentEvent.description)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let button = UIButton()
-        button.setAttributedTitle(NSAttributedString(string: "Save", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
-        button.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
-        button.addTarget(self, action: #selector(updateEvent), for: .touchUpInside)
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
+        apiManager.getMe(userManager.currentUser!.token!) { (me) in
+            self.me = me
+            self.iAmMember = self.currentEvent.members.contains(where: { (user) -> Bool in
+                if user.id == me.id {
+                    return true
+                }
+                return false
+            })
+            self.iAmAdmin = self.currentEvent.members.contains(where: { (user) -> Bool in
+                if user.id == me.id {
+                    return true
+                }
+                return false
+            })
+            self.saveButton.setAttributedTitle(NSAttributedString(string: "Save", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
+            self.saveButton.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
+            self.saveButton.addTarget(self, action: #selector(self.updateEvent), for: .touchUpInside)
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: self.saveButton)
+            if (!self.iAmMember && !self.iAmAdmin && self.type != .mine) {
+                self.saveButton.isHidden = true
+                self.descriptionTextLabel.isEditable = false
+            }
+        }
+        
+        
+       
         // Do any additional setup after loading the view.
     }
+    
     var creatorLabel : UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 13, weight: .medium)
@@ -92,21 +119,22 @@ class EventDetailController: UIViewController , UITextViewDelegate {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
-    
+
+
     func addMembersAdmins(_ event: Event) {
-        currentEvent = event
-        if root != nil {
-            root!.reloadEvent()
-        } else {
-            rootMap?.getAllEvents()
+        if iAmAdmin || type == .mine {
+            currentEvent = event
+            if root != nil {
+                root!.reloadEvent()
+            } else {
+                rootMap?.getAllEvents()
+            }
         }
     }
     
     func setupView() {
-        
         creatorLabel.attributedText = NSAttributedString(string: "Created by \(currentEvent.creator!.login)")
-        dateLabel.attributedText = NSAttributedString(string: "Date : \(currentEvent.date)")
+        dateLabel.attributedText = NSAttributedString(string: "Date : \(String(describing: currentEvent.date!))")
         descriptionLabel.attributedText = NSAttributedString(string: "Description :")
         descriptionTextLabel.text = currentEvent.description
         headerImg!.translatesAutoresizingMaskIntoConstraints = false
@@ -241,6 +269,9 @@ extension EventDetailController : UITableViewDelegate, UITableViewDataSource {
             self.navigationController?.pushViewController(vc, animated: true)
         case 2:
             let vc = PlaylistDetailController(currentEvent.playlist!, headerImg!.albumCover)
+            vc.iAmMember = iAmMember
+            vc.iAmAdmin = iAmAdmin
+            vc.type = type
             self.navigationController?.pushViewController(vc, animated: true)
         case 3:
             apiManager.deleteEventById(currentEvent._id!, completion: {

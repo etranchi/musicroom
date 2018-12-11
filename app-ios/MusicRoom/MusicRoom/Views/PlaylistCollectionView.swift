@@ -13,6 +13,7 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
     var eventCreation : Bool = false
     var isEditable = false
     var isAddingSong = false
+    var type : EventType?
     var myPlaylists: [Playlist]
     let rootTarget: PlaylistsController?
     var selectedCell : PlaylistCell?
@@ -64,6 +65,9 @@ class PlaylistCollectionView: UICollectionView, UICollectionViewDataSource, UICo
         let vc = PlaylistDetailController(myPlaylists[indexPath.item], cell.imageView.image!)
         if cell.isEditable {
             vc.isEditable = true
+        }
+        if type != nil {
+            vc.type = type!
         }
         rootTarget?.navigationController?.pushViewController(vc, animated: true)
     }
