@@ -88,7 +88,6 @@ class EventDetailController: UITableViewController {
         switch indexPath.row - 2 {
         case 0:
             let vc = SearchMemberController()
-            print(currentEvent.members)
             vc.root = self
             vc.event = currentEvent
             vc.admins = false
@@ -98,7 +97,6 @@ class EventDetailController: UITableViewController {
             let vc = SearchMemberController()
             vc.root = self
             vc.event = currentEvent
-            print(currentEvent.adminMembers)
             vc.admins = true
             vc.members = currentEvent.adminMembers
             self.navigationController?.pushViewController(vc, animated: true)
@@ -236,7 +234,7 @@ class EventDetailController: UITableViewController {
                 }
                 return false
             })
-            self.iAmAdmin = self.currentEvent.members.contains(where: { (user) -> Bool in
+            self.iAmAdmin = self.currentEvent.adminMembers.contains(where: { (user) -> Bool in
                 if user.id == me.id {
                     return true
                 }

@@ -100,7 +100,7 @@ class PlaylistsController: UITableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: playlistCellId, for: indexPath) as! ListPlaylistCell
             cell.isEditable = true
             cell.rootTarget = self
-            cell.type = .mine
+            cell.type = playlists?.myPlaylists?.count != 0 ? .mine : .friends
             cell.isAddingSong = isAddingSong
             cell.title = playlists?.myPlaylists?.count != 0 ? "My Playlists" : "Friends Playlists"
             cell.playlist = playlists?.myPlaylists

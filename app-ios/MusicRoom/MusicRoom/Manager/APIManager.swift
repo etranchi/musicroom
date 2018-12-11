@@ -11,8 +11,15 @@ import Alamofire
 
 
 public func makeAlert(_ msg : String) {
-    let alert = UIAlertView(title: "Error", message: msg, delegate:nil, cancelButtonTitle:"Cancel")
-    alert.show()
+    // to check
+    if let cont = UIApplication.shared.keyWindow?.rootViewController?.childViewControllers.last {
+        let al = UIAlertController(title: "Error", message: msg, preferredStyle: .alert)
+        al.addAction(UIAlertAction(title: "Ok", style: .default, handler: { me in
+            al.dismiss(animated: true, completion: nil)
+        }))
+        cont.present(al, animated: true, completion: nil)
+    }
+    
 }
 
 class APIManager: NSObject, URLSessionDelegate {
@@ -272,7 +279,9 @@ class APIManager: NSObject, URLSessionDelegate {
             request(req)
             URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: req) { (data, response, err) in
                 SocketIOManager.sharedInstance.socket.emit("updatePlaylist", pId)
+                print(playlist.members)
                 completion("ok")
+                print("j'aii put playlist")
             }.resume()
         } catch {
             makeAlert("Error")

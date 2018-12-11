@@ -106,8 +106,10 @@ class AlbumTrackListCell: UITableViewCell {
         if iAmMember != nil && iAmMember!{
             if icon == #imageLiteral(resourceName: "upvote_icon") {
                 icon = #imageLiteral(resourceName: "upvoted_icon")
+                plusButton.tintColor = UIColor(red: 30 / 255, green: 180 / 255, blue: 30 / 255, alpha: 1)
             } else if icon == #imageLiteral(resourceName: "upvoted_icon") {
                 icon = #imageLiteral(resourceName: "upvote_icon")
+                plusButton.tintColor = .white
             }
             let tintedIcon = icon.withRenderingMode(.alwaysTemplate)
             plusButton.setImage(tintedIcon, for: .normal)
