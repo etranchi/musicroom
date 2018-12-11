@@ -52,7 +52,7 @@ class Tracks extends Component {
 		})
 		this.getPlaylists((res) => {
 			this.setState({
-			  playlists: res.data,
+			  playlists: [...res.data.myPlaylists , ...res.data.allPlaylists , ...res.data.friendPlaylists],
 			});
 		});
 
@@ -71,9 +71,13 @@ class Tracks extends Component {
 	}
 
 	getPlaylist = (callback) => {
+		console.log('id');
+		console.log(this.props.state.id);
 		axios.get(process.env.REACT_APP_API_URL + '/playlist/' + this.props.state.id, 
 		{'headers':{'Authorization': 'Bearer ' + localStorage.getItem('token')}})
 		.then((resp) => {
+			console.log("get playlist")
+			console.log(resp.data);
 			callback(resp);
 		})
 		.catch((err) => {
@@ -88,12 +92,11 @@ class Tracks extends Component {
 		{'headers':{'Authorization': 'Bearer ' + localStorage.getItem('token')}})
 		.then((resp) => {
 			console.log("get playlists");
-			console.log(resp.data);
 			callback(resp)
 		})
 		.catch((err) => {
 			this.setState({playlists: [], loading:false})
-			console.log('Playlist error');
+			console.log('Playlists error');
 			console.log(err);
 		})
 	}
@@ -143,12 +146,13 @@ class Tracks extends Component {
 	
 	addTrack = (item) => {
 		var state = this.state;
-		state.playlist.tracks.data.push(item);
-		axios.put(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id,
-		this.state.playlist,
+		
+		axios.put(process.env.REACT_APP_API_URL + '/playlist/' + (this.state.playlist._id || this.state.playlist.id) + '/track',
+		{"id":item.id},
 		{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
 		.then(() => {
 			message.success("Music Successfully added");
+			state.playlist.tracks.data.push(item);
 			this.setState(state);
 		})
 		.catch(err => {
@@ -166,6 +170,7 @@ class Tracks extends Component {
 		if (!result.destination) {
 		  return;
 		}
+		console.log('after drag end')
 		var state = this.state;
 		const items = reorder(
 		  this.state.playlist.tracks.data,
@@ -192,10 +197,30 @@ class Tracks extends Component {
 			console.log("[error] add track to playlist");
 			console.log(err);
 		})
-	  }
+	}
+
+	 isOurPlaylist = () => {
+		 console.log("isOurPlaylist start");
+		 console.log("id ->");
+		 let ret = false;
+		 console.log(this.state.playlist);
+		 if (this.state.playlist._id)
+		 	return true
+		 this.state.playlists.forEach((item, index) => {
+			 console.log(item);
+			 console.log("itemid -> " + item.id + "playlistid -> " + this.state.playlist.id)
+			 if (item.id === this.state.playlist.id)
+			 {
+				 console.log("ca devrait return true")
+				ret = true;
+			 }
+			 	
+		 })
+		 console.log("isOurPlaylist end");
+		 return ret
+	 }
 
 	render() {
-		console.log(this.state);
 		return(
 		<div>
 			
@@ -242,11 +267,12 @@ class Tracks extends Component {
 										ref={provided.innerRef}
 										{...provided.draggableProps}
 										{...provided.dragHandleProps}>
-									{<Icon 
+									{this.isOurPlaylist() ? 
+									<Icon 
 										type="close" 
 										style={{'float':'right', 'color':'red','cursor':'pointer'}} 
 										onClick={() => this.deleteTrack(index)}>
-									</Icon>}
+									</Icon> : null}
 									<span>
 										<img 
 											src={item.album ? item.album.cover_small || defaultTrackImg : defaultTrackImg} 
@@ -255,9 +281,9 @@ class Tracks extends Component {
 										<span className="title">{item.title} - Duration: {moment.utc(item.duration * 1000).format('mm:ss')}</span>
 										<p style={{'fontStyle':'italic'}}>{item.album ? item.album.title : ""}</p>
 									</span>
-									<Select style={{ width: 120 }} onChange={this.handleChange}>
+									<Select style={{ width: 120 }} onChange={this.handleChange	}>
 										{this.state.playlists.map((playlist, i) => {
-											return ( <Select.Option value={[i, item]} >{playlist.title} </Select.Option> )})
+											return ( <Select.Option value={[i, item]} key={i}>{playlist.title} </Select.Option> )})
 										}
 									</Select>
 									</div>
@@ -271,7 +297,7 @@ class Tracks extends Component {
 						)}
 					</Droppable>
       			</DragDropContext>
-				<SearchBar type="tracks" updateParent={this.props.updateParent} addTrack={this.addTrack}/>
+				{this.isOurPlaylist() ? <SearchBar type="tracks" updateParent={this.props.updateParent} addTrack={this.addTrack}/> : null}
 				{this.state.playlist.tracks.data.length > 0 && 
 					<Player  tracks={this.state.playlist.tracks.data}/>
 				}

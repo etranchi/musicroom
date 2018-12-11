@@ -42,7 +42,8 @@ const User = new Schema({
 		type: String,
 		unique:true,
 		allowNull: false,
-		required: true
+		required: true,
+		index: true
 	},
 	creationDate: {
 		type: Date,

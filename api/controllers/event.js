@@ -1,6 +1,7 @@
 'use strict'
 
 const modelEvent = require('../models/event');
+const modelPlaylist = require('../models/playlist');
 const ObjectId = require('mongodb').ObjectID;
 const customError = require('../modules/customError');
 const playlistController = require('./playlist');
@@ -77,6 +78,11 @@ module.exports = {
 				req.body.picture = req.file.filename
 			if (req.body.playlist && !req.body.playlist._id)
 				req.body.playlist = await playlistController.getPlaylistDeezerById(req.body.playlist.id, req.user.deezerToken)
+			else if (req.body.playlist && req.body.playlist._id) {
+				req.body.playlist = await modelPlaylist.findOne({_id: req.body.playlist._id})
+				delete req.body.playlist._id
+				req.body.playlist.members = []
+			}
 			let event = await modelEvent.create(req.body)
 			res.status(200).send(event)
 		} catch (err) {

@@ -1,7 +1,7 @@
 'use strict';
 
 const playlistModel = require('../models/playlist');
-const eventModel = require('../models/event');
+const eventModel    = require('../models/event');
 
 this.rooms = [];
 
@@ -41,16 +41,18 @@ module.exports = {
         this.rooms.forEach((room) => {
             if (room.id === tmpRoom.id) {
                 room.tracks = this.sortTracksByScore(tmpRoom.tracks)
+                room.users  = tmpRoom.users;
                 ret = room;
             }
         })
         return ret
     },
-    createRoom: (roomID, tracks, event) => {
+    createRoom: (roomID, tracks, event, userID) => {
         let room = {
             id: roomID,
-            tracks: this.sortTracksByScore(tracks),
+            tracks: tracks,
             data: event,
+            users: [userID]
         };
         room.tracks.forEach((track) => {
             track.like = 0;
@@ -59,6 +61,33 @@ module.exports = {
         })
         this.rooms.push(room);
         return room
+    },
+    joinRoom: (roomID, userID) => {
+        if (this.rooms) {
+            let ret;
+            this.rooms.forEach((room) => {
+                 if (room.id === roomID) {
+                     ret = room
+                     return;
+                 }
+             });
+             if (ret.users && (ret.users.indexOf(userID) == -1)) {
+                ret.users.push(userID)
+                return true;
+             }
+         }
+         return false;
+    },
+    deleteRoom: (roomID, userID) => {
+        if (this.rooms && this.rooms.length > 0) {
+            let ret = -1 ;
+            for (let i = 0; i < this.rooms.length; i++) {
+                if (this.rooms[i].id === roomID)
+                    ret = i
+                    break;
+            }
+            ret == -1  ? null : delete this.rooms.splice(ret, 1);
+        }
     },
     getRoom: (roomID) => {
         if (this.rooms) {
@@ -74,20 +103,13 @@ module.exports = {
         return null;
     },
     saveNewEvent: async (newEvent) => {
-
         if (newEvent._id)
-        {
             return await eventModel.updateOne({_id: newEvent._id}, newEvent, {new: true})
-        }
-
     },
     checkDistance: (event, userCoord) => {
-
-        console.log("ICI : ", event.location.coord, userCoord, event.distance_max)
         this.toRad = value => {
             return value * Math.PI / 180;
         }
-
         this.getDistance = (coordA, coordB) => {
             let R     = 6371; // km
             let dLat  = this.toRad(coordB.lat - coordA.lat);
@@ -101,9 +123,7 @@ module.exports = {
             let d = R * c;
             return d.toFixed(0);
         }
-
         let distance = this.getDistance(event.location.coord, userCoord);
-        console.log("DISTANCE : ", distance)
         return distance < event.distance_max;
         
     }

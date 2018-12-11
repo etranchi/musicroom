@@ -5,7 +5,8 @@ const Track 		= require('../models/track');
 const Playlist = new Schema({
 	idUser: {
 		type: Schema.Types.ObjectId,
-		ref: 'user'
+		ref: 'user',
+		index: true
 	},
 	id: {type: Number},
 	title: {type: String},
@@ -43,7 +44,8 @@ const Playlist = new Schema({
 	},
 	members : [{
 		type: Schema.Types.ObjectId,
-		ref: 'user'
+		ref: 'user',
+		index: true
 	}]
 });
 

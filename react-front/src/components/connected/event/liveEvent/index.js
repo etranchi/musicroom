@@ -4,7 +4,7 @@ import Track from '../../../templates/track'
 import { Col, Row, message} from 'antd'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Player from '../../../other/player'
-import {socket, getRoomPlaylist, updateScore, updateTracks, updateTrack, blockSocketEvent} from '../../../other/sockets';;
+import {socket, getRoomPlaylist, updateScore, updateTracks, updateTrack, blockSocketEvent} from '../../../other/sockets';
 
 const reorder = (list, startIndex, endIndex) => {
 	const result = Array.from(list);
@@ -31,7 +31,8 @@ export default class LiveEvent extends Component {
         };
         this.roomID = this.props.roomID;
     }
-    componentDidMount = () => {
+    componentWillMount = () => {
+        console.log("LIVE EVENT COMPONENTDIDMOUNT")
         socket.on('getRoomPlaylist', (tracks) => {
             console.log("socket : receive data from getRoomPlaylist : ", tracks);
             this.savePlaylist(tracks);
@@ -54,18 +55,19 @@ export default class LiveEvent extends Component {
         else  {
             this.setState({ isAdmin:this.isUser(this.props.state.data.event.adminMembers) });
         }
-    }
-    componentWillMount = () => {
         this.setState({
             initLoading : false,
             playlist    : this.props.playlist
         }, () => {
+            console.log(" 1 LIVE EVENT : ", this.state.playlist, this.props.roomID)
             getRoomPlaylist(this.props.roomID);
+            console.log("CALL END ")
         });
     }
     savePlaylist = tracks => {
         let playlist            = this.state.playlist;
         playlist.tracks.data    = tracks;
+        console.log(" 2 LIVE EVENT : ", tracks)
         this.setState({playlist:playlist});
     }
     isUser = tab => 
@@ -100,7 +102,8 @@ export default class LiveEvent extends Component {
 		const items = reorder( this.state.playlist.tracks.data, result.source.index, result.destination.index );
         state.playlist.tracks.data = items;
         updateTracks(this.roomID, items);
-	}
+    }
+
     render() {
         return (
             <div>

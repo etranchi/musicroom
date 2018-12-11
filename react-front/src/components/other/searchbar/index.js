@@ -31,7 +31,7 @@ class SearchBar extends Component {
 				axios.get(process.env.REACT_APP_API_URL + '/search/track?q='+ value, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
 				.then((resp) => {
 
-					this.setState({'list': resp.data.data || []});
+					this.setState({'list': resp.data || []});
 				})
 				.catch((err) => {
 					console.log('tracks error');
@@ -41,51 +41,39 @@ class SearchBar extends Component {
 	}
 
 	fetchListPlaylist = (value) => {
-		if (value === '')
-			this.setState({'value': value, 'list': []})
-		else
-		{
-			this.setState({'value': value});
-			axios.get(process.env.REACT_APP_API_URL + '/search/playlist?q='+ value, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
-			.then((resp) => {
-				let myPlaylist = []
-				if (resp.data.data)
-				{
-					resp.data.data.forEach(playlist => {
-						if (!playlist.id)
-						{
-							playlist.id = playlist._id
-							console.log(playlist, this.props.state.user.email)
-							// if (playlist.creator.email === this.props.state.user.email)
-								myPlaylist.push(playlist)
-						}
-						else
-							myPlaylist.push(playlist)
-					});
-				}
-				this.setState({'list': myPlaylist});
-			})
-			.catch((err) => {
-				console.log('Playlist error');
-				console.log(err);
-			})
-		}
+		this.setState({value:value})
+		axios.get(process.env.REACT_APP_API_URL + '/search/playlist?all=on&q='+ value, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
+		.then((resp) => {
+			let myPlaylist = []
+			if (resp.data)
+			{
+				resp.data.forEach(playlist => {
+					if (!playlist.id)
+						playlist.id = playlist._id
+					myPlaylist.push(playlist)
+				});
+			}
+			this.setState({'list': myPlaylist});
+		})
+		.catch((err) => {
+			console.log('Playlist error');
+			console.log(err);
+		})
 	}
+
 	fetchListUser = (value) => {
+		console.log("fetch list user");
 		this.setState({value:value}, () => {
-			if (this.state.list.length > 0) 
-				this.searchUser();
-			else {
 				axios.get(process.env.REACT_APP_API_URL + "/user?criteria=" + value, {'headers':{'Authorization': 'Bearer '+ localStorage.getItem('token')}})
 				.then((resp) => {
 					console.log(resp.data);
 					this.setState({list: resp.data || []});
-					// this.searchUser();
+
 				})
 				.catch((err) => { console.log('User List error : ', err); })
-			}
 		})
 	}
+
 	removeMember = (global, sub) => {
 
 		for (let i = 0; i < global.length; i++)
@@ -100,36 +88,11 @@ class SearchBar extends Component {
 		return (global)
 
 	}
-	searchUser = () => {
-
-		let listUserValid = [];
-
-		this.setState({'glbUserList': this.removeMember(this.state.glbUserList, [this.props.state.data.event.creator])})
-		this.setState({'glbUserList': this.removeMember(this.state.glbUserList, this.props.state.data.event.members)})
-		this.setState({'glbUserList': this.removeMember(this.state.glbUserList, this.props.state.data.event.adminMembers)})
-
-		if (this.state.value.length < this.state.position)
-			this.setState({position:0})
-		for (var i = 0; i < this.state.glbUserList.length; i++)
-		{
-			for (var j = this.state.position; j < this.state.glbUserList[i].login.length; j++)
-			{
-				if (this.state.glbUserList[i].login[j] !== this.state.value[j])
-					break;
-				if (j + 1 === this.state.value.length)
-				{
-					listUserValid.push(this.state.glbUserList[i]);
-					break;
-				}
-			}
-		}
-		this.setState({position: this.state.value.length, list: listUserValid, glbUserList: listUserValid})
-	}
 
 	updateEventMember = (item) => {
-		
 		this.props.updateEventMember(item, this.props.type);
 	}
+
 
 	addTrack = (item) => {
 		console.log(item);
@@ -145,6 +108,7 @@ class SearchBar extends Component {
 
 	render() {
 		const { list } = this.state;
+		console.log(this.state);
 		const children = list.map((item, key) => 
 		{
 			console.log(item)
