@@ -76,8 +76,6 @@ class PlaylistDetailController: UITableViewController {
         
         let navi = navigationController as? CustomNavigationController
         navi?.animatedShowNavigationBar()
-        navigationController?.navigationBar.topItem?.title = "Search"
-        //SocketIOManager.sharedInstance.leavePlaylist(playlist._id!)
     }
     
     override func viewWillLayoutSubviews() {
@@ -156,6 +154,11 @@ class PlaylistDetailController: UITableViewController {
         updateHeaderView()
     }
     
+    func displayFriendsList() {
+        let vc = ListFriendsToAdd(playlist: playlist, root: self)
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: songCellId, for: indexPath) as! AlbumTrackListCell
         cell.iAmAdmin = iAmAdmin
@@ -172,7 +175,6 @@ class PlaylistDetailController: UITableViewController {
         cell.dotsLabel.isHidden = true
         cell.dotsLabel.isUserInteractionEnabled = false
         if iAmAdmin || type == .mine {
-            print("je suis admin")
             cell.isUserInteractionEnabled = true
             cell.dotsLabel.isUserInteractionEnabled = true
             cell.dotsLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(edit)))

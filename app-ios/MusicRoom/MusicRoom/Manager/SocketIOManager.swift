@@ -52,7 +52,7 @@ class                   SocketIOManager: NSObject
     }
     
     func                unlockPlaylist(_ playlistId: String, playlist: Playlist) {
-        apiManager.updatePlaylist(playlist)
+        apiManager.updatePlaylist(playlist) { (ll) in }
     }
     
     func                joinPlayList(_ playlistId: String) {

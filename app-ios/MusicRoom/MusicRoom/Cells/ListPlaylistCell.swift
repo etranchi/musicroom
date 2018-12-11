@@ -35,6 +35,7 @@ class ListPlaylistCell: UITableViewCell {
     }()
     
     func setupView() {
+        guard playlist != nil else { return }
         label.removeFromSuperview()
         label.text = title != nil ? title! : ""
         backgroundColor = .clear

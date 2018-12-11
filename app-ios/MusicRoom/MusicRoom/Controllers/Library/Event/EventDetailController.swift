@@ -1,18 +1,22 @@
-    //
+//
 //  EventDetailController.swift
 //  MusicRoom
 //
-//  Created by Etienne TRANCHIER on 11/28/18.
+//  Created by Jonathan DAVIN on 12/11/18.
 //  Copyright © 2018 Etienne Tranchier. All rights reserved.
 //
 
 import UIKit
 
-class EventDetailController: UIViewController , UITextViewDelegate {
+class EventDetailController: UITableViewController {
+    
     var currentEvent : Event
-    var headerImg : AlbumHeaderView?
+    var headerView: AlbumHeaderView?
+    
+    private let descriptionCellId = "descriptionCellId"
+    private let dateCellId = "dateCellId"
     private let libraryCellId = "libraryCellId"
-    var tableView : UITableView?
+    
     var root : EventsController?
     var rootMap : MapController?
     var type : EventType = .others
@@ -21,34 +25,209 @@ class EventDetailController: UIViewController , UITextViewDelegate {
     var iAmAdmin : Bool = false
     var me : User?
     
-    @objc func updateEvent() {
-        currentEvent.description = descriptionTextLabel.text
-        apiManager.putEvent(currentEvent) { (res) in
-            if (res) {
-                ToastView.shared.short(self.view, txt_msg: "Event Updated", color: UIColor.green)
-                apiManager.getEventById(self.currentEvent._id!) { (res) in
-                    self.currentEvent = res
-                    if self.root != nil {
-                        self.root!.reloadEvent()
-                    } else {
-                        self.rootMap?.getAllEvents()
-                    }
-                    self.reloadLabel()
-                }
+    private let headerHeight: CGFloat = 225
+    
+    
+    init(_ event : Event) {
+        currentEvent = event
+        super.init(nibName: nil, bundle: nil)
+        apiManager.getImgEvent(event.picture!) { (img) in
+            guard let image = img else { return }
+            if let crea = event.creator {
+                self.headerView = AlbumHeaderView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.headerHeight), albumCover: image, title: "\(event.title) by \(crea.login)")
+            } else {
+                self.headerView = AlbumHeaderView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.headerHeight), albumCover: image, title: "\(event.title)")
             }
+            self.setupView()
         }
-        
     }
     
-    func reloadLabel() {
-        creatorLabel.attributedText = NSAttributedString(string: "Created by \(currentEvent.creator!.login)")
-        dateLabel.attributedText = NSAttributedString(string: "Date : \(String(describing:currentEvent.date!))")
-        descriptionLabel.attributedText = NSAttributedString(string: "Description :")
-        descriptionTextLabel.attributedText = NSAttributedString(string: currentEvent.description)
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let navi = navigationController as? CustomNavigationController
+        navi?.animatedHideNavigationBar()
+        navigationController?.navigationBar.topItem?.title = ""
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        let navi = navigationController as? CustomNavigationController
+        navi?.animatedShowNavigationBar()
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        
+        updateHeaderView()
+        let navi = navigationController as? CustomNavigationController
+        if tableView.contentOffset.y < -90 {
+            navi?.animatedHideNavigationBar()
+        } else {
+            navi?.animatedShowNavigationBar()
+        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //tableView.separatorStyle = .none
+        tableView.backgroundColor = UIColor(white: 0.1, alpha: 1)
+        tableView.separatorStyle = .none
+        tableView.register(EventDescriptionCell.self, forCellReuseIdentifier: descriptionCellId)
+        tableView.register(EventInteractionCell.self, forCellReuseIdentifier: libraryCellId)
+        loadMe()
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch indexPath.row - 2 {
+        case 0:
+            let vc = SearchMemberController()
+            print(currentEvent.members)
+            vc.root = self
+            vc.event = currentEvent
+            vc.admins = false
+            vc.members = currentEvent.members
+            self.navigationController?.pushViewController(vc, animated: true)
+        case 1:
+            let vc = SearchMemberController()
+            vc.root = self
+            vc.event = currentEvent
+            print(currentEvent.adminMembers)
+            vc.admins = true
+            vc.members = currentEvent.adminMembers
+            self.navigationController?.pushViewController(vc, animated: true)
+        case 2:
+            guard let tracks = currentEvent.playlist?.tracks, tracks.data.count > 0, let album =  tracks.data[0].album, let cover = album.cover_big else {
+                let vc = PlaylistDetailController(currentEvent.playlist!, headerView!.albumCover)
+                vc.iAmMember = iAmMember
+                vc.iAmAdmin = iAmAdmin
+                vc.type = type
+                self.navigationController?.pushViewController(vc, animated: true)
+                return
+            }
+            UIImageView().getImageUsingCacheWithUrlString(urlString: cover, completion: { (image) in
+                let vc = PlaylistDetailController(self.currentEvent.playlist!, image)
+                vc.iAmMember = self.iAmMember
+                vc.iAmAdmin = self.iAmAdmin
+                vc.type = self.type
+                self.navigationController?.pushViewController(vc, animated: true)
+            })
+        case 3:
+            apiManager.deleteEventById(currentEvent._id!, completion: {
+                if self.root != nil {
+                    self.root?.reloadEvent()
+                } else {
+                    self.rootMap?.getAllEvents()
+                }
+                self.navigationController?.popViewController(animated: true)
+            })
+        default:
+            return
+        }
+    }
+    
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.row > 1 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: libraryCellId, for: indexPath) as! EventInteractionCell
+            switch indexPath.row - 2 {
+            case 0:
+                cell.titleLabel.text = "Members"
+                cell.iconView0.image = #imageLiteral(resourceName: "songs_icon")
+            case 1:
+                cell.titleLabel.text = "Admins"
+                cell.iconView0.image = #imageLiteral(resourceName: "playlists_icon")
+            case 2 :
+                cell.titleLabel.text = "Playlist"
+                cell.iconView0.image = #imageLiteral(resourceName: "play_icon")
+            case 3 :
+                cell.titleLabel.text = "Delete"
+                cell.iconView1.image = nil
+                cell.iconView0.image = #imageLiteral(resourceName: "trash")
+            default:
+                cell.titleLabel.text = "Omg... wtf.."
+            }
+            cell.selectionStyle = .none
+            return cell
+        }
+        if indexPath.row == 1 {
+            let cell =  tableView.dequeueReusableCell(withIdentifier: descriptionCellId, for: indexPath) as! EventDescriptionCell
+            cell.message = currentEvent.date != nil ? "\(formatTheDate(origin: currentEvent.date!))" : "No date set..."
+            return cell
+        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: descriptionCellId, for: indexPath) as! EventDescriptionCell
+        cell.message = "Creator message:\n\n\(currentEvent.description)"
+        return cell
+    }
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        // #warning Incomplete implementation, return the number of sections
+        return 1
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // #warning Incomplete implementation, return the number of rows
+        return 6
+    }
+    
+    func setupView() {
+        setupHeader()
+    }
+    
+    func updateHeaderView() {
+        var headerRect = CGRect(x: 0, y: -headerHeight, width: tableView.bounds.width, height: headerHeight)
+        headerRect.origin.y = tableView.contentOffset.y
+        headerRect.size.height = -tableView.contentOffset.y
+        headerView?.frame = headerRect
+        headerView?.titleBottomConstraint?.constant = -10 - headerRect.height + 288
+    }
+    
+    fileprivate func setupHeader() {
+        headerView?.isUserInteractionEnabled = true
+//        headerView.playlistDetailController = self
+//        headerView.playlist = playlist
+//        headerView.isEditable = isEditable
+        view.addSubview(headerView!)
+        headerView?.layer.zPosition = -1
+        tableView.contentInset = UIEdgeInsets(top: headerHeight, left: 0, bottom: 45, right: 0)
+        tableView.contentOffset = CGPoint(x: 0, y: -headerHeight)
+        updateHeaderView()
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.row == 0 {
+            return estimateFrameForText(text: "Creator message:\n\n\(currentEvent.description)\n")
+        }
+        if indexPath.row == 1 {
+            return 44
+        }
+        return 44
+    }
+    
+    private func    estimateFrameForText(text: String) -> CGFloat
+    {
+        let         size = CGSize(width: view.bounds.width - 28, height: 1000)
+        let         options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+        let         rect = NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 16)], context: nil)
+        
+        return rect.height + 30
+    }
+    
+    private func formatTheDate(origin: String) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        let date = dateFormatter.date(from: origin)
+        dateFormatter.dateFormat = "MMM d, h:mm a"
+        return date != nil ? dateFormatter.string(from: date!) : origin
+    }
+
+    func loadMe() {
         apiManager.getMe(userManager.currentUser!.token!) { (me) in
             self.me = me
             self.iAmMember = self.currentEvent.members.contains(where: { (user) -> Bool in
@@ -69,57 +248,26 @@ class EventDetailController: UIViewController , UITextViewDelegate {
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: self.saveButton)
             if (!self.iAmMember && !self.iAmAdmin && self.type != .mine) {
                 self.saveButton.isHidden = true
-                self.descriptionTextLabel.isEditable = false
+            }
+        }
+    }
+    
+    @objc func updateEvent() {
+        apiManager.putEvent(currentEvent) { (res) in
+            if (res) {
+                ToastView.shared.short(self.view, txt_msg: "Event Updated", color: UIColor.green)
+                apiManager.getEventById(self.currentEvent._id!) { (res) in
+                    self.currentEvent = res
+                    if self.root != nil {
+                        self.root!.reloadEvent()
+                    } else {
+                        self.rootMap?.getAllEvents()
+                    }
+                }
             }
         }
         
-        
-       
-        // Do any additional setup after loading the view.
     }
-    
-    var creatorLabel : UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 13, weight: .medium)
-        label.textColor = .white
-        label.textAlignment = .center
-        label.numberOfLines = 1
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    var dateLabel : UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 13, weight: .medium)
-        label.textColor = .white
-        label.textAlignment = .center
-        label.numberOfLines = 1
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    var descriptionLabel : UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 13, weight: .medium)
-        label.textColor = .white
-        label.textAlignment = .center
-        label.numberOfLines = 1
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    var descriptionTextLabel : UITextView = {
-        let label = UITextView()
-        label.backgroundColor = UIColor(white: 0.1, alpha: 1)
-        label.font = UIFont.systemFont(ofSize: 13, weight: .medium)
-        label.textAlignment = .center
-        label.textColor = .white
-        label.isScrollEnabled = true
-        label.layer.cornerRadius = 8
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-
 
     func addMembersAdmins(_ event: Event) {
         if iAmAdmin || type == .mine {
@@ -130,169 +278,5 @@ class EventDetailController: UIViewController , UITextViewDelegate {
                 rootMap?.getAllEvents()
             }
         }
-    }
-    
-    func setupView() {
-        creatorLabel.attributedText = NSAttributedString(string: "Created by \(currentEvent.creator!.login)")
-        dateLabel.attributedText = NSAttributedString(string: "Date : \(String(describing: currentEvent.date!))")
-        descriptionLabel.attributedText = NSAttributedString(string: "Description :")
-        descriptionTextLabel.text = currentEvent.description
-        headerImg!.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(headerImg!)
-        view.addSubview(creatorLabel)
-        view.addSubview(dateLabel)
-        view.addSubview(descriptionLabel)
-        view.addSubview(descriptionTextLabel)
-        view.addSubview(tableView!)
-        
-
-        NSLayoutConstraint.activate([
-            headerImg!.widthAnchor.constraint(equalTo: view.widthAnchor),
-            headerImg!.heightAnchor.constraint(equalToConstant: 250),
-            headerImg!.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            headerImg!.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
-            
-            creatorLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.6),
-            creatorLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            creatorLabel.topAnchor.constraint(equalTo: headerImg!.bottomAnchor, constant: 20),
-            
-            dateLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.6),
-            dateLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            dateLabel.topAnchor.constraint(equalTo: creatorLabel.bottomAnchor, constant: 20),
-            
-            descriptionLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.6),
-            descriptionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            descriptionLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 20),
-            
-            descriptionTextLabel.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.6),
-            descriptionTextLabel.heightAnchor.constraint(equalToConstant: 120),
-            descriptionTextLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            descriptionTextLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 20),
-            
-            tableView!.widthAnchor.constraint(equalTo: view.widthAnchor),
-            tableView!.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            tableView!.heightAnchor.constraint(equalToConstant: 160),
-            tableView!.topAnchor.constraint(equalTo: descriptionTextLabel.bottomAnchor, constant: 6.5)
-            ])
-    }
-    
-    
-    
-    init(_ event : Event) {
-        
-        currentEvent = event
-        headerImg = nil
-        super.init(nibName: nil, bundle: nil)
-        descriptionTextLabel.delegate = self
-        descriptionTextLabel.textColor = .white
-        tableView = UITableView()
-        view.backgroundColor = UIColor(white: 0.1, alpha: 1)
-        tableView!.backgroundColor = UIColor(white: 0.1, alpha: 1)
-        tableView!.delegate = self
-        tableView!.dataSource = self
-        tableView!.separatorStyle = .none
-        tableView?.isScrollEnabled = false
-        tableView!.register(LibraryCell.self, forCellReuseIdentifier: libraryCellId)
-        tableView!.translatesAutoresizingMaskIntoConstraints = false
-
-        apiManager.getImgEvent(event.picture!) { (img) in
-            self.headerImg = AlbumHeaderView(frame: .zero, albumCover: img!, title: event.title)
-            self.setupView()
-                   
-        }
-
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
-}
-
-extension EventDetailController : UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: libraryCellId, for: indexPath) as! LibraryCell
-        switch indexPath.row {
-        case 0:
-            cell.titleLabel.text = "Members"
-            cell.iconView0.image = #imageLiteral(resourceName: "songs_icon")
-        case 1:
-            cell.titleLabel.text = "Admins"
-            cell.iconView0.image = #imageLiteral(resourceName: "playlists_icon")
-        case 2 :
-            cell.titleLabel.text = "Playlist"
-            cell.iconView0.image = #imageLiteral(resourceName: "play_icon")
-        case 3 :
-            cell.titleLabel.text = "Delete"
-            cell.iconView1.image = nil
-            cell.iconView0.image = #imageLiteral(resourceName: "trash")
-        default:
-            cell.titleLabel.text = "Omg... wtf.."
-        }
-        cell.selectionStyle = .none
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch indexPath.row {
-        case 0:
-            let vc = SearchMemberController()
-            print(currentEvent.members)
-            vc.root = self
-            vc.event = currentEvent
-            vc.admins = false
-            vc.members = currentEvent.members
-            self.navigationController?.pushViewController(vc, animated: true)
-        case 1:
-            let vc = SearchMemberController()
-            vc.root = self
-            vc.event = currentEvent
-            print(currentEvent.adminMembers)
-            vc.admins = true
-            vc.members = currentEvent.adminMembers
-            self.navigationController?.pushViewController(vc, animated: true)
-        case 2:
-            let vc = PlaylistDetailController(currentEvent.playlist!, headerImg!.albumCover)
-            vc.iAmMember = iAmMember
-            vc.iAmAdmin = iAmAdmin
-            vc.type = type
-            self.navigationController?.pushViewController(vc, animated: true)
-        case 3:
-            apiManager.deleteEventById(currentEvent._id!, completion: {
-                    if self.root != nil {
-                        self.root?.reloadEvent()
-                    } else {
-                        self.rootMap?.getAllEvents()
-                    }
-                    self.navigationController?.popViewController(animated: true)
-                })
-        default:
-            print("Omg... wtf..")
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 4
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 32.5
     }
 }
