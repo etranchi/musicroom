@@ -13,10 +13,30 @@ class EventsController: UITableViewController {
     var events : DataEvent?
     private let eventCellId = "eventCellId"
     private let createCellId = "createCellId"
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        title = ""
+        navigationController?.navigationBar.topItem?.title = ""
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        title = "Events"
+        navigationController?.navigationBar.topItem?.title = ""
+        events?.myEvents.removeAll()
+        events?.friendEvents.removeAll()
+        tableView.reloadData()
+        reloadEvent()
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(white: 0.1, alpha: 1)
-        navigationController?.navigationBar.topItem?.title = "Your Events"
+        title = "Events"
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
         tableView.register(SearchEventsCell.self, forCellReuseIdentifier: eventCellId)
@@ -28,13 +48,6 @@ class EventsController: UITableViewController {
             self.tableView.reloadData()
         }
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-    // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections

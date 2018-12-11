@@ -99,7 +99,7 @@ class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate 
         let apiManager = APIManager()
         guard let pass = passTF.text, let mail = loginTF.text else { return }
         let json = [
-            "email" : mail,
+            "email" : mail.lowercased(),
             "password" : pass
         ]
         let data = try? JSONSerialization.data(withJSONObject: json, options: [])

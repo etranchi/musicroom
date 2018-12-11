@@ -103,7 +103,7 @@ class PlaylistsController: UITableViewController {
             cell.type = playlists?.myPlaylists?.count != 0 ? .mine : .friends
             cell.isAddingSong = isAddingSong
             cell.title = playlists?.myPlaylists?.count != 0 ? "My Playlists" : "Friends Playlists"
-            cell.playlist = playlists?.myPlaylists
+            cell.playlist = playlists?.myPlaylists?.count != 0 ? playlists?.myPlaylists : playlists?.friendPlaylists
             return cell
         } else if indexPath.row == 1 && globalCount == 4 {
             let cell = tableView.dequeueReusableCell(withIdentifier: playlistCellId, for: indexPath) as! ListPlaylistCell

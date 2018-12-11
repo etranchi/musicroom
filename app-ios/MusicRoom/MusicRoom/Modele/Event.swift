@@ -54,8 +54,8 @@ struct Event : Codable {
 
 
 struct DataEvent : Codable {
-    let myEvents : [Event]
-    let friendEvents : [Event]
+    var myEvents : [Event]
+    var friendEvents : [Event]
     let allEvents : [Event]
 }
 
