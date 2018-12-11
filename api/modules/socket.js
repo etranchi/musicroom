@@ -6,7 +6,16 @@ const eventModel    = require('../models/event');
 this.rooms = [];
 
 this.sortTracksByScore = (tracks) => {
-    tracks.sort((a, b) => { return a.like < b.like ? 1 : -1 })
+    
+    let tmpArray = tracks.reduce( (acc, elem) => {
+        if (elem.status === 0) acc['toSort'].push(elem);
+        else acc['played'].push(elem);
+        return acc
+    }, {toSort: [], played: []})
+    tmpArray.toSort.sort((a, b) => { 
+        return b.like - a.like;
+    })
+    tracks = tmpArray.played.concat(tmpArray.toSort)
     return tracks
 }
 module.exports = {
@@ -22,9 +31,12 @@ module.exports = {
             if (!track.like) track.like = 0;
             if (!track.userLike) track.userLike = [];
             if (!track.userUnLike) track.userUnLike = [];
-            if (track._id === trackID)
-            {
-                console.log("Update score : find")
+            if (!track.status) track.status = 0
+            if (track._id === trackID) {
+                let i = 0;
+                let j = 0;
+                if ((i = track.userLike.indexOf(userID)) != -1) track.userLike.splice(i, 1);
+                if ((j = track.userUnLike.indexOf(userID)) != -1) track.userUnLike.splice(j, 1);
                 points > 0 ? track.userLike.push(userID) : track.userUnLike.push(userID)
                 track.like += points
             } 
@@ -35,6 +47,7 @@ module.exports = {
         let ret;
         tmpRoom.tracks.forEach((track) => {
             if (!track.like) track.like = 0;
+            if (!track.status) track.status = 0;
             if (!track.userLike) track.userLike = [];
             if (!track.userUnLike) track.userUnLike = [];
         })
@@ -47,6 +60,34 @@ module.exports = {
         })
         return ret
     },
+    updateStatus: (room, status, trackID, secondTrackID) => {
+        let newTab = [];
+        if (trackID && room && status) {
+            this.rooms.forEach((tmp) => {
+                if (tmp.id === room.id) {
+                    newTab = tmp.tracks.map((elem) => {
+                        console.log(elem.short_title)
+                        if (elem._id === trackID && status === 1) {
+                            elem.status = status
+                        }
+                        else if (elem._id === secondTrackID && status === 1) {
+                            elem.status = 0
+                        }
+                        else if (elem._id === trackID) {
+                            console.log("FIND")
+                            elem.status = status * -1
+                        }
+                        else if (elem._id === secondTrackID)
+                            elem.status = status
+                        return elem
+                    })
+                    // return ;
+                }
+            })
+        }
+        console.log("New Tab : ", newTab.length)
+        return this.sortTracksByScore(newTab)
+    },
     createRoom: (roomID, tracks, event, userID) => {
         let room = {
             id: roomID,
@@ -55,10 +96,12 @@ module.exports = {
             users: [userID]
         };
         room.tracks.forEach((track) => {
-            track.like = 0;
-            track.userLike = [];
+            track.like      = 0;
+            track.status    = 0;
+            track.userLike  = [];
             track.userUnLike = [];
         })
+        room.tracks[0].status = 1;
         this.rooms.push(room);
         return room
     },
