@@ -9,7 +9,7 @@ import "antd/dist/antd.css";
 import axios from 'axios'
 import {Button, Layout} from 'antd';
 
-const { Header, Content, Footer } = Layout
+const { Header, Content} = Layout
 
 class Front extends Component {
     constructor(props) {
