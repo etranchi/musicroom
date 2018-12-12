@@ -6,7 +6,7 @@ const customError = require('../modules/customError');
 let self = module.exports = { 
 	getPlaylistsByUser: async (req, res, next) => {
 		try {
-			let localPlaylists = await playlistModel.find()
+			let localPlaylists = await playlistModel.find().populate('members')
 
 			let retPlaylist = localPlaylists.reduce((acc, elem) => {
 				if (elem.idUser.toString() === req.user._id.toString())
@@ -28,7 +28,7 @@ let self = module.exports = {
 			};
 			let deezerPlaylists = await request(options)
 			if (deezerPlaylists.data)
-				localPlaylists = [...retPlaylist.myPlaylists, ...deezerPlaylists.data]
+				retPlaylist.myPlaylists = [...retPlaylist.myPlaylists, ...deezerPlaylists.data]
 			res.status(200).json(retPlaylist)
 		} catch (err) {
 			next(new customError(err.message, 400))
@@ -52,10 +52,10 @@ let self = module.exports = {
 								public: true
 							}
 						]
-					})
+					}).populate('members')
 			else
 				playlist = await self.getPlaylistDeezerById(req.params.id, req.user.deezerToken)
-			res.status(200).json(playlist || {});
+			res.status(200).json(playlist);
 		} catch (err) {
 			console.log("Bad Request getPlaylistUserById" + err)
 			next(new customError(err.message, 400));
@@ -94,7 +94,7 @@ let self = module.exports = {
 				}
 				playlist = {}
 			}
-			res.status(200).json(playlist || {});
+			res.status(200).json(playlist);
 		} catch (err) {
 			console.log("Bad Request getPlaylistUserById" + err)
 			next(new customError(err.message, 400))
@@ -105,7 +105,7 @@ let self = module.exports = {
 		try {
 			let playlist = {}
 			if (req.body.id) {
-				if (!Number(req.params.id)) {
+				if (!Number(req.body.id)) {
 					console.log("COUCOU")
 					playlist = await playlistModel
 						.findOneAndUpdate({$and: [{
@@ -149,7 +149,7 @@ let self = module.exports = {
 	},
 	putPlaylistById: async (req, res, next) => {
 		try {
-			playlist = await playlistModel
+			let playlist = await playlistModel
 				.findOneAndUpdate(
 					{_id: req.params.id,
 					$or:
@@ -167,9 +167,9 @@ let self = module.exports = {
 					},
 					req.body,
 					{new: true}
-				)
+				).populate('members')
 			if (!playlist)
-					throw new Error('You can not modify this playlist')
+				throw new Error('You can not modify this playlist')
 			res.status(200).json(playlist);
 		} catch (err) {
 			console.log("Bad Request putPlaylistById" + err)

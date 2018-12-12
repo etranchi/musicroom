@@ -9,7 +9,7 @@ import "antd/dist/antd.css";
 import axios from 'axios'
 import {Button, Layout} from 'antd';
 
-const { Header, Content, Footer } = Layout
+const { Header, Content} = Layout
 
 class Front extends Component {
     constructor(props) {
@@ -61,7 +61,7 @@ class Front extends Component {
 		return (
           <Layout className="App">
             <Header className="HeaderApp">
-              <img alt="headerImg" className="HeaderImage" src="/header.png"></img>
+              <img alt="headerImg" className="HeaderImage" src="/header.jpg"></img>
               {token && <div className="disconnect"><Button className="disconnect" type="primary" onClick={this.logout}>Disconnect</Button></div>}
               {token && <Menu  state={this.state} updateParent={this.updateState}/>}
             </Header>

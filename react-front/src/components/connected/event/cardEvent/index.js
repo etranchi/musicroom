@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { message, Button, Divider, Row, Col} from 'antd';
+import { message, Divider, Row, Col} from 'antd';
 import CardHeader from './Header'
 import CreatorProfil from './creatorProfil'
 import BodyEvent from './Body'
 import Map from '../map'
 import geolib from 'geolib'
-import {socket, createRoom, joinRoom, closeRoom, leaveRoom, updateEvent} from '../../../other/sockets';
+import {socket, createRoom, closeRoom, leaveRoom, updateEvent, updateTracks} from '../../../other/sockets';
 
 export default class cardEvent extends Component {
 	constructor(props) {
@@ -45,25 +45,27 @@ export default class cardEvent extends Component {
             this.checkRight()
         })
         socket.on('createRoom', (tracks, msg) => {
+            if (tracks && tracks.length > 0) {
+                this.props.state.data.event.playlist.tracks.data = tracks;
+                this.props.updateParent({data:this.props.state.data})
+            }
             console.log('socket : createRoom receive data ', msg)
+        });
+        socket.on('updateTracks', (tracks, msg) => {
+            console.log('socket : updateTracks receive data ', msg)
         });
         socket.on('joinRoom', (msg) => {
             console.log('socket : joinRoom receive message ->', msg)
         });
         socket.on('closeRoom', (msg) => {
-           leaveRoom(this.props.state.data.event._id)
            this.props.updateParent({currentComponent:'cardEvent'})
         });
         socket.on('leaveRoom', (msg) => {
             console.log('socket : leaveRoom receive message ->', msg)
         });
         let tracks = this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks ? this.props.state.data.event.playlist.tracks.data : [];
-        createRoom(this.props.state.data.event._id, tracks, this.props.state.data.event);
+        createRoom(this.props.state.data.event._id, tracks, this.props.state.data.event, this.props.state.user._id);
         this.checkRight();
-        window.scrollTo(1000, 1000)
-    }
-    componentWillUnmount = () => {
-            leaveRoom(this.props.state.data.event._id)
     }
     updateMap = () => {
         let calc = geolib.getDistanceSimple(
@@ -85,80 +87,72 @@ export default class cardEvent extends Component {
         else
             return false;
     }
-    /*
-
-        startEvent :  Display si event pas Start
-                CreateRoom - Update State - Change view
-
-        joinEvent : Si event started
-                joinRoom - Change view
-
-        quitEvent: Si eventstarted
-                leaveRoom
-        
-        finishEvent: Si event started
-                closeEvent
-    */
    openLiveEvent = () => {
-        let tracks = this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks ? this.props.state.data.event.playlist.tracks.data : [];
-        createRoom(this.props.state.data.event._id, tracks, this.props.state.data.event);
-        if (!this.props.state.data.event.is_start && (!this.state.isAdmin && !this.state.isCreator)) {
-            message.info('Levent na pas demare')
-            return;
+        const is_start = this.props.state.data.event.is_start
+        const is_finish = this.props.state.data.event.is_finish
+        const tracks = this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks ? this.props.state.data.event.playlist.tracks.data : [];
+
+        if (((!is_start) || (is_start && is_finish)) && this.state.isCreator) {
+            if (!is_start || (is_start && is_finish)) {
+                updateTracks(this.props.state.data.event._id, tracks)
+                this.props.state.data.event.is_start    = true;
+                this.props.state.data.event.is_finish   = false;
+                updateEvent(this.props.state.data.event._id, this.props.state.data.event)
+            }
+            this.props.state.data.right             = this.state;
         }
-        if (this.props.state.data.event.is_start && !this.props.state.data.event.is_finish  && !this.state.isAdmin && !this.state.isCreator)
-        {
-            this.props.state.data.right = this.state;
-            this.props.updateParent({currentComponent:'liveEvent'})
-        }
-        if (!this.props.state.data.event.is_start && (this.state.isAdmin || this.state.isCreator)) {
-            this.props.state.data.event.is_start = true;
-            this.props.state.data.event.is_finish = false;
-            updateEvent(this.props.state.data.event._id, this.props.state.data.event)
-        }
-        if (this.props.state.data.event.is_finish && (this.state.isAdmin || this.state.isCreator)) {
-            createRoom(this.props.state.data.event._id, tracks, this.props.state.data.event);
-            this.props.state.data.event.is_finish = false;
-            this.props.state.data.event.is_start = true;
-            updateEvent(this.props.state.data.event._id, this.props.state.data.event)
-        }
-        else  if (this.props.state.data.event.is_finish && (!this.state.isAdmin && !this.state.isCreator)) {
-            message.info('Levent est finis')
-            return;
-        }
-        this.props.state.data.right = this.state;
+        this.props.state.data.right             = this.state;
         this.props.updateParent({currentComponent:'liveEvent'})
     }
     finishEvent = () => {
         this.props.state.data.event.is_finish = true;
         updateEvent(this.props.state.data.event._id, this.props.state.data.event)
         closeRoom(this.props.state.data.event._id)
+        this.props.updateParent({data:this.props.state.data})
+        let tracks = this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks ? this.props.state.data.event.playlist.tracks.data : [];
+        createRoom(this.props.state.data.event._id, tracks, this.props.state.data.event, this.props.state.user._id);
+    }
+    quitpage = () => {
+        this.props.changeView('listEvent')
+        leaveRoom(this.props.state.data.event._id, this.props.state.user._id)
     }
 	render() {
-        console.log(this.props.state.data.event.is_start)
+        let openLive = '';
+        const is_start = this.props.state.data.event.is_start
+        const is_finish = this.props.state.data.event.is_finish
+        if (this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks && this.props.state.data.event.playlist.tracks.data.length > 0 ) {
+            if (!is_start && this.state.isCreator) {
+                openLive =  <Col span={3} offset={1}>
+                                <a href="#!" className="btn waves-effect waves-teal" onClick={this.openLiveEvent}>Start live</a> 
+                            </Col>
+            }
+            else if (is_start && is_finish && this.state.isCreator) {
+                openLive =  <Col span={3} offset={1}>
+                                <a href="#!" className="btn waves-effect waves-teal" onClick={this.openLiveEvent}>Restart live</a> 
+                            </Col>
+            }
+            else if (is_start && !is_finish) {
+               openLive =  <Col span={3} offset={1}>
+                                <a href="#!" className="btn waves-effect waves-teal" onClick={this.openLiveEvent}>Open live</a> 
+                            </Col>
+            }
+        }
         return  (
             <div>
-            <Row>
-                <Col span={3} offset={1}>
-                        <a href="#!" className="btn waves-effect waves-teal" onClick={() => this.props.changeView('listEvent')}>Back</a> 
-                </Col>
-                {
-                    this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks && this.props.state.data.event.playlist.tracks.data.length > 0?
+                <Row>
                     <Col span={3} offset={1}>
-                        <a href="#!" className="btn waves-effect waves-teal" onClick={this.openLiveEvent}>Open live Event</a> 
+                            <a href="#!" className="btn waves-effect waves-teal" onClick={this.quitpage}>Back</a> 
                     </Col>
-                    :
-                    null
-                }
-                { 
-                    this.state.isAdmin || this.state.isCreator ? 
-                    <Col span={3} offset={1}>
-                            <a href="#!" className="btn waves-effect waves-teal" onClick={this.finishEvent}>Finish Event</a> 
-                    </Col>
-                    :
-                    null
-                }
-            </Row>
+                    { openLive }
+                    { 
+                        this.state.isCreator  && (this.props.state.data.event.is_start && !this.props.state.data.event.is_finish)? 
+                        <Col span={3} offset={1}>
+                                <a href="#!" className="btn waves-effect waves-teal" onClick={this.finishEvent}>Finish live</a> 
+                        </Col>
+                        :
+                        null
+                    }
+                </Row>
                 <CardHeader state={this.props.state} updateParent={this.props.updateParent} />
                 <Row>
                     <Col>
