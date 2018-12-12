@@ -11,8 +11,15 @@ import Alamofire
 
 
 public func makeAlert(_ msg : String) {
-    let alert = UIAlertView(title: "Error", message: msg, delegate:nil, cancelButtonTitle:"Cancel")
-    alert.show()
+    // to check
+    if let cont = UIApplication.shared.keyWindow?.rootViewController?.childViewControllers.last {
+        let al = UIAlertController(title: "Error", message: msg, preferredStyle: .alert)
+        al.addAction(UIAlertAction(title: "Ok", style: .default, handler: { me in
+            al.dismiss(animated: true, completion: nil)
+        }))
+        cont.present(al, animated: true, completion: nil)
+    }
+    
 }
 
 class APIManager: NSObject, URLSessionDelegate {
@@ -65,7 +72,7 @@ class APIManager: NSObject, URLSessionDelegate {
         let tracksUrl = self.url + "album/\(album.id)"
         var request = URLRequest(url: URL(string: tracksUrl)!)
         request.httpMethod = "GET"
-        
+        request.setValue("Bearer " + userManager.currentUser!.token!, forHTTPHeaderField: "Authorization")
         searchAll(Album.self, request: request) { (tracksData) in
             var album = album
             album = tracksData
@@ -94,9 +101,8 @@ class APIManager: NSObject, URLSessionDelegate {
         var albumsRequest = URLRequest(url: URL(string: albumsUrl)!)
         albumsRequest.httpMethod = "GET"
         albumsRequest.setValue("Bearer " + userManager.currentUser!.token!, forHTTPHeaderField: "Authorization")
-        albumsRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        self.searchAll(AlbumData.self, request: albumsRequest, completion: { (albumData) in
-            completion(albumData.data)
+        self.searchAll([Album].self, request: albumsRequest, completion: { (albums) in
+            completion(albums)
         })
     }
     
@@ -107,13 +113,23 @@ class APIManager: NSObject, URLSessionDelegate {
         var tracksRequest = URLRequest(url: URL(string: tracksUrl)!)
         tracksRequest.httpMethod = "GET"
         tracksRequest.setValue("Bearer " + userManager.currentUser!.token!, forHTTPHeaderField: "Authorization")
-        tracksRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        self.searchAll(TrackData.self, request: tracksRequest, completion: { (trackData) in
-            completion(trackData.data)
+        self.searchAll([Track].self, request: tracksRequest, completion: { (tracks) in
+            completion(tracks)
+        })
+    }
+    
+    func searchArtists(_ search: String, completion: @escaping ([Artist]) -> ()) {
+        let w = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+        
+        let artistsUrl = self.url + "search/artist?q=\(w)"
+        var artistsRequest = URLRequest(url: URL(string: artistsUrl)!)
+        artistsRequest.httpMethod = "GET"
+        artistsRequest.setValue("Bearer " + userManager.currentUser!.token!, forHTTPHeaderField: "Authorization")
+        self.searchAll([Artist].self, request: artistsRequest, completion: { (artists) in
+            completion(artists)
         })
     }
 
-    
     func updateUser(_ data : Data?, completion : @escaping (([String:Any]?) -> ())) {
         let url = self.url + "user/me"
         var req = URLRequest(url: URL(string: url)!)
@@ -125,7 +141,6 @@ class APIManager: NSObject, URLSessionDelegate {
             if err != nil {
                 makeAlert("No response from the server, try again..")
             }
-            print(res)
             do {
                 let responseJSON = try JSONSerialization.jsonObject(with: data!, options: [])
                 if let responseJSON = responseJSON as? [String: Any] {
@@ -141,7 +156,7 @@ class APIManager: NSObject, URLSessionDelegate {
             }
         }.resume()
     }
-    
+
     func giveDeezerToken(_ user : MyUser) {
         let url = self.url + "user/login/deezer?deezerToken=\(user.deezer_token!)"
         var req = URLRequest(url : URL(string : url)!)
@@ -164,6 +179,7 @@ class APIManager: NSObject, URLSessionDelegate {
             }
         }.resume()
     }
+
     func deleteUserById() {
         let url = self.url + "user/me"
         var req = URLRequest(url : URL(string: url)!)
@@ -214,22 +230,9 @@ class APIManager: NSObject, URLSessionDelegate {
             catch {
                 makeAlert("Error")
             }
-            }.resume()
+        }.resume()
     }
-    
-    func searchArtists(_ search: String, completion: @escaping ([Artist]) -> ()) {
-        let w = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
-        
-        let artistsUrl = self.url + "search/artist?q=\(w)"
-        var artistsRequest = URLRequest(url: URL(string: artistsUrl)!)
-        artistsRequest.httpMethod = "GET"
-        artistsRequest.setValue("Bearer " + userManager.currentUser!.token!, forHTTPHeaderField: "Authorization")
-        artistsRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        self.searchAll(ArtistData.self, request: artistsRequest, completion: { (artistData) in
-            completion(artistData.data)
-        })
-    }
-    
+
     func getPlaylists(completion: @escaping (DataPlaylist) -> ()) {
         let playlistsUrl = self.url + "playlist"
         var playlistsRequest = URLRequest(url: URL(string: playlistsUrl)!)
@@ -261,7 +264,7 @@ class APIManager: NSObject, URLSessionDelegate {
         }.resume()
     }
     
-    func updatePlaylist(_ playlist: Playlist) {
+    func updatePlaylist(_ playlist: Playlist, completion : @escaping((String) -> ())) {
         guard let pId = playlist._id else { return }
         let playlistURL = self.url + "playlist/\(pId)"
         do {
@@ -276,19 +279,22 @@ class APIManager: NSObject, URLSessionDelegate {
             request(req)
             URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: req) { (data, response, err) in
                 SocketIOManager.sharedInstance.socket.emit("updatePlaylist", pId)
+                print(playlist.members)
+                completion("ok")
+                print("j'aii put playlist")
             }.resume()
         } catch {
             makeAlert("Error")
         }
     }
     
-    func deletePlaylist(_ id: String, _ target: PlaylistsController?) {
+    func deletePlaylist(_ id: String, _ target: PlaylistDetailController?) {
         let playlistsUrl = self.url + "playlist/\(id)"
         var createPlaylistRequest = URLRequest(url: URL(string: playlistsUrl)!)
         createPlaylistRequest.httpMethod = "DELETE"
         createPlaylistRequest.addValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
         URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: createPlaylistRequest) { (data, response, error) in
-            target?.reloadPlaylists()
+            target?.navigationController?.popViewController(animated: true)
         }.resume()
     }
     
@@ -364,7 +370,6 @@ class APIManager: NSObject, URLSessionDelegate {
                     if let error = responseJSON["error"] as? String {
                         makeAlert(error)
                     }
-                    
                 }
             }
             catch {
@@ -372,9 +377,7 @@ class APIManager: NSObject, URLSessionDelegate {
             }
         }.resume()
     }
-    
 
-    
     func loginUser(_ json : Data?, completion : @escaping (DataUser?) -> ()) {
         let loginUrl = self.url + "user/login"
         var loginRequest = URLRequest(url: URL(string: loginUrl)!)
@@ -423,8 +426,7 @@ class APIManager: NSObject, URLSessionDelegate {
                     makeAlert("No response from the server, try again..")
                     completion(false)
                 }
-                if let d = data {
-                    let json = NSString(data: d, encoding: String.Encoding.utf8.rawValue)
+                if data != nil {
                     completion(true)
                 }
             }).resume()
@@ -516,7 +518,7 @@ class APIManager: NSObject, URLSessionDelegate {
                         }
                         onCompletion(true)
                     }
-                case .failure(let error):
+                case .failure(_):
                     makeAlert("Error during downloading file")
                     onCompletion(false)
                 }
@@ -526,7 +528,7 @@ class APIManager: NSObject, URLSessionDelegate {
         }
     }
     
-    func            loadImageUsingCacheWithUrl(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ())
+    func loadImageUsingCacheWithUrl(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ())
     {
         URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: url, completionHandler: completion).resume()
     }

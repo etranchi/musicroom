@@ -1,61 +1,62 @@
 //
-//  SearchMemberController.swift
+//  ListFriendsToAdd.swift
 //  MusicRoom
 //
-//  Created by Etienne TRANCHIER on 11/28/18.
+//  Created by Jonathan DAVIN on 12/10/18.
 //  Copyright © 2018 Etienne Tranchier. All rights reserved.
 //
 
 import UIKit
 
-class SearchMemberController: UITableViewController{
+class ListFriendsToAdd: UITableViewController {
     var searchController : UISearchController!
     
     var dataUsers : [(User,Bool)] = []
     var filteredData : [(User,Bool)] = []
-    var root : EventDetailController?
-    var admins : Bool?
-    var event : Event? {
-        didSet {
-            if let _ = event {
-                apiManager.getAllUsers("", completion: { (res) in
-                    
-                        res.forEach({ (user) in
-                            if (self.members != nil && (self.members?.index(where: { (ur) -> Bool in
-                                return user.id == ur.id
-                            })) != nil) {
-                                self.dataUsers.append((user, true))
-                            } else {
-                                self.dataUsers.append((user, false))
-                            }
-                        })
-                        self.filteredData = self.dataUsers
-                        self.tableView.reloadData()
-                })
+    let root : PlaylistDetailController
+    var playlist: Playlist
+    var members: [User] = []
+    
+    @objc func updatePlaylist() {
+        dataUsers.forEach { (user, bool) in
+            if bool == true {
+                members.append(user)
             }
         }
-    }
-    var members : [User]?
-    
-    @objc func updateEvent() {
-        let ret = dataUsers.filter({ (user, bool) -> Bool in
-            return bool
-        })
-        let bis : [User] = ret.map({ (user, bool) -> User in
-            return user
-        })
-        if admins! {
-            event!.adminMembers = bis
-        } else {
-            event!.members = bis
+        //playlist.members = members
+        apiManager.updatePlaylist(playlist) { (err) in
+            self.navigationController?.popViewController(animated: true)
         }
-        root!.addMembersAdmins(event!)
-        self.navigationController?.popViewController(animated: true)
-        
+    }
+    
+    init(playlist: Playlist, root: PlaylistDetailController) {
+        self.playlist = playlist
+        self.root = root
+        self.members = playlist.members!
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        apiManager.getAllUsers("", completion: { (res) in
+            res.forEach({ (user) in
+                if ((self.members.index(where: { (ur) -> Bool in
+                    return user.id == ur.id
+                })) != nil) {
+                    self.dataUsers.append((user, true))
+                } else {
+                    self.dataUsers.append((user, false))
+                }
+            })
+            self.filteredData = self.dataUsers
+            self.tableView.reloadData()
+        })
+        
         view.backgroundColor = UIColor(white: 0.1, alpha: 1)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
         tableView.backgroundColor = UIColor(white: 0.1, alpha: 1)
@@ -64,7 +65,7 @@ class SearchMemberController: UITableViewController{
         let button = UIButton()
         button.setAttributedTitle(NSAttributedString(string: "Save", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
         button.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
-        button.addTarget(self, action: #selector(updateEvent), for: .touchUpInside)
+        button.addTarget(self, action: #selector(updatePlaylist), for: .touchUpInside)
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchBar.delegate = self
@@ -78,11 +79,6 @@ class SearchMemberController: UITableViewController{
         definesPresentationContext = true
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-    
-    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -90,7 +86,6 @@ class SearchMemberController: UITableViewController{
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return filteredData.count
     }
-    
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
@@ -141,20 +136,21 @@ class SearchMemberController: UITableViewController{
     }
 }
 
-extension SearchMemberController : UISearchBarDelegate {
+
+extension ListFriendsToAdd : UISearchBarDelegate {
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         self.updateSearchResults(for: self.searchController)
     }
 }
 
-extension SearchMemberController : UISearchResultsUpdating {
+extension ListFriendsToAdd : UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         if let searchText = searchController.searchBar.text {
             if !searchText.isEmpty {
                 apiManager.getAllUsers(searchText, completion: { (res) in
                     self.filteredData = []
                     res.forEach({ (user) in
-                        if (self.members != nil && (self.members?.index(where: { (ur) -> Bool in
+                        if ((self.members.index(where: { (ur) -> Bool in
                             return user.id == ur.id
                         })) != nil) {
                             self.filteredData.append((user, true))
@@ -172,4 +168,5 @@ extension SearchMemberController : UISearchResultsUpdating {
         }
     }
 }
+
 

@@ -9,52 +9,58 @@
 import UIKit
 
 class PlaylistsController: UITableViewController {
-    let sections = ["My Playlists", "Friend's Playlist"]
     var playlists : DataPlaylist?
     var firstLoad = true
     var isAddingSong = false
     var track: Track?
+    var globalCount = 2
     private let playlistCellId = "playlistCellId"
     private let createCellId = "createCellId"
     private let defaultCellId = "defaultCellId"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(white: 0.1, alpha: 1)
-        navigationController?.navigationBar.topItem?.title = "Playlists"
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
-        tableView.register(SearchPlaylistCell.self, forCellReuseIdentifier: playlistCellId)
+        tableView.register(ListPlaylistCell.self, forCellReuseIdentifier: playlistCellId)
         tableView.register(CreateButtonCell.self, forCellReuseIdentifier: createCellId)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: defaultCellId)
-        apiManager.getPlaylists { (res) in
-            self.playlists = res
-            self.tableView.reloadData()
-        }
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        title = ""
+        navigationController?.navigationBar.topItem?.title = ""
     }
     
-    // MARK: - Table view data source
-    
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 1
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        title = "Playlists"
+        navigationController?.navigationBar.topItem?.title = ""
+        playlists?.myPlaylists?.removeAll()
+        playlists?.friendPlaylists?.removeAll()
+        tableView.reloadData()
+        reloadPlaylists()
     }
     
+
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return self.sections.count + 2
-    }
-    
-    func reloadEvent() {
-        apiManager.getPlaylists { (res) in
-            self.playlists = res
-            self.tableView.reloadData()
+        var count = 2
+        if let pl = playlists {
+            if pl.myPlaylists?.count != 0  {
+                count += 1
+            }
+            if pl.friendPlaylists?.count != 0 {
+                count += 1
+            }
         }
+        globalCount = count
+        return count
     }
+
     func reloadPlaylists() {
         apiManager.getPlaylists { (playlists) in
             self.playlists = playlists
@@ -90,21 +96,25 @@ class PlaylistsController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.row == 0 && playlists?.myPlaylists != nil {
-            let cell = tableView.dequeueReusableCell(withIdentifier: playlistCellId, for: indexPath) as! SearchPlaylistCell
+        if indexPath.row == 0 && globalCount >= 3 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: playlistCellId, for: indexPath) as! ListPlaylistCell
             cell.isEditable = true
             cell.rootTarget = self
-            cell.title = sections[indexPath.row]
-            cell.playlist = playlists?.myPlaylists
+            cell.type = playlists?.myPlaylists?.count != 0 ? .mine : .friends
+            cell.isAddingSong = isAddingSong
+            cell.title = playlists?.myPlaylists?.count != 0 ? "My Playlists" : "Friends Playlists"
+            cell.playlist = playlists?.myPlaylists?.count != 0 ? playlists?.myPlaylists : playlists?.friendPlaylists
             return cell
-        } else if indexPath.row == 1 && playlists?.friendPlaylists != nil {
-            let cell = tableView.dequeueReusableCell(withIdentifier: playlistCellId, for: indexPath) as! SearchPlaylistCell
+        } else if indexPath.row == 1 && globalCount == 4 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: playlistCellId, for: indexPath) as! ListPlaylistCell
             cell.isEditable = false
             cell.rootTarget = self
-            cell.title = sections[indexPath.row]
+            cell.type = .friends
+            cell.isAddingSong = isAddingSong
+            cell.title = "Friends Playlists"
             cell.playlist = playlists?.friendPlaylists
             return cell
-        } else if indexPath.row == sections.count {
+        } else if indexPath.row == globalCount - 2 {
             let cell = tableView.dequeueReusableCell(withIdentifier: createCellId, for: indexPath) as! CreateButtonCell
             cell.isCreating = true
             cell.root = self
@@ -113,7 +123,7 @@ class PlaylistsController: UITableViewController {
             cell.title = "CREATE PLAYLIST"
             return cell
         }
-        else if indexPath.row == sections.count + 1 {
+        else if indexPath.row == globalCount - 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: createCellId, for: indexPath) as! CreateButtonCell
             cell.isCreating = false
             cell.root = self
@@ -130,61 +140,9 @@ class PlaylistsController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let height: CGFloat = 0
-        if indexPath.row == 0 && (playlists?.myPlaylists?.count == 0 || playlists?.myPlaylists == nil){
-            return height
-        } else if indexPath.row == 1 && (playlists?.friendPlaylists?.count == 0 || playlists?.friendPlaylists == nil){
-            return height
-        } else if( indexPath.row == sections.count + 1  || indexPath.row == sections.count) {
+        if indexPath.row >= globalCount - 2 {
             return 60
         }
         return 240
     }
-    
-    
-    /*
-     // Override to support conditional editing of the table view.
-     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-     // Return false if you do not want the specified item to be editable.
-     return true
-     }
-     */
-    
-    /*
-     // Override to support editing the table view.
-     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-     if editingStyle == .delete {
-     // Delete the row from the data source
-     tableView.deleteRows(at: [indexPath], with: .fade)
-     } else if editingStyle == .insert {
-     // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-     }
-     }
-     */
-    
-    /*
-     // Override to support rearranging the table view.
-     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-     
-     }
-     */
-    
-    /*
-     // Override to support conditional rearranging of the table view.
-     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-     // Return false if you do not want the item to be re-orderable.
-     return true
-     }
-     */
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
 }

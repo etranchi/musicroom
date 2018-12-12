@@ -80,6 +80,32 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
         tv.translatesAutoresizingMaskIntoConstraints = false
         return tv
     }()
+
+   var localizeLabel : UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 13, weight: .medium)
+        label.textColor = .white
+        label.textAlignment = .center
+        label.numberOfLines = 1
+        label.text = "Localize this event (optional)"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let localizeTF : UITextField = {
+        let tf = UITextField()
+        tf.font = UIFont.systemFont(ofSize: 14, weight: .light)
+        tf.textAlignment = .center
+        tf.backgroundColor = UIColor.gray
+        tf.borderStyle = .roundedRect
+        tf.textColor = .white
+        tf.returnKeyType = .done
+        tf.enablesReturnKeyAutomatically = true
+        tf.attributedPlaceholder = NSAttributedString(string: "Distance in km", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white])
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        return tf
+    }()
+
     let mapView : MKMapView = {
         let mv = MKMapView()
         return mv
@@ -102,7 +128,7 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
         scrollView = UIScrollView(frame: self.view.frame)
         scrollView!.delegate = self
         scrollView!.alwaysBounceVertical = true
-        scrollView?.contentInset = UIEdgeInsets(top: 14, left: 0, bottom: 1130, right: 0)
+        scrollView?.contentInset = UIEdgeInsets(top: 14, left: 0, bottom: 1355, right: 0)
         self.view.addSubview(scrollView!)
         imagePicker.delegate = self
         let button = UIButton()
@@ -128,7 +154,7 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
         button.backgroundColor = UIColor.gray
         button.layer.cornerRadius = 8
         button.setAttributedTitle(NSAttributedString(string: "Add a picture", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
-        button.addTarget(self, action: #selector(imagePick), for: .touchUpInside)
+        button.addTarget(self, action: #selector(handleSelectProfileImage), for: .touchUpInside)
         
         button.translatesAutoresizingMaskIntoConstraints = false
         playlistView = PlaylistCollectionView([], .horizontal, nil)
@@ -141,6 +167,9 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
         scrollView!.addSubview(descriptionTV)
         scrollView!.addSubview(playlistView!)
         scrollView!.addSubview(descriptionLabel)
+        scrollView!.addSubview(localizeLabel)
+        scrollView!.addSubview(localizeTF)
+        
         NSLayoutConstraint.activate([
             
             titleTF.topAnchor.constraint(equalTo: scrollView!.topAnchor, constant: 20),
@@ -153,6 +182,7 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
             
             imageView.widthAnchor.constraint(equalTo: scrollView!.widthAnchor, multiplier: 0.9),
             imageView.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
+            imageView.heightAnchor.constraint(equalTo: scrollView!.widthAnchor, multiplier: 0.9),
             imageView.topAnchor.constraint(equalTo: button.bottomAnchor, constant: 20),
             
             
@@ -160,9 +190,18 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
             segmentedBar.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
             segmentedBar.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 20),
             
+            localizeLabel.widthAnchor.constraint(equalTo: scrollView!.widthAnchor, multiplier: 0.9),
+            localizeLabel.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
+            localizeLabel.topAnchor.constraint(equalTo: segmentedBar.bottomAnchor, constant: 20),
+            
+            localizeTF.widthAnchor.constraint(equalTo: scrollView!.widthAnchor, multiplier: 0.9),
+            localizeTF.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
+            localizeTF.topAnchor.constraint(equalTo: localizeLabel.bottomAnchor, constant: 20),
+            
+            
             descriptionLabel.widthAnchor.constraint(equalTo: scrollView!.widthAnchor, multiplier: 0.9),
             descriptionLabel.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
-            descriptionLabel.topAnchor.constraint(equalTo: segmentedBar.bottomAnchor, constant: 20),
+            descriptionLabel.topAnchor.constraint(equalTo: localizeTF.bottomAnchor, constant: 20),
             
             descriptionTV.widthAnchor.constraint(equalTo: scrollView!.widthAnchor, multiplier: 0.9),
             descriptionTV.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
@@ -178,8 +217,7 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
             playlistView!.widthAnchor.constraint(equalTo: scrollView!.widthAnchor, multiplier: 0.9),
             playlistView!.centerXAnchor.constraint(equalTo: scrollView!.centerXAnchor),
             playlistView!.heightAnchor.constraint(equalToConstant: 200)
-            
-            ])
+        ])
     }
     
     @objc func imagePick() {
@@ -195,12 +233,15 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
     }
     
     @objc func createEvent() {
-        // if data is good
+        var distance_required = false
         let vc = self.navigationController?.viewControllers[0] as! MapController
         guard let _ = selectedPin, let _ = selectedPin?.coordinate, let _ = selectedPin?.coordinate.latitude, let _ = selectedPin?.coordinate.longitude, let _ = selectedPin?.administrativeArea, let _ = selectedPin?.locality, let _ = selectedPin?.isoCountryCode, let _ = selectedPin?.thoroughfare, let _ = selectedPin?.subThoroughfare else {
             self.navigationController?.popViewController(animated: true)
             ToastView.shared.short(vc.view, txt_msg: "Can't create an event here", color: UIColor.red)
             return
+        }
+        if self.segmentedBar.selectedSegmentIndex == 1 {
+           distance_required = true
         }
         if titleTF.text != nil && imageView.image != nil && playlistView?.selectedPlaylist != nil {
             let myUser = userManager.currentUser
@@ -208,10 +249,9 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
             let address = Address(p: (selectedPin?.administrativeArea)!, v: (selectedPin?.locality)!, cp: (selectedPin?.isoCountryCode)!, r: (selectedPin?.thoroughfare)!, n: (selectedPin?.subThoroughfare)!)
             let location = Location(address: address, coord: coord)
             apiManager.getMe((myUser?.token)!, completion: { (user) in
-                let event = Event(_id : nil, creator : user, title: self.titleTF.text!, description: self.descriptionTV.text!, location: location, visibility: self.segmentedBar.selectedSegmentIndex, shared: self.segmentedBar.selectedSegmentIndex == 0 ? true : false , creationDate: String(describing: Date()), date: String(describing: Date()), playlist: self.playlistView?.selectedPlaylist!, members: [], adminMembers: [], picture : nil)
+                let event = Event(_id : nil, creator : user, title: self.titleTF.text!, description: self.descriptionTV.text!, location: location, visibility: self.segmentedBar.selectedSegmentIndex, shared: self.segmentedBar.selectedSegmentIndex == 0 ? true : false , distance_required : distance_required, distance_max: distance_required && self.localizeTF.text != nil && Int(self.localizeTF.text!) != nil ? Int(self.localizeTF.text!) : nil, creationDate: String(describing: Date()), date: String(describing: Date()), playlist: self.playlistView?.selectedPlaylist!, members: [], adminMembers: [], picture : nil)
                 apiManager.postEvent((myUser?.token)!, event: event, img: self.imageView.image!) { (resp) in
                     if resp {
-            
                         vc.selectedPin = nil
                         vc.mapView.removeAnnotations(vc.mapView.annotations)
                         vc.printToastMsg()
@@ -249,16 +289,27 @@ class EventController: UIViewController , UINavigationControllerDelegate, UIScro
 }
 
 extension EventController : UIImagePickerControllerDelegate {
+    @objc func          handleSelectProfileImage()
+    {
+        let             picker = UIImagePickerController()
+        
+        picker.delegate = self
+        picker.allowsEditing = true
+        present(picker, animated: true, completion: nil)
+    }
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        print(info)
-        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage , let urlImage = info[UIImagePickerControllerImageURL] as? URL{
-            urlImageToString = urlImage
-            imageView.image = pickedImage
-            NSLayoutConstraint.activate([
-                imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 0.6)
-                ])
+        var             selectedImageFromPicker: UIImage!
+        
+        if let          edit = info[UIImagePickerControllerEditedImage] as? UIImage {
+            selectedImageFromPicker = edit
+        } else if let   ori = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            selectedImageFromPicker = ori
         }
-        dismiss(animated: true, completion: nil)
+        if let selectedImage = selectedImageFromPicker {
+            imageView.image  = selectedImage
+        }
+        dismiss(animated: true)
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {

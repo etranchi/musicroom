@@ -99,7 +99,7 @@ class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate 
         let apiManager = APIManager()
         guard let pass = passTF.text, let mail = loginTF.text else { return }
         let json = [
-            "email" : mail,
+            "email" : mail.lowercased(),
             "password" : pass
         ]
         let data = try? JSONSerialization.data(withJSONObject: json, options: [])
@@ -197,14 +197,13 @@ class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate 
             passTF.leadingAnchor.constraint(equalTo: apiLoginContainer.leadingAnchor, constant: 14),
             passTF.trailingAnchor.constraint(equalTo: apiLoginContainer.trailingAnchor, constant: -14),
             passTF.heightAnchor.constraint(equalToConstant: 40),
-            ])
+        ])
     }
     
     func setupView() {
         apiLoginButton.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
         googleButton!.translatesAutoresizingMaskIntoConstraints = false
         facebook!.translatesAutoresizingMaskIntoConstraints = false
-        
         view.addSubview(googleButton!)
         view.addSubview(facebook!)
         view.addSubview(choiceLabel)

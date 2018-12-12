@@ -10,6 +10,7 @@ import UIKit
 
 class AlbumHeaderView: UIView {
     let albumCover: UIImage
+    var playlistDetailController: PlaylistDetailController?
     let title: String
     var playlist: Playlist?
     var isEditable: Bool = false {
@@ -133,9 +134,9 @@ class AlbumHeaderView: UIView {
             dotsLabel.widthAnchor.constraint(equalToConstant: 50),
             
             editableContainer.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 40),
-            editableContainer.bottomAnchor.constraint(equalTo: titleLabel.topAnchor, constant: 20),
+            editableContainer.bottomAnchor.constraint(equalTo: albumImageView.bottomAnchor, constant: -10),
             editableContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
-            editableContainer.heightAnchor.constraint(equalToConstant: 200)
+            editableContainer.heightAnchor.constraint(equalToConstant: 150)
         ])
         dotsLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(managePlaylistPrivacy)))
         editableContainer.transform = CGAffineTransform(translationX: self.frame.width, y: 0)

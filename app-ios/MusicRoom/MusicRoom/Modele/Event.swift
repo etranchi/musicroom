@@ -30,10 +30,12 @@ struct Event : Codable {
     let _id : String?
     let creator : User?
     let title : String
-    let description : String
+    var description : String
     let location : Location
     let visibility : Int?
-    let shared : Bool?
+    var shared : Bool?
+    var distance_required : Bool
+    var distance_max : Int?
     let creationDate : String?
     let date : String?
     let playlist : Playlist?
@@ -45,14 +47,19 @@ struct Event : Codable {
         case shared = "public"
         case creationDate = "creation_date"
         case date = "event_date"
-        case creator, title, description, location, visibility, playlist, members, adminMembers, picture, _id
+        case creator, title, description, location, visibility, playlist, members, adminMembers, picture, _id, distance_required, distance_max
     }
 
 }
 
 
 struct DataEvent : Codable {
-    let myEvents : [Event]
-    let friendEvents : [Event]
+    var myEvents : [Event]
+    var friendEvents : [Event]
     let allEvents : [Event]
+}
+
+
+enum EventType {
+    case mine, friends, others
 }

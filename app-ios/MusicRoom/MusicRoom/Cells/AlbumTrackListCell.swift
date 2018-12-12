@@ -12,6 +12,10 @@ class AlbumTrackListCell: UITableViewCell {
     var isInPlaylist = false
     var rootController: UITableViewController?
     var indexPath: IndexPath?
+    var type : EventType?
+    var iAmAdmin : Bool?
+    var iAmMember : Bool?
+    var icon : UIImage = #imageLiteral(resourceName: "plus_icon")
     var track: Track? {
         didSet {
             titleLabel.text = track?.title
@@ -19,9 +23,11 @@ class AlbumTrackListCell: UITableViewCell {
             if track?.id == currentTrack?.id {
                 titleLabel.textColor = UIColor(red: 20 / 255, green: 220 / 255, blue: 20 / 255, alpha: 1)
             }
-            var icon = #imageLiteral(resourceName: "plus_icon")
             if isInPlaylist {
                 icon = #imageLiteral(resourceName: "minus_icon")
+            }
+            if iAmMember != nil && iAmMember!{
+                icon = #imageLiteral(resourceName: "upvote_icon")
             }
             let tintedIcon = icon.withRenderingMode(.alwaysTemplate)
             plusButton.setImage(tintedIcon, for: .normal)
@@ -97,6 +103,18 @@ class AlbumTrackListCell: UITableViewCell {
     }
     
     @objc func handleAddSong() {
+        if iAmMember != nil && iAmMember!{
+            if icon == #imageLiteral(resourceName: "upvote_icon") {
+                icon = #imageLiteral(resourceName: "upvoted_icon")
+                plusButton.tintColor = UIColor(red: 30 / 255, green: 180 / 255, blue: 30 / 255, alpha: 1)
+            } else if icon == #imageLiteral(resourceName: "upvoted_icon") {
+                icon = #imageLiteral(resourceName: "upvote_icon")
+                plusButton.tintColor = .white
+            }
+            let tintedIcon = icon.withRenderingMode(.alwaysTemplate)
+            plusButton.setImage(tintedIcon, for: .normal)
+          return
+        }
         if isInPlaylist {
             let root = rootController as? PlaylistDetailController
             root?.deleteTrackFromPlaylist(track: track!, index: indexPath!)

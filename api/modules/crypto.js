@@ -12,6 +12,7 @@ class Crypto {
 		// {
 		// 	// expiresIn: expiresIn
 		// });
+		
 		// token = Buffer.from(JSON.stringify({token: token}), 'utf8').toString('base64');
 		return token;
 	}

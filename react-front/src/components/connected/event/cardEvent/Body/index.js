@@ -7,6 +7,7 @@ import Error from '../../../../other/errorController'
 import SearchBar from '../../../../other/searchbar';
 import LocationSearchInput from '../../locationSearchInput'
 import { updateEvent, updateTracks } from '../../../../other/sockets';
+import moment from 'moment';
 
 export default class Body extends Component {
     constructor(props) {
@@ -133,9 +134,10 @@ export default class Body extends Component {
         }
         else
             hours = date.split(' ')[4]
-
-        if (timeBeforeEvent < 0.0)
+        
+        if (timeBeforeEvent < 0.0 && curTime > moment().endOf('day')) {
             return "Déja passée"
+        }
         if (timeBeforeEvent > weekTimeStamp)
             return ret
         else if (timeBeforeEvent === weekTimeStamp)
@@ -167,6 +169,10 @@ export default class Body extends Component {
         this.setState({isPlaying:!this.state.isPlaying}, () => {
             window.scrollTo(2000, 2000)
         })
+    }
+    disabledDate = current => {
+        // Can not select days before today and today
+        return current && current <= moment().startOf('day');
     }
 	render() {
         return (
@@ -290,6 +296,7 @@ export default class Body extends Component {
                         <Col span={8}  offset={8}>
                             <DatePicker
                                 name="event_date"
+                                disabledDate={this.disabledDate}
                                 showTime
                                 format="YYYY-MM-DD HH:mm:ss"
                                 placeholder="Select Time"

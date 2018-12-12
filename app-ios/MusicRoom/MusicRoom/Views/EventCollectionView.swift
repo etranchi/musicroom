@@ -12,13 +12,14 @@ class EventCollectionView: UICollectionView, UICollectionViewDataSource, UIColle
     
     let events: [Event]
     let rootTarget: UITableViewController?
+    let type : EventType
     private let eventCellId = "eventCellId"
     
     
-    init(_ events: [Event], _ scrollDirection: UICollectionViewScrollDirection, _ rootTarget: UITableViewController?) {
+    init(_ events: [Event], _ scrollDirection: UICollectionViewScrollDirection, _ rootTarget: UITableViewController?, _ type: EventType) {
         self.rootTarget = rootTarget
         self.events = events
-        
+        self.type = type
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = scrollDirection
         layout.minimumInteritemSpacing = 14
@@ -42,7 +43,7 @@ class EventCollectionView: UICollectionView, UICollectionViewDataSource, UIColle
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let root = rootTarget as? EventsController {
             if let cell = collectionView.cellForItem(at: indexPath) as? EventCell {
-                root.presentSelectedEvent(events[indexPath.row], img: cell.imageView.image!)
+                root.presentSelectedEvent(events[indexPath.row], img: cell.imageView.image!, type : type)
             }
         }
     }

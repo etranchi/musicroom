@@ -17,6 +17,9 @@ class PlaylistDetailController: UITableViewController {
     var isEditable = false
     var headerView: AlbumHeaderView!
     let songCellId = "SongCellId"
+    var iAmMember : Bool = false
+    var iAmAdmin : Bool = false
+    var type : EventType = .others
     
     private let headerHeight: CGFloat = 225
     
@@ -73,8 +76,6 @@ class PlaylistDetailController: UITableViewController {
         
         let navi = navigationController as? CustomNavigationController
         navi?.animatedShowNavigationBar()
-        navigationController?.navigationBar.topItem?.title = "Search"
-        //SocketIOManager.sharedInstance.leavePlaylist(playlist._id!)
     }
     
     override func viewWillLayoutSubviews() {
@@ -142,6 +143,7 @@ class PlaylistDetailController: UITableViewController {
     fileprivate func setupHeader() {
         headerView = AlbumHeaderView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: headerHeight), albumCover: playlistCover, title: playlist.title)
         headerView.isUserInteractionEnabled = true
+        headerView.playlistDetailController = self
         headerView.playlist = playlist
         headerView.isEditable = isEditable
         tableView.register(AlbumTrackListCell.self, forCellReuseIdentifier: songCellId)
@@ -152,8 +154,16 @@ class PlaylistDetailController: UITableViewController {
         updateHeaderView()
     }
     
+    func displayFriendsList() {
+        let vc = ListFriendsToAdd(playlist: playlist, root: self)
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: songCellId, for: indexPath) as! AlbumTrackListCell
+        cell.iAmAdmin = iAmAdmin
+        cell.iAmMember = iAmMember
+        cell.type = type
         cell.isInPlaylist = true
         cell.backgroundColor = UIColor(white: 0.1, alpha: 1)
         cell.track = tracks[indexPath.row]
@@ -161,27 +171,37 @@ class PlaylistDetailController: UITableViewController {
         cell.selectionStyle = .none
         cell.rootController = self
         cell.indexPath = indexPath
-        cell.dotsLabel.isUserInteractionEnabled = true
-        cell.dotsLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(edit)))
-        if tableView.isEditing {
-            cell.dotsLabel.isHidden = true
-        } else if isUnlocked == false {
-            cell.dotsLabel.isHidden = true
-            cell.lockedIcon.isHidden = false
-        } else {
-            cell.dotsLabel.isHidden = false
-            cell.lockedIcon.isHidden = true
+        cell.isUserInteractionEnabled = true
+        cell.dotsLabel.isHidden = true
+        cell.dotsLabel.isUserInteractionEnabled = false
+        cell.lockedIcon.isHidden = true
+        if iAmAdmin || type == .mine {
+            cell.dotsLabel.isUserInteractionEnabled = true
+            cell.dotsLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(edit)))
+            if tableView.isEditing {
+                cell.dotsLabel.isHidden = true
+            } else if isUnlocked == false {
+                cell.dotsLabel.isHidden = true
+                cell.lockedIcon.isHidden = false
+            } else {
+                cell.dotsLabel.isHidden = false
+                cell.lockedIcon.isHidden = true
+            }
         }
         return cell
     }
     
     func deleteTrackFromPlaylist(track: Track, index: IndexPath) {
-        if playlist._id != nil {
-            apiManager.deleteTrackFromPlaylist(String(describing: playlist._id!), track, target: self)
-            tracks.remove(at: index.row)
-            tableView.deleteRows(at: [index], with: .fade)
+        if type != .mine {
+            if playlist._id != nil {
+                apiManager.deleteTrackFromPlaylist(String(describing: playlist._id!), track, target: self)
+                tracks.remove(at: index.row)
+                tableView.deleteRows(at: [index], with: .fade)
+            } else {
+                ToastView.shared.short(self.view, txt_msg: "Can't modify deezer playlist", color: UIColor.red)
+            }
         } else {
-            ToastView.shared.short(self.view, txt_msg: "Can't modify deezer playlist", color: UIColor.red)
+            // love track
         }
     }
     

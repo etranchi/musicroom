@@ -37,7 +37,6 @@ class                   SocketIOManager: NSObject
         }
         socket.on("playlistUpdated") { ( dataArray, ack) -> Void in
             guard dataArray.count > 0 else {
-                print("coco")
                 completionHandler(1, nil)
                 return
             }
@@ -53,7 +52,7 @@ class                   SocketIOManager: NSObject
     }
     
     func                unlockPlaylist(_ playlistId: String, playlist: Playlist) {
-        apiManager.updatePlaylist(playlist)
+        apiManager.updatePlaylist(playlist) { (ll) in }
     }
     
     func                joinPlayList(_ playlistId: String) {

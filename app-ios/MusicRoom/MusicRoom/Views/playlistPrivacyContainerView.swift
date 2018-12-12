@@ -46,6 +46,17 @@ class playlistPrivacyContainerView: UIView {
         return button
     }()
     
+    let deleteButton: UIButton = {
+        let button = UIButton(type: .system)
+        let deleteIcon = #imageLiteral(resourceName: "trash")
+        let tintedIcon = deleteIcon.withRenderingMode(.alwaysTemplate)
+        button.setImage(tintedIcon, for: .normal)
+        button.tintColor = UIColor(red: 1, green: 0.3, blue: 0.3, alpha: 1)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.isUserInteractionEnabled = true
+        return button
+    }()
+    
     let switchButton: UISwitch = {
         let sw = UISwitch()
         sw.translatesAutoresizingMaskIntoConstraints = false
@@ -74,6 +85,17 @@ class playlistPrivacyContainerView: UIView {
         return label
     }()
     
+    let deleteLabel: UILabel = {
+        let label = UILabel()
+        
+        label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        label.textColor = .white
+        label.text = "delete playlist"
+        label.numberOfLines = 1
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     let separator: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -96,25 +118,46 @@ class playlistPrivacyContainerView: UIView {
     }
     
     @objc func valueChanged(_ sender: UISwitch) {
-        playlist?.public = sender.isOn
-        print(sender.isOn)
+        if var p = playlist {
+            p.public = sender.isOn
+            apiManager.updatePlaylist(p, completion: { (done) in })
+        }
+        
+    }
+    
+    @objc func handleAddFriend() {
+        rootView?.playlistDetailController?.displayFriendsList()
+    }
+    
+    
+    @objc func handleDeletePlaylist() {
+        let alert = UIAlertController(title: "Delete", message: "Are you sure you whant to delete \"\(playlist!.title)\"?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { (action) in
+            apiManager.deletePlaylist(self.playlist!._id!, self.rootView?.playlistDetailController)
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        rootView?.playlistDetailController?.present(alert, animated: true, completion: nil)
     }
     
     func setupView() {
         rightArrowButton.addTarget(self, action: #selector(backToDetails), for: .touchUpInside)
         switchButton.addTarget(self, action: #selector(valueChanged), for: .valueChanged)
+        friendShareButton.addTarget(self, action: #selector(handleAddFriend), for: .touchUpInside)
+        deleteButton.addTarget(self, action: #selector(handleDeletePlaylist), for: .touchUpInside)
         addSubview(rightArrowButton)
         addSubview(privacyContainer)
         privacyContainer.addSubview(switchButton)
         privacyContainer.addSubview(privacyLabel)
         privacyContainer.addSubview(separator)
         addSubview(friendsLabel)
-        addSubview(separator1)
         addSubview(friendShareButton)
+        addSubview(separator1)
+        addSubview(deleteLabel)
+        addSubview(deleteButton)
         
         NSLayoutConstraint.activate([
             rightArrowButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-            rightArrowButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
+            rightArrowButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
             rightArrowButton.heightAnchor.constraint(equalToConstant: 30),
             rightArrowButton.widthAnchor.constraint(equalToConstant: 30),
             
@@ -150,6 +193,16 @@ class playlistPrivacyContainerView: UIView {
             separator1.bottomAnchor.constraint(equalTo: friendsLabel.bottomAnchor),
             separator1.leadingAnchor.constraint(equalTo: friendsLabel.leadingAnchor),
             separator1.trailingAnchor.constraint(equalTo: friendsLabel.trailingAnchor),
+            
+            deleteLabel.topAnchor.constraint(equalTo: separator1.bottomAnchor),
+            deleteLabel.leadingAnchor.constraint(equalTo: privacyContainer.leadingAnchor),
+            deleteLabel.trailingAnchor.constraint(equalTo: privacyContainer.trailingAnchor),
+            deleteLabel.heightAnchor.constraint(equalToConstant: 50),
+            
+            deleteButton.topAnchor.constraint(equalTo: deleteLabel.topAnchor, constant: 12.5),
+            deleteButton.trailingAnchor.constraint(equalTo: privacyContainer.trailingAnchor, constant: -2.5),
+            deleteButton.heightAnchor.constraint(equalToConstant: 25),
+            deleteButton.widthAnchor.constraint(equalToConstant: 25),
         ])
         if playlist?.public == true {
             switchButton.isOn = true
