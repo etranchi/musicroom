@@ -16,11 +16,16 @@ class Setting extends Component {
 		};
 	}
 	componentWillMount = () => {
-		axios.get(process.env.REACT_APP_API_URL + '/user/me', 
-			{'headers':{'Authorization':'Bearer '+ localStorage.getItem('token')}})
-				.then((resp) => { this.setState({user:resp.data, loading:true}); })
-				.catch((err) => { this.setState({error: err}) });
+		this.getUser();
 	}
+
+	getUser = () => {
+		axios.get(process.env.REACT_APP_API_URL + '/user/me', 
+		{'headers':{'Authorization':'Bearer '+ localStorage.getItem('token')}})
+			.then((resp) => { this.setState({user:resp.data, loading:true}); })
+			.catch((err) => { this.setState({error: err}) });
+	}
+
 	loginDeezer = () => {
 		const that = this;
 		DZ.init({
@@ -28,11 +33,11 @@ class Setting extends Component {
 		    channelUrl 	: process.env.REACT_APP_FRONT_URL,
 		  });
         DZ.login(function(response) {
-          if (response.authResponse) {
+          if (response.authResponse && response.authResponse.accessToken !== null) {
+			console.log(response.authResponse);
 			axios.put(process.env.REACT_APP_API_URL + '/user/login/deezer?access_token=' + localStorage.getItem("token") + '&deezerToken=' + response.authResponse.accessToken)
-			.then(resp => {
-				that.props.updateParent({ user: resp.data })
-				that.setState({ user: resp.data })
+			.then(() => {
+				that.getUser()
 			})
 			.catch(err => { console.log(err); })
           } else console.log('User cancelled login or did not fully authorize.');
@@ -40,9 +45,8 @@ class Setting extends Component {
     }
     logoutDeezer = () => {
     	axios.delete(process.env.REACT_APP_API_URL + '/user/login/deezer', {'headers':{'Authorization' : 'Bearer ' + localStorage.getItem('token')}})
-    	.then(resp => {
-    		this.props.updateParent({ user: resp.data })
-    		this.setState({ user: resp.data })
+    	.then(() => {
+			this.getUser()
     	})
     	.catch(err => { console.log(err); })
 	}
