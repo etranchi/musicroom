@@ -178,6 +178,7 @@ module.exports = function (io) {
         socket.on('updateEvent', (roomID, newEvent) => {
             console.log("[Socket] -> updateEvent")
               /* For Swift Team */
+              console.log("Update Event : ", typeof roomID)
             if (typeof roomID === 'object') {
                 let obj = JSON.parse(roomID);
                 roomID = obj.roomID

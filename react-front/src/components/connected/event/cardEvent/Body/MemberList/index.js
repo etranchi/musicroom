@@ -3,6 +3,15 @@ import SearchBar from '../../../../../other/searchbar';
 import { List, Card, Avatar, Icon, Col, Row, Layout } from 'antd';
 
 export default class MemberList extends Component {
+
+    componentWillMount = () => {
+        this.props.members.forEach(member => {
+            member.picture = member.picture.indexOf("https://") !== -1 ?
+            member.picture 
+            : 
+            process.env.REACT_APP_API_URL + "/userPicture/" + member.picture
+        });
+    }
 	render() {
         return (
             <Layout.Content>
