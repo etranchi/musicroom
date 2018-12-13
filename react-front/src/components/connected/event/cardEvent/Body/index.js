@@ -78,7 +78,6 @@ export default class Body extends Component {
                 playlist = resp.data
                 this.props.state.data.event.playlist = playlist;
                 this.props.updateParent({'currentPlayerTracks': currentPlayerTracks, 'data' : this.props.state.data, 'playlistId':playlist.id})
-                console.log("Playlist change, socket update Event")
                 updateEvent(this.roomID, this.props.state.data.event)
                 updateTracks(this.roomID, this.props.state.data.event.playlist.tracks.data)
                 this.setState({playlistId:playlist.id, isPlaying:true})         
@@ -199,14 +198,14 @@ export default class Body extends Component {
                     </Col>
                 </Row>
                 <Row style={{height:'80px'}}>
-                    <Col span={5}  offset={5} style={{ borderLeft: '2px solid #03a9f4'}}>
+                    <Col span={5}  offset={5} style={{ borderLeft: '2px solid #00695c'}}>
                         <div style={{margin:'0 0 0 3%'}} onClick={this.showModal.bind(this, "modLocation")}>
                             <Icon className="titleMedium" type="pushpin" theme="outlined" />
                             <b className="titleMedium"> {this.props.state.data.event.location.address.v} </b>
                         </div>
                     </Col>
                     <Col span={5}>
-                        <div onClick={this.showModal.bind(this, "modDate")}>
+                        <div onClick={this.showModal.bind(this, "modDate")} style={{ borderLeft: '2px solid #00695c'}}>
                             <Icon className="titleMedium"  type="clock-circle" theme="outlined" />
                             <b className="titleMedium"> { this.formatDateAnnounce(this.props.state.data.event.event_date)}</b>
                         </div>
@@ -243,8 +242,6 @@ export default class Body extends Component {
                 />
                 
                 <Divider />
-                {
-                    this.props.right.isAdmin || this.props.right.isCreator ? 
                         <Row style={{height:'70px'}}>
                             <Col span={1} offset={5}>
                                 {this.props.state.data.event.playlist ? <i 
@@ -254,16 +251,20 @@ export default class Body extends Component {
                             <Col span={3} >
                                 <p  > Ajouter une playlist : </p>
                             </Col>
-                            <Col span={3}>
-                                <SearchBar 
-                                    state={this.props.state} 
-                                    type="playlist" 
-                                    updateEventPlaylist={this.updateEventPlaylist}/>
-                            </Col>
+                            {
+                                this.props.right.isAdmin || this.props.right.isCreator ? 
+                                    <Col span={3}>
+                                        <SearchBar 
+                                            state={this.props.state} 
+                                            type="playlist" 
+                                            updateEventPlaylist={this.updateEventPlaylist}/>
+                                    </Col>
+                                    :
+                                    <Col span={3}>
+                                        {this.props.state.data.event.playlist ? this.props.state.data.event.playlist.title : 'Titre Inconnue'}
+                                    </Col>
+                            }
                         </Row>
-                        :
-                        null
-                }
                 {/* Modal for description modification  */}
                 <Modal 
                     title="Description : "

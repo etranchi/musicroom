@@ -4,7 +4,6 @@ const ftSocket = require('./socket');
 
 module.exports = function (io) {
     let playlistBlocked = []
-
     io.on('connection', (socket) => {
 
         /* Socket For Playlist */
@@ -50,62 +49,99 @@ module.exports = function (io) {
 
             let room = ftSocket.getRoom(roomID);
             if (room)
+            {
                 io.sockets.in(room.id).emit('getRoomPlaylist', room.tracks)
+            }
             else
                 return;
         });
 
-        socket.on('createRoom', (roomID, tracks, event) => {
+        socket.on('createRoom', (roomID, tracks, event, userID) => {
             console.log("[Socket] -> createRoom")
+            /* For Swift Team */
+            if (typeof roomID === 'object') {
+                let obj = JSON.parse(roomID);
+                roomID = obj.roomID
+                tracks = obj.tracks
+                event = obj.event
+                userID = obj.userID
+            }
+            /* =============== */
+
             let room = ftSocket.getRoom(roomID);
 
-
             if (!room) {
-                // console.log("[Socket] ->  createRoom : Room Created")
-                room = ftSocket.createRoom(roomID, tracks, event)
-                // console.log("Before : ", io.sockets.adapter.rooms[room.id], Object.keys(io.sockets.adapter.rooms).length)
+                console.log('room created')
+                room = ftSocket.createRoom(roomID, tracks, event, userID)
                 socket.join(room.id);
-                io.sockets.in(room.id).emit('createRoom', room.tracks, "ok")
-                // console.log("After 1 : ", io.sockets.adapter.rooms[room.id], Object.keys(io.sockets.adapter.rooms).length)
-                console.log(socket.username)
+                io.sockets.in(room.id).emit('createRoom', room.tracks, true)
+
+            } else if (ftSocket.joinRoom(roomID, userID)) {
+                console.log('room joined')
+                socket.join(room.id);
+                io.sockets.in(room.id).emit('createRoom', room.tracks, true)
+
             } else {
-                // console.log("[Socket] ->  createRoom : Room Joined")
-                // console.log("Before : ", io.sockets.adapter.rooms[room.id],Object.keys(io.sockets.adapter.rooms).length)
+                console.log('room user exist')
                 socket.join(room.id);
-                // console.log("After 2 : ", io.sockets.adapter.rooms[room.id], Object.keys(io.sockets.adapter.rooms).length)
-                console.log(socket.username)
+                io.sockets.in(room.id).emit('createRoom', room.tracks, false)
             }
         });
-        // socket.on('joinRoom', (roomID) => {
-        //     console.log("[Socket] -> joinRoom", roomID)
+        socket.on('leaveRoom', (roomID, userID) => {
+            console.log("[Socket] -> leaveRoom")
+              /* For Swift Team */
+            if (typeof roomID === 'object') {
+                let obj = JSON.parse(roomID);
+                roomID = obj.roomID
+                userID = obj.userID
+            }
+            /* =============== */
+            let room = ftSocket.getRoom(roomID);
+            let index = 0;
 
-        //     let room = ftSocket.getRoom(roomID)
-        //     if (room) {
-        //         socket.join(room.id);
-        //         io.sockets.in(room.id).emit('joinRoom', true)
-        //     } else sockets.emit('joinRoom', false)
-        // });
+            if (room) {
+                console.log(room.users, userID)
+                if ((index = room.users.indexOf(userID)) != -1) {
+                room.users.splice(index, 1)
+                room = ftSocket.updateRoom(room)
+            }
+                socket.leave(roomID);
+            }
+        });
         socket.on('closeRoom', (roomID) => {
             console.log("[Socket] -> closeRoom")
 
             let room = ftSocket.getRoom(roomID)
             if (room) {
+                ftSocket.deleteRoom(roomID);
                 io.sockets.in(room.id).emit('closeRoom');
             }
         });
         socket.on('updateTracks', (roomID, tracks) => {
             console.log("[Socket] -> updateTracks")
-
+              /* For Swift Team */
+            if (typeof roomID === 'object') {
+                let obj = JSON.parse(roomID);
+                roomID = obj.roomID
+                tracks = obj.tracks
+            }
+            /* =============== */
             let room = ftSocket.getRoom(roomID)
             if (room) {
                 room.tracks = tracks
-                io.sockets.in(room.id).emit('updateScore', room.tracks)
+                io.sockets.in(room.id).emit('updateTracks', room.tracks)
             } else
                 return io.sockets.in(room.id).emit('updateTracks', 'fail');
         });
         socket.on('updateTrack', (roomID, track) => {
             console.log("[Socket] -> updateTrack")
-
+              /* For Swift Team */
+            if (typeof roomID === 'object') {
+                let obj = JSON.parse(roomID);
+                roomID = obj.roomID
+                track = obj.track
+            }
+            /* =============== */
             let room = ftSocket.getRoom(roomID)
             if (room) {
                 room.tracks.forEach(music => {
@@ -116,6 +152,16 @@ module.exports = function (io) {
         });
         socket.on('updateScore', (roomID, trackID, points, userID, userCoord) => {
             console.log("[Socket] -> updateScore")
+              /* For Swift Team */
+            if (typeof roomID === 'object') {
+                let obj = JSON.parse(roomID);
+                roomID = obj.roomID
+                trackID = obj.trackID
+                points = obj.points
+                userID = obj.userID
+                userCoord = obj.userCoord
+            }
+            /* =============== */
             let room = ftSocket.getRoom(roomID)
 
             if (room) {
@@ -131,6 +177,14 @@ module.exports = function (io) {
         });
         socket.on('updateEvent', (roomID, newEvent) => {
             console.log("[Socket] -> updateEvent")
+              /* For Swift Team */
+              console.log("Update Event : ", typeof roomID)
+            if (typeof roomID === 'object') {
+                let obj = JSON.parse(roomID);
+                roomID = obj.roomID
+                newEvent = obj.newEvent
+            }
+            /* =============== */
             let room = ftSocket.getRoom(roomID)
 
             if (newEvent._id && room) {
@@ -140,9 +194,39 @@ module.exports = function (io) {
             ftSocket.saveNewEvent(newEvent);
             io.sockets.in(roomID).emit('updateEvent', newEvent);
         });
+        socket.on('updateStatus', (roomID, status, trackID, secondTrackID) => {
+            console.log("[Socket] -> updateStatus");
+            /* For Swift Team */
+            if (typeof roomID === 'object') {
+                let obj = JSON.parse(roomID);
+                roomID = obj.roomID
+                status = obj.status
+                trackID = obj.trackID
+                secondTrackID = obj.secondTrackID
+            }
+            /* =============== */
+            let room    = ftSocket.getRoom(roomID)
+            let tracks  = [];
+            if (room) {
+                tracks = ftSocket.updateStatus(room, status, trackID, secondTrackID);
+                io.sockets.in(roomID).emit('updateStatus', tracks);
+            }
+        })
+        /* Socket for Player */
         socket.on('updatePlayer', (roomID, newEvent) => {
             console.log("[Socket] -> updatePlayer");
+            /* For Swift Team */
+            if (typeof roomID === 'object') {
+                let obj = JSON.parse(roomID);
+                roomID = obj.roomID
+                newEvent = obj.newEvent
+            }
+            /* =============== */
+            console.log(newEvent)
             io.sockets.in(roomID).emit('updatePlayer', newEvent);
         })
+    });
+    io.on('disconnect', (socket) => {
+        console.log("IN SOCKET DISCONNECT", socket)
     });
 };

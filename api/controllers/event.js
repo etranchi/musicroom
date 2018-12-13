@@ -81,6 +81,7 @@ module.exports = {
 			else if (req.body.playlist && req.body.playlist._id) {
 				req.body.playlist = await modelPlaylist.findOne({_id: req.body.playlist._id})
 				delete req.body.playlist._id
+				req.body.playlist.members = []
 			}
 			let event = await modelEvent.create(req.body)
 			res.status(200).send(event)

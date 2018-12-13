@@ -56,13 +56,22 @@ export default class EditSetting extends Component {
 		if (this.checkInput() === 0) {
 			if (this.state.infoFile && this.state.infoFile.file && this.state.infoFile.file.originFileObj)
 				data.append('file', this.state.infoFile.file.originFileObj);
-			data.append('body', JSON.stringify(this.currentUser));
+			let user = {
+				picture : this.currentUser.picture,
+				login : this.currentUser.login,
+				password: this.currentUser.password
+			}
+			data.append('body', JSON.stringify(user));
 			axios.put(process.env.REACT_APP_API_URL + '/user/me', data, {'headers' : {'Authorization': 'Bearer '+ localStorage.getItem('token')}})
-				.then(resp => { 
+				.then(resp => {
+					message.success("Account successfully updated !")
 					this.props.updateState({user:resp.data})
 					this.props.updateParent({currentComponent: 'setting', user:resp.data})
 				})
-				.catch(err => { console.log(err); })
+				.catch(err => { 
+					Error.display_error(err);
+					console.log(err); 
+				})
 		}
 	}
 	

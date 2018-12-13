@@ -6,7 +6,16 @@ const eventModel    = require('../models/event');
 this.rooms = [];
 
 this.sortTracksByScore = (tracks) => {
-    tracks.sort((a, b) => { return a.like < b.like ? 1 : -1 })
+    
+    let tmpArray = tracks.reduce( (acc, elem) => {
+        if (elem.status === 0) acc['toSort'].push(elem);
+        else acc['played'].push(elem);
+        return acc
+    }, {toSort: [], played: []})
+    tmpArray.toSort.sort((a, b) => { 
+        return b.like - a.like;
+    })
+    tracks = tmpArray.played.concat(tmpArray.toSort)
     return tracks
 }
 module.exports = {
@@ -22,9 +31,12 @@ module.exports = {
             if (!track.like) track.like = 0;
             if (!track.userLike) track.userLike = [];
             if (!track.userUnLike) track.userUnLike = [];
-            if (track._id === trackID)
-            {
-                console.log("Update score : find")
+            if (!track.status) track.status = 0
+            if (track._id === trackID) {
+                let i = 0;
+                let j = 0;
+                if ((i = track.userLike.indexOf(userID)) != -1) track.userLike.splice(i, 1);
+                if ((j = track.userUnLike.indexOf(userID)) != -1) track.userUnLike.splice(j, 1);
                 points > 0 ? track.userLike.push(userID) : track.userUnLike.push(userID)
                 track.like += points
             } 
@@ -35,30 +47,90 @@ module.exports = {
         let ret;
         tmpRoom.tracks.forEach((track) => {
             if (!track.like) track.like = 0;
+            if (!track.status) track.status = 0;
             if (!track.userLike) track.userLike = [];
             if (!track.userUnLike) track.userUnLike = [];
         })
         this.rooms.forEach((room) => {
             if (room.id === tmpRoom.id) {
                 room.tracks = this.sortTracksByScore(tmpRoom.tracks)
+                room.users  = tmpRoom.users;
                 ret = room;
             }
         })
         return ret
     },
-    createRoom: (roomID, tracks, event) => {
+    updateStatus: (room, status, trackID, secondTrackID) => {
+        let newTab = [];
+        if (trackID && room && status) {
+            this.rooms.forEach((tmp) => {
+                if (tmp.id === room.id) {
+                    newTab = tmp.tracks.map((elem) => {
+                        console.log(elem.short_title)
+                        if (elem._id === trackID && status === 1) {
+                            elem.status = status
+                        }
+                        else if (elem._id === secondTrackID && status === 1) {
+                            elem.status = 0
+                        }
+                        else if (elem._id === trackID) {
+                            console.log("FIND")
+                            elem.status = status * -1
+                        }
+                        else if (elem._id === secondTrackID)
+                            elem.status = status
+                        return elem
+                    })
+                    // return ;
+                }
+            })
+        }
+        console.log("New Tab : ", newTab.length)
+        return this.sortTracksByScore(newTab)
+    },
+    createRoom: (roomID, tracks, event, userID) => {
         let room = {
             id: roomID,
-            tracks: this.sortTracksByScore(tracks),
+            tracks: tracks,
             data: event,
+            users: [userID]
         };
         room.tracks.forEach((track) => {
-            track.like = 0;
-            track.userLike = [];
+            track.like      = 0;
+            track.status    = 0;
+            track.userLike  = [];
             track.userUnLike = [];
         })
+        room.tracks[0].status = 1;
         this.rooms.push(room);
         return room
+    },
+    joinRoom: (roomID, userID) => {
+        if (this.rooms) {
+            let ret;
+            this.rooms.forEach((room) => {
+                 if (room.id === roomID) {
+                     ret = room
+                     return;
+                 }
+             });
+             if (ret.users && (ret.users.indexOf(userID) == -1)) {
+                ret.users.push(userID)
+                return true;
+             }
+         }
+         return false;
+    },
+    deleteRoom: (roomID, userID) => {
+        if (this.rooms && this.rooms.length > 0) {
+            let ret = -1 ;
+            for (let i = 0; i < this.rooms.length; i++) {
+                if (this.rooms[i].id === roomID)
+                    ret = i
+                    break;
+            }
+            ret == -1  ? null : delete this.rooms.splice(ret, 1);
+        }
     },
     getRoom: (roomID) => {
         if (this.rooms) {

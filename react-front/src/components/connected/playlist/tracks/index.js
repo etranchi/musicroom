@@ -31,7 +31,6 @@ class Tracks extends Component {
 	}
 	componentDidMount() {
 		socket.on('blockPlaylist', () => {
-			console.log("JE BLOCK LA PLAYLIST POUR TOUS LES AUTRES")
 			this.getPlaylist((res) => {
 				this.setState({
 				initLoading: false,
@@ -41,7 +40,6 @@ class Tracks extends Component {
 			});
 		})
 		socket.on('playlistUpdated', () => {
-			console.log("playlistUpdated socket event")
 			this.getPlaylist((res) => {
 				this.setState({
 					initLoading: false,
@@ -76,14 +74,19 @@ class Tracks extends Component {
 		axios.get(process.env.REACT_APP_API_URL + '/playlist/' + this.props.state.id, 
 		{'headers':{'Authorization': 'Bearer ' + localStorage.getItem('token')}})
 		.then((resp) => {
-			console.log("get playlist")
-			console.log(resp.data);
-			callback(resp);
+			if (callback)
+				callback(resp);
+			else{
+				this.setState({
+				initLoading: false,
+				playlist: resp.data,
+				isBlocked: !resp.data._id
+			  });
+			}
 		})
 		.catch((err) => {
+			Error.display_error(err)
 			this.setState({playlist:{tracks: {data:[]}}, isloading:false})
-			console.log('Playlist error');
-			console.log(err);
 		})
 	}
 
@@ -95,9 +98,8 @@ class Tracks extends Component {
 			callback(resp)
 		})
 		.catch((err) => {
+			Error.display_error(err)
 			this.setState({playlists: [], loading:false})
-			console.log('Playlists error');
-			console.log(err);
 		})
 	}
 
@@ -105,55 +107,52 @@ class Tracks extends Component {
 		axios.delete(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id,
 		{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
 		.then(() => {
+			message.success("Successfully deleted playlist")
 			this.props.updateParent({'currentComponent':'playlist', id:null})
 		})
 		.catch(err => {
+			Error.display_error(err)
 			console.log(err);
 		})
 	}
 
 	deleteTrack = (index) => {
-		console.log("Je suis lock ? " + this.state.isBlocked)
-		if (this.state.playlist.id)
-		{
-			axios.delete(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist.id + '/' + this.state.playlist.tracks.data[index].id, 
-			{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
-			.then(() => {
-				var state = this.state;
-				state.playlist.tracks.data.splice(index,1);
-				this.setState(state);
-				updatePlaylist(this.state.playlist._id)
-			})
-			.catch(err => {
-				console.log(err);
-			})
-		}
-		else if (this.state.isBlocked === false) {
+		axios.delete(process.env.REACT_APP_API_URL + '/playlist/' + (this.state.playlist._id || this.state.playlist.id) + '/' + this.state.playlist.tracks.data[index].id, 
+		{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
+		.then(() => {
 			var state = this.state;
 			state.playlist.tracks.data.splice(index,1);
-			axios.put(process.env.REACT_APP_API_URL + '/playlist/' + (this.state.playlist._id || this.state.playlist.id), 
-			this.state.playlist,
-			{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
-			.then(() => {
-				this.setState(state);
-				updatePlaylist(this.state.playlist._id)
-			})
-			.catch(err => {
-				console.log(err);
-			})
-		}
+			updatePlaylist(this.state.playlist._id)
+			message.success("Successfully deleted track")
+			this.getPlaylist()
+		})
+		.catch(err => {
+			Error.display_error(err)
+		})
+		// if (this.state.isBlocked === false) {
+		// 	var state = this.state;
+		// 	state.playlist.tracks.data.splice(index,1);
+		// 	axios.put(process.env.REACT_APP_API_URL + '/playlist/' + (this.state.playlist._id || this.state.playlist.id), 
+		// 	this.state.playlist,
+		// 	{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
+		// 	.then(() => {
+		// 		this.setState(state);
+		// 		updatePlaylist(this.state.playlist._id)
+		// 	})
+		// 	.catch(err => {
+		// 		console.log(err);
+		// 	})
+		// }
 	}
 	
-	addTrack = (item) => {
-		var state = this.state;
-		
+	addTrack = (item) => {		
 		axios.put(process.env.REACT_APP_API_URL + '/playlist/' + (this.state.playlist._id || this.state.playlist.id) + '/track',
 		{"id":item.id},
 		{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
 		.then(() => {
 			message.success("Music Successfully added");
-			state.playlist.tracks.data.push(item);
-			this.setState(state);
+			updatePlaylist(this.state.playlist._id || this.state.playlist.id)
+			this.getPlaylist()
 		})
 		.catch(err => {
 			Error.display_error(err);
@@ -161,16 +160,13 @@ class Tracks extends Component {
 	}
 
 	onDragStart = () => {
-		console.log("BLOCK SOCKET")	
 		blockSocketEvent(this.state.playlist._id)
 	}
 	
 	onDragEnd = (result) => {
-		console.log("In DRAG END")
 		if (!result.destination) {
 		  return;
 		}
-		console.log('after drag end')
 		var state = this.state;
 		const items = reorder(
 		  this.state.playlist.tracks.data,
@@ -194,29 +190,18 @@ class Tracks extends Component {
 		 {id: array[1].id},
 		 {'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
 		.catch(err => {
-			console.log("[error] add track to playlist");
 			console.log(err);
 		})
 	}
 
 	 isOurPlaylist = () => {
-		 console.log("isOurPlaylist start");
-		 console.log("id ->");
 		 let ret = false;
-		 console.log(this.state.playlist);
 		 if (this.state.playlist._id)
 		 	return true
-		 this.state.playlists.forEach((item, index) => {
-			 console.log(item);
-			 console.log("itemid -> " + item.id + "playlistid -> " + this.state.playlist.id)
+		 this.state.playlists.forEach((item) => {
 			 if (item.id === this.state.playlist.id)
-			 {
-				 console.log("ca devrait return true")
 				ret = true;
-			 }
-			 	
 		 })
-		 console.log("isOurPlaylist end");
 		 return ret
 	 }
 
@@ -299,7 +284,7 @@ class Tracks extends Component {
       			</DragDropContext>
 				{this.isOurPlaylist() ? <SearchBar type="tracks" updateParent={this.props.updateParent} addTrack={this.addTrack}/> : null}
 				{this.state.playlist.tracks.data.length > 0 && 
-					<Player  tracks={this.state.playlist.tracks.data}/>
+					<Player  isAdmin={true} isCreator={true} tracks={this.state.playlist.tracks.data}/>
 				}
 				</Layout.Content>
 		</div>

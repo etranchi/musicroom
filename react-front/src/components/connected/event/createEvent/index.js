@@ -3,7 +3,7 @@ import LocationSearchInput from '../locationSearchInput'
 import './styles.css';
 import axios from 'axios'
 import SearchBar from '../../../other/searchbar'
-import { Avatar, Card, Icon, Button, Input, DatePicker, Upload, message, Divider, Layout, Col, Row, Checkbox, InputNumber} from 'antd';
+import { Avatar, Card, Icon, Button, Input, DatePicker, Upload, message, Divider, Layout, Col, Row, InputNumber, Switch} from 'antd';
 import Error from '../../../other/errorController'
 import moment from 'moment';
 
@@ -21,7 +21,7 @@ export default class CreateEvent extends Component {
             event_date       : new Date(),
             date             : '',
             format_date      : '',
-            public           : false,
+            public           : true,
             location         : {},
             imageUrl         : '',
             infoFile         : '',
@@ -200,9 +200,7 @@ export default class CreateEvent extends Component {
                     </Row>
                     <Row>
                         <Col span={2} offset={10}>
-                            <div style={{'margin': '0 0 0 12% '}}>
-                                <Checkbox name="public"  onChange={() => {this.setState({public:!this.state.public})}}>Public</Checkbox>
-                            </div>
+                            <Switch defaultChecked onChange={() => {this.setState({public:!this.state.public})}} /> {this.state.public ? "Public" : "Privé"}
                             <Divider />
                         </Col>
                         { 
@@ -211,8 +209,8 @@ export default class CreateEvent extends Component {
                                 :
                                 <Col span={10}>
                                     <Row >
-                                        <Col span={1}>
-                                            <Checkbox name="public"  onChange={() => {this.setState({distance_required:!this.state.distance_required})}}/>
+                                        <Col span={2}>
+                                        <Switch defaultunChecked onChange={() => {this.setState({distance_required:!this.state.distance_required})}} />
                                         </Col>
                                         <Col span={9} >
                                         <b> Distance maximum pour participer : </b>

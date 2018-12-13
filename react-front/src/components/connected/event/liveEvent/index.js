@@ -4,7 +4,7 @@ import Track from '../../../templates/track'
 import { Col, Row, message} from 'antd'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Player from '../../../other/player'
-import {socket, getRoomPlaylist, updateScore, updateTracks, updateTrack, blockSocketEvent} from '../../../other/sockets';;
+import {socket, getRoomPlaylist, updateScore, updateTracks, updateTrack, blockSocketEvent} from '../../../other/sockets';
 
 const reorder = (list, startIndex, endIndex) => {
 	const result = Array.from(list);
@@ -19,8 +19,6 @@ export default class LiveEvent extends Component {
         super(props);
         this.state = {
             playlist    : [],
-            initLoading : true,
-            loading     : false,
             isBlocked   : false,
             rotate      : {
                     active: false,
@@ -31,16 +29,15 @@ export default class LiveEvent extends Component {
         };
         this.roomID = this.props.roomID;
     }
-    componentDidMount = () => {
+    componentWillMount = () => {
         socket.on('getRoomPlaylist', (tracks) => {
-            console.log("socket : receive data from getRoomPlaylist : ", tracks);
             this.savePlaylist(tracks);
         });
-        socket.on('updateTrack', (msg) => {
-            console.log("socket : receive message from updateTrack -> ", msg);
+
+        socket.on('updateStatus', (tracks) => {
+            this.savePlaylist(tracks);
         });
         socket.on('updateScore', (tracks) => {
-            console.log("socket : receive data from updateScore : ", typeof tracks);
             if (typeof tracks === 'object') {
                 this.savePlaylist(tracks);
                 this.setState({rotate: {active:false, id:0, liked: false}});
@@ -48,18 +45,12 @@ export default class LiveEvent extends Component {
             else
                 message.error(tracks)
         });
-        /**************************************/
         if (this.props.state.data.event.creator.email === this.props.state.user.email)
             this.setState({isCreator:true});
         else  {
-            this.setState({ isAdmin:this.isUser(this.props.state.data.event.adminMembers) });
+            this.setState({isAdmin:this.isUser(this.props.state.data.event.adminMembers) });
         }
-    }
-    componentWillMount = () => {
-        this.setState({
-            initLoading : false,
-            playlist    : this.props.playlist
-        }, () => {
+        this.setState({ playlist : this.props.playlist }, () => {
             getRoomPlaylist(this.props.roomID);
         });
     }
@@ -68,16 +59,18 @@ export default class LiveEvent extends Component {
         playlist.tracks.data    = tracks;
         this.setState({playlist:playlist});
     }
-    isUser = tab => 
-    {
-        tab.forEach(user => {
-            if (user.email === this.props.state.user.email)
-                return true;
+    isUser = tab => {
+        let ret = false;
+        tab.forEach(user => { 
+            if (user._id === this.props.state.user._id)
+            {
+                ret = true
+                return ;
+            }
         });
-        return false;
+        return ret;
     }
-    callSocket = (type, OldTrack, value) => {
-
+    callSocket = (OldTrack, value) => {
         let me          = this.props.state.user;
         let index       = -1;
 
@@ -100,8 +93,9 @@ export default class LiveEvent extends Component {
 		const items = reorder( this.state.playlist.tracks.data, result.source.index, result.destination.index );
         state.playlist.tracks.data = items;
         updateTracks(this.roomID, items);
-	}
+    }
     render() {
+        console.log(this.state)
         return (
             <div>
                 <Row>
@@ -111,7 +105,7 @@ export default class LiveEvent extends Component {
                 </Row>
                 <Row>
                     <Col span={24}>
-                        { this.state.playlist.tracks.data.length > 0 && <Player  tracks={this.state.playlist.tracks.data} roomID={this.props.roomID}/> }
+                        { this.state.playlist.tracks.data.length > 0 && <Player  isCreator={this.state.isCreator} isAdmin={this.state.isAdmin} tracks={this.state.playlist.tracks.data} roomID={this.props.roomID}/> }
                     </Col>
                 </Row>
                 <br/>
