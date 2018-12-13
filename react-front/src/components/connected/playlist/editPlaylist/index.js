@@ -120,6 +120,15 @@ export default class EditPlaylist extends Component {
 						</a>
 					</Col>
 				</Row>
+				<Row>
+					<Col span={8} offset={8}>
+						<b> Modifier le titre : </b>
+						<Input 
+							value={this.state.playlist.title} 
+							onChange={(e) => this.handleChange(e)}>
+						</Input>
+					</Col>
+				</Row>
 				{
 					this.state.playlist.idUser === this.props.state.user._id ?
 						<Row>
@@ -135,6 +144,7 @@ export default class EditPlaylist extends Component {
 						: 
 						null
 				}
+				<Divider/>
 				<Row style={{height:'80px'}}>
 					<Col span={3} offset={7} > 
 						<b style={{display:'inline-block'}} > ({this.state.playlist.members.length}) </b>
@@ -150,8 +160,13 @@ export default class EditPlaylist extends Component {
                             <List
                                 grid={{ gutter: 16, column: 3 }}
                                 dataSource={this.state.playlist.members}
-                                renderItem={item => (
-                                    <List.Item>
+                                renderItem={item =>  {
+									item.picture = item.picture.indexOf("https://") !== -1 ?
+									item.picture 
+									: 
+									process.env.REACT_APP_API_URL + "/userPicture/" + item.picture
+									return (
+										<List.Item>
                                         <Card.Meta
                                             avatar={ <Avatar 
                                                         size={116} 
@@ -167,22 +182,24 @@ export default class EditPlaylist extends Component {
                                         >
                                             <Icon style={{color:'#B71C1C'}}  type="close" theme="outlined"/>
                                         </div>
-                                    </List.Item>     
-                                )}
+                                    </List.Item>  
+									)
+								}}
                             />
                         </Col>
                     </Row>
                     : 
                     null
-                }
-				<Input 
-					value={this.state.playlist.title} 
-					onChange={(e) => this.handleChange(e)}>
-				</Input>
-				<Button 
-					onClick={this.save}>Save
-				</Button>
+				}
+				<Divider/>
+				<Row>
+					<Col span ={3} offset={10}>
+						<Button 
+							onClick={this.save}>Save
+						</Button>
+					</Col>
+				</Row>
 			</div>
 		);
-  }
+  	}
 }
