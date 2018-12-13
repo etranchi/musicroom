@@ -74,8 +74,6 @@ class Tracks extends Component {
 		axios.get(process.env.REACT_APP_API_URL + '/playlist/' + this.props.state.id, 
 		{'headers':{'Authorization': 'Bearer ' + localStorage.getItem('token')}})
 		.then((resp) => {
-			console.log("get playlist")
-			console.log(resp.data);
 			if (callback)
 				callback(resp);
 			else{
@@ -87,9 +85,8 @@ class Tracks extends Component {
 			}
 		})
 		.catch((err) => {
+			Error.display_error(err)
 			this.setState({playlist:{tracks: {data:[]}}, isloading:false})
-			console.log('Playlist error');
-			console.log(err);
 		})
 	}
 
@@ -101,9 +98,8 @@ class Tracks extends Component {
 			callback(resp)
 		})
 		.catch((err) => {
+			Error.display_error(err)
 			this.setState({playlists: [], loading:false})
-			console.log('Playlists error');
-			console.log(err);
 		})
 	}
 
@@ -111,9 +107,11 @@ class Tracks extends Component {
 		axios.delete(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id,
 		{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
 		.then(() => {
+			message.success("Successfully deleted playlist")
 			this.props.updateParent({'currentComponent':'playlist', id:null})
 		})
 		.catch(err => {
+			Error.display_error(err)
 			console.log(err);
 		})
 	}
@@ -125,10 +123,11 @@ class Tracks extends Component {
 			var state = this.state;
 			state.playlist.tracks.data.splice(index,1);
 			updatePlaylist(this.state.playlist._id)
+			message.success("Successfully deleted track")
 			this.getPlaylist()
 		})
 		.catch(err => {
-			console.log(err);
+			Error.display_error(err)
 		})
 		// if (this.state.isBlocked === false) {
 		// 	var state = this.state;
