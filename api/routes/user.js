@@ -158,7 +158,6 @@ router.get('/:id',
 /**
  * @route POST /user
  * @group user - Operations about user
- * @security - Bearer: []
  * @param {string} email.body.required - user's email
  * @param {string} login.body.required - user's login
  * @param {string} password.body.required - user's password
