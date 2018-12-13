@@ -172,8 +172,7 @@ module.exports = function (io) {
                 room = ftSocket.updateRoom(room)
                 io.sockets.in(room.id).emit('updateScore', room.tracks)
             } 
-            else
-                return io.sockets.in(room.id).emit('updateScore', 'fail');
+            return
         });
         socket.on('updateEvent', (roomID, newEvent) => {
             console.log("[Socket] -> updateEvent")
