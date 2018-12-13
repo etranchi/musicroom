@@ -70,9 +70,14 @@ class EventsController: UITableViewController {
         let vc = EventDetailController(event)
         vc.root = self
         vc.type = type
-        self.navigationController?.pushViewController(vc, animated: true)
+        guard event.playlist != nil else { return }
+        apiManager.getMe(userManager.currentUser!.token!) { (user) in
+            SocketIOManager.sharedInstance.createEventRoom(roomID: event._id!, tracks: event.playlist!.tracks!.data, event: event, userID: user.id)
+            userID = user.id
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
     }
-    
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == 0 && events?.myEvents != nil {
             let cell = tableView.dequeueReusableCell(withIdentifier: eventCellId, for: indexPath) as! SearchEventsCell

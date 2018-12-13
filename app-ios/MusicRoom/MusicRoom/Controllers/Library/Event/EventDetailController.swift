@@ -30,6 +30,7 @@ class EventDetailController: UITableViewController {
     
     init(_ event : Event) {
         currentEvent = event
+        eventID = currentEvent._id!
         super.init(nibName: nil, bundle: nil)
         apiManager.getImgEvent(event.picture!) { (img) in
             guard let image = img else { return }
@@ -75,8 +76,7 @@ class EventDetailController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        //tableView.separatorStyle = .none
+    
         tableView.backgroundColor = UIColor(white: 0.1, alpha: 1)
         tableView.separatorStyle = .none
         tableView.register(EventDescriptionCell.self, forCellReuseIdentifier: descriptionCellId)
@@ -102,7 +102,12 @@ class EventDetailController: UITableViewController {
             self.navigationController?.pushViewController(vc, animated: true)
         case 2:
             guard let tracks = currentEvent.playlist?.tracks, tracks.data.count > 0, let album =  tracks.data[0].album, let cover = album.cover_big else {
+                guard currentEvent.playlist != nil else {
+                    ToastView.shared.short(self.view, txt_msg: "The playlist is empty.", color: UIColor.red)
+                    return
+                }
                 let vc = PlaylistDetailController(currentEvent.playlist!, headerView!.albumCover)
+                vc.isInEvent = true
                 vc.iAmMember = iAmMember
                 vc.iAmAdmin = iAmAdmin
                 vc.type = type

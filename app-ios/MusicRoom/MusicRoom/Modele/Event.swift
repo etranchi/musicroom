@@ -33,17 +33,27 @@ struct CreateEventRoom: Codable {
     var userID: String
 }
 
-struct leaveEventRoom: Codable {
+struct LeaveEventRoom: Codable {
     var roomID: String
     var userID: String
 }
 
-struct updateEventTrack: Codable {
+struct UpdateEventTrackScore: Codable {
     var roomID: String
     var trackID: String
     var points: Int
     var userID: String
     var userCoord: Coord
+}
+
+struct UpdateEventTracks: Codable {
+    var roomID: String
+    var tracks: [Track]
+}
+
+struct UpdateEventTrack: Codable {
+    var roomID: String
+    var track: Track
 }
 
 struct Event : Codable {

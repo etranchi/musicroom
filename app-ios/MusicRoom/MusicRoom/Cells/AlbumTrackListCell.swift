@@ -12,9 +12,9 @@ class AlbumTrackListCell: UITableViewCell {
     var isInPlaylist = false
     var rootController: UITableViewController?
     var indexPath: IndexPath?
-    var type : EventType?
-    var iAmAdmin : Bool?
-    var iAmMember : Bool?
+    var type : EventType = .others
+    var iAmAdmin : Bool = false
+    var iAmMember : Bool = false
     var icon : UIImage = #imageLiteral(resourceName: "plus_icon")
     var track: Track? {
         didSet {
@@ -26,8 +26,18 @@ class AlbumTrackListCell: UITableViewCell {
             if isInPlaylist {
                 icon = #imageLiteral(resourceName: "minus_icon")
             }
-            if iAmMember != nil && iAmMember!{
+            if iAmMember{
+                let isLiked = likedTracks.first(where: { (id) -> Bool in
+                    return track!.id == id ? true : false
+                })
                 icon = #imageLiteral(resourceName: "upvote_icon")
+                plusButton.tintColor = .white
+                if isLiked != nil {
+                    icon = #imageLiteral(resourceName: "upvoted_icon")
+                    plusButton.tintColor = UIColor(red: 30 / 255, green: 180 / 255, blue: 30 / 255, alpha: 1)
+                } else {
+                    plusButton.tintColor = .white
+                }
             }
             let tintedIcon = icon.withRenderingMode(.alwaysTemplate)
             plusButton.setImage(tintedIcon, for: .normal)
@@ -103,19 +113,15 @@ class AlbumTrackListCell: UITableViewCell {
     }
     
     @objc func handleAddSong() {
-        if iAmMember != nil && iAmMember!{
-            if icon == #imageLiteral(resourceName: "upvote_icon") {
-                icon = #imageLiteral(resourceName: "upvoted_icon")
-                plusButton.tintColor = UIColor(red: 30 / 255, green: 180 / 255, blue: 30 / 255, alpha: 1)
-            } else if icon == #imageLiteral(resourceName: "upvoted_icon") {
-                icon = #imageLiteral(resourceName: "upvote_icon")
-                plusButton.tintColor = .white
-            }
+        if iAmMember {
+            let root = rootController as? PlaylistDetailController
+            root?.toggleLike(id: track!.id)
             let tintedIcon = icon.withRenderingMode(.alwaysTemplate)
             plusButton.setImage(tintedIcon, for: .normal)
+           
           return
         }
-        if isInPlaylist {
+        if type == .mine || iAmAdmin {
             let root = rootController as? PlaylistDetailController
             root?.deleteTrackFromPlaylist(track: track!, index: indexPath!)
             return

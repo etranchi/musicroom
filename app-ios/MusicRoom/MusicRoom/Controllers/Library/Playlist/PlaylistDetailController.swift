@@ -7,7 +7,10 @@
 //
 
 import UIKit
+import CoreLocation
 
+
+var likedTracks : [Int] = []
 class PlaylistDetailController: UITableViewController {
 
     var playlist: Playlist
@@ -20,6 +23,7 @@ class PlaylistDetailController: UITableViewController {
     var iAmMember : Bool = false
     var iAmAdmin : Bool = false
     var type : EventType = .others
+    var isInEvent : Bool = false
     
     private let headerHeight: CGFloat = 225
     
@@ -28,6 +32,20 @@ class PlaylistDetailController: UITableViewController {
         self.playlistCover = playlistCover
         self.tracks = playlist.tracks != nil ? playlist.tracks!.data : []
         super.init(nibName: nil, bundle: nil)
+        likedTracks.removeAll()
+    }
+    
+    func toggleLike(id : Int)  {
+        let exist = likedTracks.first { (tid) -> Bool in
+            return tid == id ? true : false
+        }
+        if exist != nil {
+            likedTracks.remove(at: likedTracks.index(of: exist!)!)
+            likeTrack(trackID: id, points: -1)
+        } else {
+            likedTracks.append(id)
+            likeTrack(trackID: id, points: 1)
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -41,6 +59,12 @@ class PlaylistDetailController: UITableViewController {
         navi?.animatedHideNavigationBar()
         navigationController?.navigationBar.topItem?.title = ""
         SocketIOManager.sharedInstance.joinPlayList(playlist._id!)
+        SocketIOManager.sharedInstance.listenToTracksChanges { (tracks) in
+            if let t = tracks {
+                self.tracks = t
+                self.tableView.reloadData()
+            }
+        }
         SocketIOManager.sharedInstance.listenToPlaylistChanges(playlist._id!) { (resp, playlist) in
             if resp == 0 {
                 self.lockPlaylist()
@@ -102,6 +126,7 @@ class PlaylistDetailController: UITableViewController {
         
         tableView.backgroundColor = UIColor(white: 0.1, alpha: 1)
         tableView.alwaysBounceVertical = false
+        
         setupHeader()
     }
     
@@ -166,12 +191,15 @@ class PlaylistDetailController: UITableViewController {
         cell.type = type
         cell.isInPlaylist = true
         cell.backgroundColor = UIColor(white: 0.1, alpha: 1)
+        cell.rootController = self
         cell.track = tracks[indexPath.row]
         cell.authorLabel.text = tracks[indexPath.row].artist?.name
         cell.selectionStyle = .none
-        cell.rootController = self
+        
+        
+        
+        
         cell.indexPath = indexPath
-        cell.isUserInteractionEnabled = true
         cell.dotsLabel.isHidden = true
         cell.dotsLabel.isUserInteractionEnabled = false
         cell.lockedIcon.isHidden = true
@@ -191,8 +219,15 @@ class PlaylistDetailController: UITableViewController {
         return cell
     }
     
+    func likeTrack(trackID: Int, points: Int) {
+        let manager = CLLocationManager()
+        guard manager.location != nil else { return }
+        let coord = Coord(lat: (manager.location!.coordinate.latitude), lng: manager.location!.coordinate.longitude)
+        SocketIOManager.sharedInstance.updateTrackScore(roomID: eventID, trackID: String(trackID), points: points, userID: userID, userCoord: coord)
+    }
+    
     func deleteTrackFromPlaylist(track: Track, index: IndexPath) {
-        if type != .mine {
+        if !isInEvent || (type == .mine || iAmAdmin) {
             if playlist._id != nil {
                 apiManager.deleteTrackFromPlaylist(String(describing: playlist._id!), track, target: self)
                 tracks.remove(at: index.row)
@@ -200,8 +235,6 @@ class PlaylistDetailController: UITableViewController {
             } else {
                 ToastView.shared.short(self.view, txt_msg: "Can't modify deezer playlist", color: UIColor.red)
             }
-        } else {
-            // love track
         }
     }
     
