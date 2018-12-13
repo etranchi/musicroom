@@ -144,6 +144,7 @@ class EditPlaylist extends Component {
 						</a>
 					</Col>
 				</Row>
+				{this.state.playlist.idUser === this.props.state.user._id ?
 				<Row>
 					<Col span={2} offset={10}>
 						<div style={{'margin': '0 0 0 12% '}}>
@@ -151,7 +152,8 @@ class EditPlaylist extends Component {
 						</div>
 						<Divider />
 					</Col>
-				</Row>
+				</Row> : null
+				}
 				<Row style={{height:'80px'}}>
                     <Col span={3} offset={5} >
                         <b style={{display:'inline-block'}} > ({this.state.playlist.members.length}) </b>
