@@ -58,7 +58,8 @@ export default class EditSetting extends Component {
 				data.append('file', this.state.infoFile.file.originFileObj);
 			let user = {
 				picture : this.currentUser.picture,
-				login : this.currentUser.login
+				login : this.currentUser.login,
+				password: this.currentUser.password
 			}
 			data.append('body', JSON.stringify(user));
 			axios.put(process.env.REACT_APP_API_URL + '/user/me', data, {'headers' : {'Authorization': 'Bearer '+ localStorage.getItem('token')}})
