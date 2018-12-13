@@ -66,7 +66,6 @@ export default class cardEvent extends Component {
         let tracks = this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks ? this.props.state.data.event.playlist.tracks.data : [];
         createRoom(this.props.state.data.event._id, tracks, this.props.state.data.event, this.props.state.user._id);
         this.checkRight();
-        window.scrollTo(1000, 1000)
     }
     updateMap = () => {
         let calc = geolib.getDistanceSimple(
@@ -93,22 +92,16 @@ export default class cardEvent extends Component {
         const is_finish = this.props.state.data.event.is_finish
         const tracks = this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks ? this.props.state.data.event.playlist.tracks.data : [];
 
-        console.log("COUCOU")
-        if (((!is_start) || (is_start && is_finish)) && this.state.isCreator)
-        {
-            console.log("Enter and update Tracks")
-            if (!is_start)
-            {
+        if (((!is_start) || (is_start && is_finish)) && this.state.isCreator) {
+            if (!is_start || (is_start && is_finish)) {
                 updateTracks(this.props.state.data.event._id, tracks)
                 this.props.state.data.event.is_start    = true;
                 this.props.state.data.event.is_finish   = false;
                 updateEvent(this.props.state.data.event._id, this.props.state.data.event)
             }
             this.props.state.data.right             = this.state;
-            // updateEvent(this.props.state.data.event._id, this.props.state.data.event)
         }
         this.props.state.data.right             = this.state;
-        console.log("GO TO LIVE EVENT")
         this.props.updateParent({currentComponent:'liveEvent'})
     }
     finishEvent = () => {

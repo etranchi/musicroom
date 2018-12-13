@@ -41,11 +41,13 @@ class                   SocketIOManager: NSObject
                 return
             }
             let data = dataArray[0]
-            let jsonData = try! JSONSerialization.data(withJSONObject:data)
-            let playlist = try! JSONDecoder().decode(Playlist.self, from: jsonData)
+            let jsonData = try? JSONSerialization.data(withJSONObject:data)
+            guard let json = jsonData else { return }
+            let playlist = try? JSONDecoder().decode(Playlist.self, from: json)
             completionHandler(1, playlist)
         }
     }
+    
     
     func                lockPlaylist(_ playlistId: String) {
         socket.emit("blockPlaylist", playlistId)

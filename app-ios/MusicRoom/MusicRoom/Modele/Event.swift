@@ -26,6 +26,26 @@ struct Location : Codable {
     let coord : Coord
 }
 
+struct CreateEventRoom: Codable {
+    var roomID: String
+    var tracks: [Track]
+    var event: Event
+    var userID: String
+}
+
+struct leaveEventRoom: Codable {
+    var roomID: String
+    var userID: String
+}
+
+struct updateEventTrack: Codable {
+    var roomID: String
+    var trackID: String
+    var points: Int
+    var userID: String
+    var userCoord: Coord
+}
+
 struct Event : Codable {
     let _id : String?
     let creator : User?
