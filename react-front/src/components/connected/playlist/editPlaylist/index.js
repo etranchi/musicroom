@@ -120,17 +120,21 @@ export default class EditPlaylist extends Component {
 						</a>
 					</Col>
 				</Row>
-				<Row>
-					<Col span={1} offset={10}>
-						<h1> Playlist : </h1>
-					</Col>
-					<Col span={2}>
-						<div style={{'margin': '0 0 0 12% '}}>
-							<Checkbox name="public" checked={this.state.playlist.public} onChange={() => {this.setPublic()}}> {this.state.playlist.public ? "Public" : "Privé" }</Checkbox>
-						</div>
-					</Col>
-				</Row>
-				<Divider />
+				{
+					this.state.playlist.idUser === this.props.state.user._id ?
+						<Row>
+							<Col span={1} offset={10}>
+								<h1> Playlist : </h1>
+							</Col>
+							<Col span={2}>
+								<div style={{'margin': '0 0 0 12% '}}>
+									<Checkbox name="public" checked={this.state.playlist.public} onChange={() => {this.setPublic()}}> {this.state.playlist.public ? "Public" : "Privé" }</Checkbox>
+								</div>
+							</Col>
+						</Row> 
+						: 
+						null
+				}
 				<Row style={{height:'80px'}}>
 					<Col span={3} offset={7} > 
 						<b style={{display:'inline-block'}} > ({this.state.playlist.members.length}) </b>

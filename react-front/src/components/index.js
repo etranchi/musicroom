@@ -61,7 +61,7 @@ class Front extends Component {
 		return (
           <Layout className="App">
             <Header className="HeaderApp">
-              <img alt="headerImg" className="HeaderImage" src="/header.jpg"></img>
+              <img alt="headerImg" className="HeaderImage" src="https://www.zupimages.net/up/18/50/2sp2.jpg"></img>
               {token && <div className="disconnect"><Button className="disconnect" type="primary" onClick={this.logout}>Disconnect</Button></div>}
               {token && <Menu  state={this.state} updateParent={this.updateState}/>}
             </Header>

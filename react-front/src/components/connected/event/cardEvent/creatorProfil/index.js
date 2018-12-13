@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Checkbox, Divider, Card, Avatar, Modal, Icon, Col, Row, Input, InputNumber} from 'antd';
+import { Checkbox, Divider, Card, Avatar, Modal, Icon, Col, Row, InputNumber} from 'antd';
 import { updateEvent} from '../../../../other/sockets';
 
 export default class CreatorProfil extends Component {
