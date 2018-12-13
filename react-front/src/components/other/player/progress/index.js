@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Row, Col, Progress } from 'antd';
-import {socket, updatePlayer} from '../../sockets'
+import {updatePlayer} from '../../sockets'
 
 const { DZ } = window;
 
