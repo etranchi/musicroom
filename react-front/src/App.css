@@ -28,7 +28,9 @@ iframe {
     background-color: #00695c !important;
     border-color:  #00695c !important;
 } 
-
+.ant-switch-checked {
+    background-color: #00695c !important;
+}
 .ant-tabs-nav .ant-tabs-tab-active {
     color: #00695c !important;
 }

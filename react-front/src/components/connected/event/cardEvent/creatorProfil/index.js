@@ -6,48 +6,59 @@ export default class CreatorProfil extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            iconPrivacy: this.props.state.data.event.public ? 'unlock' : 'lock'
+            iconPrivacy:'',
+            visible:false,
+            userPicture: ''
         };
+    }
+    componentWillMount = () =>{
+        this.setState({iconPrivacy:this.props.state.data.event.public ? 'unlock' : 'lock'});
+        this.setState({
+            userPicture:this.props.state.data.event.creator.picture.indexOf("https://") !== -1 ?
+                this.props.state.data.event.creator.picture  
+                :  
+                process.env.REACT_APP_API_URL + "/userPicture/" + this.props.state.data.event.creator.picture
+        });
     }
     handleChangePrivacy = () => {
         if (!this.props.right.isCreator && !this.props.right.isAdmin)
             return ;
         this.props.state.data.event.public = !this.props.state.data.event.public;
         this.setState({iconPrivacy: this.props.state.data.event.public ? 'unlock' : 'lock'});
-        updateEvent(this.roomID, this.props.state.data.event);
+        updateEvent(this.props.state.data.event._id, this.props.state.data.event);
     }
     handleChangeDistanceRequired = () => {
+        if (!this.props.right.isCreator && !this.props.right.isAdmin)
+            return ;
         this.props.state.data.event.distance_required = !this.props.state.data.event.distance_required;
         updateEvent(this.props.state.data.event._id, this.props.state.data.event);
     }
     handleChangeDistance = (val) => {
-       if  (val > 1 && val < 9999)
+       if  (val > 1 && val < 9999 && (this.props.right.isCreator || this.props.right.isAdmin))
        {
             this.props.state.data.event.distance_max = val;
             updateEvent(this.props.state.data.event._id, this.props.state.data.event);
        }
     }
     showModal = () => {
+        console.log("Je suis ici")
         this.setState({visible: true});
     }
     handleOk = () => {
-        updateEvent(this.roomID, this.props.state.data.event);
+        if (this.props.right.isCreator || this.props.right.isAdmin)
+            updateEvent(this.props.state.data.event._id, this.props.state.data.event);
         this.setState({visible: false});
     }
     handleCancel = () => {
         this.setState({visible: false});
     }
 	render() {
-        let userPicture = this.props.state.data.event.creator.picture.indexOf("https://") !== -1 ?
-                                this.props.state.data.event.creator.picture 
-                                : 
-                                process.env.REACT_APP_API_URL + "/userPicture/" + this.props.state.data.event.creator.picture;
         return (
             <div>
             <Row >
                 <Col span={9} offset={4}>
                     <Card.Meta
-                        avatar={<Avatar size={116} src={userPicture}/>}
+                        avatar={<Avatar size={116} src={this.state.userPicture}/>}
                         title= { this.props.state.data.event.creator && this.props.state.data.event.creator.login ? 
                                     this.props.state.data.event.creator.login 
                                     : 
@@ -111,14 +122,14 @@ export default class CreatorProfil extends Component {
             </Row>
             <Modal
                 title="Liste des participants : "
-                visible={this.state.modMember}
+                visible={this.state.visible}
                 onOk={this.handleOk.bind(this, "modTitle")}
                 onCancel={this.handleCancel}
             >
                 <b>  Admin Members ({this.props.state.data.event.adminMembers.length}) : </b>
                 {
                     this.props.state.data.event.adminMembers.map((member, key) => {
-                        let userPicture = member.facebookId ?
+                        let userPicture = member.picture.indexOf("https://") !== -1 ?
                                             member.picture 
                                             : 
                                             process.env.REACT_APP_API_URL + "/userPicture/" + member.picture
@@ -136,7 +147,7 @@ export default class CreatorProfil extends Component {
                 <b> Members ({this.props.state.data.event.members.length}) : </b>
                 {
                     this.props.state.data.event.members.map((member, key) => {
-                        let userPicture = member.facebookId ?
+                        let userPicture = member.picture.indexOf("https://") !== -1 ?
                                             member.picture 
                                             : 
                                             process.env.REACT_APP_API_URL + "/userPicture/" + member.picture
@@ -150,20 +161,6 @@ export default class CreatorProfil extends Component {
                         );
                     })
                 }   
-                </Modal>
-                {/* Modal for title modification  */}
-                <Modal 
-                    title="Description : " 
-                    visible={this.state.modTitle} 
-                    onOk={this.handleOk.bind(this, "modTitle")} 
-                    onCancel={this.handleCancel.bind(this, "modTitle")} 
-                >
-                    <Input.TextArea  
-                        placeholder="Descriptif de l'évènement : " 
-                        name= "description" 
-                        value={this.props.state.data.event.description} 
-                        onChange={this.handleChangeDescription}
-                    /> 
                 </Modal>
             <Divider />
            </div>

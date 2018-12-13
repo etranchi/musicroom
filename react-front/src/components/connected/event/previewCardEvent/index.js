@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Avatar, Divider, Modal, Row, Col, Button, message } from 'antd';
+import { Card, Avatar, Divider, message } from 'antd';
 import './styles.css';
 import Map from "../map"
 import axios from 'axios'
@@ -36,9 +36,6 @@ export default class PreviewCardEvent extends Component {
         let distance = this.getDistance(this.props.event.location.coord, this.props.state.data.userCoord);
         this.setState({distance:distance});
         this.date = this.props.event.event_date ? this.formatDateAnnounce(this.props.event.event_date) : 'Inconnue';
-    }
-    openMap(){
-        this.showModal();
     }
     showModal = () => {
         this.setState({visible: true});
@@ -107,10 +104,7 @@ export default class PreviewCardEvent extends Component {
                 }
                 actions=
                 {
-                    [
-                        <i onClick={this.openMap.bind(this)} className="fas fa-map-marker"></i>,
-                        <i onClick={this.delete} className="fas fa-trash-alt"></i>
-                    ]
+                    this.props.event.creator.email === this.props.state.user.email ?  [ <i onClick={this.delete} className="fas fa-trash-alt"></i> ]  : [ ]
                 }
             >
                 <Card.Meta
@@ -126,24 +120,6 @@ export default class PreviewCardEvent extends Component {
                         </div>
                     }
                 />  
-                <Modal
-                    title={"Vous êtes à " + this.state.distance + "km"}
-                    visible={this.state.visible}
-                    onOk={this.handleOk}
-                    onCancel={this.handleCancel}
-                >  
-                    <Map 
-                        state={this.props.state} 
-                        openCardEvent={this.props.openCardEvent} 
-                        events={[this.props.event]}
-                    />
-                    <Row>
-					<Col span={11}/>
-					<Col span={4}>
-						<Button  onClick={this.props.openCardEvent.bind(this, this.props.event)}> Voir l'évent </Button>
-					</Col>
-				</Row>       
-            </Modal>
             </Card>
         )
 	}

@@ -43,68 +43,80 @@ class List extends Component {
 				</div>
 			);
 		}
-		else{
-			console.log('render')
-			console.log(this.state.playlist)
-		return (
-			<div>
-			<Row type="flex" justify="space-between">
-				<Col>
-					<SearchBar updateParent={this.props.updateParent}/>
-				</Col>
-				<Col>
-					<Button onClick={this.props.updateParent.bind(this, {'currentComponent': 'createPlaylist'})}>+</Button>
-				</Col>
-			</Row>
-			<ul className="collection">
-			<h1 style={{fontSize:'36px'}}> Mes Playlists : </h1>
-					{this.state.playlist.myPlaylists.map((val, i) => {
-						return (
-							<li 
-								className="collection-item avatar" 
-								key={i} 
-								onClick={this.props.updateParent.bind(this,{'currentComponent': 'tracks', 'id': val._id || val.id})}>
-								<img src={val.picture_small || defaultImage} alt="" className="circle"/>
-								<span className="title">{val.title}</span>
-								<p>{val.description}</p>
-							</li>
-						);
-					})}
-				</ul>
+		else {
+			return (
+				<div>
+				<Row type="flex" justify="space-between">
+					<Col>
+						<b> Rechercher une playlist Deezer : </b>
+						<SearchBar updateParent={this.props.updateParent}/>
+					</Col>
+					<Col>
+						<Button onClick={this.props.updateParent.bind(this, {'currentComponent': 'createPlaylist'})}>+</Button>
+						<b> Créer une playlist</b>
+					</Col>
+				</Row>
 				<ul className="collection">
-				<h1 style={{fontSize:'36px'}}> Playlists de mes amis : </h1>
-					{this.state.playlist.friendPlaylists.map((val, i) => {
-						return (
-							<li 
-								className="collection-item avatar" 
-								key={i} 
-								onClick={this.props.updateParent.bind(this,{'currentComponent': 'tracks', 'id': val._id || val.id})}>
-								<img src={val.picture_small || defaultImage} alt="" className="circle"/>
-								<span className="title">{val.title}</span>
-								<p>{val.description}</p>
-							</li>
-						);
-					})}
+					<div className="styleCollection">
+						<h1 style={{fontSize:'36px'}}> Mes Playlists : </h1>
+						{
+							this.state.playlist.myPlaylists.map((val, i) => {
+								return (
+									<li 
+										className="collection-item avatar" 
+										key={i} 
+										onClick={this.props.updateParent.bind(this,{'currentComponent': 'tracks', 'id': val._id || val.id})}>
+										<img src={val.picture_small || defaultImage} alt="" className="circle"/>
+										<span className="title">{val.title}</span>
+										<p>{val.description}</p>
+									</li>
+								);
+							})
+						}
+					</div>
 				</ul>
-				<ul className="collection">
-				<h1 style={{fontSize:'36px'}}> Playlists publiques : </h1>
-					{this.state.playlist.allPlaylists.map((val, i) => {
-						return (
-							<li 
-								className="collection-item avatar" 
-								key={i} 
-								onClick={this.props.updateParent.bind(this,{'currentComponent': 'tracks', 'id': val._id || val.id})}>
-								<img src={val.picture_small || defaultImage} alt="" className="circle"/>
-								<span className="title">{val.title}</span>
-								<p>{val.description}</p>
-							</li>
-						);
-					})}
-				</ul>
-			</div>
-		);
-	}
-  }
+					<ul className="collection">
+						<div className="styleCollection">
+							<h1 style={{fontSize:'36px'}}> Playlists de mes amis : </h1>
+							{
+								this.state.playlist.friendPlaylists.map((val, i) => {
+									return (
+										<li 
+											className="collection-item avatar" 
+											key={i} 
+											onClick={this.props.updateParent.bind(this,{'currentComponent': 'tracks', 'id': val._id || val.id})}>
+											<img src={val.picture_small || defaultImage} alt="" className="circle"/>
+											<span className="title">{val.title}</span>
+											<p>{val.description}</p>
+										</li>
+									);
+								})
+							}
+						</div>
+					</ul>
+					<ul className="collection">
+						<div className="styleCollection">
+						<h1 style={{fontSize:'36px'}}> Playlists publiques : </h1>
+						{
+							this.state.playlist.allPlaylists.map((val, i) => {
+								return (
+									<li 
+										className="collection-item avatar" 
+										key={i} 
+										onClick={this.props.updateParent.bind(this,{'currentComponent': 'tracks', 'id': val._id || val.id})}>
+										<img src={val.picture_small || defaultImage} alt="" className="circle"/>
+										<span className="title">{val.title}</span>
+										<p>{val.description}</p>
+									</li>
+								);
+							})
+						}
+						</div>
+					</ul>
+				</div>
+			);
+		}
+  	}
 }
 
 export default List;

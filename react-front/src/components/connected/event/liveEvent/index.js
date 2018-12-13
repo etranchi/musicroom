@@ -31,18 +31,18 @@ export default class LiveEvent extends Component {
     }
     componentWillMount = () => {
         socket.on('getRoomPlaylist', (tracks) => {
-            console.log("socket : receive data from getRoomPlaylist : ", tracks);
+            //console.log("socket : receive data from getRoomPlaylist : ", tracks);
             this.savePlaylist(tracks);
         });
         socket.on('updateTrack', (msg) => {
-            console.log("socket : receive message from updateTrack -> ", msg);
+            //console.log("socket : receive message from updateTrack -> ", msg);
         });
         socket.on('updateStatus', (tracks) => {
-            console.log("socket : receive message from updateStatus -> ", tracks);
+            //console.log("socket : receive message from updateStatus -> ", tracks);
             this.savePlaylist(tracks);
         });
         socket.on('updateScore', (tracks) => {
-            console.log("socket : receive data from updateScore : ", typeof tracks);
+           // console.log("socket : receive data from updateScore : ", typeof tracks);
             if (typeof tracks === 'object') {
                 this.savePlaylist(tracks);
                 this.setState({rotate: {active:false, id:0, liked: false}});
@@ -72,8 +72,7 @@ export default class LiveEvent extends Component {
         });
         return false;
     }
-    callSocket = (type, OldTrack, value) => {
-
+    callSocket = (OldTrack, value) => {
         let me          = this.props.state.user;
         let index       = -1;
 
