@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Avatar, Divider, Modal, Row, Col, Button } from 'antd';
+import { Card, Avatar, Divider, Modal, Row, Col, Button, message } from 'antd';
 import './styles.css';
 import Map from "../map"
 import axios from 'axios'
@@ -83,7 +83,10 @@ export default class PreviewCardEvent extends Component {
     }
     delete = () => {
         axios.delete(process.env.REACT_APP_API_URL + '/event/'+ this.props.event._id, {headers:{Authorization: 'Bearer ' + localStorage.getItem('token')}})
-        .then(resp => { this.props.getEvents(); })
+        .then(resp => { 
+            message.success("Event deleted")
+            this.props.getEvents(); 
+        })
         .catch(err => { Error.display_error(err); })
     }
 	render() {
