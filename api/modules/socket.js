@@ -27,18 +27,21 @@ module.exports = {
         }
     },
     updateScore: (room, trackID, points, userID) => {
+        console.log( trackID, points, userID)
         room.tracks.forEach((track) => {
             if (!track.like) track.like = 0;
             if (!track.userLike) track.userLike = [];
             if (!track.userUnLike) track.userUnLike = [];
             if (!track.status) track.status = 0
             if (track._id === trackID) {
+                console.log('qui')
                 let i = 0;
                 let j = 0;
                 if ((i = track.userLike.indexOf(userID)) != -1) track.userLike.splice(i, 1);
                 if ((j = track.userUnLike.indexOf(userID)) != -1) track.userUnLike.splice(j, 1);
                 points > 0 ? track.userLike.push(userID) : track.userUnLike.push(userID)
                 track.like += points
+                console.log("TRACKS FIND : score : ",  track.like)
             } 
         })
         return room

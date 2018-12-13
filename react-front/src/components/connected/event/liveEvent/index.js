@@ -70,7 +70,7 @@ export default class LiveEvent extends Component {
         });
         return ret;
     }
-    callSocket = (OldTrack, value) => {
+    callSocket = (type, OldTrack, value) => {
         let me          = this.props.state.user;
         let index       = -1;
 
