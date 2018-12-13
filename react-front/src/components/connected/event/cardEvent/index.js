@@ -19,14 +19,19 @@ export default class cardEvent extends Component {
         };
     }
     isUser = tab => {
+        let ret = false;
         tab.forEach(user => { 
-            if (user.email === this.props.state.user.email)
-                return true
+            if (user._id === this.props.state.user._id)
+            {
+                ret = true
+                return ;
+            }
         });
-        return false;
+        return ret;
     }
     checkRight = () => {
-        if (this.props.state.data.event.creator.email === this.props.state.user.email)
+        console.log()
+        if (this.props.state.data.event.creator._id === this.props.state.user._id)
             this.setState({isCreator:true});
         else {
             this.setState({
@@ -52,6 +57,10 @@ export default class cardEvent extends Component {
             console.log('socket : createRoom receive data ', msg)
         });
         socket.on('updateTracks', (tracks, msg) => {
+            if (tracks && tracks.length > 0) {
+                this.props.state.data.event.playlist.tracks.data = tracks;
+                this.props.updateParent({data:this.props.state.data})
+            }
             console.log('socket : updateTracks receive data ', msg)
         });
         socket.on('joinRoom', (msg) => {
