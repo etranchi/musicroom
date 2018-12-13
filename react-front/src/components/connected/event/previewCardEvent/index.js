@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Card, Avatar, Divider, message } from 'antd';
 import './styles.css';
-import Map from "../map"
 import axios from 'axios'
 import Error from '../../../other/errorController'
 
