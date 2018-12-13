@@ -6,8 +6,8 @@ target 'MusicRoom' do
   use_frameworks!
 
   # Pods for MusicRoom
-  pod 'FacebookCore'
-  pod 'FacebookLogin'
+  pod 'FacebookCore', '0.3.0'
+  pod 'FacebookLogin', '0.3.0'
   pod 'GoogleSignIn'
   pod 'Alamofire'
   pod 'Socket.IO-Client-Swift', '~> 13.3.0'

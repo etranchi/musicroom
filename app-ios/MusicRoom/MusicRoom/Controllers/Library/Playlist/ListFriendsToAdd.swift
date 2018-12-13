@@ -18,13 +18,15 @@ class ListFriendsToAdd: UITableViewController {
     var members: [User] = []
     
     @objc func updatePlaylist() {
+        members.removeAll()
         dataUsers.forEach { (user, bool) in
             if bool == true {
                 members.append(user)
             }
         }
-        //playlist.members = members
+        playlist.members = members
         apiManager.updatePlaylist(playlist) { (err) in
+            self.root.playlist = self.playlist
             self.navigationController?.popViewController(animated: true)
         }
     }
@@ -92,9 +94,9 @@ class ListFriendsToAdd: UITableViewController {
         cell.textLabel!.text = filteredData[indexPath.row].0.login
         cell.textLabel?.textColor = .white
         cell.selectionStyle = .none
-        cell.isSelected = filteredData[indexPath.row].1
+        cell.setSelected(filteredData[indexPath.row].1, animated: true)
         if cell.isSelected {
-            cell.backgroundColor = UIColor.green
+            cell.backgroundColor = UIColor(red: 40 / 255, green: 210 / 255, blue: 40 / 255, alpha: 1)
         } else {
             cell.backgroundColor = UIColor(white: 0.1, alpha: 1)
         }
@@ -104,8 +106,8 @@ class ListFriendsToAdd: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)
         let userSelected = filteredData[indexPath.row].0
-        cell?.isSelected = true
-        cell?.backgroundColor = UIColor.green
+        cell?.setSelected(true, animated: true)
+        cell?.backgroundColor = UIColor(red: 40 / 255, green: 210 / 255, blue: 40 / 255, alpha: 1)
         let toChange = dataUsers.index { (user, bool) -> Bool in
             if user.id == userSelected.id {
                 return true
@@ -121,7 +123,7 @@ class ListFriendsToAdd: UITableViewController {
     override func tableView(_ tableView : UITableView, didDeselectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)
         let userSelected = filteredData[indexPath.row].0
-        cell?.isSelected = false
+        cell?.setSelected(false, animated: true)
         cell?.backgroundColor = UIColor(white: 0.1, alpha: 1)
         let toChange = dataUsers.index { (user, bool) -> Bool in
             if user.id == userSelected.id {

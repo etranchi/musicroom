@@ -70,7 +70,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         return button
     }()
     
-    private lazy var player: DZRPlayer? = {
+    public lazy var player: DZRPlayer? = {
         guard let deezerConnect = DeezerManager.sharedInstance.deezerConnect,
             var _player = DZRPlayer(connection: deezerConnect) else { return nil }
         _player.shouldUpdateNowPlayingInfo = true

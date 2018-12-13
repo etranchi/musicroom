@@ -279,9 +279,7 @@ class APIManager: NSObject, URLSessionDelegate {
             request(req)
             URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: req) { (data, response, err) in
                 SocketIOManager.sharedInstance.socket.emit("updatePlaylist", pId)
-                print(playlist.members)
                 completion("ok")
-                print("j'aii put playlist")
             }.resume()
         } catch {
             makeAlert("Error")

@@ -19,7 +19,7 @@ struct User : Codable {
     var status : Status?
     var creationDate : String?
     var id : String
-    var picture : String
+    var picture : String?
     enum CodingKeys: String, CodingKey {
         case id = "_id"
         case login, email, password, status, creationDate, picture

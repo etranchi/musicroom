@@ -11,7 +11,15 @@ import SocketIO
 class                   SocketIOManager: NSObject
 {
     static let          sharedInstance = SocketIOManager()
-    static let          manager = SocketManager(socketURL: URL(string: "https://www.come-over.com:4242")!, config: [.log(false), .compress, .sessionDelegate(apiManager), .reconnectWait(5), .reconnects(true)])
+    static let          manager = SocketManager(socketURL: URL(string: "https://www.come-over.com:4242")!, config: [.log(false),
+                                                                                                                    .compress,
+                                                                                                                    .sessionDelegate(apiManager),
+                                                                                                                    .reconnectWait(5),
+                                                                                                                    .reconnects(true),
+                                                                                                                    .forceWebsockets(true),
+                                                                                                                    .forceNew(true),
+                                                                                                                    .selfSigned(true),
+                                                                                                                    .secure(true)])
     var                 socket = manager.socket(forNamespace: "/")
     
     override init() {
