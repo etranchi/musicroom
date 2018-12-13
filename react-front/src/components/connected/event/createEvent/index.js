@@ -3,7 +3,7 @@ import LocationSearchInput from '../locationSearchInput'
 import './styles.css';
 import axios from 'axios'
 import SearchBar from '../../../other/searchbar'
-import { Avatar, Card, Icon, Button, Input, DatePicker, Upload, message, Divider, Layout, Col, Row, Checkbox, InputNumber, Switch} from 'antd';
+import { Avatar, Card, Icon, Button, Input, DatePicker, Upload, message, Divider, Layout, Col, Row, InputNumber, Switch} from 'antd';
 import Error from '../../../other/errorController'
 import moment from 'moment';
 

@@ -7,7 +7,6 @@ let self = module.exports = {
 	getPlaylistsByUser: async (req, res, next) => {
 		try {
 			let localPlaylists = await playlistModel.find().populate('members')
-
 			let retPlaylist = localPlaylists.reduce((acc, elem) => {
 				if (elem.idUser.toString() === req.user._id.toString())
 					acc['myPlaylists'].push(elem)
@@ -101,7 +100,6 @@ let self = module.exports = {
 		}
 	},
 	postPlaylist: async (req, res, next) => {
-		console.log('posting playlist');
 		try {
 			let playlist = {}
 			if (req.body.id) {
@@ -138,7 +136,6 @@ let self = module.exports = {
 						type: 'user'
 					}
 				}
-				console.log(req.body)
 				playlist = await playlistModel.create(req.body);
 			}
 			res.status(201).json(playlist);
@@ -256,10 +253,21 @@ let self = module.exports = {
 	},
 	deleteTrackPlaylistById: async (req, res, next) => {
 		try {
-			console.log("Body SWIFT -> ")
-			console.log(req.body)
 			if (!Number(req.params.id)) {
-				await playlistModel.updateOne({_id: req.params.id, idUser: req.user._id},
+				await playlistModel.updateOne({_id: req.params.id, 
+					$or:
+					[
+						{'idUser':
+							{$eq: req.user._id}
+						},
+						{'members':
+							{$in: req.user._id}
+						},
+						{
+							public: true
+						}
+					]
+				},
 					{$pull: {'tracks.data': {id: req.params.trackId}}}
 				)
 			} else {
