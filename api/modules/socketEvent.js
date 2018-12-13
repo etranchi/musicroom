@@ -139,9 +139,7 @@ module.exports = function (io) {
             if (typeof roomID === 'object') {
                 let obj = JSON.parse(roomID);
                 roomID = obj.roomID
-                tracks = obj.tracks
-                event = obj.event
-                userID = obj.userID
+                track = obj.track
             }
             /* =============== */
             let room = ftSocket.getRoom(roomID)
