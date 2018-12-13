@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import EditSetting from './edit';
-import {Button, Divider, Layout, Col, Row, Card, Avatar, Spin} from 'antd';
+import {Button, Divider, Layout, Col, Row, Card, Avatar, Spin, message} from 'antd';
 
 const DZ = window.DZ;
 const {Content, Footer, Header} = Layout;
@@ -37,6 +37,7 @@ class Setting extends Component {
 			console.log(response.authResponse);
 			axios.put(process.env.REACT_APP_API_URL + '/user/login/deezer?access_token=' + localStorage.getItem("token") + '&deezerToken=' + response.authResponse.accessToken)
 			.then(() => {
+				message.success("Successfully linked to deezer")
 				that.getUser()
 			})
 			.catch(err => { console.log(err); })
@@ -46,6 +47,7 @@ class Setting extends Component {
     logoutDeezer = () => {
     	axios.delete(process.env.REACT_APP_API_URL + '/user/login/deezer', {'headers':{'Authorization' : 'Bearer ' + localStorage.getItem('token')}})
     	.then(() => {
+			message.success("Successfully unlinked to deezer")
 			this.getUser()
     	})
     	.catch(err => { console.log(err); })
