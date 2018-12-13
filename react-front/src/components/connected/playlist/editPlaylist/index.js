@@ -2,24 +2,23 @@ import React, { Component } from 'react';
 import axios from 'axios'
 import { Input, Button, Col, Row, List, Icon, Card, Avatar, message, Checkbox, Divider } from 'antd'
 import SearchBar from '../../../other/searchbar'
+import Error from '../../../other/errorController'
 
-class EditPlaylist extends Component {
+export default class EditPlaylist extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
 			playlist: {title:'', members:[],public:true, tracks:{data:[]}},
 			isloading: false
-		}
+		};
 	}
-	componentDidMount() {
+	componentDidMount = () => {
 		this.getPlaylist((ret) => {this.setState({playlist:ret.data, isloading:false})});
 	}
-
-	getPlaylist = (callback) => {
+	getPlaylist = callback => {
 		this.setState({isloading: true});
 		axios.get(process.env.REACT_APP_API_URL + '/playlist/' + this.props.state.id, {'headers':{'Authorization': 'Bearer ' + localStorage.getItem('token')}})
 		.then((resp) => {
-			console.log(resp.data)
 			if (callback)
 				callback(resp)
 			else
@@ -27,16 +26,14 @@ class EditPlaylist extends Component {
 		})
 		.catch((err) => {
 			this.setState({playlist:{title:'', members:[],public:true, tracks:{data:[]}}, isloading:false})
-			console.log(err);
+			Error.display_error(err);
 		})
 	}
-
-	handleChange = (e) =>{
+	handleChange = e =>{
 		var tmp = this.state.playlist;
 		tmp.title = e.target.value;
 		this.setState({playlist: tmp});
 	}
-
 	save = () =>{
 		axios.put(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id || this.state.playlist.id, 
 		this.state.playlist,
@@ -44,74 +41,53 @@ class EditPlaylist extends Component {
 		.then(() => {
 			this.props.updateParent({'currentComponent':'tracks'})
 		})
-		.catch(err => {
-			console.log(err);
-		})
+		.catch(err => { Error.display_error(err) })
 	}
-
 	delete = () => {
 		axios.delete(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id || this.state.playlist.id,
 			{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}}
 		)
-		.then(() => {
-			this.props.updateParent({'currentComponent':'playlist', id:null})
-		})
-		.catch(err => {
-			console.log(err);
-		})
+		.then(() => { this.props.updateParent({'currentComponent':'playlist', id:null}) })
+		.catch(err => { Error.display_error(err) })
 	}
-
-	addTrack = (item) => {
+	addTrack = item => {
     	this.setState({ tracks: [...this.state.tracks, item] })
 	}
-	
-	updatePlaylistMember = (item) => {
+	updatePlaylistMember = item => {
 		let isMember = this.state.playlist.members.filter( elem => elem['_id'] === item._id )
 		if (isMember.length > 0) {
 			message.error("member already in playlist")
 			return;
 		}
-		let state = this.state
+		let state = this.state;
 		state.playlist.members.push(item);
 		axios.put(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id || this.state.playlist.id, 
 		state.playlist,
 		{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
-		.then(() => {
-			this.getPlaylist()
-		})
-		.catch(err => {
-			console.log(err);
-		})
-		
+		.then(() => { this.getPlaylist() })
+		.catch(err => { Error.display_error(err) })
 	}
-
-	removeMember = (item) => {
+	removeMember = item => {
 		let state = this.state
 		let newMembers = this.state.playlist.members.filter( (elem) => {
 			if (elem['_id'] !== item._id)
 				return elem;
 			return null
-		})		
+		});
 		state.playlist.members = newMembers;
 		axios.put(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id || this.state.playlist.id, 
 		state.playlist,
 		{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
-		.then(() => {
-			this.getPlaylist()
-		})
-		.catch(err => {
-			console.log(err);
-		})
+		.then(() => { this.getPlaylist() })
+		.catch(err => { Error.display_error(err) })
 	}
-
 	setPublic = () => {
 		let state = this.state;
 		state.playlist.public = !state.playlist.public
 		this.setState(state);
 	}
-
 	render() {
-		if( this.state.isloading === true ) {
+		if (this.state.isloading === true) {
 			return (
 				<div>
 					<a 
@@ -145,17 +121,21 @@ class EditPlaylist extends Component {
 					</Col>
 				</Row>
 				<Row>
-					<Col span={2} offset={10}>
+					<Col span={1} offset={10}>
+						<h1> Playlist : </h1>
+					</Col>
+					<Col span={2}>
 						<div style={{'margin': '0 0 0 12% '}}>
-							<Checkbox name="public" checked={this.state.playlist.public} onChange={() => {this.setPublic()}}>Public</Checkbox>
+							<Checkbox name="public" checked={this.state.playlist.public} onChange={() => {this.setPublic()}}> {this.state.playlist.public ? "Public" : "Privé" }</Checkbox>
 						</div>
-						<Divider />
 					</Col>
 				</Row>
+				<Divider />
 				<Row style={{height:'80px'}}>
-                    <Col span={3} offset={5} >
-                        <b style={{display:'inline-block'}} > ({this.state.playlist.members.length}) </b>
-                    </Col>
+					<Col span={3} offset={7} > 
+						<b style={{display:'inline-block'}} > ({this.state.playlist.members.length}) </b>
+						<b> Ajouter des membres : </b>
+					</Col>
                     <Col span={3}>
                         <SearchBar state={this.props.state}  updateEventMember={this.updatePlaylistMember} type="member"/> 
                     </Col>
@@ -202,5 +182,3 @@ class EditPlaylist extends Component {
 		);
   }
 }
-
-export default EditPlaylist;

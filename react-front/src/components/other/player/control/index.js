@@ -82,7 +82,7 @@ export default class Player extends Component {
         let index = this.state.currentTracksID + 1;
         if (index >= this.state.tracks.length)
             return ;     
-        if (index - 1 >= 0)
+        if (index - 1 >= 0 && this.props.roomID)
             updateStatus(this.props.roomID, -1, this.state.tracks[index]._id, this.state.tracks[index-1]._id)  
         this.setState({currentTracksID:index});
         this.props.updateParentState({currentTracksID:index});
@@ -94,7 +94,7 @@ export default class Player extends Component {
         let index = this.state.currentTracksID - 1;
         if (index < 0)
             return ;
-        if (index + 1 < this.state.tracks.length)
+        if (index + 1 < this.state.tracks.length  && this.props.roomID)
             updateStatus(this.props.roomID, 1, this.state.tracks[index]._id, this.state.tracks[index + 1]._id)
         this.setState({currentTracksID:index})
         this.props.updateParentState({currentTracksID:index})
