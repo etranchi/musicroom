@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input, Row, Col, Divider, Button } from 'antd'
+import { Input, Row, Col, Divider, Button, message } from 'antd'
 import axios from 'axios'
 import SearchBar from '../../../other/searchbar'
 import Track from '../../../templates/track'
@@ -23,7 +23,10 @@ export default class CreatePlaylist extends Component {
 		body.tracks.data 	= this.state.tracks;
 		body.title 			= this.state.title;
 		axios.post(process.env.REACT_APP_API_URL + '/playlist', body, {'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}} )
-			.then(resp => { this.props.updateParent({currentComponent:'playlist'}) })
+			.then(() => { 
+				message.success("Successfully created playlist")
+				this.props.updateParent({currentComponent:'playlist'}) 
+			})
 			.catch((err) => { Error.display_error(err); })  
 	}
 	handleChange = event =>{

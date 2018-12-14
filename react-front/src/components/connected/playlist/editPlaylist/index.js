@@ -39,6 +39,7 @@ export default class EditPlaylist extends Component {
 		this.state.playlist,
 		{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
 		.then(() => {
+			message.success("Successfully saved playlist")
 			this.props.updateParent({'currentComponent':'tracks'})
 		})
 		.catch(err => { Error.display_error(err) })
@@ -47,7 +48,9 @@ export default class EditPlaylist extends Component {
 		axios.delete(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id || this.state.playlist.id,
 			{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}}
 		)
-		.then(() => { this.props.updateParent({'currentComponent':'playlist', id:null}) })
+		.then(() => { 
+			message.success("Successfully deleted playlist")
+			this.props.updateParent({'currentComponent':'playlist', id:null}) })
 		.catch(err => { Error.display_error(err) })
 	}
 	addTrack = item => {
@@ -64,7 +67,10 @@ export default class EditPlaylist extends Component {
 		axios.put(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id || this.state.playlist.id, 
 		state.playlist,
 		{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
-		.then(() => { this.getPlaylist() })
+		.then(() => {
+			message.success("Successfully added member")
+			this.getPlaylist()
+		})
 		.catch(err => { Error.display_error(err) })
 	}
 	removeMember = item => {
@@ -78,7 +84,10 @@ export default class EditPlaylist extends Component {
 		axios.put(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id || this.state.playlist.id, 
 		state.playlist,
 		{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
-		.then(() => { this.getPlaylist() })
+		.then(() => { 
+			message.success("Successfully deleted member")
+			this.getPlaylist()
+		 })
 		.catch(err => { Error.display_error(err) })
 	}
 	setPublic = () => {
