@@ -129,9 +129,10 @@ module.exports = function (io) {
             let room = ftSocket.getRoom(roomID)
             if (room) {
                 room.tracks = tracks
+                if (room.tracks[0] === undefined)
+                    room.tracks[0].status = 1
                 io.sockets.in(room.id).emit('updateTracks', room.tracks)
-            } else
-                return io.sockets.in(room.id).emit('updateTracks', 'fail');
+            }
         });
         socket.on('updateTrack', (roomID, track) => {
             console.log("[Socket] -> updateTrack")
@@ -171,8 +172,7 @@ module.exports = function (io) {
                 room = ftSocket.updateScore(room, trackID, points, userID)
                 room = ftSocket.updateRoom(room)
                 io.sockets.in(room.id).emit('updateScore', room.tracks)
-            } 
-            return
+            }
         });
         socket.on('updateEvent', (roomID, newEvent) => {
             console.log("[Socket] -> updateEvent")

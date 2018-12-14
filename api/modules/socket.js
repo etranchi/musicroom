@@ -101,7 +101,8 @@ module.exports = {
             track.userLike  = [];
             track.userUnLike = [];
         })
-        room.tracks[0].status = 1;
+        if (room.tracks[0])
+            room.tracks[0].status = 1;
         this.rooms.push(room);
         return room
     },
