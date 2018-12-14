@@ -5,6 +5,8 @@ import Playlist from './playlist'
 import Setting from './setting'
 import axios from 'axios'
 
+const { DZ } = window;
+
 export default class Connected extends Component {
 	constructor(props){
 		super(props);
@@ -15,6 +17,8 @@ export default class Connected extends Component {
 		};
 	}
 	componentWillMount = () => {
+		DZ.player.seek(0);
+		DZ.player.pause()
 		this.getGeolocalisation();
 	}
 	getGeolocalisation = () => {
