@@ -38,6 +38,8 @@ export default class LiveEvent extends Component {
             this.savePlaylist(tracks);
         });
         socket.on('updateScore', (tracks) => {
+            console.log('Update score -> ')
+            console.log(tracks)
             if (typeof tracks === 'object') {
                 this.savePlaylist(tracks);
                 this.setState({rotate: {active:false, id:0, liked: false}});

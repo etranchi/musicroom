@@ -38,6 +38,9 @@ export default class Player extends Component {
                 case "next":
                     this.nextTrack();
                     break;
+                case "suiv":
+                    this.nextTrackSuiv();
+                    break;
                 case "prev":
                     this.prevTrack();
                     break;
@@ -54,9 +57,7 @@ export default class Player extends Component {
         })
         socket.on('updateStatus', (tracksNew) => {
             console.log("Socket : updateStatus receive data : ", tracksNew)
-            this.setState({tracks:tracksNew}, () => {
-                console.log(tracksNew)
-            })  
+            this.setState({tracks:tracksNew})
         });
         socket.on('updateScore', (tracksNew) => {
             console.log("Socket : updateScore receive data : ", tracksNew)
@@ -82,12 +83,28 @@ export default class Player extends Component {
         let index = this.state.currentTracksID + 1;
         if (index >= this.state.tracks.length)
             return ;     
-        if (index - 1 >= 0 && this.props.roomID)
-            updateStatus(this.props.roomID, -1, this.state.tracks[index]._id, this.state.tracks[index-1]._id)  
+        if (index - 1 >= 0 && this.props.roomID) {
+            updateStatus(this.props.roomID, -1, this.state.tracks[index]._id, this.state.tracks[index-1]._id)
+        }
         this.setState({currentTracksID:index});
         this.props.updateParentState({currentTracksID:index});
+
         DZ.player.next();
         DZ.player.seek(0);
+    }
+    nextTrackSuiv = () => {
+        let index = this.state.currentTracksID + 1;
+        if (index >= this.state.tracks.length)
+            return ;     
+        if (index - 1 >= 0 && this.props.roomID) {
+            updateStatus(this.props.roomID, -1, this.state.tracks[index]._id, this.state.tracks[index-1]._id)
+        }
+        this.setState({currentTracksID:index});
+        this.props.updateParentState({currentTracksID:index});
+        DZ.Event.subscribe('tracklist_changed', e => {
+            DZ.player.next();
+            DZ.player.seek(0);
+        })
     }
 
     prevTrack = () => {

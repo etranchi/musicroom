@@ -24,8 +24,8 @@ function createEventLive (tracks) {
     socket.emit("createEventLive", tracks)
 }
 
-function createRoom (roomID, tracks, event, userID) {
-    socket.emit("createRoom", roomID, tracks, event, userID)
+function createRoom (roomID, userID) {
+    socket.emit("createRoom", roomID, userID)
 }
 function joinRoom (roomID) {
     socket.emit("joinRoom", roomID)
