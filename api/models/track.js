@@ -67,6 +67,11 @@ const Track = new Schema({
 	album: {
 		type: Object,
 	},
+	likes: [{
+		type: Schema.Types.ObjectId,
+		ref: 'user',
+		index: true
+	}]
 });
 
 module.exports = mongoose.model('track', Track);

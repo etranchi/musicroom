@@ -96,6 +96,7 @@ export default class LiveEvent extends Component {
         state.playlist.tracks.data = items;
         updateTracks(this.roomID, items);
     }
+
     render() {
         console.log(this.state)
         return (
@@ -137,7 +138,8 @@ export default class LiveEvent extends Component {
                                                                     userID={this.props.state.user._id} 
                                                                     rotate={this.state.rotate} 
                                                                     order={index} 
-                                                                    track={item} 
+                                                                    track={item}
+                                                                    event={this.props.state.data.event}
                                                                     callSocket={this.callSocket}
                                                                 />
                                                             </div>

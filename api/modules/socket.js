@@ -26,6 +26,17 @@ module.exports = {
             return err
         }
     },
+    getTracks: async (eventId) => {
+        try {
+            let event = await eventModel.findOne({_id: eventId});
+            if (event) {
+                return event.playlist.tracks.data
+            }
+            return null
+        } catch (err) {
+            return err
+        }
+    },
     updateScore: (room, trackID, points, userID) => {
         room.tracks.forEach((track) => {
             if (track._id.toString() === trackID.toString()) {
