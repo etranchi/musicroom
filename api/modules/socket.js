@@ -29,10 +29,12 @@ module.exports = {
     updateScore: (room, trackID, points, userID) => {
         room.tracks.forEach((track) => {
             if (track._id.toString() === trackID.toString()) {
-                let i = 0;
-                let j = 0;
-                if ((i = track.userLike.indexOf(userID)) != -1) track.userLike.splice(i, 1);
-                if ((j = track.userUnLike.indexOf(userID)) != -1) track.userUnLike.splice(j, 1);
+                let i = track.userLike.indexOf(userID)
+                let j = track.userUnLike.indexOf(userID)
+                if ((points === 1 && i !== -1) || (points === -1 && j !== -1))
+                    return (room)
+                if (i != -1) track.userLike.splice(i, 1);
+                if (j != -1) track.userUnLike.splice(j, 1);
                 points > 0 ? track.userLike.push(userID) : track.userUnLike.push(userID)
                 track.like += points
             } 
