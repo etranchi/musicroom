@@ -19,13 +19,14 @@ class SettingsController: UIViewController, DeezerSessionDelegate {
         manager.sessionDelegate = self
         deezerManager.deezerConnect = manager
         if userManager.currentUser?.deezer_token == nil {
-            manager.authorize([DeezerConnectPermissionEmail, DeezerConnectPermissionBasicAccess, DeezerConnectPermissionDeleteLibrary, DeezerConnectPermissionManageLibrary, DeezerConnectPermissionOfflineAccess, DeezerConnectPermissionListeningHistory])
+            manager.authorize([DeezerConnectPermissionEmail, DeezerConnectPermissionBasicAccess])
         } else {
             manager.logout()
             userManager.currentUser?.deezer_token = nil
             userManager.save()
             updateButton()
         }
+        playerController.linkPlayerWithDeezer()
     }
     func deezerDidLogin() {
         let user = userManager.currentUser

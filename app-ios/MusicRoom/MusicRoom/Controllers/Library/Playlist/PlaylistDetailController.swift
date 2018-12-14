@@ -66,22 +66,36 @@ class PlaylistDetailController: UITableViewController {
         super.viewWillAppear(animated)
         
         let navi = navigationController as? CustomNavigationController
+        print(playlist)
         navi?.animatedHideNavigationBar()
         navigationController?.navigationBar.topItem?.title = ""
-        SocketIOManager.sharedInstance.joinPlayList(playlist._id!)
-        SocketIOManager.sharedInstance.listenToTracksChanges { (tracks) in
-            if let t = tracks {
-                self.tracks = t
+        if playlist._id == nil {
+            print("hey")
+            apiManager.getDeezerPlaylistById(playlist.id!, completion: { (playlist) in
+                self.playlist = playlist
+                self.tracks = playlist.tracks!.data
                 self.tableView.reloadData()
+                print("ho")
+                
+                
+            })
+        } else {
+            SocketIOManager.sharedInstance.joinPlayList(playlist._id != nil ? playlist._id! : String(playlist.id!))
+            SocketIOManager.sharedInstance.listenToTracksChanges { (tracks) in
+                if let t = tracks {
+                    self.tracks = t
+                    self.tableView.reloadData()
+                }
+            }
+            SocketIOManager.sharedInstance.listenToPlaylistChanges(playlist._id != nil ? playlist._id! : String(playlist.id!)) { (resp, playlist) in
+                if resp == 0 {
+                    self.lockPlaylist()
+                } else {
+                    self.unlockPlaylist(playlist)
+                }
             }
         }
-        SocketIOManager.sharedInstance.listenToPlaylistChanges(playlist._id!) { (resp, playlist) in
-            if resp == 0 {
-                self.lockPlaylist()
-            } else {
-                self.unlockPlaylist(playlist)
-            }
-        }
+        
     }
     
     private func lockPlaylist() {
@@ -143,7 +157,7 @@ class PlaylistDetailController: UITableViewController {
     @objc func edit() {
         tableView.isEditing = isUnlocked
         tableView.reloadData()
-        SocketIOManager.sharedInstance.lockPlaylist(playlist._id!)
+        SocketIOManager.sharedInstance.lockPlaylist(playlist._id != nil ? playlist._id! : String(playlist.id!))
     }
     
     override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
@@ -157,7 +171,7 @@ class PlaylistDetailController: UITableViewController {
         tableView.isEditing = false
         tableView.reloadData()
         playlist.tracks?.data = tracks
-        SocketIOManager.sharedInstance.unlockPlaylist(playlist._id!, playlist: playlist)
+        SocketIOManager.sharedInstance.unlockPlaylist(playlist._id != nil ? playlist._id! : String(playlist.id!), playlist: playlist)
         tableView.reloadData()
         guard tracks.count > 0, let album = tracks[0].album, let imageURL = album.cover_medium else { return }
         UIImageView().getImageUsingCacheWithUrlString(urlString: imageURL) { (image) in

@@ -34,7 +34,7 @@ class ListFriendsToAdd: UITableViewController {
     init(playlist: Playlist, root: PlaylistDetailController) {
         self.playlist = playlist
         self.root = root
-        self.members = playlist.members!
+        self.members = playlist.members != nil ? playlist.members! : []
         super.init(nibName: nil, bundle: nil)
     }
     

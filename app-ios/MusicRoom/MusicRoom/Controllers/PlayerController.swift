@@ -70,7 +70,20 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
         return button
     }()
     
-    public lazy var player: DZRPlayer? = {
+    private lazy var player: DZRPlayer? = {
+        let me = userManager.currentUser
+        if me != nil {
+            DeezerManager.sharedInstance.deezerConnect?.accessToken = me!.deezer_token
+            DeezerManager.sharedInstance.deezerConnect?.appId = APP_ID
+            if DeezerManager.sharedInstance.deezerConnect!.isSessionValid() {
+                var _player = DZRPlayer(connection: DeezerManager.sharedInstance.deezerConnect)
+                _player!.shouldUpdateNowPlayingInfo = true
+                _player!.delegate = self
+                _player!.networkType = .wifiAnd3G
+                _player!.shouldUpdateNowPlayingInfo = true
+                return _player
+            }
+        }
         guard let deezerConnect = DeezerManager.sharedInstance.deezerConnect,
             var _player = DZRPlayer(connection: deezerConnect) else { return nil }
         _player.shouldUpdateNowPlayingInfo = true
@@ -82,6 +95,27 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    
+    func linkPlayerWithDeezer() {
+        let me = userManager.currentUser
+        if me != nil {
+            DeezerManager.sharedInstance.deezerConnect?.accessToken = me!.deezer_token
+            DeezerManager.sharedInstance.deezerConnect?.appId = APP_ID
+            if DeezerManager.sharedInstance.deezerConnect!.isSessionValid() {
+                player = DZRPlayer(connection: DeezerManager.sharedInstance.deezerConnect)
+                player!.shouldUpdateNowPlayingInfo = true
+                player!.delegate = self
+                player!.networkType = .wifiAnd3G
+                player!.shouldUpdateNowPlayingInfo = true
+            }
+        }
+        player = DZRPlayer(connection:  DeezerManager.sharedInstance.deezerConnect)
+        guard player != nil else { return }
+        player!.shouldUpdateNowPlayingInfo = true
+        player!.delegate = self
+        player!.networkType = .wifiAnd3G
+        player!.shouldUpdateNowPlayingInfo = true
     }
     
     func player(_ player: DZRPlayer!, didPlay playedBytes: Int64, outOf totalBytes: Int64) {
@@ -215,6 +249,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     fileprivate func setupUI() {
         if firstPlay {
             cancelable?.cancel()
+            linkPlayerWithDeezer()
         }
         let size = view.bounds.height
         let bestConstant: CGFloat = size > 800 ? 50 : 25
