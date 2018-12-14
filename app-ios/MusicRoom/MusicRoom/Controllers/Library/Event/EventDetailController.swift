@@ -53,6 +53,7 @@ class EventDetailController: UITableViewController {
         let navi = navigationController as? CustomNavigationController
         navi?.animatedHideNavigationBar()
         navigationController?.navigationBar.topItem?.title = ""
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -81,6 +82,7 @@ class EventDetailController: UITableViewController {
         tableView.separatorStyle = .none
         tableView.register(EventDescriptionCell.self, forCellReuseIdentifier: descriptionCellId)
         tableView.register(EventInteractionCell.self, forCellReuseIdentifier: libraryCellId)
+        likedTracks.removeAll()
         loadMe()
     }
     
@@ -106,19 +108,12 @@ class EventDetailController: UITableViewController {
                     ToastView.shared.short(self.view, txt_msg: "The playlist is empty.", color: UIColor.red)
                     return
                 }
-                let vc = PlaylistDetailController(currentEvent.playlist!, headerView!.albumCover)
-                vc.isInEvent = true
-                vc.iAmMember = iAmMember
-                vc.iAmAdmin = iAmAdmin
-                vc.type = type
+                let vc = PlaylistDetailController(currentEvent.playlist!, headerView!.albumCover, isInEvent: true, iAmMember, iAmAdmin, type)
                 self.navigationController?.pushViewController(vc, animated: true)
                 return
             }
             UIImageView().getImageUsingCacheWithUrlString(urlString: cover, completion: { (image) in
-                let vc = PlaylistDetailController(self.currentEvent.playlist!, image)
-                vc.iAmMember = self.iAmMember
-                vc.iAmAdmin = self.iAmAdmin
-                vc.type = self.type
+                let vc = PlaylistDetailController(self.currentEvent.playlist!, image, isInEvent: true, self.iAmMember, self.iAmAdmin, self.type)
                 self.navigationController?.pushViewController(vc, animated: true)
             })
         case 3:

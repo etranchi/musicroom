@@ -43,8 +43,6 @@ class EventsController: UITableViewController {
         tableView.register(CreateButtonCell.self, forCellReuseIdentifier: createCellId)
         apiManager.getEvents { (res) in
             self.events = res
-            print(res.myEvents.count)
-            print(res.friendEvents.count)
             self.tableView.reloadData()
         }
     }
@@ -74,6 +72,14 @@ class EventsController: UITableViewController {
         apiManager.getMe(userManager.currentUser!.token!) { (user) in
             SocketIOManager.sharedInstance.createEventRoom(roomID: event._id!, tracks: event.playlist!.tracks!.data, event: event, userID: user.id)
             userID = user.id
+            if currentTrack != nil {
+                playerController.handlePause()
+            }
+            (UIApplication.shared.keyWindow?.rootViewController as? TabBarController)?.minimizedPlayer.isUserInteractionEnabled = false
+            playerController.view.isUserInteractionEnabled = false
+            (UIApplication.shared.keyWindow?.rootViewController as? TabBarController)?.minimizedPlayer.titleLabel.text = "live event"
+            (UIApplication.shared.keyWindow?.rootViewController as? TabBarController)?.minimizedPlayer.authorLabel.text = "\(event.title)"
+            
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }

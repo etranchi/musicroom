@@ -161,8 +161,7 @@ class MinimizedPlayerView: UIView {
     
     @objc func pushPlayer() {
         if playerIsPushable {
-            let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? TabBarController
-            tabBarController?.showPlayerFromMinimized()
+            (UIApplication.shared.keyWindow?.rootViewController as? TabBarController)?.showPlayerFromMinimized()
         }
     }
     

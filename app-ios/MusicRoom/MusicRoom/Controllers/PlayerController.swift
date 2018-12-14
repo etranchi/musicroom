@@ -99,7 +99,6 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     
     func viewDidPop() {
         guard index >= 0 else { return }
-        loadTrackInplayer()
         setupTrack(indexOffset: index)
         playerButtonView?.handlePlay()
     }
@@ -180,12 +179,16 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
                 guard let res = response as? DZRTrack else { return }
                 self.track = res
                 self.hasPaused = true
-                self.player?.play(res)
-                if self.isPlaying == true {
-                    self.playerButtonView?.handlePlay()
+                if res.isPlayable() {
+                    self.view.isUserInteractionEnabled = true
+                    self.minimizedPlayer?.isUserInteractionEnabled = true
+                    self.player?.play(res)
+                    if self.isPlaying == true {
+                        self.playerButtonView?.handlePlay()
+                    }
+                    self.minimizedPlayer?.update(isPlaying: self.isPlaying, title: self.tracks[self.index].title, artist: self.tracks[self.index].artist!.name!)
+                    currentTrack = self.tracks[self.index]
                 }
-                self.minimizedPlayer?.update(isPlaying: self.isPlaying, title: self.tracks[self.index].title, artist: self.tracks[self.index].artist!.name!)
-                currentTrack = self.tracks[self.index]
                 self.reloadView()
             }
         })

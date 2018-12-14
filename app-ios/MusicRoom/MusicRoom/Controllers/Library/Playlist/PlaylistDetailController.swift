@@ -32,7 +32,17 @@ class PlaylistDetailController: UITableViewController {
         self.playlistCover = playlistCover
         self.tracks = playlist.tracks != nil ? playlist.tracks!.data : []
         super.init(nibName: nil, bundle: nil)
-        likedTracks.removeAll()
+    }
+    
+    init(_ playlist: Playlist, _ playlistCover: UIImage, isInEvent: Bool, _ iAmMember: Bool, _ iAmAdmin: Bool, _ type: EventType) {
+        self.isInEvent = isInEvent
+        self.iAmMember = iAmMember
+        self.iAmAdmin = iAmAdmin
+        self.type = type
+        self.playlist = playlist
+        self.playlistCover = playlistCover
+        self.tracks = playlist.tracks != nil ? playlist.tracks!.data : []
+        super.init(nibName: nil, bundle: nil)
     }
     
     func toggleLike(id : Int)  {
@@ -239,6 +249,8 @@ class PlaylistDetailController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print(isInEvent, type)
+        guard isInEvent == false || type == .mine else { return }
         (tabBarController as? TabBarController)?.showPlayerForSong(indexPath.row, tracks: tracks)
     }
     

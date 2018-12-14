@@ -26,6 +26,7 @@ class TabBarController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.delegate = self
         view.backgroundColor = UIColor(white: 0.2, alpha: 1)
         setupBlurTabBar()
         setupTabBarController()
@@ -166,7 +167,6 @@ class TabBarController: UITabBarController {
         })
     }
     
-    
     //pan gesture
     let                 menuHeight = UIScreen.main.bounds.height
     @objc func          handlePan(gesture: UIPanGestureRecognizer) {
@@ -246,6 +246,8 @@ extension TabBarController: UITabBarControllerDelegate  {
         if fromView != toView {
             UIView.transition(from: fromView, to: toView, duration: 0.3, options: [.transitionCrossDissolve], completion: nil)
         }
+        print("hey!")
+        (viewController as? CustomNavigationController)?.popToRootViewController(animated: true)
         
         return true
     }

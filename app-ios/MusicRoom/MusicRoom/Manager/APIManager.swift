@@ -87,9 +87,7 @@ class APIManager: NSObject, URLSessionDelegate {
         var playlistsRequest = URLRequest(url: URL(string: playlistsUrl)!)
         playlistsRequest.httpMethod = "GET"
         playlistsRequest.setValue("Bearer " + userManager.currentUser!.token!, forHTTPHeaderField: "Authorization")
-        print("plouf")
         self.searchAll([SPlaylist].self, request: playlistsRequest, completion: { (res) in
-            print("plaaf")
             completion(res)
         })
     }
@@ -192,7 +190,6 @@ class APIManager: NSObject, URLSessionDelegate {
             do {
                 let responseJSON = try JSONSerialization.jsonObject(with: data!, options: [])
                 if let responseJSON = responseJSON as? [String: AnyObject] {
-                    print(responseJSON)
                     return
                 }
             }
@@ -448,7 +445,6 @@ class APIManager: NSObject, URLSessionDelegate {
         let eventsUrl = self.url + "event"
         var request = URLRequest(url: URL(string: eventsUrl)!)
         request.httpMethod = "GET"
-        print(userManager.currentUser!.token!)
         request.setValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         self.searchAll(DataEvent.self, request: request) { (res) in
@@ -467,7 +463,6 @@ class APIManager: NSObject, URLSessionDelegate {
     func getAllUsers(_ search : String, completion : @escaping (([User]) -> ())) {
         let w = search.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
         let allUserUrl = self.url + "user?criteria=\(w)"
-        print(allUserUrl)
         var request = URLRequest(url: URL(string: allUserUrl)!)
         request.httpMethod = "GET"
         request.setValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
@@ -553,7 +548,6 @@ class APIManager: NSObject, URLSessionDelegate {
                             if let error = responseJSON["error"] as? String {
                                 makeAlert(error)
                             }
-                            print(responseJSON)
                         }
                         
                     }

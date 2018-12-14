@@ -14,6 +14,7 @@ struct Track: Codable {
     var readable: Bool
     var link: String?
     var album: Album?
+    var status: Int?
     var artist: Artist?
     var title: String
     var duration: Int
