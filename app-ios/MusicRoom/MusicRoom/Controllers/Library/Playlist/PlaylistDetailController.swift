@@ -10,7 +10,7 @@ import UIKit
 import CoreLocation
 
 
-var likedTracks : [Int] = []
+var likedTracks : [String] = []
 class PlaylistDetailController: UITableViewController {
 
     var playlist: Playlist
@@ -45,7 +45,7 @@ class PlaylistDetailController: UITableViewController {
         super.init(nibName: nil, bundle: nil)
     }
     
-    func toggleLike(id : Int)  {
+    func toggleLike(id : String)  {
         let exist = likedTracks.first { (tid) -> Bool in
             return tid == id ? true : false
         }
@@ -229,11 +229,11 @@ class PlaylistDetailController: UITableViewController {
         return cell
     }
     
-    func likeTrack(trackID: Int, points: Int) {
+    func likeTrack(trackID: String, points: Int) {
         let manager = CLLocationManager()
         guard manager.location != nil else { return }
         let coord = Coord(lat: (manager.location!.coordinate.latitude), lng: manager.location!.coordinate.longitude)
-        SocketIOManager.sharedInstance.updateTrackScore(roomID: eventID, trackID: String(trackID), points: points, userID: userID, userCoord: coord)
+        SocketIOManager.sharedInstance.updateTrackScore(roomID: eventID, trackID: trackID, points: points, userID: userID, userCoord: coord)
     }
     
     func deleteTrackFromPlaylist(track: Track, index: IndexPath) {

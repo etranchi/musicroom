@@ -70,7 +70,7 @@ class EventsController: UITableViewController {
         vc.type = type
         guard event.playlist != nil else { return }
         apiManager.getMe(userManager.currentUser!.token!) { (user) in
-            SocketIOManager.sharedInstance.createEventRoom(roomID: event._id!, tracks: event.playlist!.tracks!.data, event: event, userID: user.id)
+            SocketIOManager.sharedInstance.createEventRoom(roomID: event._id!, userID: user.id)
             userID = user.id
             if currentTrack != nil {
                 playerController.handlePause()

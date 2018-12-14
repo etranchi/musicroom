@@ -125,11 +125,12 @@ class SettingsController: UIViewController, DeezerSessionDelegate {
             ret = ["password": passTF.text!]
         }
         if ret != [:] {
-            print(ret)
             let data = try? JSONSerialization.data(withJSONObject: ret, options: [])
             apiManager.updateUser(data!, completion: { (ret) in
                 if ret != nil && ret!.count > 0 {
-                    print(ret)
+                    if ret["error"] == nil {
+                        ToastView.shared.short(self.view, txt_msg: "Your account has been updated", color:  UIColor(red: 40 / 255, green: 210 / 255, blue: 40 / 255, alpha: 1))
+                    }
                 }
             })
         }

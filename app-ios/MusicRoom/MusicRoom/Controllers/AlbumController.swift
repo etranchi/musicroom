@@ -137,7 +137,7 @@ extension AlbumController {
         var tracks: [Track] = []
         
         album.tracks?.data.forEach({ (track) in
-            let tr = Track.init(id: track.id, readable: track.readable, link: nil, album: album, status: nil, artist: album.artist, title: track.title, duration: track.duration)
+            let tr = Track.init(id: track.id, _id: nil, readable: track.readable, link: nil, album: album, status: nil, artist: album.artist, title: track.title, duration: track.duration)
             tracks.append(tr)
         })
         return tracks

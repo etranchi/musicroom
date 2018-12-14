@@ -28,7 +28,7 @@ class AlbumTrackListCell: UITableViewCell {
             }
             if iAmMember{
                 let isLiked = likedTracks.first(where: { (id) -> Bool in
-                    return track!.id == id ? true : false
+                    return track!._id! == id ? true : false
                 })
                 icon = #imageLiteral(resourceName: "upvote_icon")
                 plusButton.tintColor = .white
@@ -115,7 +115,7 @@ class AlbumTrackListCell: UITableViewCell {
     @objc func handleAddSong() {
         if iAmMember {
             let root = rootController as? PlaylistDetailController
-            root?.toggleLike(id: track!.id)
+            root?.toggleLike(id: track!._id!)
             let tintedIcon = icon.withRenderingMode(.alwaysTemplate)
             plusButton.setImage(tintedIcon, for: .normal)
            

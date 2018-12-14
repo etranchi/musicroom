@@ -11,6 +11,7 @@ import Foundation
 
 struct Track: Codable {
     var id: Int
+    var _id: String?
     var readable: Bool
     var link: String?
     var album: Album?

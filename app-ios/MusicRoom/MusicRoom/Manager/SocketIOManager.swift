@@ -73,8 +73,8 @@ class                   SocketIOManager: NSObject
         }
     }
     
-    func                createEventRoom(roomID: String, tracks: [Track], event: Event, userID: String) {
-        let toSend = CreateEventRoom(roomID: roomID, tracks: tracks, event: event, userID: userID)
+    func                createEventRoom(roomID: String, userID: String) {
+        let toSend = CreateEventRoom(roomID: roomID, userID: userID)
         let json = try? JSONEncoder().encode(toSend)
         guard json != nil else { return }
         socket.emit("createRoom", json!)
@@ -84,7 +84,7 @@ class                   SocketIOManager: NSObject
         let toSend = UpdateEventTrackScore(roomID: eventID, trackID: trackID, points: points, userID: userID, userCoord: userCoord)
         print(toSend)
         let json = try? JSONEncoder().encode(toSend)
-        guard json != nil else { return }
+        guard json != nil else { return } 
         socket.emit("updateScore", json!)
     }
     

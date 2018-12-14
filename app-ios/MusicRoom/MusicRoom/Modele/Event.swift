@@ -28,8 +28,6 @@ struct Location : Codable {
 
 struct CreateEventRoom: Codable {
     var roomID: String
-    var tracks: [Track]
-    var event: Event
     var userID: String
 }
 
