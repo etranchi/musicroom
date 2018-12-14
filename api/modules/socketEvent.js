@@ -59,6 +59,13 @@ module.exports = function (io) {
         socket.on('createRoom', async (roomID, userID) => {
             try {
                 console.log("[Socket] -> createRoom")
+                 /* For Swift Team */
+                if (typeof roomID === 'object') {
+                    let obj = JSON.parse(roomID);
+                    roomID = obj.roomID
+                    userID = obj.userID
+                }
+                /* =============== */
                 let room = ftSocket.getRoom(roomID);
                 if (!room) {
                     console.log('room created')
@@ -82,6 +89,13 @@ module.exports = function (io) {
         });
         socket.on('leaveRoom', (roomID, userID) => {
             console.log("[Socket] -> leaveRoom")
+              /* For Swift Team */
+              if (typeof roomID === 'object') {
+                let obj = JSON.parse(roomID);
+                roomID = obj.roomID
+                userID = obj.userID
+            }
+            /* =============== */
             let room = ftSocket.getRoom(roomID);
             let index = 0;
             if (room) {
@@ -103,6 +117,13 @@ module.exports = function (io) {
         });
         socket.on('updateTracks', (roomID, tracks) => {
             console.log("[Socket] -> updateTracks")
+              /* For Swift Team */
+              if (typeof roomID === 'object') {
+                let obj = JSON.parse(roomID);
+                roomID = obj.roomID
+                tracks = obj.tracks
+            }
+            /* =============== */
             let room = ftSocket.getRoom(roomID)
             if (room) {
                 room.tracks = tracks
