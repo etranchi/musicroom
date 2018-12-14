@@ -38,9 +38,6 @@ struct LeaveEventRoom: Codable {
 
 struct UpdateEventTrackScore: Codable {
     var roomID: String
-    var trackID: String
-    var points: Int
-    var userID: String
     var userCoord: Coord
 }
 

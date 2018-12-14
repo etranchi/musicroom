@@ -54,8 +54,10 @@ class PlaylistDetailController: UITableViewController {
             likeTrack(trackID: id, points: -1)
         } else {
             likedTracks.append(id)
+            
             likeTrack(trackID: id, points: 1)
         }
+        tableView.reloadData()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -247,7 +249,12 @@ class PlaylistDetailController: UITableViewController {
         let manager = CLLocationManager()
         guard manager.location != nil else { return }
         let coord = Coord(lat: (manager.location!.coordinate.latitude), lng: manager.location!.coordinate.longitude)
-        SocketIOManager.sharedInstance.updateTrackScore(roomID: eventID, trackID: trackID, points: points, userID: userID, userCoord: coord)
+        apiManager.likeTracksEvent(eventID, trackID) { (ret) in
+            if ret {
+                    SocketIOManager.sharedInstance.updateTrackScore(roomID: eventID, userCoord: coord)
+            }
+        }
+        
     }
     
     func deleteTrackFromPlaylist(track: Track, index: IndexPath) {

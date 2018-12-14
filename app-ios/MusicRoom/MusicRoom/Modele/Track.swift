@@ -21,6 +21,9 @@ struct Track: Codable {
     var duration: Int
 }
 
+struct TrackLike : Codable {
+    let trackId : String
+}
 struct AlbumTrack: Codable {
     var id: Int
     var readable: Bool

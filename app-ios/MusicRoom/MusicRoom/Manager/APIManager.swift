@@ -230,6 +230,25 @@ class APIManager: NSObject, URLSessionDelegate {
         }.resume()
     }
 
+    func likeTracksEvent(_ eventID: String, _ trackID : String ,completion: @escaping ((Bool) -> ())) {
+        
+        let likeTracksUrl = self.url + "track/\(eventID)/like"
+        print(likeTracksUrl)
+        var req = URLRequest(url : URL(string: likeTracksUrl)!)
+        req.httpMethod = "PUT"
+        let like = TrackLike(trackId: trackID)
+        do {
+            req.httpBody = try jsonEncoder.encode(like)
+            req.addValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
+            req.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+            self.searchAll(Bool.self, request: req) { (ret) in
+                completion(ret)
+            }
+        } catch {
+            makeAlert("Error")
+        }
+    }
+    
     func getPlaylists(completion: @escaping (DataPlaylist) -> ()) {
         let playlistsUrl = self.url + "playlist"
         var playlistsRequest = URLRequest(url: URL(string: playlistsUrl)!)

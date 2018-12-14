@@ -80,8 +80,8 @@ class                   SocketIOManager: NSObject
         socket.emit("createRoom", json!)
     }
     
-    func                updateTrackScore(roomID: String, trackID: String, points: Int, userID: String, userCoord: Coord) {
-        let toSend = UpdateEventTrackScore(roomID: eventID, trackID: trackID, points: points, userID: userID, userCoord: userCoord)
+    func                updateTrackScore(roomID: String, userCoord: Coord) {
+        let toSend = UpdateEventTrackScore(roomID: roomID, userCoord: userCoord)
         print(toSend)
         let json = try? JSONEncoder().encode(toSend)
         guard json != nil else { return } 
