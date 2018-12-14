@@ -70,7 +70,6 @@ export default class cardEvent extends Component {
         socket.on('closeRoom', (msg) => {
            this.props.updateParent({currentComponent:'cardEvent'})
         });
-        let tracks = this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks ? this.props.state.data.event.playlist.tracks.data : [];
         createRoom(this.props.state.data.event._id, this.props.state.user._id);
         this.checkRight();
     }
@@ -116,7 +115,6 @@ export default class cardEvent extends Component {
         updateEvent(this.props.state.data.event._id, this.props.state.data.event)
         closeRoom(this.props.state.data.event._id)
         this.props.updateParent({data:this.props.state.data})
-        let tracks = this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks ? this.props.state.data.event.playlist.tracks.data : [];
         createRoom(this.props.state.data.event._id, this.props.state.user._id);
     }
     quitpage = () => {
