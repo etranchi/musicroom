@@ -37,6 +37,12 @@ export default class LiveEvent extends Component {
         socket.on('updateStatus', (tracks) => {
             this.savePlaylist(tracks);
         });
+
+        socket.on('updateTracks', (tracks) => {
+            console.log("updateTrakc event recv");
+            this.savePlaylist(tracks);
+        });
+
         socket.on('updateScore', (tracks) => {
             console.log('Update score -> ')
             console.log(tracks)
@@ -94,7 +100,9 @@ export default class LiveEvent extends Component {
 		let state = this.state;
 		const items = reorder( this.state.playlist.tracks.data, result.source.index, result.destination.index );
         state.playlist.tracks.data = items;
+        console.log(items);
         updateTracks(this.roomID, items);
+        console.log("updating tracks")
     }
 
     render() {
