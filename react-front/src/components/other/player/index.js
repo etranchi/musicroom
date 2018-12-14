@@ -25,7 +25,7 @@ export default class Player extends Component {
                 </div>
                 <div className='defaultComponentProperty control'>
                     <div style={{height:'50px'}}><Control isCreator={this.props.isCreator} isAdmin={this.props.isAdmin}updateParentState={this.updateState} tracks={this.props.tracks} roomID={this.props.roomID}/></div>
-                    <div style={{height:'30px'}}><Progress isCreator={this.props.isCreator} strokesColor={this.props.strokesColor} updateParentState={this.updateState} tracks={this.props.tracks}/></div>
+                    <div style={{height:'30px'}}><Progress isCreator={this.props.isCreator} strokesColor={this.props.strokesColor} updateParentState={this.updateState} tracks={this.props.tracks} roomID={this.props.roomID}/></div>
                 </div>
                 <div className='defaultComponentProperty default'> 
                     <Options strokesColor={this.props.strokesColor} tracks={this.props.tracks}/>  

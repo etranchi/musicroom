@@ -56,55 +56,39 @@ module.exports = function (io) {
                 return;
         });
 
-        socket.on('createRoom', (roomID, tracks, event, userID) => {
-            console.log("[Socket] -> createRoom")
-            /* For Swift Team */
-            if (typeof roomID === 'object') {
-                let obj = JSON.parse(roomID);
-                roomID = obj.roomID
-                tracks = obj.tracks
-                event = obj.event
-                userID = obj.userID
-            }
-            /* =============== */
+        socket.on('createRoom', async (roomID, userID) => {
+            try {
+                console.log("[Socket] -> createRoom")
+                let room = ftSocket.getRoom(roomID);
+                if (!room) {
+                    console.log('room created')
+                    room = await ftSocket.createRoom(roomID, userID)
+                    socket.join(roomID);
+                    io.sockets.in(roomID).emit('createRoom', room.tracks, true)
+                } else if (ftSocket.joinRoom(room, userID)) {
+                    console.log('room joined')
+                    socket.join(roomID);
+                    io.sockets.in(roomID).emit('createRoom', room.tracks, true)
 
-            let room = ftSocket.getRoom(roomID);
-
-            if (!room) {
-                console.log('room created')
-                room = ftSocket.createRoom(roomID, tracks, event, userID)
-                socket.join(room.id);
-                io.sockets.in(room.id).emit('createRoom', room.tracks, true)
-
-            } else if (ftSocket.joinRoom(roomID, userID)) {
-                console.log('room joined')
-                socket.join(room.id);
-                io.sockets.in(room.id).emit('createRoom', room.tracks, true)
-
-            } else {
-                console.log('room user exist')
-                socket.join(room.id);
-                io.sockets.in(room.id).emit('createRoom', room.tracks, false)
+                } else {
+                    console.log('room user exist')
+                    socket.join(roomID);
+                    io.sockets.in(roomID).emit('createRoom', room.tracks, false)
+                }
+            } catch (e) {
+                console.log("Error create room -> " + e)
+                return io.sockets.in(roomID).emit('error', e.message)
             }
         });
         socket.on('leaveRoom', (roomID, userID) => {
             console.log("[Socket] -> leaveRoom")
-              /* For Swift Team */
-            if (typeof roomID === 'object') {
-                let obj = JSON.parse(roomID);
-                roomID = obj.roomID
-                userID = obj.userID
-            }
-            /* =============== */
             let room = ftSocket.getRoom(roomID);
             let index = 0;
-
             if (room) {
-                console.log(room.users, userID)
-                if ((index = room.users.indexOf(userID)) != -1) {
-                room.users.splice(index, 1)
-                room = ftSocket.updateRoom(room)
-            }
+                if ((index = room.users.indexOf(userID)) !== -1) {
+                    room.users.splice(index, 1)
+                    room = ftSocket.updateRoom(room)
+                }
                 socket.leave(roomID);
             }
         });
@@ -119,19 +103,13 @@ module.exports = function (io) {
         });
         socket.on('updateTracks', (roomID, tracks) => {
             console.log("[Socket] -> updateTracks")
-              /* For Swift Team */
-            if (typeof roomID === 'object') {
-                let obj = JSON.parse(roomID);
-                roomID = obj.roomID
-                tracks = obj.tracks
-            }
-            /* =============== */
             let room = ftSocket.getRoom(roomID)
             if (room) {
                 room.tracks = tracks
+                if (room.tracks[0] && !room.tracks[0].status)
+                    room.tracks[0].status = 1
                 io.sockets.in(room.id).emit('updateTracks', room.tracks)
-            } else
-                return io.sockets.in(room.id).emit('updateTracks', 'fail');
+            }
         });
         socket.on('updateTrack', (roomID, track) => {
             console.log("[Socket] -> updateTrack")
@@ -165,15 +143,13 @@ module.exports = function (io) {
             let room = ftSocket.getRoom(roomID)
 
             if (room) {
-                let isClose = ftSocket.checkDistance(room.data, userCoord)
-                if (!room.data.public && room.data.distance_required && !isClose)
+                let isClose = ftSocket.checkDistance(room.event, userCoord)
+                if (room.event.distance_required && !isClose)
                     return io.sockets.in(room.id).emit('updateScore', 'Vous n\'êtes pas assé proche');
                 room = ftSocket.updateScore(room, trackID, points, userID)
                 room = ftSocket.updateRoom(room)
                 io.sockets.in(room.id).emit('updateScore', room.tracks)
-            } 
-            else
-                return io.sockets.in(room.id).emit('updateScore', 'fail');
+            }
         });
         socket.on('updateEvent', (roomID, newEvent) => {
             console.log("[Socket] -> updateEvent")
@@ -188,7 +164,7 @@ module.exports = function (io) {
             let room = ftSocket.getRoom(roomID)
 
             if (newEvent._id && room) {
-                room.data = newEvent
+                room.event = newEvent
                 room = ftSocket.updateRoom(room)
             }
             ftSocket.saveNewEvent(newEvent);

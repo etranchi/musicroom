@@ -33,13 +33,16 @@ export default  class liveEvent extends Component {
         const duration  = min + ":" + rest + 'min';
 
         let isLike      = {display:'block'};
-        let isUnLike    = {display:'block', margin:'0 1% 0 0'};
+        let isUnLike    = {display:'none', margin:'0 1% 0 0'};
 
         if ( this.props.userID && this.props.track.userLike && this.props.track.userLike.length > 0) {
-            if (this.props.track.userLike.indexOf(this.props.userID) !== -1) isLike = {display:'none'}
+            if (this.props.track.userLike.indexOf(this.props.userID) !== -1) {
+                isUnLike = {display:'block'}
+                isLike = {display:'none'}
+            }
         }
-        if ( this.props.userID && this.props.track.userUnLike && this.props.track.userUnLike.length > 0) {
-            if (this.props.track.userUnLike.indexOf(this.props.userID) !== -1) isUnLike = {display:'none'}
+        else if ( this.props.userID && this.props.track.userUnLike && this.props.track.userUnLike.length > 0) {
+            if (this.props.track.userUnLike.indexOf(this.props.userID) !== -1) isLike = {display:'block'}
         }
         return (
             <Layout style={layoutStyle}>
