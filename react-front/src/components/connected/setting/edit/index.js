@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Icon, Button, Input, Upload, message, Divider, Layout, Col, Row} from 'antd';
 import Error from '../../../other/errorController'
+import './styles.css'
 
 const {Content, Footer, Header} = Layout
 
