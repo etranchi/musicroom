@@ -38,6 +38,8 @@ export default class LiveEvent extends Component {
             this.savePlaylist(tracks);
         });
         socket.on('updateScore', (tracks) => {
+            console.log('Update score -> ')
+            console.log(tracks)
             if (typeof tracks === 'object') {
                 this.savePlaylist(tracks);
                 this.setState({rotate: {active:false, id:0, liked: false}});
@@ -70,7 +72,7 @@ export default class LiveEvent extends Component {
         });
         return ret;
     }
-    callSocket = (OldTrack, value) => {
+    callSocket = (type, OldTrack, value) => {
         let me          = this.props.state.user;
         let index       = -1;
 
@@ -94,6 +96,7 @@ export default class LiveEvent extends Component {
         state.playlist.tracks.data = items;
         updateTracks(this.roomID, items);
     }
+
     render() {
         console.log(this.state)
         return (
@@ -135,7 +138,8 @@ export default class LiveEvent extends Component {
                                                                     userID={this.props.state.user._id} 
                                                                     rotate={this.state.rotate} 
                                                                     order={index} 
-                                                                    track={item} 
+                                                                    track={item}
+                                                                    event={this.props.state.data.event}
                                                                     callSocket={this.callSocket}
                                                                 />
                                                             </div>

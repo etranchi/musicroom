@@ -74,15 +74,19 @@ module.exports = {
 				throw new Error('No description')
 			if (!req.body.location)
 				throw new Error('No Location')
+			if (!req.body.playlist)
+				throw new Error('No playlist')
 			if (req.file && req.file.filename)
 				req.body.picture = req.file.filename
-			if (req.body.playlist && !req.body.playlist._id)
+			if (!req.body.playlist._id) {
 				req.body.playlist = await playlistController.getPlaylistDeezerById(req.body.playlist.id, req.user.deezerToken)
-			else if (req.body.playlist && req.body.playlist._id) {
+			} else {
 				req.body.playlist = await modelPlaylist.findOne({_id: req.body.playlist._id})
 				delete req.body.playlist._id
 				req.body.playlist.members = []
 			}
+			if (!req.body.playlist || !req.body.playlist.tracks || req.body.playlist.tracks.data.length === 0)
+				throw new Error('No tracks in playlist')
 			let event = await modelEvent.create(req.body)
 			res.status(200).send(event)
 		} catch (err) {
@@ -92,6 +96,7 @@ module.exports = {
 	},
 	putEventById: async (req, res, next) => {
 		try {
+			console.log(req.body)
 			if (!req.body.creator)
 				throw new Error('No creator')
 			if (!req.body.title)
@@ -100,6 +105,17 @@ module.exports = {
 				throw new Error('No location')
 			if (!req.body.description)
 				throw new Error('No description')
+			if (!req.body.playlist)
+				throw new Error('No playlist')
+			if (!req.body.playlist._id) {
+				req.body.playlist = await playlistController.getPlaylistDeezerById(req.body.playlist.id, req.user.deezerToken)
+			} else {
+				req.body.playlist = await modelPlaylist.findOne({_id: req.body.playlist._id})
+				delete req.body.playlist._id
+				req.body.playlist.members = []
+			}
+			if (!req.body.playlist || !req.body.playlist.tracks || req.body.playlist.tracks.data.length === 0)
+				throw new Error('No tracks in playlist')
 			let user = await modelEvent
 				.findOne(
 					{_id: req.params.id,

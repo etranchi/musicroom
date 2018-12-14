@@ -43,6 +43,11 @@ export default class cardEvent extends Component {
             this.setState({isViewer:false});
     }
     componentDidMount = () => {
+        socket.on('error', (message) => {
+            //console.log('socket :  updateEvent receive data ', newEvent)
+            message.error(message);
+            
+        })
         socket.on('updateEvent', (newEvent) => {
             //console.log('socket :  updateEvent receive data ', newEvent)
             this.props.state.data.event = newEvent
@@ -65,8 +70,7 @@ export default class cardEvent extends Component {
         socket.on('closeRoom', (msg) => {
            this.props.updateParent({currentComponent:'cardEvent'})
         });
-        let tracks = this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks ? this.props.state.data.event.playlist.tracks.data : [];
-        createRoom(this.props.state.data.event._id, tracks, this.props.state.data.event, this.props.state.user._id);
+        createRoom(this.props.state.data.event._id, this.props.state.user._id);
         this.checkRight();
     }
     updateMap = () => {
@@ -111,8 +115,7 @@ export default class cardEvent extends Component {
         updateEvent(this.props.state.data.event._id, this.props.state.data.event)
         closeRoom(this.props.state.data.event._id)
         this.props.updateParent({data:this.props.state.data})
-        let tracks = this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks ? this.props.state.data.event.playlist.tracks.data : [];
-        createRoom(this.props.state.data.event._id, tracks, this.props.state.data.event, this.props.state.user._id);
+        createRoom(this.props.state.data.event._id, this.props.state.user._id);
     }
     quitpage = () => {
         this.props.changeView('listEvent')

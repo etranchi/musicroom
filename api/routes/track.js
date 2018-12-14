@@ -34,6 +34,19 @@ router.post('/',
     trackController.postTrack);
 
 /**
+ * @route PUT /track/:id/like
+ * @group track - Operations about track
+ * @security - Bearer: []
+ * @returns {object} 204
+ * @returns {Error} 400
+ * @returns {Error}  default - Unexpected error
+ */
+router.put('/:id/like',
+    passport.authenticate('bearer'),
+    middlewares.isConfirmed,
+    trackController.putTrackLike);
+
+/**
  * @route DELETE /track/:id
  * @group track - Operations about track
  * @security - Bearer: []

@@ -252,7 +252,7 @@ export default class Body extends Component {
                                 <p  > Ajouter une playlist : </p>
                             </Col>
                             {
-                                this.props.right.isAdmin || this.props.right.isCreator ? 
+                                ((this.props.right.isAdmin || this.props.right.isCreator) && !this.props.state.data.event.is_start) ? 
                                     <Col span={3}>
                                         <SearchBar 
                                             state={this.props.state} 

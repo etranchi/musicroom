@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input, Row, Col, Divider, Button } from 'antd'
+import { Input, Row, Col, Divider, Button, message } from 'antd'
 import axios from 'axios'
 import SearchBar from '../../../other/searchbar'
 import Track from '../../../templates/track'
@@ -17,13 +17,16 @@ export default class CreatePlaylist extends Component {
 		let body = {
 			title: '',
 			tracks:{
-				data:[]
+				data: []
 			}
 		};
 		body.tracks.data 	= this.state.tracks;
 		body.title 			= this.state.title;
 		axios.post(process.env.REACT_APP_API_URL + '/playlist', body, {'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}} )
-			.then(resp => { this.props.updateParent({currentComponent:'playlist'}) })
+			.then(() => { 
+				message.success("Successfully created playlist")
+				this.props.updateParent({currentComponent:'playlist'}) 
+			})
 			.catch((err) => { Error.display_error(err); })  
 	}
 	handleChange = event =>{
@@ -50,9 +53,11 @@ export default class CreatePlaylist extends Component {
 					</Col>
 				</Row>
 				<Row>
-					<Col span={8} offset={8}>
+					<Col span={2} offset={8}>
+						<div style={{margin:'20% 0 0 0'}}> <b> Titre playlist : </b>  </div>
+					</Col>
+					<Col span={5} >
 						<Input 
-							placeholder="title" 
 							value={this.state.title} 
 							name="title" 
 							onChange={this.handleChange}/>
@@ -60,7 +65,10 @@ export default class CreatePlaylist extends Component {
 				</Row>
 				<Divider />
 				<Row>
-					<Col span={8} offset={8}>
+					<Col span={2} offset={8}>
+							<div style={{margin:'10% 0 0 0'}}> <b> Ajouter un titre : </b>  </div>
+					</Col>
+					<Col span={8}>
 						<SearchBar 
 							updateParent={this.props.updateParent} 
 							type="tracks" 
@@ -68,17 +76,18 @@ export default class CreatePlaylist extends Component {
 					</Col>
 				</Row>
 				<Row>
-				{
-					this.state.tracks.map((val, i) => {
-						return (<Track order={i} track={val}/>);
-					})
-				}
+					<Col span={12} offset={6}>
+					{
+						this.state.tracks.map((val, i) => {
+							return (<Track key={i} order={i} track={val}/>);
+						})
+					}
+					</Col>
 				</Row>
+				<Divider />
 				<Row>
-					<Col span={8} offset={8}>
-					<Button onClick={this.save.bind(this)}>
-						Save
-					</Button>
+					<Col span={3} offset={11}>
+						<Button onClick={this.save.bind(this)}> Save </Button>
 					</Col>
 				</Row>
 			</div>

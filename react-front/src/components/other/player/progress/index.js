@@ -29,6 +29,10 @@ export default class Progressor extends Component {
                 });
             }
         });
+        DZ.Event.subscribe('track_end', e => {
+            console.log("TRACK END")
+            updatePlayer(this.props.roomID, 'suiv');
+        });
     }
     changeSeek = ({ target, clientX }) => {
         const { x, width } = target.getBoundingClientRect();
