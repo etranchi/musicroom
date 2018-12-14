@@ -26,11 +26,11 @@ module.exports = {
             return err
         }
     },
-    getTracks: async (eventId) => {
+    getEvent: async (eventId) => {
         try {
             let event = await eventModel.findOne({_id: eventId});
             if (event) {
-                return event.playlist.tracks.data
+                return event
             }
             return null
         } catch (err) {

@@ -17,7 +17,7 @@ export default  class liveEvent extends Component {
 		.then((resp) => {
             message.success("Successfully liked music")
             console.log("event -> ")
-			updateScore(resp.data._id)
+			updateScore(resp.data._id, this.props.state.data.userCoord)
 		})
 		.catch(err => { Error.display_error(err) })
     }
