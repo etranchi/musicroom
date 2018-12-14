@@ -95,7 +95,6 @@
 		8F364B8B217E5B9100B57FC8 /* MusicRoom.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8F364B89217E5B9100B57FC8 /* MusicRoom.xcdatamodeld */; };
 		8F364B90217E5B9200B57FC8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F364B8E217E5B9200B57FC8 /* LaunchScreen.storyboard */; };
 		8FEFE2972191E2CD0002E966 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FEFE2962191E2CD0002E966 /* LoginController.swift */; };
-		E997985E32780E8DC3179DD4 /* Pods_MusicRoom.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC674AABD535B082079B3A49 /* Pods_MusicRoom.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -229,9 +228,6 @@
 		8F364B91217E5B9200B57FC8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8FEFE2942191DC420002E966 /* PlaylistCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistCell.swift; sourceTree = "<group>"; };
 		8FEFE2962191E2CD0002E966 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LoginController.swift; path = ../LoginController.swift; sourceTree = "<group>"; };
-		AC674AABD535B082079B3A49 /* Pods_MusicRoom.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MusicRoom.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		B6FE34DBAE1555D838A7EBD9 /* Pods-MusicRoom.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicRoom.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom.debug.xcconfig"; sourceTree = "<group>"; };
-		C1F4CA7BD395A780F23DCE88 /* Pods-MusicRoom.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicRoom.release.xcconfig"; path = "Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -253,7 +249,6 @@
 				8F18988E217F231800CE1A8D /* AudioToolbox.framework in Frameworks */,
 				8F18988C217F230D00CE1A8D /* CoreAudio.framework in Frameworks */,
 				8F189888217F22EE00CE1A8D /* libDeezer.a in Frameworks */,
-				E997985E32780E8DC3179DD4 /* Pods_MusicRoom.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -522,7 +517,6 @@
 				8F18988F217F232100CE1A8D /* SystemConfiguration.framework */,
 				8F18988D217F231800CE1A8D /* AudioToolbox.framework */,
 				8F18988B217F230D00CE1A8D /* CoreAudio.framework */,
-				AC674AABD535B082079B3A49 /* Pods_MusicRoom.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -546,7 +540,6 @@
 				8F364B81217E5B9100B57FC8 /* MusicRoom */,
 				8F364B80217E5B9100B57FC8 /* Products */,
 				8F18988A217F230D00CE1A8D /* Frameworks */,
-				ADBFE756833B4B20F11FB7AC /* Pods */,
 				772E7700219D87360005AE33 /* Recovered References */,
 			);
 			sourceTree = "<group>";
@@ -581,15 +574,6 @@
 			path = MusicRoom;
 			sourceTree = "<group>";
 		};
-		ADBFE756833B4B20F11FB7AC /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				B6FE34DBAE1555D838A7EBD9 /* Pods-MusicRoom.debug.xcconfig */,
-				C1F4CA7BD395A780F23DCE88 /* Pods-MusicRoom.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -597,12 +581,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8F364B94217E5B9200B57FC8 /* Build configuration list for PBXNativeTarget "MusicRoom" */;
 			buildPhases = (
-				92FC604B71B7C7A83D33E63C /* [CP] Check Pods Manifest.lock */,
 				8F364B7B217E5B9100B57FC8 /* Sources */,
 				8F364B7C217E5B9100B57FC8 /* Frameworks */,
 				8F364B7D217E5B9100B57FC8 /* Resources */,
-				049E39241575533CD7B6141F /* [CP] Embed Pods Frameworks */,
-				49B292DD4F23CBBF7B07A046 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -665,81 +646,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		049E39241575533CD7B6141F /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/Bolts/Bolts.framework",
-				"${BUILT_PRODUCTS_DIR}/FBSDKCoreKit/FBSDKCoreKit.framework",
-				"${BUILT_PRODUCTS_DIR}/FBSDKLoginKit/FBSDKLoginKit.framework",
-				"${BUILT_PRODUCTS_DIR}/FacebookCore/FacebookCore.framework",
-				"${BUILT_PRODUCTS_DIR}/FacebookLogin/FacebookLogin.framework",
-				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
-				"${BUILT_PRODUCTS_DIR}/Socket.IO-Client-Swift/SocketIO.framework",
-				"${BUILT_PRODUCTS_DIR}/Starscream/Starscream.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Bolts.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKCoreKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKLoginKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FacebookCore.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FacebookLogin.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SocketIO.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Starscream.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		49B292DD4F23CBBF7B07A046 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom-resources.sh",
-				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MusicRoom/Pods-MusicRoom-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		92FC604B71B7C7A83D33E63C /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-MusicRoom-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8F364B7B217E5B9100B57FC8 /* Sources */ = {
@@ -955,7 +861,6 @@
 		};
 		8F364B95217E5B9200B57FC8 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B6FE34DBAE1555D838A7EBD9 /* Pods-MusicRoom.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MusicRoom/MusicRoom.entitlements;
@@ -996,7 +901,6 @@
 		};
 		8F364B96217E5B9200B57FC8 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C1F4CA7BD395A780F23DCE88 /* Pods-MusicRoom.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MusicRoom/MusicRoom.entitlements;
