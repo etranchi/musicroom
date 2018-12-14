@@ -111,23 +111,23 @@ module.exports = function (io) {
         //         });
         //     }
         // });
-        socket.on('updateScore', async (roomID, trackID, points, userID, userCoord) => {
+        socket.on('updateScore', async (roomID, userCoord) => {
             console.log("roomid -> " + roomID)
             try {
-            console.log("[Socket] -> updateScore")
               /* For Swift Team */
             if (typeof roomID === 'object') {
                 let obj = JSON.parse(roomID);
                 roomID = obj.roomID
-                trackID = obj.trackID
-                points = obj.points
-                userID = obj.userID
                 userCoord = obj.userCoord
             }
             /* =============== */
+            let event = await ftSocket.getEvent(roomID)
+            let isClose = event.public ? true : ftSocket.checkDistance(event, userCoord)
+            if (event.distance_required && !isClose)
+                return io.sockets.in(roomID).emit('updateScore', 'Vous n\'êtes pas assez proche');
 
-            let tracks = await ftSocket.getTracks(roomID)
-            io.sockets.in(roomID).emit('updateScore', tracks)
+            
+            io.sockets.in(roomID).emit('updateScore', event.playlist.tracks.data)
             // let room = ftSocket.getRoom(roomID)
 
             // if (room) {

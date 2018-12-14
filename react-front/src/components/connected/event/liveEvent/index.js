@@ -82,7 +82,7 @@ export default class LiveEvent extends Component {
             OldTrack.userUnLike.splice(0, index);
         updateTrack(this.roomID,  OldTrack);
         this.setState({rotate: {active:true, id:OldTrack._id, liked: value > 0 ? true : false}}, () => {
-            updateScore(this.roomID, OldTrack._id, value, this.props.state.user._id, this.props.state.data.userCoord);
+            updateScore(this.roomID, this.props.state.data.userCoord);
         })
     }
     onDragStart = () => {
@@ -139,6 +139,7 @@ export default class LiveEvent extends Component {
                                                                     rotate={this.state.rotate} 
                                                                     order={index} 
                                                                     track={item}
+                                                                    state={this.props.state}
                                                                     event={this.props.state.data.event}
                                                                     callSocket={this.callSocket}
                                                                 />
