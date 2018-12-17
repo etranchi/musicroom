@@ -59,6 +59,12 @@ module.exports = function (io) {
         });
 
         socket.on('createRoom', (roomID, userID) => {
+            /* For Swift Team */
+            if (typeof roomID === 'object') {
+                let obj = JSON.parse(roomID);
+                roomID = obj.roomID
+                userID = obj.userID
+            }
             if (ftSocket.manageRooms("join", roomID, userID))
             {
                 console.log("User joined")
@@ -70,6 +76,12 @@ module.exports = function (io) {
             console.log("Nb clients in room " + roomID + " -> " + io.sockets.adapter.rooms[roomID].length)
         });
         socket.on('leaveRoom', (roomID, userID) => {
+            /* For Swift Team */
+            if (typeof roomID === 'object') {
+                let obj = JSON.parse(roomID);
+                roomID = obj.roomID
+                userID = obj.userID
+            }
             console.log("[Socket] -> leaveRoom")
             ftSocket.manageRooms("leave", roomID, userID)
             socket.leave(roomID);
