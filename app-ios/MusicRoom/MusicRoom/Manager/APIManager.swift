@@ -230,20 +230,38 @@ class APIManager: NSObject, URLSessionDelegate {
         }.resume()
     }
 
-    func likeTracksEvent(_ eventID: String, _ trackID : String ,completion: @escaping ((Bool) -> ())) {
+    func likeTracksEvent(_ eventID: String, _ body : TrackLike ,completion: @escaping (() -> ())) {
         
         let likeTracksUrl = self.url + "track/\(eventID)/like"
         print(likeTracksUrl)
         var req = URLRequest(url : URL(string: likeTracksUrl)!)
         req.httpMethod = "PUT"
-        let like = TrackLike(trackId: trackID)
         do {
-            req.httpBody = try jsonEncoder.encode(like)
+            req.httpBody = try jsonEncoder.encode(body)
             req.addValue("Bearer \(userManager.currentUser!.token!)", forHTTPHeaderField: "Authorization")
             req.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-            self.searchAll(Bool.self, request: req) { (ret) in
-                completion(ret)
-            }
+            URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: req) { (data, response, err) in
+                if err != nil {
+                    makeAlert("No response from the server, try again..")
+                }
+
+                if let d = data {
+                    do {
+                        let responseJSON = try JSONSerialization.jsonObject(with: d, options: [])
+                        if let responseJSON = responseJSON as? [String: Any] {
+                            if let error = responseJSON["error"] as? String {
+                                makeAlert(error)
+                                return
+                            } else {
+                                completion()
+                            }
+                        }
+                    } catch {
+                        makeAlert("Error")
+                    }
+                    
+                }
+            }.resume()
         } catch {
             makeAlert("Error")
         }
@@ -294,7 +312,7 @@ class APIManager: NSObject, URLSessionDelegate {
             req.httpBody = json!.data(using: String.Encoding.utf8.rawValue)
             request(req)
             URLSession(configuration: .default, delegate: self, delegateQueue: .main).dataTask(with: req) { (data, response, err) in
-                SocketIOManager.sharedInstance.socket.emit("updatePlaylist", pId)
+                SocketIOManager.sharedInstance.updateTracks(roomID: eventID, tracks: playlist.tracks!.data)
                 completion("ok")
             }.resume()
         } catch {

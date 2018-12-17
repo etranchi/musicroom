@@ -26,7 +26,6 @@ class MapController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         mapView.removeAnnotations(mapView.annotations)
         if creating != nil && creating! {
-            print("yoooo")
             resultSearchController?.becomeFirstResponder()
             // searchBar?.becomeFirstResponder()
         }
@@ -128,7 +127,26 @@ class MapController: UIViewController {
         if selected != nil {
             let vc = EventDetailController(selected!.event!)
             vc.rootMap = self
-            self.navigationController?.pushViewController(vc, animated: true)
+            
+            guard selected!.event!.playlist != nil else { return }
+            apiManager.getMe(userManager.currentUser!.token!) { (user) in
+                SocketIOManager.sharedInstance.createEventRoom(roomID: selected!.event!._id!, userID: user.id)
+                userID = user.id
+                vc.type = selected?.event!.creator!.id == userID ? .mine : .friends
+                vc.iAmMember = true
+                let bool = selected!.event?.adminMembers.first(where: { (ur) -> Bool in
+                    return ur.id == userID
+                })
+                vc.iAmAdmin = bool != nil ? true : false
+                if currentTrack != nil {
+                    playerController.handlePause()
+                }
+                (UIApplication.shared.keyWindow?.rootViewController as? TabBarController)?.minimizedPlayer.isUserInteractionEnabled = false
+                playerController.view.isUserInteractionEnabled = false
+                (UIApplication.shared.keyWindow?.rootViewController as? TabBarController)?.minimizedPlayer.titleLabel.text = "live event"
+                (UIApplication.shared.keyWindow?.rootViewController as? TabBarController)?.minimizedPlayer.authorLabel.text = "\(selected!.event!.title)"
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
         }
     }
     

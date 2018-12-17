@@ -68,33 +68,42 @@ class PlaylistDetailController: UITableViewController {
         super.viewWillAppear(animated)
         
         let navi = navigationController as? CustomNavigationController
-        print(playlist)
         navi?.animatedHideNavigationBar()
         navigationController?.navigationBar.topItem?.title = ""
         if playlist._id == nil {
-            print("hey")
             apiManager.getDeezerPlaylistById(playlist.id!, completion: { (playlist) in
                 self.playlist = playlist
                 self.tracks = playlist.tracks!.data
                 self.tableView.reloadData()
-                print("ho")
-                
-                
             })
-        } else {
-            SocketIOManager.sharedInstance.joinPlayList(playlist._id != nil ? playlist._id! : String(playlist.id!))
-            SocketIOManager.sharedInstance.listenToTracksChanges { (tracks) in
-                if let t = tracks {
-                    self.tracks = t
-                    self.tableView.reloadData()
-                }
+        }
+        print(playlist._id!)
+        SocketIOManager.sharedInstance.joinPlayList(playlist._id!)
+        SocketIOManager.sharedInstance.listenToTracksChanges { (tracks) in
+            if let t = tracks {
+                self.tracks = t
+                self.tableView.reloadData()
             }
-            SocketIOManager.sharedInstance.listenToPlaylistChanges(playlist._id != nil ? playlist._id! : String(playlist.id!)) { (resp, playlist) in
-                if resp == 0 {
-                    self.lockPlaylist()
-                } else {
-                    self.unlockPlaylist(playlist)
-                }
+        }
+        SocketIOManager.sharedInstance.listenToPlaylistChanges(playlist._id!) { (resp, playlist, tracks) in
+            print("Je passe dans l'update")
+            if tracks != nil {
+                print("update tracks")
+                self.tracks = tracks!
+                self.tableView.reloadData()
+                return
+            }
+            else if playlist != nil {
+                print("update playlist")
+                self.playlist = playlist!
+                self.tracks = playlist!.tracks!.data
+                self.tableView.reloadData()
+                return
+            }
+            else if resp == 0 {
+                self.lockPlaylist()
+            } else {
+                self.unlockPlaylist(playlist)
             }
         }
         
@@ -102,7 +111,6 @@ class PlaylistDetailController: UITableViewController {
     
     private func lockPlaylist() {
         isUnlocked = false
-        
         tableView.reloadData()
     }
     
@@ -246,14 +254,14 @@ class PlaylistDetailController: UITableViewController {
     }
     
     func likeTrack(trackID: String, points: Int) {
-        let manager = CLLocationManager()
-        guard manager.location != nil else { return }
-        let coord = Coord(lat: (manager.location!.coordinate.latitude), lng: manager.location!.coordinate.longitude)
-        apiManager.likeTracksEvent(eventID, trackID) { (ret) in
-            if ret {
-                    SocketIOManager.sharedInstance.updateTrackScore(roomID: eventID, userCoord: coord)
-            }
+        apiManager.getEventById(eventID) { (event) in
+            let coord = event.location.coord
+            let like = TrackLike(trackId: trackID, userCoord : coord)
+            apiManager.likeTracksEvent(eventID, like, completion: {
+                SocketIOManager.sharedInstance.updateTrackScore(roomID: eventID, userCoord: coord)
+            })
         }
+        
         
     }
     

@@ -43,33 +43,48 @@ class                   SocketIOManager: NSObject
     }
     
     func                listenToTracksChanges(completionHandler: @escaping (_ tracks: [Track]?) -> Void) {
-        socket.on("updateScore") { ( dataArray, ack) -> Void in
-            guard dataArray.count > 0 else {
-                completionHandler(nil)
-                return
-            }
-            let data = dataArray[0]
-            let jsonData = try? JSONSerialization.data(withJSONObject:data)
-            guard let json = jsonData else { return }
-            let tracks = try? JSONDecoder().decode([Track].self, from: json)
-            completionHandler(tracks)
-        }
+ 
     }
     
-    func                listenToPlaylistChanges(_ playlistId: String, completionHandler: @escaping (_ trackedUsersListUpdate: Int?, _ playlist: Playlist?) -> Void) {
+    func                listenToPlaylistChanges(_ playlistId: String, completionHandler: @escaping (_ trackedUsersListUpdate: Int?, _ playlist: Playlist?, _ tracks : [Track]?) -> Void) {
         socket.on("blockPlaylist") { ( dataArray, ack) -> Void in
-            completionHandler(0, nil)
+            completionHandler(0, nil, nil)
         }
+
         socket.on("playlistUpdated") { ( dataArray, ack) -> Void in
             guard dataArray.count > 0 else {
-                completionHandler(1, nil)
+                completionHandler(1, nil, nil)
                 return
             }
             let data = dataArray[0]
             let jsonData = try? JSONSerialization.data(withJSONObject:data)
             guard let json = jsonData else { return }
             let playlist = try? JSONDecoder().decode(Playlist.self, from: json)
-            completionHandler(1, playlist)
+            completionHandler(1, playlist, nil)
+        }
+        socket.on("updateScore") { ( dataArray, ack) -> Void in
+            print("")
+            guard dataArray.count > 0 else {
+                completionHandler(0, nil, nil)
+                return
+            }
+            let data = dataArray[0]
+            let jsonData = try? JSONSerialization.data(withJSONObject:data)
+            guard let json = jsonData else { return }
+            let tracks = try? JSONDecoder().decode([Track].self, from: json)
+            completionHandler(0, nil, tracks)
+        }
+        
+        socket.on("updateTracks") { (dataArray, ack) -> Void in
+            guard dataArray.count > 0 else {
+                completionHandler(0, nil, nil)
+                return
+            }
+            let data = dataArray[0]
+            let jsonData = try? JSONSerialization.data(withJSONObject:data)
+            guard let json = jsonData else { return }
+            let tracks = try? JSONDecoder().decode([Track].self, from: json)
+            completionHandler(0, nil, tracks)
         }
     }
     
@@ -80,12 +95,16 @@ class                   SocketIOManager: NSObject
         socket.emit("createRoom", json!)
     }
     
-    func                updateTrackScore(roomID: String, userCoord: Coord) {
-        let toSend = UpdateEventTrackScore(roomID: roomID, userCoord: userCoord)
-        print(toSend)
+    func updateTracks(roomID : String, tracks : [Track]) {
+        let toSend = UpdateTracks(roomID: roomID, tracks: tracks)
         let json = try? JSONEncoder().encode(toSend)
-        guard json != nil else { return } 
-        socket.emit("updateScore", json!)
+        guard json != nil else { return }
+        socket.emit("updateTracks", json!)
+    }
+    
+    func                updateTrackScore(roomID: String, userCoord: Coord) {
+        print("EMIT SCORE")
+        socket.emit("updateScore", roomID)
     }
     
     func                lockPlaylist(_ playlistId: String) {

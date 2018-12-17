@@ -40,7 +40,6 @@ class SearchDeezerPlaylistController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selected = data[indexPath.row]
         let id = selected.id != nil ? String(describing: selected.id!) : selected._id!
-        print(id)
         apiManager.createPlaylist("id=" + id, self.root)
         self.navigationController?.popViewController(animated: true)
         

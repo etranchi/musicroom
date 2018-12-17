@@ -23,6 +23,12 @@ struct Track: Codable {
 
 struct TrackLike : Codable {
     let trackId : String
+    let userCoord : Coord?
+}
+
+struct UpdateTracks : Codable {
+    let roomID : String
+    let tracks : [Track]
 }
 struct AlbumTrack: Codable {
     var id: Int

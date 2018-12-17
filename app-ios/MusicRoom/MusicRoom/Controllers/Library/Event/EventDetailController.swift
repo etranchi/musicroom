@@ -117,14 +117,18 @@ class EventDetailController: UITableViewController {
                 self.navigationController?.pushViewController(vc, animated: true)
             })
         case 3:
-            apiManager.deleteEventById(currentEvent._id!, completion: {
-                if self.root != nil {
-                    self.root?.reloadEvent()
-                } else {
-                    self.rootMap?.getAllEvents()
-                }
-                self.navigationController?.popViewController(animated: true)
-            })
+            if type == .mine {
+                apiManager.deleteEventById(currentEvent._id!, completion: {
+                    if self.root != nil {
+                        self.root?.reloadEvent()
+                    } else {
+                        self.rootMap?.getAllEvents()
+                    }
+                    self.navigationController?.popViewController(animated: true)
+                })
+            } else{
+                ToastView.shared.short(self.tableView, txt_msg: "This event is not yours", color: UIColor.red)
+            }
         default:
             return
         }

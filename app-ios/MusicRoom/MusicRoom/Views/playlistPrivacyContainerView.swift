@@ -131,6 +131,11 @@ class playlistPrivacyContainerView: UIView {
     
     
     @objc func handleDeletePlaylist() {
+        if playlist!._id == nil {
+            ToastView.shared.short(self, txt_msg: "Can't delete deezer playlist", color: UIColor.red)
+            return
+            
+        }
         let alert = UIAlertController(title: "Delete", message: "Are you sure you whant to delete \"\(playlist!.title)\"?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { (action) in
             apiManager.deletePlaylist(self.playlist!._id!, self.rootView?.playlistDetailController)
