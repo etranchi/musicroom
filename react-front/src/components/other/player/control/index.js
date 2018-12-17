@@ -28,8 +28,11 @@ export default class Player extends Component {
         this.props.updateParentState({currentTracksID:getPlay})
         this.setState({tracksID:tracksID, tracks:this.props.tracks, currentTracksID:getPlay}, () => {
             DZ.player.playTracks(tracksID, getPlay)
+            console.log("FLAG : ",  this.state.isPlaying, this.props.isPlay)
+            this.state.isPlaying ? DZ.player.play() : DZ.player.pause();
             DZ.player.setVolume(50)
         });
+
     }
     componentDidMount = () => {
         socket.on('updatePlayer', (event) => {
@@ -127,7 +130,6 @@ export default class Player extends Component {
         DZ.player.prev();
         DZ.player.seek(0);
     }
-
     playerUpdate = (event) => {
         console.log("PLayer update : ", this.props)
         if (this.props.isCreator || this.props.isAdmin) {
@@ -154,7 +156,6 @@ export default class Player extends Component {
             }
         }
     }
-
 	render() {
         return (
             <Row style={{height:'inherit', margin:'3% 0 0 0'}}>

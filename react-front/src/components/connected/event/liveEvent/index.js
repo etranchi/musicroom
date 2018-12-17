@@ -118,7 +118,7 @@ export default class LiveEvent extends Component {
                 </Row>
                 <Row>
                     <Col span={24}>
-                        { this.state.playlist.tracks.data.length > 0 && <Player  isCreator={this.state.isCreator} isAdmin={this.state.isAdmin} tracks={this.state.playlist.tracks.data} roomID={this.props.roomID}/> }
+                        { this.state.playlist.tracks.data.length > 0 && <Player  isCreator={this.state.isCreator} isAdmin={this.state.isAdmin} tracks={this.state.playlist.tracks.data} roomID={this.props.roomID} isPlay={this.props.state.data.event.is_play}/> }
                     </Col>
                 </Row>
                 <br/>
