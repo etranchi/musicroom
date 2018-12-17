@@ -58,12 +58,20 @@ module.exports = function (io) {
             
         });
 
-        socket.on('createRoom', (roomID) => {
+        socket.on('createRoom', (roomID, userID) => {
+            if (ftSocket.manageRooms("join", roomID, userID))
+            {
+                console.log("User joined")
+                socket.join(roomID);
+            } else {
+                console.log("User exist")
+            }
             socket.join(roomID);
             console.log("Nb clients in room " + roomID + " -> " + io.sockets.adapter.rooms[roomID].length)
         });
-        socket.on('leaveRoom', (roomID) => {
+        socket.on('leaveRoom', (roomID, userID) => {
             console.log("[Socket] -> leaveRoom")
+            ftSocket.manageRooms("leave", roomID, userID)
             socket.leave(roomID);
             if (io.sockets.adapter.rooms[roomID])
                 console.log("Nb clients in room " + roomID + " -> " + io.sockets.adapter.rooms[roomID].length)

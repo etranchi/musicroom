@@ -5,6 +5,8 @@ const eventModel    = require('../models/event');
 
 this.rooms = [];
 
+
+this.roomUsersIndex = [];
 this.sortTracksByScore = (tracks) => {
     
     let tmpArray = tracks.reduce( (acc, elem) => {
@@ -107,6 +109,61 @@ module.exports = {
             return await eventModel.findOneAndUpdate({_id: eventId}, {'isPlaying': trackID}, {new: true})
         }catch (e) {
             return e
+        }
+    },
+    manageRooms: (type, roomID, userID) => {
+        let currentRoom = {};
+
+        if (type === 'join') {
+            console.log("ManageRooms JOIN : ")
+            if (!this.roomUsersIndex || this.roomUsersIndex.length === 0)
+            {
+                console.log("ManageRooms : no room found for this ID going to create one")
+                currentRoom.id = roomID
+                currentRoom.users = [userID]
+                this.roomUsersIndex.push(currentRoom);
+                return true
+            } else {
+                console.log('')
+                for (var i = 0; i < this.roomUsersIndex.length; i++) {
+                    let room = this.roomUsersIndex[i];
+                    if (room.id === roomID)
+                    {
+                        console.log("ManageRooms : room find go update USERS ")
+                        if (room.users.indexOf(userID) === -1) {
+                            console.log("ManageRooms : users not find goign add this users")
+                            room.users.push(userID)
+                            return true
+                        }
+                        else
+                        {
+                            console.log("ManageRooms : users find return false ")
+                            return false
+                        }
+                    }
+                    onsole.log("ManageRooms : no room found for this ID going to create one")
+                    currentRoom.id = roomID
+                    currentRoom.users = [userID]
+                    this.roomUsersIndex.push(currentRoom);
+                    return true
+                }
+            }
+        }
+        else {
+            for (var i = 0; i < this.roomUsersIndex.length; i++) {
+                let room = this.roomUsersIndex[i];
+                if (room.id === roomID)
+                {
+                    console.log("Leave room find")
+                    let j = 0;
+                    if ( (j = room.users.indexOf(userID)) != -1) {
+                        console.log("Leave user find")
+                        room.users.splice(j, 1)
+                    }
+                    else
+                        return false
+                }
+            }
         }
     },
     createRoom: async (roomID, userID) => {
