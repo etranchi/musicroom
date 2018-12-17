@@ -127,9 +127,9 @@ module.exports = function (io) {
             }
             /* =============== */
             let event = await ftSocket.getEvent(roomID)
-            let isClose = event.public ? true : ftSocket.checkDistance(event, userCoord)
-            if (event.distance_required && !isClose)
-                return io.sockets.in(roomID).emit('updateScore', 'Vous n\'êtes pas assez proche');
+            // let isClose = event.public ? true : ftSocket.checkDistance(event, userCoord)
+            // if (event.distance_required && !isClose)
+            //     return io.sockets.in(roomID).emit('updateScore', 'Vous n\'êtes pas assez proche');
 
             
             io.sockets.in(roomID).emit('updateScore', event.playlist.tracks.data)

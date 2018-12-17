@@ -42,8 +42,8 @@ function updateTracks (roomID, tracks) {
 function updateTrack (roomID, track) {
     socket.emit("updateTrack", roomID, track)
 }
-function updateScore (roomID, tracksID, pointsD, userID, userCoord) {
-    socket.emit("updateScore", roomID, tracksID, pointsD, userID, userCoord)
+function updateScore (roomID, userCoord) {
+    socket.emit("updateScore", roomID, userCoord)
 }
 function updatePlayer (roomID, event) {
     console.log("trying to update player with params [roomId -> " + roomID + ", event -> " + event + "]");
