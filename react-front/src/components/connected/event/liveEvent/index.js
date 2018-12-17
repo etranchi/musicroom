@@ -30,15 +30,20 @@ export default class LiveEvent extends Component {
         this.roomID = this.props.roomID;
     }
     componentWillMount = () => {
-        socket.on('getRoomPlaylist', (tracks) => {
+        socket.on('getRoomPlaylist', (tracks, trackID) => {
             this.savePlaylist(tracks);
+
         });
 
-        socket.on('updateStatus', (tracks) => { 
+        socket.on('updateStatus', (tracks, trackID) => { 
+            console.log("updateStatus")
+            console.log(tracks)
             this.savePlaylist(tracks);
         });
 
         socket.on('updateTracks', (tracks) => {
+            console.log("updateStatus")
+            console.log(tracks)
             console.log("updateTrakc event recv");
             this.savePlaylist(tracks);
         });
@@ -100,10 +105,7 @@ export default class LiveEvent extends Component {
 		let state = this.state;
 		const items = reorder( this.state.playlist.tracks.data, result.source.index, result.destination.index );
         state.playlist.tracks.data = items;
-        console.log(items);
-        console.log(this.roomID)
         updateTracks(this.roomID, items);
-        console.log("updating tracks")
     }
 
     render() {
@@ -117,7 +119,7 @@ export default class LiveEvent extends Component {
                 </Row>
                 <Row>
                     <Col span={24}>
-                        { this.state.playlist.tracks.data.length > 0 && <Player  isCreator={this.state.isCreator} isAdmin={this.state.isAdmin} tracks={this.state.playlist.tracks.data} roomID={this.props.roomID}/> }
+                        { this.state.playlist.tracks.data.length > 0 && <Player  isCreator={this.state.isCreator} isAdmin={this.state.isAdmin} tracks={this.state.playlist.tracks.data} roomID={this.props.roomID} isPlay={this.props.state.data.event.is_play}/> }
                     </Col>
                 </Row>
                 <br/>

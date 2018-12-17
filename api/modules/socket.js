@@ -63,32 +63,12 @@ module.exports = {
         })
         return ret
     },
-    updateStatus: (room, status, trackID, secondTrackID) => {
-        let newTab = [];
-        if (trackID && room && status) {
-            this.rooms.forEach((tmp) => {
-                if (tmp.id === room.id) {
-                    newTab = tmp.tracks.map((elem) => {
-                        if (elem._id.toString() === trackID.toString() && status === 1) {
-                            elem.status = status
-                        }
-                        else if (elem._id.toString() === secondTrackID.toString() && status === 1) {
-                            elem.status = 0
-                        }
-                        else if (elem._id.toString() === trackID.toString()) {
-                            elem.status = status * -1
-                        }
-                        else if (elem._id.toString() === secondTrackID.toString()) {
-                            elem.status = status
-                        }
-                        return elem
-                    })
-                    // return ;
-                }
-            })
+    updateStatus: async (eventId, trackID) => {
+        try {
+            return await eventModel.findOneAndUpdate({_id: eventId}, {'isPlaying': trackID}, {new: true})
+        }catch (e) {
+            return e
         }
-        console.log("New Tab : ", newTab.length)
-        return this.sortTracksByScore(newTab)
     },
     createRoom: async (roomID, userID) => {
         try {
@@ -153,10 +133,13 @@ module.exports = {
         if (newEvent._id)
             return await eventModel.updateOne({_id: newEvent._id}, newEvent, {new: true})
     },
+    updatePlayStatus: async (roomID, value) => {
+        if (roomID)
+            return await eventModel.updateOne({_id: roomID}, {is_play:value}, {new: true})
+    },
     updateEventTracks : async (eventId, tracks) => {
         try {
             return await eventModel.findOneAndUpdate({_id: eventId}, {'playlist.tracks.data': tracks}, {new: true})
-
         }catch (e) {
             return e
         }

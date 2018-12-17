@@ -6,8 +6,7 @@ const Playlist 		= require('../models/playlist');
 const Event = new Schema({
 	creator: {
 		type: Schema.Types.ObjectId,
-		ref: 'user',
-		index: true
+		ref: 'user'
 	},
 	title:{type: String, default: "Aucun"},
 	description:{type: String, default: "à définir"},
@@ -26,12 +25,16 @@ const Event = new Schema({
 	},
 	public: {type: Boolean, default: false},
 	distance_max: {type:Number, default: 2},
+	distance_required: {type: Boolean, default: false},
 	is_start:  {type: Boolean, default: false},
 	is_finish:  {type: Boolean, default: false},
-	distance_required: {type: Boolean, default: false},
+	is_play: {type: Boolean, default: true},
 	creation_date: {type: Date, default: Date.now},
 	event_date: {type: Date, default: Date.now},
 	playlist: {type: Playlist.schema},
+	isPlaying: {
+		type: Schema.Types.ObjectId
+	},
 	members : [{
 		type: Schema.Types.ObjectId,
 		ref: 'user'
