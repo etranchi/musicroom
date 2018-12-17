@@ -57,6 +57,7 @@ struct Event : Codable {
     let title : String
     var description : String
     let location : Location
+    var hasStarted: Bool
     let visibility : Int?
     var shared : Bool?
     var distance_required : Bool
@@ -72,6 +73,7 @@ struct Event : Codable {
         case shared = "public"
         case creationDate = "creation_date"
         case date = "event_date"
+        case hasStarted = "is_start"
         case creator, title, description, location, visibility, playlist, members, adminMembers, picture, _id, distance_required, distance_max
     }
 
