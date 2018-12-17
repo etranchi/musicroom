@@ -174,5 +174,13 @@ module.exports = {
         return distance < event.distance_max;
         // return true
         
+    },
+    updateEventTracks : async (eventId, tracks) => {
+        try {
+            return await eventModel.findOneAndUpdate({_id: eventId}, {'playlist.tracks.data': tracks}, {new: true})
+
+        }catch (e) {
+            return e
+        }
     }
 };
