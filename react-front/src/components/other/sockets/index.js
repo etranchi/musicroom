@@ -49,9 +49,8 @@ function updatePlayer (roomID, event, data) {
     console.log("trying to update player with params [roomId -> " + roomID + ", event -> " + event + "]");
     socket.emit("updatePlayer", roomID, event, data)
 }
-function updateStatus (roomID, status, trackID, secondTrackID) {
-    console.log('la')
-    socket.emit("updateStatus", roomID, status, trackID, secondTrackID)
+function updateStatus (roomID, fStatus, fTrackID, sStatus, sTrackID) {
+    socket.emit("updateStatus", roomID, fStatus, fTrackID, sStatus, sTrackID)
 }
 function leaveRoom (roomID, userID) {
     socket.emit("leaveRoom", roomID, userID)

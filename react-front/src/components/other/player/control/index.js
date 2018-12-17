@@ -28,11 +28,8 @@ export default class Player extends Component {
         this.props.updateParentState({currentTracksID:getPlay})
         this.setState({tracksID:tracksID, tracks:this.props.tracks, currentTracksID:getPlay}, () => {
             DZ.player.playTracks(tracksID, getPlay)
-            console.log("FLAG : ",  this.state.isPlaying, this.props.isPlay)
-            this.state.isPlaying ? DZ.player.play() : DZ.player.pause();
             DZ.player.setVolume(50)
         });
-
     }
     componentDidMount = () => {
         socket.on('updatePlayer', (event) => {
@@ -95,9 +92,14 @@ export default class Player extends Component {
         if (index >= this.state.tracks.length)
             return ;     
         if (index - 1 >= 0 && this.props.roomID) {
-            console.log(this.state.tracks[index])
-            console.log(this.state.tracks[index]._id)
-            updateStatus(this.props.roomID, -1, this.state.tracks[index]._id, this.state.tracks[index-1]._id)
+            /* 
+                    current Song    :  index -1
+                    current Status  : -1
+                    next Song       :  index
+                    next Status     : 1
+            */
+           console.log('Next track', index, '/', this.state.tracks.length,  this.state.tracks[index-1]._id, this.state.tracks[index]._id)
+            updateStatus(this.props.roomID, -1, this.state.tracks[index-1]._id, 1, this.state.tracks[index]._id)
         }
         this.setState({currentTracksID:index});
         this.props.updateParentState({currentTracksID:index});
@@ -106,11 +108,13 @@ export default class Player extends Component {
         DZ.player.seek(0);
     }
     nextTrackSuiv = () => {
+        console.log("JE PASSE")
         let index = this.state.currentTracksID + 1;
         if (index >= this.state.tracks.length)
             return ;     
         if (index - 1 >= 0 && this.props.roomID) {
-            updateStatus(this.props.roomID, -1, this.state.tracks[index]._id, this.state.tracks[index-1]._id)
+            console.log('Next track Suiv')
+            updateStatus(this.props.roomID, -1, this.state.tracks[index-1]._id, 1, this.state.tracks[index]._id)
         }
         this.setState({currentTracksID:index});
         this.props.updateParentState({currentTracksID:index});
@@ -124,12 +128,21 @@ export default class Player extends Component {
         if (index < 0)
             return ;
         if (index + 1 < this.state.tracks.length  && this.props.roomID)
-            updateStatus(this.props.roomID, 1, this.state.tracks[index]._id, this.state.tracks[index + 1]._id)
+        {
+            /* 
+                current Song    :  index + 1
+                current Status  : 0
+                next Song       :  index
+                next Status     : 1
+            */
+           updateStatus(this.props.roomID, 0, this.state.tracks[index+1]._id, 1, this.state.tracks[index]._id)
+        }
         this.setState({currentTracksID:index})
         this.props.updateParentState({currentTracksID:index})
         DZ.player.prev();
         DZ.player.seek(0);
     }
+
     playerUpdate = (event) => {
         console.log("PLayer update : ", this.props)
         if (this.props.isCreator || this.props.isAdmin) {
@@ -156,6 +169,7 @@ export default class Player extends Component {
             }
         }
     }
+
 	render() {
         return (
             <Row style={{height:'inherit', margin:'3% 0 0 0'}}>

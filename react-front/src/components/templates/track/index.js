@@ -91,6 +91,8 @@ export default  class liveEvent extends Component {
                                         <b> Score : { this.props.track.likes.length} </b>
                                         <br/>
                                         <b >Duration : {duration}</b>
+                                        <br/>
+                                        <b >Status : {this.props.track.status}</b>
                                     </div>
                                     :
                                     null
