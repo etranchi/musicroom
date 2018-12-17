@@ -30,16 +30,20 @@ export default class LiveEvent extends Component {
         this.roomID = this.props.roomID;
     }
     componentWillMount = () => {
-        console.log("EVENT : ", this.props.state.data.event)
-        socket.on('getRoomPlaylist', (tracks) => {
+        socket.on('getRoomPlaylist', (tracks, trackID) => {
             this.savePlaylist(tracks);
+
         });
 
-        socket.on('updateStatus', (tracks) => { 
+        socket.on('updateStatus', (tracks, trackID) => { 
+            console.log("updateStatus")
+            console.log(tracks)
             this.savePlaylist(tracks);
         });
 
         socket.on('updateTracks', (tracks) => {
+            console.log("updateStatus")
+            console.log(tracks)
             console.log("updateTrakc event recv");
             this.savePlaylist(tracks);
         });
@@ -101,10 +105,7 @@ export default class LiveEvent extends Component {
 		let state = this.state;
 		const items = reorder( this.state.playlist.tracks.data, result.source.index, result.destination.index );
         state.playlist.tracks.data = items;
-        console.log(items);
-        console.log(this.roomID)
         updateTracks(this.roomID, items);
-        console.log("updating tracks")
     }
 
     render() {
