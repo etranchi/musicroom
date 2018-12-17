@@ -116,6 +116,23 @@ module.exports = function (io) {
                 });
             }
         });
+        socket.on('updateStatus', async (eventID, fStatus, fTrackID, sStatus, sTrackID) => {
+            console.log("[Socket] -> updateStatus");
+            /* For Swift Team */
+             
+            if (typeof eventID === 'object') {
+                let obj = JSON.parse(eventID);
+                eventID = obj.eventID
+                fStatus = obj.fStatus
+                fTrackID = obj.fTrackID
+                sStatus = obj.sStatus
+                sTrackID = obj.sTrackID
+            }
+            /* =============== */
+            let tracks = await ftSocket.updateTrackStatus(eventID, fStatus, fTrackID, sStatus, sTrackID)
+            console.log("Changement de status : ", tracks[1].status)
+            io.sockets.in(eventID).emit('updateStatus', tracks);
+        })
         socket.on('updateScore', async (roomID, userCoord) => {
             console.log("roomid -> " + roomID)
             try {
@@ -167,23 +184,6 @@ module.exports = function (io) {
             ftSocket.saveNewEvent(newEvent);
             io.sockets.in(roomID).emit('updateEvent', newEvent);
         });
-        socket.on('updateStatus', (roomID, trackID) => {
-            console.log("[Socket] -> updateStatus");
-            /* For Swift Team */
-            if (typeof roomID === 'object') {
-                let obj = JSON.parse(roomID);
-                roomID = obj.roomID
-                trackID = obj.trackID
-            }
-            /* =============== */
-            let room    = ftSocket.getRoom(roomID)
-            console.log(room);
-            let tracks  = [];
-            if (room) {
-                tracks = ftSocket.updateStatus(room, status, trackID, secondTrackID);
-                io.sockets.in(roomID).emit('updateStatus', tracks);
-            }
-        })
         /* Socket for Player */
         socket.on('updatePlayer', (roomID, newEvent, data) => {
             console.log("[Socket] -> updatePlayer");

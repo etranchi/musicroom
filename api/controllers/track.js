@@ -70,6 +70,27 @@ module.exports = {
 			next(new customError(err.message, err.code))
 		}
 	},
+	putTrackStatus: async (req, res, next) => {
+		console.log("API : Dans puttrackStatus : ")
+		console.log("status : ", req.body.status)
+		try {
+			if (!req.body.trackId)
+				throw new Error('No track id')
+			let event = await eventModel.findOne({_id: req.params.id})
+			if (event) {
+				event.playlist.tracks.data.map((elem) => {
+					if (elem._id == req.body.trackId) {
+						elem.status = req.body.status
+					}
+				});
+				event = await eventModel.findOneAndUpdate({_id: req.params.id}, event, {new: true})
+			}
+			res.status(200).send(event);
+		} catch (err) {
+			console.log(err)
+			next(new customError(err.message, err.code))
+		}
+	},
 	deleteTrackById: async (req, res, next) => {
 		try {
 			await trackModel.updateOne({id: req.params.id}, {$pull: {userId: req.user._id}})

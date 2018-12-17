@@ -87,6 +87,7 @@ module.exports = {
 			}
 			if (!req.body.playlist || !req.body.playlist.tracks || req.body.playlist.tracks.data.length === 0)
 				throw new Error('No tracks in playlist')
+			req.body.playlist.tracks.data[0].status = 1;
 			let event = await modelEvent.create(req.body)
 			res.status(200).send(event)
 		} catch (err) {

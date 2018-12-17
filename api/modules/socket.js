@@ -63,32 +63,44 @@ module.exports = {
         })
         return ret
     },
-    updateStatus: (room, status, trackID, secondTrackID) => {
-        let newTab = [];
-        if (trackID && room && status) {
-            this.rooms.forEach((tmp) => {
-                if (tmp.id === room.id) {
-                    newTab = tmp.tracks.map((elem) => {
-                        if (elem._id.toString() === trackID.toString() && status === 1) {
-                            elem.status = status
-                        }
-                        else if (elem._id.toString() === secondTrackID.toString() && status === 1) {
-                            elem.status = 0
-                        }
-                        else if (elem._id.toString() === trackID.toString()) {
-                            elem.status = status * -1
-                        }
-                        else if (elem._id.toString() === secondTrackID.toString()) {
-                            elem.status = status
-                        }
-                        return elem
-                    })
-                    // return ;
-                }
-            })
+    updateTrackStatus: async (eventID, fStatus, fTrackID, sStatus, sTrackID) => {
+        try {
+            let event = await eventModel.findOne( {_id: eventID});
+            for (var i = 0; i < event.playlist.tracks.data.length; i++) {
+                let id = event.playlist.tracks.data[i]._id.toString();
+                if (id === fTrackID) event.playlist.tracks.data[i].status = fStatus
+                if (id === sTrackID) event.playlist.tracks.data[i].status = sStatus
+            }
+            await eventModel.updateOne({_id: eventID}, event, {new: true})
+            return (event.playlist.tracks.data)
+        } catch (e) {
+            throw e
         }
-        console.log("New Tab : ", newTab.length)
-        return this.sortTracksByScore(newTab)
+        // let newTab = [];
+        // if (trackID && room && status) {
+        //     this.rooms.forEach((tmp) => {
+        //         if (tmp.id === room.id) {
+        //             newTab = tmp.tracks.map((elem) => {
+        //                 if (elem._id.toString() === trackID.toString() && status === 1) {
+        //                     elem.status = status
+        //                 }
+        //                 else if (elem._id.toString() === secondTrackID.toString() && status === 1) {
+        //                     elem.status = 0
+        //                 }
+        //                 else if (elem._id.toString() === trackID.toString()) {
+        //                     elem.status = status * -1
+        //                 }
+        //                 else if (elem._id.toString() === secondTrackID.toString()) {
+        //                     elem.status = status
+        //                 }
+        //                 return elem
+        //             })
+        //             // return ;
+        //         }
+        //     })
+        // }
+        // console.log("New Tab : ", newTab.length)
+        // return this.sortTracksByScore(newTab)
     },
     createRoom: async (roomID, userID) => {
         try {
