@@ -5,8 +5,8 @@ const eventModel    = require('../models/event');
 
 this.rooms = [];
 
-
-this.roomUsersIndex = [];
+if (!this.roomUsersIndex)
+    this.roomUsersIndex = [];
 this.sortTracksByScore = (tracks) => {
     
     let tmpArray = tracks.reduce( (acc, elem) => {
@@ -114,6 +114,7 @@ module.exports = {
     manageRooms: (type, roomID, userID) => {
         let currentRoom = {};
 
+        console.log(this.roomUsersIndex.length)
         if (type === 'join') {
             console.log("ManageRooms JOIN : ")
             if (!this.roomUsersIndex || this.roomUsersIndex.length === 0)
@@ -141,7 +142,7 @@ module.exports = {
                             return false
                         }
                     }
-                    onsole.log("ManageRooms : no room found for this ID going to create one")
+                    console.log("ManageRooms : no room found for this ID going to create one")
                     currentRoom.id = roomID
                     currentRoom.users = [userID]
                     this.roomUsersIndex.push(currentRoom);
