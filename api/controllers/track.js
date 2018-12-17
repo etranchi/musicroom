@@ -61,9 +61,23 @@ module.exports = {
 						}
 					}
 				});
-				event.playlist.tracks.data.sort((a, b) => {
+				let bool = false
+				let ret = event.playlist.tracks.data.reduce((acc, track) => {
+					if (track.status === 1) {
+						bool = true
+						acc["played"].push(track)
+					} else if (bool === false)
+						acc["played"].push(track)
+					else
+						acc["toSort"].push(track)
+					return acc
+				}, {played: [], toSort: []})
+
+				ret.toSort = ret.toSort.sort((a, b) => {
 					return (b.likes.length - a.likes.length)
 				})
+				event.playlist.tracks.data = ret.played.concat(ret.toSort)
+
 				event = await eventModel.findOneAndUpdate({_id: req.params.id}, event, {new: true})
 			}
 			res.status(200).send(event);
