@@ -28,12 +28,15 @@ export default class Player extends Component {
         this.props.updateParentState({currentTracksID:getPlay})
         this.setState({tracksID:tracksID, tracks:this.props.tracks, currentTracksID:getPlay}, () => {
             DZ.player.playTracks(tracksID, getPlay)
+            console.log(tracksID)
+            console.log(getPlay)
             console.log("FLAG : ",  this.state.isPlaying, this.props.isPlay)
             this.state.isPlaying ? DZ.player.play() : DZ.player.pause();
             DZ.player.setVolume(50)
         });
 
     }
+
     componentDidMount = () => {
         socket.on('updatePlayer', (event) => {
             console.log("Socket : updatePlayer receive data : ", event)
@@ -61,9 +64,29 @@ export default class Player extends Component {
                     break;
             }     
         })
-        socket.on('updateStatus', (tracksNew) => {
-            console.log("Socket : updateStatus receive data : ", tracksNew)
-            this.setState({tracks:tracksNew})
+        socket.on('getRoomPlaylist', (tracks, trackID) => {
+            let index = 0;
+            console.log("ici");
+            tracks.filter((track, i) => {
+                if (track._id.toString() === trackID.toString())
+                    index = i
+                return track
+            });
+            this.setState({currentTracksID:index, tracks:tracks})
+            this.props.updateParentState({currentTracksID:index})
+            DZ.player.playTracks(tracks, index)
+            DZ.player.play()
+        });
+
+        socket.on('updateStatus', (tracks, trackID) => {
+            let index = 0;
+            this.state.tracks.filter((track, i) => {
+                if (track._id.toString() === trackID.toString())
+                    index = i
+                return null
+            });
+            this.setState({currentTracksID:index})
+            this.props.updateParentState({currentTracksID:index})
         });
         socket.on('updateScore', (tracksNew) => {
             console.log("Socket : updateScore receive data : ", tracksNew)
@@ -97,7 +120,7 @@ export default class Player extends Component {
         if (index - 1 >= 0 && this.props.roomID) {
             console.log(this.state.tracks[index])
             console.log(this.state.tracks[index]._id)
-            updateStatus(this.props.roomID, -1, this.state.tracks[index]._id, this.state.tracks[index-1]._id)
+            updateStatus(this.props.roomID, this.state.tracks[index]._id)
         }
         this.setState({currentTracksID:index});
         this.props.updateParentState({currentTracksID:index});
@@ -110,7 +133,7 @@ export default class Player extends Component {
         if (index >= this.state.tracks.length)
             return ;     
         if (index - 1 >= 0 && this.props.roomID) {
-            updateStatus(this.props.roomID, -1, this.state.tracks[index]._id, this.state.tracks[index-1]._id)
+            updateStatus(this.props.roomID,this.state.tracks[index]._id)
         }
         this.setState({currentTracksID:index});
         this.props.updateParentState({currentTracksID:index});
@@ -124,7 +147,7 @@ export default class Player extends Component {
         if (index < 0)
             return ;
         if (index + 1 < this.state.tracks.length  && this.props.roomID)
-            updateStatus(this.props.roomID, 1, this.state.tracks[index]._id, this.state.tracks[index + 1]._id)
+            updateStatus(this.props.roomID, this.state.tracks[index]._id)
         this.setState({currentTracksID:index})
         this.props.updateParentState({currentTracksID:index})
         DZ.player.prev();

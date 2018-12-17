@@ -32,6 +32,9 @@ const Event = new Schema({
 	creation_date: {type: Date, default: Date.now},
 	event_date: {type: Date, default: Date.now},
 	playlist: {type: Playlist.schema},
+	isPlaying: {
+		type: Schema.Types.ObjectId
+	},
 	members : [{
 		type: Schema.Types.ObjectId,
 		ref: 'user'
