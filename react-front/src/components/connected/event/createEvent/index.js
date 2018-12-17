@@ -230,7 +230,7 @@ export default class CreateEvent extends Component {
                         }
                     </Row>
                     <Row>
-                        <Col span={5} offset={10}>
+                        <Col span={9} offset={10}>
                             <Row>
                                 <Col span={10} offset={2}>
                                     <DatePicker

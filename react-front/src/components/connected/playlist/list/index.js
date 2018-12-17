@@ -67,6 +67,7 @@ export default class List extends Component {
 											<img src={val.picture_small || defaultImage} alt="" className="circle"/>
 											<span className="title">{<b>Titre : {val.title}</b>}</span>
 											<p>{val.description}</p>
+											<p>{"nombre de titre : " + val.tracks.data.length}</p>
 										</li>
 									</div>
 								);
