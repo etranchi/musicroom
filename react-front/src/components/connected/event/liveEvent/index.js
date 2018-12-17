@@ -34,7 +34,7 @@ export default class LiveEvent extends Component {
             this.savePlaylist(tracks);
         });
 
-        socket.on('updateStatus', (tracks) => {
+        socket.on('updateStatus', (tracks) => { 
             this.savePlaylist(tracks);
         });
 
@@ -101,6 +101,7 @@ export default class LiveEvent extends Component {
 		const items = reorder( this.state.playlist.tracks.data, result.source.index, result.destination.index );
         state.playlist.tracks.data = items;
         console.log(items);
+        console.log(this.roomID)
         updateTracks(this.roomID, items);
         console.log("updating tracks")
     }
