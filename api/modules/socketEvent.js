@@ -126,7 +126,7 @@ module.exports = function (io) {
             /* =============== */
             let tracks = await ftSocket.updateTrackStatus(eventID, fStatus, fTrackID, sStatus, sTrackID)
             console.log("Changement de status : ", tracks[1].status)
-            io.sockets.in(eventID).emit('updateStatus', tracks);
+            io.in(eventID).emit('updateStatus', tracks);
         })
         socket.on('updateScore', async (roomID, userCoord) => {
             console.log("roomid -> " + roomID)
@@ -139,10 +139,10 @@ module.exports = function (io) {
             }
             /* =============== */
             let event = await ftSocket.getEvent(roomID)
-            io.sockets.in(roomID).emit('updateScore', event.playlist.tracks.data)
+            io.in(roomID).emit('updateScore', event.playlist.tracks.data)
 
         } catch (e) {
-            io.sockets.in(roomID).emit('error', e.message)
+            io.in(roomID).emit('error', e.message)
         }
 
         });
@@ -157,7 +157,7 @@ module.exports = function (io) {
             }
             /* =============== */
             ftSocket.saveNewEvent(newEvent);
-            io.sockets.in(roomID).emit('updateEvent', newEvent);
+            io.in(roomID).emit('updateEvent', newEvent);
         });
         /* Socket for Player */
         socket.on('updatePlayer', (roomID, newEvent, data) => {
@@ -172,7 +172,7 @@ module.exports = function (io) {
                 ftSocket.updatePlayStatus(roomID, newEvent === 'pause' ? false : true)
             /* =============== */
             console.log(newEvent)
-            io.sockets.in(roomID).emit('updatePlayer', newEvent, data);
+            io.in(roomID).emit('updatePlayer', newEvent, data);
         })
     });
     io.on('disconnect', (socket) => {
