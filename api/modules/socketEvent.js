@@ -49,7 +49,8 @@ module.exports = function (io) {
             try {
                 let event = await ftSocket.getEvent(roomID);
             console.log(event)
-            io.sockets.in(roomID).emit('getRoomPlaylist', event.playlist.tracks.data)
+            console.log(event.isPlaying)
+            io.sockets.in(roomID).emit('getRoomPlaylist', event.playlist.tracks.data, event.isPlaying)
             } catch (e) {
                 io.sockets.in(roomID).emit('error', e.message)
             }
@@ -69,15 +70,6 @@ module.exports = function (io) {
             else
                 console.log("No more room for " + roomID)
         });
-        // socket.on('closeRoom', (roomID) => {
-        //     console.log("[Socket] -> closeRoom")
-
-        //     let room = ftSocket.getRoom(roomID)
-        //     if (room) {
-        //         ftSocket.deleteRoom(roomID);
-        //         io.sockets.in(room.id).emit('closeRoom');
-        //     }
-        // });
         socket.on('updateTracks', async (roomID, tracks) => {
             try {
             console.log("[Socket] -> updateTracks")
@@ -88,12 +80,7 @@ module.exports = function (io) {
                 tracks = obj.tracks
             }
             let event = await ftSocket.updateEventTracks(roomID, tracks)
-            /* =============== */
             io.sockets.in(roomID).emit('updateTracks', event.playlist.tracks.data)
-            // room.tracks = tracks
-            // if (room.tracks[0] && !room.tracks[0].status)
-            //     room.tracks[0].status = 1
-            // io.sockets.in(roomID).emit('updateTracks', room.tracks)
         } catch (e) {
             console.log(e)
             io.sockets.in(roomID).emit('error', e.message)
@@ -144,24 +131,10 @@ module.exports = function (io) {
             }
             /* =============== */
             let event = await ftSocket.getEvent(roomID)
-            let isClose = event.public ? true : ftSocket.checkDistance(event, userCoord)
-            if (event.distance_required && !isClose)
-                return io.sockets.in(roomID).emit('updateScore', 'Vous n\'êtes pas assez proche');
-
-            
             io.sockets.in(roomID).emit('updateScore', event.playlist.tracks.data)
-            // let room = ftSocket.getRoom(roomID)
 
-            // if (room) {
-            //     let isClose = ftSocket.checkDistance(room.event, userCoord)
-            //     if (room.event.distance_required && !isClose)
-            //         return io.sockets.in(room.id).emit('updateScore', 'Vous n\'êtes pas assé proche');
-            //     room = ftSocket.updateScore(room, trackID, points, userID)
-            //     room = ftSocket.updateRoom(room)
-            //     io.sockets.in(room.id).emit('updateScore', room.tracks)
-            // }
         } catch (e) {
-            console.log(e)
+            io.sockets.in(roomID).emit('error', e.message)
         }
 
         });
@@ -175,12 +148,6 @@ module.exports = function (io) {
                 newEvent = obj.newEvent
             }
             /* =============== */
-            let room = ftSocket.getRoom(roomID)
-
-            if (newEvent._id && room) {
-                room.event = newEvent
-                room = ftSocket.updateRoom(room)
-            }
             ftSocket.saveNewEvent(newEvent);
             io.sockets.in(roomID).emit('updateEvent', newEvent);
         });

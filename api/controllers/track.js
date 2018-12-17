@@ -44,9 +44,12 @@ module.exports = {
 	},
 	putTrackLike: async (req, res, next) => {
 		try {
-			if (!req.body.trackId)
-				throw new Error('No track id')
+			if (!req.body.trackId || !req.body.userCoord)
+				throw new customError('No track id or user coord', 400)
 			let event = await eventModel.findOne({_id: req.params.id})
+			let isClose = event.public ? true : checkDistance(event, req.body.userCoord)
+			if (event.distance_required && !isClose)
+				throw new customError('Vous n\'êtes pas assez proche', 400)
 			if (event) {
 				event.playlist.tracks.data.map((elem) => {
 					if (elem._id == req.body.trackId) {
@@ -63,7 +66,6 @@ module.exports = {
 				})
 				event = await eventModel.findOneAndUpdate({_id: req.params.id}, event, {new: true})
 			}
-
 			res.status(200).send(event);
 		} catch (err) {
 			console.log(err)
@@ -101,3 +103,24 @@ module.exports = {
 		}
 	}
 };
+
+function checkDistance(event, userCoord) {
+	this.toRad = value => {
+		return value * Math.PI / 180;
+	}
+	this.getDistance = (coordA, coordB) => {
+		let R     = 6371; // km
+		let dLat  = this.toRad(coordB.lat - coordA.lat);
+		let dLon  = this.toRad(coordB.lng - coordA.lng);
+		let lat1  = this.toRad(coordA.lng);
+		let lat2  = this.toRad(coordB.lng);
+
+		let a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+		Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+		let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+		let d = R * c;
+		return d.toFixed(0);
+	}
+	let distance = this.getDistance(event.location.coord, userCoord);
+	return distance < event.distance_max;
+}

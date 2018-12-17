@@ -76,6 +76,7 @@ module.exports = {
         } catch (e) {
             throw e
         }
+    },
         // let newTab = [];
         // if (trackID && room && status) {
         //     this.rooms.forEach((tmp) => {
@@ -101,6 +102,12 @@ module.exports = {
         // }
         // console.log("New Tab : ", newTab.length)
         // return this.sortTracksByScore(newTab)
+    updateStatus: async (eventId, trackID) => {
+        try {
+            return await eventModel.findOneAndUpdate({_id: eventId}, {'isPlaying': trackID}, {new: true})
+        }catch (e) {
+            return e
+        }
     },
     createRoom: async (roomID, userID) => {
         try {
@@ -169,32 +176,9 @@ module.exports = {
         if (roomID)
             return await eventModel.updateOne({_id: roomID}, {is_play:value}, {new: true})
     },
-    checkDistance: (event, userCoord) => {
-        this.toRad = value => {
-            return value * Math.PI / 180;
-        }
-        this.getDistance = (coordA, coordB) => {
-            let R     = 6371; // km
-            let dLat  = this.toRad(coordB.lat - coordA.lat);
-            let dLon  = this.toRad(coordB.lng - coordA.lng);
-            let lat1  = this.toRad(coordA.lng);
-            let lat2  = this.toRad(coordB.lng);
-    
-            let a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-            Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
-            let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-            let d = R * c;
-            return d.toFixed(0);
-        }
-        let distance = this.getDistance(event.location.coord, userCoord);
-        return distance < event.distance_max;
-        // return true
-        
-    },
     updateEventTracks : async (eventId, tracks) => {
         try {
             return await eventModel.findOneAndUpdate({_id: eventId}, {'playlist.tracks.data': tracks}, {new: true})
-
         }catch (e) {
             return e
         }

@@ -12,7 +12,7 @@ export default  class liveEvent extends Component {
 
     like = () => {
         axios.put(process.env.REACT_APP_API_URL + '/track/' + this.props.event._id + "/like",
-		{'trackId': this.props.track._id},
+		{'trackId': this.props.track._id, 'userCoord': this.props.state.data.userCoord},
 		{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
 		.then((resp) => {
             message.success("Successfully liked music")
