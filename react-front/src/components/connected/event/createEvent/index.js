@@ -230,7 +230,7 @@ export default class CreateEvent extends Component {
                         }
                     </Row>
                     <Row>
-                        <Col span={10} offset={8}>
+                        <Col span={9} offset={10}>
                             <Row>
                                 <Col span={10} offset={2}>
                                     <DatePicker
@@ -260,7 +260,8 @@ export default class CreateEvent extends Component {
                         </Col>
                     </Row>
                     <Row>
-                        <Col span={4} offset={10}>
+                        <Col span={5}  offset={9}>
+                            <b> Playlist : </b>
                             <SearchBar 
                                 state={this.props.state} 
                                 type="playlist" 

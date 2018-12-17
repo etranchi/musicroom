@@ -5,6 +5,8 @@ const eventModel    = require('../models/event');
 
 this.rooms = [];
 
+
+this.roomUsersIndex = [];
 this.sortTracksByScore = (tracks) => {
     
     let tmpArray = tracks.reduce( (acc, elem) => {
@@ -26,11 +28,11 @@ module.exports = {
             return err
         }
     },
-    getTracks: async (eventId) => {
+    getEvent: async (eventId) => {
         try {
             let event = await eventModel.findOne({_id: eventId});
             if (event) {
-                return event.playlist.tracks.data
+                return event
             }
             return null
         } catch (err) {
@@ -63,32 +65,107 @@ module.exports = {
         })
         return ret
     },
-    updateStatus: (room, status, trackID, secondTrackID) => {
-        let newTab = [];
-        if (trackID && room && status) {
-            this.rooms.forEach((tmp) => {
-                if (tmp.id === room.id) {
-                    newTab = tmp.tracks.map((elem) => {
-                        if (elem._id.toString() === trackID.toString() && status === 1) {
-                            elem.status = status
-                        }
-                        else if (elem._id.toString() === secondTrackID.toString() && status === 1) {
-                            elem.status = 0
-                        }
-                        else if (elem._id.toString() === trackID.toString()) {
-                            elem.status = status * -1
-                        }
-                        else if (elem._id.toString() === secondTrackID.toString()) {
-                            elem.status = status
-                        }
-                        return elem
-                    })
-                    // return ;
-                }
-            })
+    updateTrackStatus: async (eventID, fStatus, fTrackID, sStatus, sTrackID) => {
+        try {
+            let event = await eventModel.findOne( {_id: eventID});
+            for (var i = 0; i < event.playlist.tracks.data.length; i++) {
+                let id = event.playlist.tracks.data[i]._id.toString();
+                if (id === fTrackID) event.playlist.tracks.data[i].status = fStatus
+                if (id === sTrackID) event.playlist.tracks.data[i].status = sStatus
+            }
+            await eventModel.updateOne({_id: eventID}, event, {new: true})
+            return (event.playlist.tracks.data)
+        } catch (e) {
+            throw e
         }
-        console.log("New Tab : ", newTab.length)
-        return this.sortTracksByScore(newTab)
+    },
+        // let newTab = [];
+        // if (trackID && room && status) {
+        //     this.rooms.forEach((tmp) => {
+        //         if (tmp.id === room.id) {
+        //             newTab = tmp.tracks.map((elem) => {
+        //                 if (elem._id.toString() === trackID.toString() && status === 1) {
+        //                     elem.status = status
+        //                 }
+        //                 else if (elem._id.toString() === secondTrackID.toString() && status === 1) {
+        //                     elem.status = 0
+        //                 }
+        //                 else if (elem._id.toString() === trackID.toString()) {
+        //                     elem.status = status * -1
+        //                 }
+        //                 else if (elem._id.toString() === secondTrackID.toString()) {
+        //                     elem.status = status
+        //                 }
+        //                 return elem
+        //             })
+        //             // return ;
+        //         }
+        //     })
+        // }
+        // console.log("New Tab : ", newTab.length)
+        // return this.sortTracksByScore(newTab)
+    updateStatus: async (eventId, trackID) => {
+        try {
+            return await eventModel.findOneAndUpdate({_id: eventId}, {'isPlaying': trackID}, {new: true})
+        }catch (e) {
+            return e
+        }
+    },
+    manageRooms: (type, roomID, userID) => {
+        let currentRoom = {};
+
+        console.log(this.roomUsersIndex.length)
+        if (type === 'join') {
+            console.log("ManageRooms JOIN : ")
+            if (!this.roomUsersIndex || this.roomUsersIndex.length === 0)
+            {
+                console.log("ManageRooms : no room found for this ID going to create one")
+                currentRoom.id = roomID
+                currentRoom.users = [userID]
+                this.roomUsersIndex.push(currentRoom);
+                return true
+            } else {
+                console.log('')
+                for (var i = 0; i < this.roomUsersIndex.length; i++) {
+                    let room = this.roomUsersIndex[i];
+                    if (room.id === roomID)
+                    {
+                        console.log("ManageRooms : room find go update USERS ")
+                        if (room.users.indexOf(userID) === -1) {
+                            console.log("ManageRooms : users not find goign add this users")
+                            room.users.push(userID)
+                            return true
+                        }
+                        else
+                        {
+                            console.log("ManageRooms : users find return false ")
+                            return false
+                        }
+                    }
+                    console.log("ManageRooms : no room found for this ID going to create one")
+                    currentRoom.id = roomID
+                    currentRoom.users = [userID]
+                    this.roomUsersIndex.push(currentRoom);
+                    return true
+                }
+            }
+        }
+        else {
+            for (var i = 0; i < this.roomUsersIndex.length; i++) {
+                let room = this.roomUsersIndex[i];
+                if (room.id === roomID)
+                {
+                    console.log("Leave room find")
+                    let j = 0;
+                    if ( (j = room.users.indexOf(userID)) != -1) {
+                        console.log("Leave user find")
+                        room.users.splice(j, 1)
+                    }
+                    else
+                        return false
+                }
+            }
+        }
     },
     createRoom: async (roomID, userID) => {
         try {
@@ -153,26 +230,15 @@ module.exports = {
         if (newEvent._id)
             return await eventModel.updateOne({_id: newEvent._id}, newEvent, {new: true})
     },
-    checkDistance: (event, userCoord) => {
-        this.toRad = value => {
-            return value * Math.PI / 180;
+    updatePlayStatus: async (roomID, value) => {
+        if (roomID)
+            return await eventModel.updateOne({_id: roomID}, {is_play:value}, {new: true})
+    },
+    updateEventTracks : async (eventId, tracks) => {
+        try {
+            return await eventModel.findOneAndUpdate({_id: eventId}, {'playlist.tracks.data': tracks}, {new: true})
+        }catch (e) {
+            return e
         }
-        this.getDistance = (coordA, coordB) => {
-            let R     = 6371; // km
-            let dLat  = this.toRad(coordB.lat - coordA.lat);
-            let dLon  = this.toRad(coordB.lng - coordA.lng);
-            let lat1  = this.toRad(coordA.lng);
-            let lat2  = this.toRad(coordB.lng);
-    
-            let a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-            Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
-            let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-            let d = R * c;
-            return d.toFixed(0);
-        }
-        let distance = this.getDistance(event.location.coord, userCoord);
-        return distance < event.distance_max;
-        // return true
-        
     }
 };

@@ -10,7 +10,6 @@ import Error from '../../../other/errorController'
 import { leavePlaylist, joinPlaylist, updatePlaylist, socket, blockSocketEvent } from '../../../other/sockets';
 
 const reorder = (list, startIndex, endIndex) => {
-	console.log("IN REORDER")
 	const result = Array.from(list);
 	const [removed] = result.splice(startIndex, 1);
 	result.splice(endIndex, 0, removed);
@@ -156,7 +155,7 @@ export default class Tracks extends Component {
 		axios.put(process.env.REACT_APP_API_URL + '/playlist/' + (this.state.playlists[array[0]]._id || this.state.playlists[array[0]].id)  + '/track',
 		 {id: array[1].id},
 		 {'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
-		.catch(err => { Error.display_error(err) })
+		.catch(err => { Error.display_error(err)})
 	}
 	isOurPlaylist = () => {
 		let ret = false;
@@ -215,8 +214,8 @@ export default class Tracks extends Component {
 											ref={provided.innerRef}
 											{...provided.draggableProps}
 											{...provided.dragHandleProps}>
-										{this.isOurPlaylist() ? 
-										<Icon 
+										{this.isOurPlaylist() ?
+										<Icon
 											type="close" 
 											style={{'float':'right', 'color':'red','cursor':'pointer'}} 
 											onClick={() => this.deleteTrack(index)}>

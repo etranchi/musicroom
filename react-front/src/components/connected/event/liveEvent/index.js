@@ -30,13 +30,24 @@ export default class LiveEvent extends Component {
         this.roomID = this.props.roomID;
     }
     componentWillMount = () => {
-        socket.on('getRoomPlaylist', (tracks) => {
+        socket.on('getRoomPlaylist', (tracks, trackID) => {
+            this.savePlaylist(tracks);
+
+        });
+
+        socket.on('updateStatus', (tracks, trackID) => { 
+            console.log("updateStatus")
+            console.log(tracks)
             this.savePlaylist(tracks);
         });
 
-        socket.on('updateStatus', (tracks) => {
+        socket.on('updateTracks', (tracks) => {
+            console.log("updateStatus")
+            console.log(tracks)
+            console.log("updateTrakc event recv");
             this.savePlaylist(tracks);
         });
+
         socket.on('updateScore', (tracks) => {
             console.log('Update score -> ')
             console.log(tracks)
@@ -82,7 +93,7 @@ export default class LiveEvent extends Component {
             OldTrack.userUnLike.splice(0, index);
         updateTrack(this.roomID,  OldTrack);
         this.setState({rotate: {active:true, id:OldTrack._id, liked: value > 0 ? true : false}}, () => {
-            updateScore(this.roomID, OldTrack._id, value, this.props.state.user._id, this.props.state.data.userCoord);
+            updateScore(this.roomID, this.props.state.data.userCoord);
         })
     }
     onDragStart = () => {
@@ -98,7 +109,6 @@ export default class LiveEvent extends Component {
     }
 
     render() {
-        console.log(this.state)
         return (
             <div>
                 <Row>
@@ -108,7 +118,7 @@ export default class LiveEvent extends Component {
                 </Row>
                 <Row>
                     <Col span={24}>
-                        { this.state.playlist.tracks.data.length > 0 && <Player  isCreator={this.state.isCreator} isAdmin={this.state.isAdmin} tracks={this.state.playlist.tracks.data} roomID={this.props.roomID}/> }
+                        { this.state.playlist.tracks.data.length > 0 && <Player  isCreator={this.state.isCreator} isAdmin={this.state.isAdmin} tracks={this.state.playlist.tracks.data} roomID={this.props.roomID} isPlay={this.props.state.data.event.is_play}/> }
                     </Col>
                 </Row>
                 <br/>
@@ -139,6 +149,7 @@ export default class LiveEvent extends Component {
                                                                     rotate={this.state.rotate} 
                                                                     order={index} 
                                                                     track={item}
+                                                                    state={this.props.state}
                                                                     event={this.props.state.data.event}
                                                                     callSocket={this.callSocket}
                                                                 />

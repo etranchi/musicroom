@@ -6,6 +6,7 @@ import BodyEvent from './Body'
 import Map from '../map'
 import geolib from 'geolib'
 import {socket, createRoom, closeRoom, leaveRoom, updateEvent, updateTracks} from '../../../other/sockets';
+import Error from '../../../other/errorController';
 
 export default class cardEvent extends Component {
 	constructor(props) {
@@ -45,7 +46,8 @@ export default class cardEvent extends Component {
     componentDidMount = () => {
         socket.on('error', (message) => {
             //console.log('socket :  updateEvent receive data ', newEvent)
-            message.error(message);
+            console.log(message);
+            Error.display_error(message);
             
         })
         socket.on('updateEvent', (newEvent) => {

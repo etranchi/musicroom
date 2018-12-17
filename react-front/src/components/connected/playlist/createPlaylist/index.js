@@ -56,7 +56,7 @@ export default class CreatePlaylist extends Component {
 					<Col span={2} offset={8}>
 						<div style={{margin:'20% 0 0 0'}}> <b> Titre playlist : </b>  </div>
 					</Col>
-					<Col span={5} >
+					<Col span={3} >
 						<Input 
 							value={this.state.title} 
 							name="title" 

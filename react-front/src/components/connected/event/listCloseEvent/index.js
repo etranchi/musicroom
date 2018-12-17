@@ -56,7 +56,7 @@ export default class listCloseEvent extends Component {
                     <Divider />
                     <Layout>
                         <Layout.Content>
-                            <Row >
+                            <Row style={{height:'800px'}}>
                                 <Col span={14} offset={2}>
                                     { 
                                         this.state.loading === false  ? 
@@ -71,7 +71,7 @@ export default class listCloseEvent extends Component {
                                             null
                                     }
                                 </Col>
-                                <Col span={6} offset={2}>>
+                                <Col span={6} offset={2}>
                                     { 
                                         this.state.displayCard === true ? 
                                             <div style={{margin:'20% 0 0 0'}}> 

@@ -12,12 +12,12 @@ export default  class liveEvent extends Component {
 
     like = () => {
         axios.put(process.env.REACT_APP_API_URL + '/track/' + this.props.event._id + "/like",
-		{'trackId': this.props.track._id},
+		{'trackId': this.props.track._id, 'userCoord': this.props.state.data.userCoord},
 		{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
 		.then((resp) => {
             message.success("Successfully liked music")
             console.log("event -> ")
-			updateScore(resp.data._id)
+			updateScore(resp.data._id, this.props.state.data.userCoord)
 		})
 		.catch(err => { Error.display_error(err) })
     }
@@ -82,14 +82,21 @@ export default  class liveEvent extends Component {
                             <Skeleton avatar title={false} loading={false} active>
                                 <List.Item.Meta
                                     avatar={<Avatar size={118} src={picture} />}
-                                    title={<p className="Ffamily" style={{fontSize:'18px', margin:'10% 0 0 0'}}> {title} </p>}
+                                    title={<p className="Ffamily" style={{fontSize:'2vh'}}> {title} </p>}
                                     description={artist}
                                 />
-                                <div>
-                                    <b> Score : { this.props.track.likes.length} </b>
-                                    <br/>
-                                    <b >Duration : {duration}</b>
-                                </div>
+                                {
+                                    this.props.track.likes ? 
+                                    <div>
+                                        <b> Score : { this.props.track.likes.length} </b>
+                                        <br/>
+                                        <b >Duration : {duration}</b>
+                                        <br/>
+                                        <b >Status : {this.props.track.status}</b>
+                                    </div>
+                                    :
+                                    null
+                                }
                             </Skeleton>
                             </List.Item>
                         </Col>
