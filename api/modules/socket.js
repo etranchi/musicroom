@@ -153,6 +153,10 @@ module.exports = {
         if (newEvent._id)
             return await eventModel.updateOne({_id: newEvent._id}, newEvent, {new: true})
     },
+    updatePlayStatus: async (roomID, value) => {
+        if (roomID)
+            return await eventModel.updateOne({_id: roomID}, {is_play:value}, {new: true})
+    },
     checkDistance: (event, userCoord) => {
         this.toRad = value => {
             return value * Math.PI / 180;

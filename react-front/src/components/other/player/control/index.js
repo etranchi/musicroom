@@ -10,7 +10,7 @@ export default class Player extends Component {
 	constructor(props) {
         super(props);
 		this.state = {
-            isPlaying : true,
+            isPlaying : this.props.isPlay || false,
             repeat: false,
             random: false,
             currentTracksID: 0,
@@ -47,6 +47,9 @@ export default class Player extends Component {
                 case "play":
                     this.playTrack();
                     break;
+                case "pause":
+                    this.pauseTrack();
+                    break;
                 case "changePosition":
                     this.setState({isPlaying:true});
                     DZ.player.play();
@@ -73,11 +76,16 @@ export default class Player extends Component {
         else this.setState({[value]:!this.state[value]})
     }
     playTrack = () => {
-        this.setState({isPlaying:!this.state.isPlaying}, () => {
-            this.state.isPlaying ?  DZ.player.play() :  DZ.player.pause()
-            console.log("play/pause set state");
+        console.log("Player : play")
+        this.setState({isPlaying:true}, () => {
+            DZ.player.play()
         });
-        console.log("play/pause");
+    }
+    pauseTrack = () => {
+        console.log("Player : pause")
+        this.setState({isPlaying:false}, () => {
+            DZ.player.pause()
+        });
     }
     nextTrack = () => {
         let index = this.state.currentTracksID + 1;
@@ -106,7 +114,6 @@ export default class Player extends Component {
             DZ.player.seek(0);
         })
     }
-
     prevTrack = () => {
         let index = this.state.currentTracksID - 1;
         if (index < 0)
@@ -136,6 +143,9 @@ export default class Player extends Component {
                     case "play":
                         this.playTrack();
                         break;
+                    case "pause":
+                        this.pauseTrack();
+                        break;
                     default:
                         break;
                 } 
@@ -156,7 +166,7 @@ export default class Player extends Component {
                 </Col>
                 <Col span={1}/>
                 <Col span={3}>
-                    <i onClick={() => {this.playerUpdate("play")}} className={this.state.isPlaying ? "fas fa-pause-circle playerAction" : "fas fa-play-circle playerAction"}></i>  
+                    <i onClick={() => {this.playerUpdate((this.state.isPlaying ? "pause" : "play") )}} className={this.state.isPlaying ? "fas fa-pause-circle playerAction" : "fas fa-play-circle playerAction"}></i>  
                 </Col>
                 <Col span={1}/>
                 <Col span={3}>
