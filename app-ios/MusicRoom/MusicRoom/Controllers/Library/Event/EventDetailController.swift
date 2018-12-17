@@ -51,6 +51,12 @@ class EventDetailController: UITableViewController {
         super.viewWillAppear(animated)
         
         let navi = navigationController as? CustomNavigationController
+        if currentTrack != nil { playerController.handlePause() }
+        (UIApplication.shared.keyWindow?.rootViewController as? TabBarController)?.minimizedPlayer.isUserInteractionEnabled = false
+        playerController.view.isUserInteractionEnabled = false
+        (UIApplication.shared.keyWindow?.rootViewController as? TabBarController)?.minimizedPlayer.titleLabel.text = "live event"
+        (UIApplication.shared.keyWindow?.rootViewController as? TabBarController)?.minimizedPlayer.authorLabel.text = "\(currentEvent.title)"
+        
         navi?.animatedHideNavigationBar()
         navigationController?.navigationBar.topItem?.title = ""
         
@@ -84,6 +90,7 @@ class EventDetailController: UITableViewController {
         tableView.register(EventInteractionCell.self, forCellReuseIdentifier: libraryCellId)
         likedTracks.removeAll()
         loadMe()
+        print(currentEvent.hasStarted)
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -109,11 +116,13 @@ class EventDetailController: UITableViewController {
                     return
                 }
                 let vc = PlaylistDetailController(currentEvent.playlist!, headerView!.albumCover, isInEvent: true, iAmMember, iAmAdmin, type)
+                vc.event = currentEvent
                 self.navigationController?.pushViewController(vc, animated: true)
                 return
             }
             UIImageView().getImageUsingCacheWithUrlString(urlString: cover, completion: { (image) in
                 let vc = PlaylistDetailController(self.currentEvent.playlist!, image, isInEvent: true, self.iAmMember, self.iAmAdmin, self.type)
+                vc.event = self.currentEvent
                 self.navigationController?.pushViewController(vc, animated: true)
             })
         case 3:

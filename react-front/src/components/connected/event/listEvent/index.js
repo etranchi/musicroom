@@ -16,6 +16,9 @@ export default class ListEvent extends Component {
 	}
 	componentDidMount = () => {
 		this.getEvents(ret => {
+			ret.myEvents.sort((a, b) 		=> { return a.event_date > b.event_date });
+			ret.friendEvents.sort((a, b) 	=> { return a.event_date > b.event_date });
+			ret.allEvents.sort((a, b) 	=> { return a.event_date > b.event_date });
 			this.setState({
 				myEvents	: ret.myEvents, 
 				friendEvents: ret.friendEvents, 

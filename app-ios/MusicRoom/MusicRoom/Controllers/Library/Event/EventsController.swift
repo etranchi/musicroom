@@ -72,14 +72,6 @@ class EventsController: UITableViewController {
         apiManager.getMe(userManager.currentUser!.token!) { (user) in
             SocketIOManager.sharedInstance.createEventRoom(roomID: event._id!, userID: user.id)
             userID = user.id
-            if currentTrack != nil {
-                playerController.handlePause()
-            }
-            (UIApplication.shared.keyWindow?.rootViewController as? TabBarController)?.minimizedPlayer.isUserInteractionEnabled = false
-            playerController.view.isUserInteractionEnabled = false
-            (UIApplication.shared.keyWindow?.rootViewController as? TabBarController)?.minimizedPlayer.titleLabel.text = "live event"
-            (UIApplication.shared.keyWindow?.rootViewController as? TabBarController)?.minimizedPlayer.authorLabel.text = "\(event.title)"
-            
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }

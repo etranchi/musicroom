@@ -6,6 +6,7 @@ import BodyEvent from './Body'
 import Map from '../map'
 import geolib from 'geolib'
 import {socket, createRoom, closeRoom, leaveRoom, updateEvent, updateTracks} from '../../../other/sockets';
+import Error from '../../../other/errorController';
 
 export default class cardEvent extends Component {
 	constructor(props) {
@@ -19,14 +20,19 @@ export default class cardEvent extends Component {
         };
     }
     isUser = tab => {
+        let ret = false;
         tab.forEach(user => { 
-            if (user.email === this.props.state.user.email)
-                return true
+            if (user._id === this.props.state.user._id)
+            {
+                ret = true
+                return ;
+            }
         });
-        return false;
+        return ret;
     }
     checkRight = () => {
-        if (this.props.state.data.event.creator.email === this.props.state.user.email)
+        console.log()
+        if (this.props.state.data.event.creator._id === this.props.state.user._id)
             this.setState({isCreator:true});
         else {
             this.setState({
@@ -38,8 +44,14 @@ export default class cardEvent extends Component {
             this.setState({isViewer:false});
     }
     componentDidMount = () => {
+        socket.on('error', (message) => {
+            //console.log('socket :  updateEvent receive data ', newEvent)
+            console.log(message);
+            Error.display_error(message);
+            
+        })
         socket.on('updateEvent', (newEvent) => {
-            console.log('socket :  updateEvent receive data ', newEvent)
+            //console.log('socket :  updateEvent receive data ', newEvent)
             this.props.state.data.event = newEvent
             this.props.updateParent({'data': this.props.state.data})
             this.checkRight()
@@ -49,22 +61,18 @@ export default class cardEvent extends Component {
                 this.props.state.data.event.playlist.tracks.data = tracks;
                 this.props.updateParent({data:this.props.state.data})
             }
-            console.log('socket : createRoom receive data ', msg)
+            //console.log('socket : createRoom receive data ', msg)
         });
         socket.on('updateTracks', (tracks, msg) => {
-            console.log('socket : updateTracks receive data ', msg)
-        });
-        socket.on('joinRoom', (msg) => {
-            console.log('socket : joinRoom receive message ->', msg)
+            if (tracks && tracks.length > 0) {
+                this.props.state.data.event.playlist.tracks.data = tracks;
+                this.props.updateParent({data:this.props.state.data})
+            }
         });
         socket.on('closeRoom', (msg) => {
            this.props.updateParent({currentComponent:'cardEvent'})
         });
-        socket.on('leaveRoom', (msg) => {
-            console.log('socket : leaveRoom receive message ->', msg)
-        });
-        let tracks = this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks ? this.props.state.data.event.playlist.tracks.data : [];
-        createRoom(this.props.state.data.event._id, tracks, this.props.state.data.event, this.props.state.user._id);
+        createRoom(this.props.state.data.event._id, this.props.state.user._id);
         this.checkRight();
     }
     updateMap = () => {
@@ -109,8 +117,7 @@ export default class cardEvent extends Component {
         updateEvent(this.props.state.data.event._id, this.props.state.data.event)
         closeRoom(this.props.state.data.event._id)
         this.props.updateParent({data:this.props.state.data})
-        let tracks = this.props.state.data.event.playlist && this.props.state.data.event.playlist.tracks ? this.props.state.data.event.playlist.tracks.data : [];
-        createRoom(this.props.state.data.event._id, tracks, this.props.state.data.event, this.props.state.user._id);
+        createRoom(this.props.state.data.event._id, this.props.state.user._id);
     }
     quitpage = () => {
         this.props.changeView('listEvent')

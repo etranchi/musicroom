@@ -24,6 +24,7 @@ class PlaylistDetailController: UITableViewController {
     var iAmAdmin : Bool = false
     var type : EventType = .others
     var isInEvent : Bool = false
+    var event: Event?
     
     private let headerHeight: CGFloat = 225
     
@@ -133,6 +134,7 @@ class PlaylistDetailController: UITableViewController {
         super.viewWillDisappear(animated)
         
         let navi = navigationController as? CustomNavigationController
+        
         navi?.animatedShowNavigationBar()
     }
     
@@ -162,6 +164,12 @@ class PlaylistDetailController: UITableViewController {
         tableView.alwaysBounceVertical = false
         
         setupHeader()
+        if type == .mine && event != nil {
+            event?.hasStarted = true
+            apiManager.putEvent(event!, completion: { (true) in
+                print("event started")
+            })
+        }
     }
     
     @objc func edit() {
