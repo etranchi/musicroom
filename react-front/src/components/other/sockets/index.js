@@ -1,8 +1,6 @@
 import openSocket from 'socket.io-client';
 
-const socket = openSocket(process.env.REACT_APP_SOCKET_URL,{
-    transports: [ 'websocket', 'polling' ]
-  });
+const socket = openSocket(process.env.REACT_APP_API_URL);
 
 function joinPlaylist (playlistId) {
     console.log("je join la plalist -> " + playlistId)
