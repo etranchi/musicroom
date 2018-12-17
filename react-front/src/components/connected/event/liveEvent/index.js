@@ -30,6 +30,7 @@ export default class LiveEvent extends Component {
         this.roomID = this.props.roomID;
     }
     componentWillMount = () => {
+        console.log("EVENT : ", this.props.state.data.event)
         socket.on('getRoomPlaylist', (tracks) => {
             this.savePlaylist(tracks);
         });

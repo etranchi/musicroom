@@ -185,7 +185,7 @@ module.exports = function (io) {
             }
         })
         /* Socket for Player */
-        socket.on('updatePlayer', (roomID, newEvent) => {
+        socket.on('updatePlayer', (roomID, newEvent, data) => {
             console.log("[Socket] -> updatePlayer");
             /* For Swift Team */
             if (typeof roomID === 'object') {
@@ -193,9 +193,11 @@ module.exports = function (io) {
                 roomID = obj.roomID
                 newEvent = obj.newEvent
             }
+            if (newEvent === 'pause' || newEvent === 'play')
+                ftSocket.updatePlayStatus(roomID, newEvent === 'pause' ? false : true)
             /* =============== */
             console.log(newEvent)
-            io.sockets.in(roomID).emit('updatePlayer', newEvent);
+            io.sockets.in(roomID).emit('updatePlayer', newEvent, data);
         })
     });
     io.on('disconnect', (socket) => {
