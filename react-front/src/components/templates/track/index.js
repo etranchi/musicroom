@@ -82,14 +82,19 @@ export default  class liveEvent extends Component {
                             <Skeleton avatar title={false} loading={false} active>
                                 <List.Item.Meta
                                     avatar={<Avatar size={118} src={picture} />}
-                                    title={<p className="Ffamily" style={{fontSize:'18px', margin:'10% 0 0 0'}}> {title} </p>}
+                                    title={<p className="Ffamily" style={{fontSize:'2vh'}}> {title} </p>}
                                     description={artist}
                                 />
-                                <div>
-                                    <b> Score : { this.props.track.likes.length} </b>
-                                    <br/>
-                                    <b >Duration : {duration}</b>
-                                </div>
+                                {
+                                    this.props.track.likes ? 
+                                    <div>
+                                        <b> Score : { this.props.track.likes.length} </b>
+                                        <br/>
+                                        <b >Duration : {duration}</b>
+                                    </div>
+                                    :
+                                    null
+                                }
                             </Skeleton>
                             </List.Item>
                         </Col>

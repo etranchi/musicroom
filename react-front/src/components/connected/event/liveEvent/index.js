@@ -108,7 +108,6 @@ export default class LiveEvent extends Component {
     }
 
     render() {
-        console.log(this.state)
         return (
             <div>
                 <Row>

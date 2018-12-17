@@ -103,7 +103,7 @@ export default class PreviewCardEvent extends Component {
                 }
                 actions=
                 {
-                    this.props.event.creator.email === this.props.state.user.email ?  [ <i onClick={this.delete} className="fas fa-trash-alt"></i> ]  : [ ]
+                    this.props.event.creator && this.props.event.creator.email && this.props.event.creator.email === this.props.state.user.email ?  [ <i onClick={this.delete} className="fas fa-trash-alt"></i> ]  : [ ]
                 }
             >
                 <Card.Meta
