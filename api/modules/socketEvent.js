@@ -44,16 +44,17 @@ module.exports = function (io) {
                 console.log("No more room for " + playlistId)
         });
         /* Socket For LiveEvent */
-        socket.on('getRoomPlaylist', (roomID) => {
+        socket.on('getRoomPlaylist', async (roomID) => {
             console.log("[Socket] -> getRoomPlaylist")
-
-            let room = ftSocket.getRoom(roomID);
-            if (room)
-            {
-                io.sockets.in(room.id).emit('getRoomPlaylist', room.tracks)
+            try {
+                let event = await ftSocket.getEvent(roomID);
+            console.log(event)
+            io.sockets.in(roomID).emit('getRoomPlaylist', event.playlist.tracks.data)
+            } catch (e) {
+                io.sockets.in(roomID).emit('error', e.message)
             }
-            else
-                return;
+
+            
         });
 
         socket.on('createRoom', (roomID) => {
@@ -86,14 +87,16 @@ module.exports = function (io) {
                 roomID = obj.roomID
                 tracks = obj.tracks
             }
+            let event = await ftSocket.updateEventTracks(roomID, tracks)
             /* =============== */
-            io.sockets.in(roomID).emit('updateTracks', tracks)
+            io.sockets.in(roomID).emit('updateTracks', event.playlist.tracks.data)
             // room.tracks = tracks
             // if (room.tracks[0] && !room.tracks[0].status)
             //     room.tracks[0].status = 1
             // io.sockets.in(roomID).emit('updateTracks', room.tracks)
         } catch (e) {
             console.log(e)
+            io.sockets.in(roomID).emit('error', e.message)
         }
         });
         socket.on('updateTrack', (roomID, track) => {
@@ -164,18 +167,17 @@ module.exports = function (io) {
             ftSocket.saveNewEvent(newEvent);
             io.sockets.in(roomID).emit('updateEvent', newEvent);
         });
-        socket.on('updateStatus', (roomID, status, trackID, secondTrackID) => {
+        socket.on('updateStatus', (roomID, trackID) => {
             console.log("[Socket] -> updateStatus");
             /* For Swift Team */
             if (typeof roomID === 'object') {
                 let obj = JSON.parse(roomID);
                 roomID = obj.roomID
-                status = obj.status
                 trackID = obj.trackID
-                secondTrackID = obj.secondTrackID
             }
             /* =============== */
             let room    = ftSocket.getRoom(roomID)
+            console.log(room);
             let tracks  = [];
             if (room) {
                 tracks = ftSocket.updateStatus(room, status, trackID, secondTrackID);

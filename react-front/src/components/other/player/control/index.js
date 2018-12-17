@@ -84,6 +84,8 @@ export default class Player extends Component {
         if (index >= this.state.tracks.length)
             return ;     
         if (index - 1 >= 0 && this.props.roomID) {
+            console.log(this.state.tracks[index])
+            console.log(this.state.tracks[index]._id)
             updateStatus(this.props.roomID, -1, this.state.tracks[index]._id, this.state.tracks[index-1]._id)
         }
         this.setState({currentTracksID:index});
