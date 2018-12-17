@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Row, Col, Progress } from 'antd';
-import {socket, updatePlayer} from '../../sockets'
+import {updatePlayer} from '../../sockets'
 
 const { DZ } = window;
 
@@ -28,6 +28,10 @@ export default class Progressor extends Component {
                     this.duration.current.textContent = this.convertTime(e[1]);
                 });
             }
+        });
+        DZ.Event.subscribe('track_end', e => {
+            console.log("TRACK END")
+            updatePlayer(this.props.roomID, 'suiv');
         });
     }
     changeSeek = ({ target, clientX }) => {

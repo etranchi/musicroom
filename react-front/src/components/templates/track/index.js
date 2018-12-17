@@ -1,11 +1,26 @@
 import React, { Component } from 'react';
 import './styles.css';
-import { Layout, Row, Col, List, Skeleton, Avatar} from 'antd';
+import { Layout, Row, Col, List, Skeleton, Avatar, message} from 'antd';
+import axios from 'axios'
+import { updateScore } from '../../other/sockets';
+import  Error  from '../../other/errorController';
 
 
 const {Content}  = Layout
 
 export default  class liveEvent extends Component {
+
+    like = () => {
+        axios.put(process.env.REACT_APP_API_URL + '/track/' + this.props.event._id + "/like",
+		{'trackId': this.props.track._id},
+		{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
+		.then((resp) => {
+            message.success("Successfully liked music")
+            console.log("event -> ")
+			updateScore(resp.data._id, this.props.state.data.userCoord)
+		})
+		.catch(err => { Error.display_error(err) })
+    }
 	render() {
         const picture   = this.props.track.album.cover_medium ? this.props.track.album.cover_medium : this.props.track.album.cover_large ? this.props.track.album.cover_large : this.props.track.album.cover_small;
         const title     = this.props.track.title_short;
@@ -33,13 +48,15 @@ export default  class liveEvent extends Component {
         const duration  = min + ":" + rest + 'min';
 
         let isLike      = {display:'block'};
-        let isUnLike    = {display:'block', margin:'0 1% 0 0'};
+        let isUnLike    = {display:'none', margin:'0 1% 0 0'};
 
-        if ( this.props.userID && this.props.track.userLike && this.props.track.userLike.length > 0) {
-            if (this.props.track.userLike.indexOf(this.props.userID) !== -1) isLike = {display:'none'}
+        if ( this.props.userID && this.props.track.likes.indexOf(this.props.userID) !== -1) {
+            isUnLike = {display:'block'}
+            isLike = {display:'none'}
         }
-        if ( this.props.userID && this.props.track.userUnLike && this.props.track.userUnLike.length > 0) {
-            if (this.props.track.userUnLike.indexOf(this.props.userID) !== -1) isUnLike = {display:'none'}
+        else {
+            isLike = {display:'block'}
+            isUnLike = {display:'none'}
         }
         return (
             <Layout style={layoutStyle}>
@@ -53,11 +70,11 @@ export default  class liveEvent extends Component {
                             <List.Item actions={
                                 this.props.callSocket ?
                                 [
-                                    <i  onClick={this.props.callSocket.bind(this,"updateScore", this.props.track, 1)}  
+                                    <i  onClick={this.like}  
                                         style={isLike} 
                                         className="far fa-thumbs-up HoverLike"
                                     />,
-                                    <i  onClick={this.props.callSocket && this.props.callSocket.bind(this,"updateScore", this.props.track, -1)} 
+                                    <i  onClick={this.like} 
                                         style={isUnLike} 
                                         className="far fa-thumbs-down HoverUnlike"
                                     />
@@ -65,14 +82,19 @@ export default  class liveEvent extends Component {
                             <Skeleton avatar title={false} loading={false} active>
                                 <List.Item.Meta
                                     avatar={<Avatar size={118} src={picture} />}
-                                    title={<p className="Ffamily" style={{fontSize:'18px', margin:'10% 0 0 0'}}> {title} </p>}
+                                    title={<p className="Ffamily" style={{fontSize:'2vh'}}> {title} </p>}
                                     description={artist}
                                 />
-                                <div>
-                                    <b> Score : { this.props.track.like? this.props.track.like: 0 } </b>
-                                    <br/>
-                                    <b >Duration : {duration}</b>
-                                </div>
+                                {
+                                    this.props.track.likes ? 
+                                    <div>
+                                        <b> Score : { this.props.track.likes.length} </b>
+                                        <br/>
+                                        <b >Duration : {duration}</b>
+                                    </div>
+                                    :
+                                    null
+                                }
                             </Skeleton>
                             </List.Item>
                         </Col>

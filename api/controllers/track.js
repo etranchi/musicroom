@@ -1,4 +1,5 @@
 const trackModel = require('../models/track');
+const eventModel = require('../models/event');
 const config = require('../config/config');
 const request = require('request-promise');
 const customError = require('../modules/customError');
@@ -39,6 +40,34 @@ module.exports = {
 		} catch (err) {
 			console.log("Bad Request postTrack" + err)
 			next(new customError(err.message, 400))
+		}
+	},
+	putTrackLike: async (req, res, next) => {
+		try {
+			if (!req.body.trackId)
+				throw new Error('No track id')
+			let event = await eventModel.findOne({_id: req.params.id})
+			if (event) {
+				event.playlist.tracks.data.map((elem) => {
+					if (elem._id == req.body.trackId) {
+						let i = elem.likes.indexOf(req.user._id)
+						if (i !== -1) {
+							elem.likes.splice(i, 1)
+						} else {
+							elem.likes.push(req.user._id)
+						}
+					}
+				});
+				event.playlist.tracks.data.sort((a, b) => {
+					return (b.likes.length - a.likes.length)
+				})
+				event = await eventModel.findOneAndUpdate({_id: req.params.id}, event, {new: true})
+			}
+
+			res.status(200).send(event);
+		} catch (err) {
+			console.log(err)
+			next(new customError(err.message, err.code))
 		}
 	},
 	deleteTrackById: async (req, res, next) => {

@@ -5,6 +5,8 @@ import Playlist from './playlist'
 import Setting from './setting'
 import axios from 'axios'
 
+const { DZ } = window;
+
 export default class Connected extends Component {
 	constructor(props){
 		super(props);
@@ -15,6 +17,8 @@ export default class Connected extends Component {
 		};
 	}
 	componentWillMount = () => {
+		DZ.player.seek(0);
+		DZ.player.pause()
 		this.getGeolocalisation();
 	}
 	getGeolocalisation = () => {
@@ -28,7 +32,7 @@ export default class Connected extends Component {
 			axios.get('https://api.ipify.org?format=json')
 				.then(ip => {
 					/* Transform user ip to coord */
-					axios.get('https://geo.ipify.org/api/v1?apiKey=at_SoggptEjCDvnJYqbssJZlNKVWyzvg&ipAddress=' + ip.data.ip)
+					axios.get('https://geo.ipify.org/api/v1?apiKey=at_a4068uhAAope5JSeZRIwg1wRZ0UIQ&ipAddress=' + ip.data.ip)
 						.then(resp => {
 							this.props.state.data.userCoord.lat = resp.data.location.lat
 							this.props.state.data.userCoord.lng = resp.data.location.lng
@@ -65,9 +69,25 @@ export default class Connected extends Component {
 			return (	
 				<Layout> 
 					<Layout.Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: this.state.height }}>
-						{this.props.state.data.userCoord.lat && this.props.state.data.userCoord.lng && (this.props.state.currentComponent === 'event' || this.props.state.currentComponent === 'createEvent' || this.props.state.currentComponent === 'liveEvent' || this.props.state.currentComponent === 'cardEvent')? <Event state={this.props.state} updateParent={this.props.updateParent}/> : null}
-						{this.props.state.currentComponent === 'playlist' || this.props.state.currentComponent === 'createPlaylist' || this.props.state.currentComponent === 'tracks' || this.props.state.currentComponent === 'editPlaylist' ? <Playlist state={this.props.state} updateParent={this.props.updateParent}/> : null}
-						{this.props.state.currentComponent === 'setting' || this.props.state.currentComponent === 'editSetting'? <Setting state={this.props.state} updateParent={this.props.updateParent} logout={this.props.logout}/> : null}
+						{ 
+							this.props.state.data.userCoord.lat && this.props.state.data.userCoord.lng && 
+							(this.props.state.currentComponent === 'event' || this.props.state.currentComponent === 'createEvent' || this.props.state.currentComponent === 'liveEvent' || this.props.state.currentComponent === 'cardEvent') ? 
+								<Event state={this.props.state} updateParent={this.props.updateParent}/> 
+								: 
+								null
+						}
+						{
+							this.props.state.currentComponent === 'playlist' || this.props.state.currentComponent === 'createPlaylist' || this.props.state.currentComponent === 'tracks' || this.props.state.currentComponent === 'editPlaylist' ? 
+								<Playlist state={this.props.state} updateParent={this.props.updateParent}/> 
+								: 
+								null
+						}
+						{
+							this.props.state.currentComponent === 'setting' || this.props.state.currentComponent === 'editSetting'? 
+								<Setting state={this.props.state} updateParent={this.props.updateParent} logout={this.props.logout}/> 
+								: 
+								null
+						}
 					</Layout.Content>
 				</Layout>
 			);

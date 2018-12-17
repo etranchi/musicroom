@@ -6,3 +6,18 @@
     bottom: 0;
     margin: auto;
 }
+.styleCollection {
+    padding: 1%
+}
+
+.listContent {
+    width:80%;
+    margin:1% 10% 1% 10%;
+    border: 1px solid #e0e0e0;
+ }
+
+ .listTitle {
+    font-size:36px;
+    text-decoration: underline;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+ }

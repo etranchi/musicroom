@@ -10,7 +10,6 @@ import Error from '../../../other/errorController'
 import { leavePlaylist, joinPlaylist, updatePlaylist, socket, blockSocketEvent } from '../../../other/sockets';
 
 const reorder = (list, startIndex, endIndex) => {
-	console.log("IN REORDER")
 	const result = Array.from(list);
 	const [removed] = result.splice(startIndex, 1);
 	result.splice(endIndex, 0, removed);
@@ -18,7 +17,7 @@ const reorder = (list, startIndex, endIndex) => {
 	return result;
   };
 
-class Tracks extends Component {
+export default class Tracks extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
@@ -27,11 +26,10 @@ class Tracks extends Component {
 			loading: false,
 			isBlocked: true,
 			playlists:[]
-		}
+		};
 	}
 	componentDidMount() {
 		socket.on('blockPlaylist', () => {
-			console.log("JE BLOCK LA PLAYLIST POUR TOUS LES AUTRES")
 			this.getPlaylist((res) => {
 				this.setState({
 				initLoading: false,
@@ -41,7 +39,6 @@ class Tracks extends Component {
 			});
 		})
 		socket.on('playlistUpdated', () => {
-			console.log("playlistUpdated socket event")
 			this.getPlaylist((res) => {
 				this.setState({
 					initLoading: false,
@@ -55,7 +52,6 @@ class Tracks extends Component {
 			  playlists: [...res.data.myPlaylists , ...res.data.allPlaylists , ...res.data.friendPlaylists],
 			});
 		});
-
 		this.getPlaylist((res) => {
 			res.data._id && joinPlaylist(res.data._id)
 			this.setState({
@@ -65,113 +61,79 @@ class Tracks extends Component {
 			});
 		});	
 	}
-
 	componentWillUnmount() {
-		leavePlaylist(this.state.playlist._id)
+		leavePlaylist(this.state.playlist._id);
 	}
-
 	getPlaylist = (callback) => {
 		console.log('id');
 		console.log(this.props.state.id);
 		axios.get(process.env.REACT_APP_API_URL + '/playlist/' + this.props.state.id, 
 		{'headers':{'Authorization': 'Bearer ' + localStorage.getItem('token')}})
 		.then((resp) => {
-			console.log("get playlist")
-			console.log(resp.data);
-			callback(resp);
+			if (callback)
+				callback(resp);
+			else {
+				this.setState({
+				initLoading: false,
+				playlist: resp.data,
+				isBlocked: !resp.data._id
+			  });
+			}
 		})
 		.catch((err) => {
+			Error.display_error(err)
 			this.setState({playlist:{tracks: {data:[]}}, isloading:false})
-			console.log('Playlist error');
-			console.log(err);
 		})
 	}
-
 	getPlaylists = (callback) => {
 		axios.get(process.env.REACT_APP_API_URL + '/playlist', 
 		{'headers':{'Authorization': 'Bearer ' + localStorage.getItem('token')}})
-		.then((resp) => {
-			console.log("get playlists");
-			callback(resp)
-		})
+		.then((resp) => { callback(resp) })
 		.catch((err) => {
+			Error.display_error(err)
 			this.setState({playlists: [], loading:false})
-			console.log('Playlists error');
-			console.log(err);
 		})
 	}
-
 	delete = () => {
 		axios.delete(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist._id,
 		{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
 		.then(() => {
+			message.success("Successfully deleted playlist")
 			this.props.updateParent({'currentComponent':'playlist', id:null})
 		})
-		.catch(err => {
-			console.log(err);
-		})
+		.catch(err => { Error.display_error(err) })
 	}
-
 	deleteTrack = (index) => {
-		console.log("Je suis lock ? " + this.state.isBlocked)
-		if (this.state.playlist.id)
-		{
-			axios.delete(process.env.REACT_APP_API_URL + '/playlist/' + this.state.playlist.id + '/' + this.state.playlist.tracks.data[index].id, 
-			{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
-			.then(() => {
-				var state = this.state;
-				state.playlist.tracks.data.splice(index,1);
-				this.setState(state);
-				updatePlaylist(this.state.playlist._id)
-			})
-			.catch(err => {
-				console.log(err);
-			})
-		}
-		else if (this.state.isBlocked === false) {
+		axios.delete(process.env.REACT_APP_API_URL + '/playlist/' + (this.state.playlist._id || this.state.playlist.id) + '/' + this.state.playlist.tracks.data[index].id, 
+		{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
+		.then(() => {
 			var state = this.state;
 			state.playlist.tracks.data.splice(index,1);
-			axios.put(process.env.REACT_APP_API_URL + '/playlist/' + (this.state.playlist._id || this.state.playlist.id), 
-			this.state.playlist,
-			{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
-			.then(() => {
-				this.setState(state);
-				updatePlaylist(this.state.playlist._id)
-			})
-			.catch(err => {
-				console.log(err);
-			})
-		}
+			updatePlaylist(this.state.playlist._id)
+			message.success("Successfully deleted track")
+			this.getPlaylist()
+		})
+		.catch(err => { Error.display_error(err) });
 	}
-	
-	addTrack = (item) => {
-		var state = this.state;
-		
+	addTrack = (item) => {		
 		axios.put(process.env.REACT_APP_API_URL + '/playlist/' + (this.state.playlist._id || this.state.playlist.id) + '/track',
 		{"id":item.id},
 		{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
 		.then(() => {
 			message.success("Music Successfully added");
-			state.playlist.tracks.data.push(item);
-			this.setState(state);
+			updatePlaylist(this.state.playlist._id || this.state.playlist.id)
+			this.getPlaylist()
 		})
-		.catch(err => {
-			Error.display_error(err);
-		})
+		.catch(err => { Error.display_error(err); })
 	}
-
 	onDragStart = () => {
-		console.log("BLOCK SOCKET")	
-		blockSocketEvent(this.state.playlist._id)
+		blockSocketEvent(this.state.playlist._id);
 	}
-	
 	onDragEnd = (result) => {
-		console.log("In DRAG END")
 		if (!result.destination) {
 		  return;
 		}
-		console.log('after drag end')
-		var state = this.state;
+		let state = this.state;
 		const items = reorder(
 		  this.state.playlist.tracks.data,
 		  result.source.index,
@@ -185,126 +147,112 @@ class Tracks extends Component {
 			updatePlaylist(this.state.playlist._id)
 			this.setState(items);
 		})
-		.catch(err => {
-			console.log(err);
-		})
+		.catch(err => { Error.display_error(err) })
 	}
 	handleChange = (array) => {
+		if (typeof array === 'string')
+			array = JSON.parse(array)
 		axios.put(process.env.REACT_APP_API_URL + '/playlist/' + (this.state.playlists[array[0]]._id || this.state.playlists[array[0]].id)  + '/track',
 		 {id: array[1].id},
 		 {'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
-		.catch(err => {
-			console.log("[error] add track to playlist");
-			console.log(err);
-		})
+		.catch(err => { Error.display_error(err)})
 	}
-
-	 isOurPlaylist = () => {
-		 console.log("isOurPlaylist start");
-		 console.log("id ->");
-		 let ret = false;
-		 console.log(this.state.playlist);
-		 if (this.state.playlist._id)
+	isOurPlaylist = () => {
+		let ret = false;
+		if (this.state.playlist._id)
 		 	return true
-		 this.state.playlists.forEach((item, index) => {
-			 console.log(item);
-			 console.log("itemid -> " + item.id + "playlistid -> " + this.state.playlist.id)
-			 if (item.id === this.state.playlist.id)
-			 {
-				 console.log("ca devrait return true")
+		this.state.playlists.forEach((item) => {
+			if (item.id === this.state.playlist.id)
 				ret = true;
-			 }
-			 	
-		 })
-		 console.log("isOurPlaylist end");
-		 return ret
+		});
+		return ret;
 	 }
-
 	render() {
-		return(
-		<div>
-			
-			<Row type="flex" justify="space-between">
-				<Col>
-					<a 
-					href="#!" 
-					className="btn waves-effect waves-teal" 
-					onClick={() => this.props.updateParent({'currentComponent': 'playlist'})}>Back
-					</a>
-				</Col>
-				<Col>
-					{this.state.playlist._id && 
-					<a 
-					href="#!" 
-					className="btn waves-effect" 
-					style={{'backgroundColor':'orange'}} 
-					onClick={() => this.props.updateParent({'currentComponent': 'editPlaylist'})}>Edit
-					</a>}
-				</Col>
-			</Row>
-			<Layout.Content>
-				<h3 style={{'textAlign':'center', 'fontSize': '20px'}}>{this.state.playlist.title}</h3>
-				<DragDropContext 
-					onDragEnd={this.onDragEnd} 
-					onDragStart={this.onDragStart}>
-					<Droppable 
-						droppableId="droppable" 
-						isDragDisabled={this.state.isBlocked} 
-						isDropDisabled={this.state.isBlocked}>
-						{(provided, snapshot) => (
-							<div
-							ref={provided.innerRef}
-							>
-							<ul className="collection">
-							{this.state.playlist.tracks.data.map((item, index) => (
-								<li className="collection-item avatar" key={index}>
-								<Draggable 
-									key={item.id} 
-									draggableId={item.id} 
-									index={index} >
-								{(provided, snapshot) => (
-									<div
-										ref={provided.innerRef}
-										{...provided.draggableProps}
-										{...provided.dragHandleProps}>
-									{this.isOurPlaylist() ? 
-									<Icon 
-										type="close" 
-										style={{'float':'right', 'color':'red','cursor':'pointer'}} 
-										onClick={() => this.deleteTrack(index)}>
-									</Icon> : null}
-									<span>
-										<img 
-											src={item.album ? item.album.cover_small || defaultTrackImg : defaultTrackImg} 
-											alt="" 
-											className="circle"/>
-										<span className="title">{item.title} - Duration: {moment.utc(item.duration * 1000).format('mm:ss')}</span>
-										<p style={{'fontStyle':'italic'}}>{item.album ? item.album.title : ""}</p>
-									</span>
-									<Select style={{ width: 120 }} onChange={this.handleChange	}>
-										{this.state.playlists.map((playlist, i) => {
-											return ( <Select.Option value={[i, item]} key={i}>{playlist.title} </Select.Option> )})
-										}
-									</Select>
-									</div>
-								)}
-								</Draggable>
-								</li>
-							))}
-							</ul>
-							{provided.placeholder}
-							</div>
-						)}
-					</Droppable>
-      			</DragDropContext>
-				{this.isOurPlaylist() ? <SearchBar type="tracks" updateParent={this.props.updateParent} addTrack={this.addTrack}/> : null}
-				{this.state.playlist.tracks.data.length > 0 && 
-					<Player  isAdmin={true} isCreator={true} tracks={this.state.playlist.tracks.data}/>
-				}
-				</Layout.Content>
-		</div>
+		return (
+			<div>
+				
+				<Row type="flex" justify="space-between">
+					<Col>
+						<a 
+						href="#!" 
+						className="btn waves-effect waves-teal" 
+						onClick={() => this.props.updateParent({'currentComponent': 'playlist'})}>Back
+						</a>
+					</Col>
+					<Col>
+						{this.state.playlist._id && 
+						<a 
+						href="#!" 
+						className="btn waves-effect" 
+						style={{'backgroundColor':'orange'}} 
+						onClick={() => this.props.updateParent({'currentComponent': 'editPlaylist'})}>Edit
+						</a>}
+					</Col>
+				</Row>
+				<Layout.Content>
+					<h3 style={{'textAlign':'center', 'fontSize': '20px'}}>{this.state.playlist.title}</h3>
+					<DragDropContext 
+						onDragEnd={this.onDragEnd} 
+						onDragStart={this.onDragStart}>
+						<Droppable 
+							droppableId="droppable" 
+							isDragDisabled={this.state.isBlocked} 
+							isDropDisabled={this.state.isBlocked}>
+							{(provided, snapshot) => (
+								<div
+								ref={provided.innerRef}
+								>
+								<ul className="collection">
+								{this.state.playlist.tracks.data.map((item, index) => (
+									<li className="collection-item avatar" key={index}>
+									<Draggable 
+										key={item.id} 
+										draggableId={item.id} 
+										index={index} >
+									{(provided, snapshot) => (
+										<div
+											ref={provided.innerRef}
+											{...provided.draggableProps}
+											{...provided.dragHandleProps}>
+										{this.isOurPlaylist() ?
+										<Icon
+											type="close" 
+											style={{'float':'right', 'color':'red','cursor':'pointer'}} 
+											onClick={() => this.deleteTrack(index)}>
+										</Icon> : null}
+										<span>
+											<img 
+												src={item.album ? item.album.cover_small || defaultTrackImg : defaultTrackImg} 
+												alt="" 
+												className="circle"/>
+											<span className="title">{item.title} - Duration: {moment.utc(item.duration * 1000).format('mm:ss')}</span>
+											<p style={{'fontStyle':'italic'}}>{item.album ? item.album.title : ""}</p>
+										</span>
+										<Select style={{ width: 120 }} onChange={this.handleChange} defaultValue="Ajouter à">
+											{
+												this.state.playlists.map((playlist, i) => {
+													let array = [i, item]
+													array = JSON.stringify(array);
+												return ( <Select.Option value={array} key={i}>{playlist.title} </Select.Option> )})
+											}
+										</Select>
+										</div>
+									)}
+									</Draggable>
+									</li>
+								))}
+								</ul>
+								{provided.placeholder}
+								</div>
+							)}
+						</Droppable>
+					</DragDropContext>
+					{this.isOurPlaylist() ? <div><b> Ajouter un titre : </b> <SearchBar type="tracks" updateParent={this.props.updateParent} addTrack={this.addTrack}/> </div>: null}
+					{this.state.playlist.tracks.data.length > 0 && 
+						<Player  isAdmin={true} isCreator={true} tracks={this.state.playlist.tracks.data}/>
+					}
+					</Layout.Content>
+			</div>
 		)
-  }
+  	}
 }
-
-export default Tracks;

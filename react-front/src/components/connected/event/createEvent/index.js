@@ -3,7 +3,7 @@ import LocationSearchInput from '../locationSearchInput'
 import './styles.css';
 import axios from 'axios'
 import SearchBar from '../../../other/searchbar'
-import { Avatar, Card, Icon, Button, Input, DatePicker, Upload, message, Divider, Layout, Col, Row, Checkbox, InputNumber, Switch} from 'antd';
+import { Avatar, Card, Icon, Button, Input, DatePicker, Upload, message, Divider, Layout, Col, Row, InputNumber, Switch} from 'antd';
 import Error from '../../../other/errorController'
 import moment from 'moment';
 
@@ -230,7 +230,7 @@ export default class CreateEvent extends Component {
                         }
                     </Row>
                     <Row>
-                        <Col span={10} offset={8}>
+                        <Col span={9} offset={10}>
                             <Row>
                                 <Col span={10} offset={2}>
                                     <DatePicker
@@ -260,7 +260,8 @@ export default class CreateEvent extends Component {
                         </Col>
                     </Row>
                     <Row>
-                        <Col span={4} offset={10}>
+                        <Col span={5}  offset={9}>
+                            <b> Playlist : </b>
                             <SearchBar 
                                 state={this.props.state} 
                                 type="playlist" 

@@ -29,7 +29,6 @@ export default class listCloseEvent extends Component {
                 result = result.concat(resp.data.allEvents)
             this.setState({events: result.reverse()}, () => {
                 this.setState({loading:false});
-                console.log(this.state.events)
             });
 		})
 		.catch((err) => { Error.display_error(err); });
@@ -57,7 +56,7 @@ export default class listCloseEvent extends Component {
                     <Divider />
                     <Layout>
                         <Layout.Content>
-                            <Row >
+                            <Row style={{height:'800px'}}>
                                 <Col span={14} offset={2}>
                                     { 
                                         this.state.loading === false  ? 
@@ -72,7 +71,7 @@ export default class listCloseEvent extends Component {
                                             null
                                     }
                                 </Col>
-                                <Col span={6} offset={2}>>
+                                <Col span={6} offset={2}>
                                     { 
                                         this.state.displayCard === true ? 
                                             <div style={{margin:'20% 0 0 0'}}> 

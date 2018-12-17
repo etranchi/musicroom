@@ -78,7 +78,6 @@ export default class Body extends Component {
                 playlist = resp.data
                 this.props.state.data.event.playlist = playlist;
                 this.props.updateParent({'currentPlayerTracks': currentPlayerTracks, 'data' : this.props.state.data, 'playlistId':playlist.id})
-                console.log("Playlist change, socket update Event")
                 updateEvent(this.roomID, this.props.state.data.event)
                 updateTracks(this.roomID, this.props.state.data.event.playlist.tracks.data)
                 this.setState({playlistId:playlist.id, isPlaying:true})         
@@ -199,14 +198,14 @@ export default class Body extends Component {
                     </Col>
                 </Row>
                 <Row style={{height:'80px'}}>
-                    <Col span={5}  offset={5} style={{ borderLeft: '2px solid #03a9f4'}}>
+                    <Col span={5}  offset={5} style={{ borderLeft: '2px solid #00695c'}}>
                         <div style={{margin:'0 0 0 3%'}} onClick={this.showModal.bind(this, "modLocation")}>
                             <Icon className="titleMedium" type="pushpin" theme="outlined" />
                             <b className="titleMedium"> {this.props.state.data.event.location.address.v} </b>
                         </div>
                     </Col>
                     <Col span={5}>
-                        <div onClick={this.showModal.bind(this, "modDate")}>
+                        <div onClick={this.showModal.bind(this, "modDate")} style={{ borderLeft: '2px solid #00695c'}}>
                             <Icon className="titleMedium"  type="clock-circle" theme="outlined" />
                             <b className="titleMedium"> { this.formatDateAnnounce(this.props.state.data.event.event_date)}</b>
                         </div>
@@ -253,7 +252,7 @@ export default class Body extends Component {
                                 <p  > Ajouter une playlist : </p>
                             </Col>
                             {
-                                this.props.right.isAdmin || this.props.right.isCreator ? 
+                                ((this.props.right.isAdmin || this.props.right.isCreator) && !this.props.state.data.event.is_start) ? 
                                     <Col span={3}>
                                         <SearchBar 
                                             state={this.props.state} 
@@ -264,9 +263,6 @@ export default class Body extends Component {
                                     <Col span={3}>
                                         {this.props.state.data.event.playlist ? this.props.state.data.event.playlist.title : 'Titre Inconnue'}
                                     </Col>
-                            }
-                            {
-                                console.log("Playlist : ", this.props.state.data.event.playlist)
                             }
                         </Row>
                 {/* Modal for description modification  */}

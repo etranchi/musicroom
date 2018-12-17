@@ -22,7 +22,7 @@ export default class Event extends Component {
 	openCardEvent = event => {
         window.scrollTo(600, 600);
         this.props.state.data.event = event;
-        this.props.updateParent({'currentComponent': 'cardEvent', 'data': this.props.state.data});
+		this.props.updateParent({'currentComponent': 'cardEvent', 'data': this.props.state.data});
 	}
 	render() {
 		if (this.props.state.currentComponent === 'cardEvent' && this.state.currentSubView)

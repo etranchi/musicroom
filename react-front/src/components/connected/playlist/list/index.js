@@ -4,31 +4,27 @@ import defaultImage from '../../../../assets/playlist.png'
 import axios from 'axios'
 import {Button, Row, Col} from 'antd'
 import SearchBar from '../../../other/searchbar'
+import Error from '../../../other/errorController'
 
-class List extends Component {
+export default class List extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			playlist: {myPlaylists:[],friendPlaylists:[],allPlaylists:[]},
 			loading:true
-		}
+		};
 	}
-
 	componentDidMount() {
 		this.setState({loading: true});
 		axios.get(process.env.REACT_APP_API_URL + '/playlist', {'headers':{'Authorization': 'Bearer ' + localStorage.getItem('token')}})
-		.then((resp) => {
-			this.setState({playlist: resp.data, loading:false})
-		})
+		.then((resp) => { this.setState({playlist: resp.data, loading:false}) })
 		.catch((err) => {
 			this.setState({playlist: {myPlaylists:[],friendPlaylists:[],allPlaylists:[]}, loading:false})
-			console.log('Playlist error');
-			console.log(err);
+			Error.display_error(err);
 		})
 	}
-
 	render() {
-		if( this.state.isloading === true ) {
+		if (this.state.isloading === true ) {
 			return (
 				<div className="preloader-wrapper active loader">
 					<div className="spinner-layer spinner-red-only">
@@ -43,68 +39,87 @@ class List extends Component {
 				</div>
 			);
 		}
-		else{
-			console.log('render')
-			console.log(this.state.playlist)
-		return (
-			<div>
-			<Row type="flex" justify="space-between">
-				<Col>
-					<SearchBar updateParent={this.props.updateParent}/>
-				</Col>
-				<Col>
-					<Button onClick={this.props.updateParent.bind(this, {'currentComponent': 'createPlaylist'})}>+</Button>
-				</Col>
-			</Row>
-			<ul className="collection">
-			<h1 style={{fontSize:'36px'}}> Mes Playlists : </h1>
-					{this.state.playlist.myPlaylists.map((val, i) => {
-						return (
-							<li 
-								className="collection-item avatar" 
-								key={i} 
-								onClick={this.props.updateParent.bind(this,{'currentComponent': 'tracks', 'id': val._id || val.id})}>
-								<img src={val.picture_small || defaultImage} alt="" className="circle"/>
-								<span className="title">{val.title}</span>
-								<p>{val.description}</p>
-							</li>
-						);
-					})}
+		else {
+			console.log(this.state);
+			return (
+				<div>
+				<Row type="flex" justify="space-between">
+					<Col>
+						<b> Rechercher une playlist Deezer : </b>
+						<SearchBar updateParent={this.props.updateParent}/>
+					</Col>
+					<Col>
+						<Button onClick={this.props.updateParent.bind(this, {'currentComponent': 'createPlaylist'})}>+</Button>
+						<b> Créer une playlist</b>
+					</Col>
+				</Row>
+				<ul className="collection">
+					<div className="styleCollection">
+						<h1 className="listTitle"> Mes Playlists : </h1>
+						{
+							this.state.playlist.myPlaylists.map((val, i) => {
+								console.log('Val : ', val)
+								return (
+									<div className="listContent" key={i} >
+										<li 
+											className="collection-item avatar" 
+											onClick={this.props.updateParent.bind(this,{'currentComponent': 'tracks', 'id': val._id || val.id})}>
+											<img src={val.picture_small || defaultImage} alt="" className="circle"/>
+											<span className="title">{<b>Titre : {val.title}</b>}</span>
+											<p>{val.description}</p>
+											<p>{"nombre de titres : " + val.tracks.data.length}</p>
+										</li>
+									</div>
+								);
+							})
+						}
+					</div>
 				</ul>
 				<ul className="collection">
-				<h1 style={{fontSize:'36px'}}> Playlists de mes amis : </h1>
-					{this.state.playlist.friendPlaylists.map((val, i) => {
-						return (
-							<li 
-								className="collection-item avatar" 
-								key={i} 
-								onClick={this.props.updateParent.bind(this,{'currentComponent': 'tracks', 'id': val._id || val.id})}>
-								<img src={val.picture_small || defaultImage} alt="" className="circle"/>
-								<span className="title">{val.title}</span>
-								<p>{val.description}</p>
-							</li>
-						);
-					})}
+					<div className="styleCollection">
+						<h1 className="listTitle"> Playlists de mes amis : </h1>
+						{
+							this.state.playlist.friendPlaylists.map((val, i) => {
+								return (
+									<div className="listContent" key={i} >
+										<li 
+											className="collection-item avatar" 
+											onClick={this.props.updateParent.bind(this,{'currentComponent': 'tracks', 'id': val._id || val.id})}>
+											<img src={val.picture_small || defaultImage} alt="" className="circle"/>
+											<span className="title"> <b>Titre : {val.title}</b></span>
+											<p>{val.description}</p>
+											<p>{"nombre de titres : " + val.tracks.data.length}</p>
+										</li>
+									</div>
+								);
+							})
+						}
+					</div>
 				</ul>
 				<ul className="collection">
-				<h1 style={{fontSize:'36px'}}> Playlists publiques : </h1>
-					{this.state.playlist.allPlaylists.map((val, i) => {
-						return (
-							<li 
-								className="collection-item avatar" 
-								key={i} 
-								onClick={this.props.updateParent.bind(this,{'currentComponent': 'tracks', 'id': val._id || val.id})}>
-								<img src={val.picture_small || defaultImage} alt="" className="circle"/>
-								<span className="title">{val.title}</span>
-								<p>{val.description}</p>
-							</li>
-						);
-					})}
+					<div className="styleCollection">
+					<h1 className="listTitle"> Playlists publiques : </h1>
+					{
+						this.state.playlist.allPlaylists.map((val, i) => {
+							return (
+								<div className="listContent" key={i} >
+									<li 
+										className="collection-item avatar" 
+										onClick={this.props.updateParent.bind(this,{'currentComponent': 'tracks', 'id': val._id || val.id})}>
+										<img src={val.picture_small || defaultImage} alt="" className="circle"/>
+										<span className="title"><b>Titre : {val.title}</b></span>
+										<span className="tracksLength"> <b>| Nombre de tracks :  {val.tracks.data.length || '0' }</b></span>
+										<p>{val.description}</p>
+										<p>{"nombre de titres : " + val.tracks.data.length}</p>
+									</li>
+								</div>
+							);
+						})
+					}
+					</div>
 				</ul>
-			</div>
-		);
-	}
-  }
+				</div>
+			);
+		}
+  	}
 }
-
-export default List;

@@ -30,19 +30,23 @@ export default class LiveEvent extends Component {
         this.roomID = this.props.roomID;
     }
     componentWillMount = () => {
+        console.log("EVENT : ", this.props.state.data.event)
         socket.on('getRoomPlaylist', (tracks) => {
-            console.log("socket : receive data from getRoomPlaylist : ", tracks);
             this.savePlaylist(tracks);
         });
-        socket.on('updateTrack', (msg) => {
-            console.log("socket : receive message from updateTrack -> ", msg);
-        });
-        socket.on('updateStatus', (tracks) => {
-            console.log("socket : receive message from updateStatus -> ", tracks);
+
+        socket.on('updateStatus', (tracks) => { 
             this.savePlaylist(tracks);
         });
+
+        socket.on('updateTracks', (tracks) => {
+            console.log("updateTrakc event recv");
+            this.savePlaylist(tracks);
+        });
+
         socket.on('updateScore', (tracks) => {
-            console.log("socket : receive data from updateScore : ", typeof tracks);
+            console.log('Update score -> ')
+            console.log(tracks)
             if (typeof tracks === 'object') {
                 this.savePlaylist(tracks);
                 this.setState({rotate: {active:false, id:0, liked: false}});
@@ -64,16 +68,18 @@ export default class LiveEvent extends Component {
         playlist.tracks.data    = tracks;
         this.setState({playlist:playlist});
     }
-    isUser = tab => 
-    {
-        tab.forEach(user => {
-            if (user.email === this.props.state.user.email)
-                return true;
+    isUser = tab => {
+        let ret = false;
+        tab.forEach(user => { 
+            if (user._id === this.props.state.user._id)
+            {
+                ret = true
+                return ;
+            }
         });
-        return false;
+        return ret;
     }
     callSocket = (type, OldTrack, value) => {
-
         let me          = this.props.state.user;
         let index       = -1;
 
@@ -83,7 +89,7 @@ export default class LiveEvent extends Component {
             OldTrack.userUnLike.splice(0, index);
         updateTrack(this.roomID,  OldTrack);
         this.setState({rotate: {active:true, id:OldTrack._id, liked: value > 0 ? true : false}}, () => {
-            updateScore(this.roomID, OldTrack._id, value, this.props.state.user._id, this.props.state.data.userCoord);
+            updateScore(this.roomID, this.props.state.data.userCoord);
         })
     }
     onDragStart = () => {
@@ -95,8 +101,12 @@ export default class LiveEvent extends Component {
 		let state = this.state;
 		const items = reorder( this.state.playlist.tracks.data, result.source.index, result.destination.index );
         state.playlist.tracks.data = items;
+        console.log(items);
+        console.log(this.roomID)
         updateTracks(this.roomID, items);
+        console.log("updating tracks")
     }
+
     render() {
         return (
             <div>
@@ -107,7 +117,7 @@ export default class LiveEvent extends Component {
                 </Row>
                 <Row>
                     <Col span={24}>
-                        { this.state.playlist.tracks.data.length > 0 && <Player  isCreator={this.state.isCreator} isAdmin={this.state.isAdmin} tracks={this.state.playlist.tracks.data} roomID={this.props.roomID}/> }
+                        { this.state.playlist.tracks.data.length > 0 && <Player  isCreator={this.state.isCreator} isAdmin={this.state.isAdmin} tracks={this.state.playlist.tracks.data} roomID={this.props.roomID} isPlay={this.props.state.data.event.is_play}/> }
                     </Col>
                 </Row>
                 <br/>
@@ -137,7 +147,9 @@ export default class LiveEvent extends Component {
                                                                     userID={this.props.state.user._id} 
                                                                     rotate={this.state.rotate} 
                                                                     order={index} 
-                                                                    track={item} 
+                                                                    track={item}
+                                                                    state={this.props.state}
+                                                                    event={this.props.state.data.event}
                                                                     callSocket={this.callSocket}
                                                                 />
                                                             </div>
