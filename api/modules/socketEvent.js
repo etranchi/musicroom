@@ -77,40 +77,42 @@ module.exports = function (io) {
         //         io.sockets.in(room.id).emit('closeRoom');
         //     }
         // });
-        // socket.on('updateTracks', (roomID, tracks) => {
-        //     console.log("[Socket] -> updateTracks")
-        //       /* For Swift Team */
-        //       if (typeof roomID === 'object') {
-        //         let obj = JSON.parse(roomID);
-        //         roomID = obj.roomID
-        //         tracks = obj.tracks
-        //     }
-        //     /* =============== */
-        //     let room = ftSocket.getRoom(roomID)
-        //     if (room) {
-        //         room.tracks = tracks
-        //         if (room.tracks[0] && !room.tracks[0].status)
-        //             room.tracks[0].status = 1
-        //         io.sockets.in(room.id).emit('updateTracks', room.tracks)
-        //     }
-        // });
-        // socket.on('updateTrack', (roomID, track) => {
-        //     console.log("[Socket] -> updateTrack")
-        //       /* For Swift Team */
-        //     if (typeof roomID === 'object') {
-        //         let obj = JSON.parse(roomID);
-        //         roomID = obj.roomID
-        //         track = obj.track
-        //     }
-        //     /* =============== */
-        //     let room = ftSocket.getRoom(roomID)
-        //     if (room) {
-        //         room.tracks.forEach(music => {
-        //             if (music._id === track._id)
-        //                 music = track
-        //         });
-        //     }
-        // });
+        socket.on('updateTracks', async (roomID, tracks) => {
+            try {
+            console.log("[Socket] -> updateTracks")
+              /* For Swift Team */
+              if (typeof roomID === 'object') {
+                let obj = JSON.parse(roomID);
+                roomID = obj.roomID
+                tracks = obj.tracks
+            }
+            /* =============== */
+            io.sockets.in(roomID).emit('updateTracks', tracks)
+            // room.tracks = tracks
+            // if (room.tracks[0] && !room.tracks[0].status)
+            //     room.tracks[0].status = 1
+            // io.sockets.in(roomID).emit('updateTracks', room.tracks)
+        } catch (e) {
+            console.log(e)
+        }
+        });
+        socket.on('updateTrack', (roomID, track) => {
+            console.log("[Socket] -> updateTrack")
+              /* For Swift Team */
+            if (typeof roomID === 'object') {
+                let obj = JSON.parse(roomID);
+                roomID = obj.roomID
+                track = obj.track
+            }
+            /* =============== */
+            let room = ftSocket.getRoom(roomID)
+            if (room) {
+                room.tracks.forEach(music => {
+                    if (music._id === track._id)
+                        music = track
+                });
+            }
+        });
         socket.on('updateScore', async (roomID, userCoord) => {
             console.log("roomid -> " + roomID)
             try {
