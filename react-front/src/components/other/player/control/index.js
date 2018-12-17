@@ -61,12 +61,18 @@ export default class Player extends Component {
         })
         socket.on('getRoomPlaylist', (tracks, trackID) => {
             let index = 0;
-            console.log("ici");
-            tracks.filter((track, i) => {
-                if (track._id.toString() === trackID.toString())
-                    index = i
-                return track
-            });
+            console.log("ici", tracks);
+            for (var i = 0; i < tracks.length; i++) {
+                if (tracks[i].status == 1) {
+                    index = i;
+                    break;
+                }
+            }
+            // tracks.filter((track, i) => {
+            //     if (track._id.toString() === trackID.toString())
+            //         index = i
+            //     return track
+            // });
             this.setState({currentTracksID:index, tracks:tracks})
             this.props.updateParentState({currentTracksID:index})
             DZ.player.playTracks(tracks, index)
@@ -75,11 +81,12 @@ export default class Player extends Component {
 
         socket.on('updateStatus', (tracks, trackID) => {
             let index = 0;
-            this.state.tracks.filter((track, i) => {
-                if (track._id.toString() === trackID.toString())
-                    index = i
-                return null
-            });
+            for (var i = 0; i < tracks.length; i++) {
+                if (tracks[i].status == 1) {
+                    index = i;
+                    break;
+                }
+            }
             this.setState({currentTracksID:index})
             this.props.updateParentState({currentTracksID:index})
         });
