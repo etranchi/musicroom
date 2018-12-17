@@ -86,7 +86,14 @@ export default class SearchBar extends Component {
 		const children = list.map((item, key) => {
 			return (
 				this.props.type === 'member' || this.props.type === 'admin' ? 
-					<AutoComplete.Option  onClick={(e) => this.updateEventMember(item)}  key={key}> <Card.Meta className= "cardMemberList" avatar={<Avatar src={item.picture} />} title= {item.login} /> </AutoComplete.Option>
+					<AutoComplete.Option  onClick={(e) => this.updateEventMember(item)}  key={key}> 
+						<Card.Meta 
+							className= "cardMemberList" 
+							avatar= { 
+								<Avatar src=  { item.picture = item.picture.indexOf("https://") !== -1 ? item.picture  : process.env.REACT_APP_API_URL + "/userPicture/" + item.picture} /> } 
+										title=  {item.login } 
+								/> 
+					</AutoComplete.Option>
 					: 
 					this.props.type === 'playlist' ?
 						<AutoComplete.Option  onClick={(e) => this.props.updateEventPlaylist(item)} key={item.id}>{item.title}</AutoComplete.Option>
