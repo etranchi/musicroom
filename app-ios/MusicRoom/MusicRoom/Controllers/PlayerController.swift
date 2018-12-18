@@ -222,7 +222,8 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
                         self.playerButtonView?.handlePlay()
                     }
                     if self.isMasteringEvent {
-                        SocketIOManager.sharedInstance.updateCurrentTrack(trackID: String(self.tracks[self.index].id))
+                        print(self.tracks[self.index]._id!)
+                        SocketIOManager.sharedInstance.updateCurrentTrack(trackID: self.tracks[self.index]._id!)
                     }
                     self.minimizedPlayer?.update(isPlaying: self.isPlaying, title: self.tracks[self.index].title, artist: self.tracks[self.index].artist!.name!)
                     currentTrack = self.tracks[self.index]

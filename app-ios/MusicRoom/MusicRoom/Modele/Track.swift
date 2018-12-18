@@ -32,8 +32,8 @@ struct UpdateTracks : Codable {
 }
 
 struct CurrentTrack: Codable {
-    let roomID : String
-    let currentTrack : String
+    let eventID : String
+    let trackID : String
 }
 
 struct AlbumTrack: Codable {

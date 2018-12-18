@@ -59,11 +59,14 @@ class                   SocketIOManager: NSObject
         }
         
         socket.on("updateStatus") { (dataArray, ack) -> Void in
+            print("j'update status")
             guard dataArray.count > 0 else {
                 completionHandler(1, nil, nil, nil)
                 return
             }
-            guard let data = dataArray[0] as? String else {return }
+            let json = try? JSONSerialization.data(withJSONObject: dataArray, options: [])
+            guard let data = dataArray[0] as? String else { return }
+            print(data)
             completionHandler(1, nil, nil, data)
         }
         
@@ -96,7 +99,6 @@ class                   SocketIOManager: NSObject
                 return
             }
             let data = dataArray[0]
-            print(dataArray, ack)
             let jsonData = try? JSONSerialization.data(withJSONObject:data)
             guard let json = jsonData else { return }
             let tracks = try? JSONDecoder().decode([Track].self, from: json)
@@ -104,8 +106,9 @@ class                   SocketIOManager: NSObject
         }
     }
     
+    
     func                updateCurrentTrack(trackID: String) {
-        let toSend = CurrentTrack(roomID: eventID, currentTrack: trackID)
+        let toSend = CurrentTrack(eventID: eventID, trackID: trackID)
         let json = try? JSONEncoder().encode(toSend)
         guard json != nil else { return }
         socket.emit("updateStatus", json!)

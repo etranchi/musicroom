@@ -243,25 +243,17 @@ class APIManager: NSObject, URLSessionDelegate {
                 if err != nil {
                     makeAlert("No response from the server, try again..")
                 }
-                print("plouf")
                 if let d = data {
-                    print("plouf2")
                     do {
-                        print("plouf3")
                         let responseJSON = try JSONSerialization.jsonObject(with: d, options: [])
-                        print("plouf4")
                         if let responseJSON = responseJSON as? [String: Any] {
                             if let error = responseJSON["error"] as? String {
-                                print("plouf5")
                                 makeAlert(error)
                                 completion(false)
                             } else {
-                                print("plouf6")
                                 completion(true)
                             }
-                            print("plouf77")
                         }
-                        print("plouf888")
                     } catch {
                         makeAlert("Error")
                         completion(false)

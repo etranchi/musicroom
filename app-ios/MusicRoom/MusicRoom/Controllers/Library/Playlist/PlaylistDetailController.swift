@@ -67,19 +67,8 @@ class PlaylistDetailController: UITableViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        let navi = navigationController as? CustomNavigationController
-        navi?.animatedHideNavigationBar()
-        navigationController?.navigationBar.topItem?.title = ""
-        if playlist._id == nil {
-            apiManager.getDeezerPlaylistById(playlist.id!, completion: { (playlist) in
-                self.playlist = playlist
-                self.tracks = playlist.tracks!.data
-                self.tableView.reloadData()
-            })
-        }
+    
+    func setupSocket() {
         SocketIOManager.sharedInstance.joinPlayList(playlist._id!)
         SocketIOManager.sharedInstance.listenToTracksChanges { (tracks) in
             if let t = tracks {
@@ -89,20 +78,27 @@ class PlaylistDetailController: UITableViewController {
         }
         SocketIOManager.sharedInstance.listenToPlaylistChanges(playlist._id!) { (resp, playlist, tracks, id) in
             if id != nil {
-                if let currentId = id {
-                    if currentTrack != nil {
-                        currentTrack?._id = currentId
-                    } else {
-                        let track = Track(id: 0, _id: currentId, readable: true, link: "plapla", album: nil, status: 0, artist: nil, title: "bite", duration: 111)
-                        currentTrack = track
-                    }
+                guard let track = self.tracks.first(where: { (tr) -> Bool in
+                    return tr._id! == id!
+                }) else { return }
+                if currentTrack != nil {
+                    currentTrack?.id = track.id
+                    
+                } else {
+                    let track = Track(id: track.id, _id: track._id != nil ? track._id : "", readable: true, link: "plapla", album: nil, status: 0, artist: nil, title: "bite", duration: 111)
+                    currentTrack = track
                 }
                 self.tableView.reloadData()
                 return
             }
             else if tracks != nil {
+                print("hellow!")
                 self.tracks = tracks!
+                self.playlist.tracks?.data = tracks!
                 self.tableView.reloadData()
+                if self.isUnlocked == false {
+                    self.unlockPlaylist(playlist)
+                }
                 return
             }
             else if playlist != nil {
@@ -117,6 +113,23 @@ class PlaylistDetailController: UITableViewController {
                 self.unlockPlaylist(playlist)
             }
         }
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let navi = navigationController as? CustomNavigationController
+        navi?.animatedHideNavigationBar()
+        navigationController?.navigationBar.topItem?.title = ""
+        if playlist._id == nil {
+            apiManager.getDeezerPlaylistById(playlist.id!, completion: { (playlist) in
+                self.playlist = playlist
+                self.tracks = playlist.tracks!.data
+                self.tableView.reloadData()
+            })
+        }
+        else {
+            setupSocket()
+        }
         
     }
     
@@ -126,14 +139,10 @@ class PlaylistDetailController: UITableViewController {
     }
     
     private func unlockPlaylist(_ playlist: Playlist?) {
-        if let p = playlist {
-            self.playlist = p
-            tracks = p.tracks!.data
-            guard self.tracks.count > 0, let album = self.tracks[0].album, let imageURL = album.cover_medium else { return }
-            UIImageView().getImageUsingCacheWithUrlString(urlString: imageURL) { (image) in
-                self.headerView.albumImageBackground.image = image
-                self.headerView.albumImageView.image = image
-            }
+        guard self.tracks.count > 0, let album = self.tracks[0].album, let imageURL = album.cover_medium else { return }
+        UIImageView().getImageUsingCacheWithUrlString(urlString: imageURL) { (image) in
+            self.headerView.albumImageBackground.image = image
+            self.headerView.albumImageView.image = image
         }
         isUnlocked = true
         tableView.isEditing = false
