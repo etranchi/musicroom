@@ -5,8 +5,8 @@ const eventModel    = require('../models/event');
 
 this.rooms = [];
 
-
-this.roomUsersIndex = [];
+if (!this.roomUsersIndex)
+    this.roomUsersIndex = [];
 this.sortTracksByScore = (tracks) => {
     
     let tmpArray = tracks.reduce( (acc, elem) => {

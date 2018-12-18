@@ -67,7 +67,6 @@ export default class List extends Component {
 											<img src={val.picture_small || defaultImage} alt="" className="circle"/>
 											<span className="title">{<b>Titre : {val.title}</b>}</span>
 											<p>{val.description}</p>
-											<p>{"nombre de titres : " + val.tracks.data.length}</p>
 										</li>
 									</div>
 								);
@@ -88,7 +87,6 @@ export default class List extends Component {
 											<img src={val.picture_small || defaultImage} alt="" className="circle"/>
 											<span className="title"> <b>Titre : {val.title}</b></span>
 											<p>{val.description}</p>
-											<p>{"nombre de titres : " + val.tracks.data.length}</p>
 										</li>
 									</div>
 								);
@@ -108,9 +106,7 @@ export default class List extends Component {
 										onClick={this.props.updateParent.bind(this,{'currentComponent': 'tracks', 'id': val._id || val.id})}>
 										<img src={val.picture_small || defaultImage} alt="" className="circle"/>
 										<span className="title"><b>Titre : {val.title}</b></span>
-										<span className="tracksLength"> <b>| Nombre de tracks :  {val.tracks.data.length || '0' }</b></span>
 										<p>{val.description}</p>
-										<p>{"nombre de titres : " + val.tracks.data.length}</p>
 									</li>
 								</div>
 							);
