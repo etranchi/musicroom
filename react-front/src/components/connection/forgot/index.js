@@ -55,6 +55,7 @@ class Forgot extends Component {
 					</Button>
 				</Col>
 			</Row>
+			<Divider />
 			</Content>
 		);
 	}
