@@ -19,7 +19,7 @@ export default class Player extends Component {
         };
     }
     componentWillMount = () => {
-        let tracksID    = [];
+        let tracksID = []
         let getPlay     = 0;
         this.props.tracks.forEach(track => {
             if (track._id.toString() === this.props.currentTrack) {
@@ -36,7 +36,7 @@ export default class Player extends Component {
 
     componentDidMount = () => {
         socket.on('updatePlayer', (event) => {
-            console.log("Socket : updatePlayer receive data : ", event)
+            console.log("Socket : updatePlayer receive data : ", event, this.props)
             switch (event){
                 case "next":
                     this.nextTrack();
@@ -89,9 +89,31 @@ export default class Player extends Component {
         });
         socket.on('updateScore', (tracksNew) => {
             console.log("Socket : updateScore receive data : ", tracksNew)
-            this.setState({tracks:tracksNew}, () => {
-                console.log(tracksNew)
-            })  
+
+            console.log("[BEFORE]")
+            console.log("------------------------------------")
+            console.log("List : ", DZ.player.getTrackList())
+            console.log("Current Track :  : ", DZ.player.getCurrentTrack())
+            console.log("Current Track Index : ", DZ.player.getCurrentIndex())
+            console.log("------------------------------------")
+
+            let oldArray = this.state.tracks.map((track) => {
+                return track.id
+            })
+            let indexArray = tracksNew.map((track) => {
+                return track.id
+            })
+            console.log("INDEX ARRAY  :", indexArray, oldArray)
+            
+            this.setState({tracks:tracksNew})
+            this.setState({tracksID:indexArray})
+            DZ.player.changeTrackOrder(indexArray)
+            console.log("[AFTER]")
+            console.log("------------------------------------")
+            console.log("List : ", DZ.player.getTrackList())
+            console.log("Current Track :  : ", DZ.player.getCurrentTrack())
+            console.log("Current Track Index : ", DZ.player.getCurrentIndex())
+            console.log("------------------------------------")
         });
     }
     updateState = value =>
@@ -120,7 +142,6 @@ export default class Player extends Component {
             updateStatus(this.props.roomID, this.state.tracks[index]._id)
         this.setState({currentTracksID:index});
         this.props.updateParentState({currentTracksID:index});
-
         DZ.player.next();
         DZ.player.seek(0);
     }

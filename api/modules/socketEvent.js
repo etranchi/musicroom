@@ -75,7 +75,7 @@ module.exports = function (io) {
                 userID = obj.userID
             }
             console.log("[Socket] -> leaveRoom")
-            ftSocket.manageRooms("leave", roomID, userID)
+            //ftSocket.manageRooms("leave", roomID, userID)
             socket.leave(roomID);
             if (io.sockets.adapter.rooms[roomID])
                 console.log("Nb clients in room " + roomID + " -> " + io.sockets.adapter.rooms[roomID].length)
