@@ -11,12 +11,29 @@ import Foundation
 
 struct Track: Codable {
     var id: Int
+    var _id: String?
     var readable: Bool
     var link: String?
     var album: Album?
+    var status: Int?
     var artist: Artist?
     var title: String
     var duration: Int
+}
+
+struct TrackLike : Codable {
+    let trackId : String
+    let userCoord : Coord?
+}
+
+struct UpdateTracks : Codable {
+    let roomID : String
+    let tracks : [Track]
+}
+
+struct CurrentTrack: Codable {
+    let eventID : String
+    let trackID : String
 }
 
 struct AlbumTrack: Codable {

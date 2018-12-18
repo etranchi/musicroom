@@ -14,10 +14,30 @@ struct Creator: Codable {
 }
 
 struct Playlist: Codable {
+    var `public`: Bool?
+    var members: [User]?
     var creator: Creator?
     var tracks: PlaylistTrackData?
+    var currentTrackId: String?
     var title: String
     var picture_medium: String?
     var _id : String?
     var id: Int?
+}
+
+
+struct SPlaylist : Codable {
+    var id : Int?
+    var title : String
+    var _id : String?
+}
+
+struct SearchPlaylist : Codable{
+    let data : [SPlaylist]
+}
+
+struct DataPlaylist: Codable {
+    var myPlaylists: [Playlist]?
+    var friendPlaylists: [Playlist]?
+    var allPlaylists: [Playlist]?
 }

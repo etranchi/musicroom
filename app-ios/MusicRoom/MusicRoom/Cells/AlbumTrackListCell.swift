@@ -12,6 +12,10 @@ class AlbumTrackListCell: UITableViewCell {
     var isInPlaylist = false
     var rootController: UITableViewController?
     var indexPath: IndexPath?
+    var type : EventType = .others
+    var iAmAdmin : Bool = false
+    var iAmMember : Bool = false
+    var icon : UIImage = #imageLiteral(resourceName: "plus_icon")
     var track: Track? {
         didSet {
             titleLabel.text = track?.title
@@ -19,9 +23,21 @@ class AlbumTrackListCell: UITableViewCell {
             if track?.id == currentTrack?.id {
                 titleLabel.textColor = UIColor(red: 20 / 255, green: 220 / 255, blue: 20 / 255, alpha: 1)
             }
-            var icon = #imageLiteral(resourceName: "plus_icon")
-            if isInPlaylist {
+            if isInPlaylist || iAmAdmin || type == .mine{
                 icon = #imageLiteral(resourceName: "minus_icon")
+            }
+            if iAmMember{
+                let isLiked = likedTracks.first(where: { (id) -> Bool in
+                    return track!._id! == id ? true : false
+                })
+                icon = #imageLiteral(resourceName: "upvote_icon")
+                plusButton.tintColor = .white
+                if isLiked != nil {
+                    icon = #imageLiteral(resourceName: "upvoted_icon")
+                    plusButton.tintColor = UIColor(red: 30 / 255, green: 180 / 255, blue: 30 / 255, alpha: 1)
+                } else {
+                    plusButton.tintColor = .white
+                }
             }
             let tintedIcon = icon.withRenderingMode(.alwaysTemplate)
             plusButton.setImage(tintedIcon, for: .normal)
@@ -50,12 +66,23 @@ class AlbumTrackListCell: UITableViewCell {
     let dotsLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .heavy)
         label.textColor = .lightGray
         label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "..."
         return label
+    }()
+    
+    let lockedIcon: UIImageView = {
+        let iv = UIImageView()
+        
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        iv.contentMode = .scaleAspectFit
+        iv.layer.masksToBounds = true
+        iv.image = #imageLiteral(resourceName: "locked_icon")
+        iv.isUserInteractionEnabled = true
+        return iv
     }()
     
     let plusButton: UIButton = {
@@ -86,7 +113,15 @@ class AlbumTrackListCell: UITableViewCell {
     }
     
     @objc func handleAddSong() {
-        if isInPlaylist {
+        if iAmMember {
+            let root = rootController as? PlaylistDetailController
+            root?.toggleLike(id: track!._id!)
+            let tintedIcon = icon.withRenderingMode(.alwaysTemplate)
+            plusButton.setImage(tintedIcon, for: .normal)
+           
+          return
+        }
+        if type == .mine || iAmAdmin {
             let root = rootController as? PlaylistDetailController
             root?.deleteTrackFromPlaylist(track: track!, index: indexPath!)
             return
@@ -102,6 +137,7 @@ class AlbumTrackListCell: UITableViewCell {
         addSubview(authorLabel)
         addSubview(dotsLabel)
         addSubview(separator)
+        addSubview(lockedIcon)
         
         NSLayoutConstraint.activate([
             plusButton.centerYAnchor.constraint(equalTo: centerYAnchor),
@@ -120,9 +156,14 @@ class AlbumTrackListCell: UITableViewCell {
             authorLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             
             dotsLabel.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -14),
-            dotsLabel.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -2),
-            dotsLabel.widthAnchor.constraint(equalToConstant: 20),
-            dotsLabel.heightAnchor.constraint(equalToConstant: 30),
+            dotsLabel.topAnchor.constraint(equalTo: topAnchor),
+            dotsLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
+            dotsLabel.widthAnchor.constraint(equalToConstant: 40),
+            
+            lockedIcon.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+            lockedIcon.centerYAnchor.constraint(equalTo: centerYAnchor),
+            lockedIcon.widthAnchor.constraint(equalToConstant: 40),
+            lockedIcon.heightAnchor.constraint(equalToConstant: 20),
             
             separator.leadingAnchor.constraint(equalTo: leadingAnchor),
             separator.trailingAnchor.constraint(equalTo: trailingAnchor),

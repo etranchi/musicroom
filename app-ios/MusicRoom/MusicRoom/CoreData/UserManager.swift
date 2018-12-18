@@ -10,9 +10,15 @@
 import CoreData
 import Foundation
 
+enum LoginType {
+    case local, fb, google
+}
+
 class UserManager {
     public var context : NSManagedObjectContext
     public var currentUser : MyUser?
+    
+    public var logedWith : LoginType?
     
     public func newUser() -> MyUser
     {
@@ -64,7 +70,8 @@ class UserManager {
         return result
     }*/
     
-    func deleteAllData(_ entity:String) {
+    func deleteAllData() {
+        let entity = "MyUser"
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
         fetchRequest.returnsObjectsAsFaults = false
         do {

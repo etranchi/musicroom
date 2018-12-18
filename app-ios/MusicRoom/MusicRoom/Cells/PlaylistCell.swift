@@ -10,6 +10,7 @@ import UIKit
 
 class PlaylistCell: UICollectionViewCell {
     var vc : PlaylistCollectionView?
+    var isEditable: Bool = false
     var playlist: Playlist! {
         didSet {
             titleLabel.text = playlist.title
@@ -45,22 +46,12 @@ class PlaylistCell: UICollectionViewCell {
     let titleLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 2
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
-    }()
-    
-    let deleteView: UIImageView = {
-        let iv = UIImageView()
-        
-        iv.contentMode = .scaleAspectFit
-        iv.image = #imageLiteral(resourceName: "delete_icon")
-        iv.translatesAutoresizingMaskIntoConstraints = false
-        iv.layer.masksToBounds = true
-        return iv
     }()
     
     func setupViews() {
@@ -70,20 +61,13 @@ class PlaylistCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: topAnchor),
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            imageView.widthAnchor.constraint(equalToConstant: bounds.width),
-            imageView.heightAnchor.constraint(equalToConstant: bounds.width),
-            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 5),
+            imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            imageView.heightAnchor.constraint(equalToConstant: 160),
+            
+            titleLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor),
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
             titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor)
+            titleLabel.heightAnchor.constraint(equalToConstant: 40)
         ])
-        addSubview(deleteView)
-        NSLayoutConstraint.activate([
-            deleteView.centerXAnchor.constraint(equalTo: imageView.centerXAnchor),
-            deleteView.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
-            deleteView.heightAnchor.constraint(equalToConstant: 100),
-            deleteView.widthAnchor.constraint(equalToConstant: 100)
-        ])
-        deleteView.isHidden = true
     }
 }

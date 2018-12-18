@@ -26,24 +26,67 @@ struct Location : Codable {
     let coord : Coord
 }
 
+struct CreateEventRoom: Codable {
+    var roomID: String
+    var userID: String
+}
+
+struct LeaveEventRoom: Codable {
+    var roomID: String
+    var userID: String
+}
+
+struct UpdateEventTrackScore: Codable {
+    var roomID: String
+    var userCoord: Coord
+}
+
+struct UpdateEventTracks: Codable {
+    var roomID: String
+    var tracks: [Track]
+}
+
+struct UpdateEventTrack: Codable {
+    var roomID: String
+    var track: Track
+}
+
 struct Event : Codable {
     let _id : String?
     let creator : User?
     let title : String
-    let description : String
+    var description : String
     let location : Location
-    let visibility : Int
-    let shared : Bool
-    let creationDate : String
-    let date : String
+    var hasStarted: Bool
+    let visibility : Int?
+    var shared : Bool?
+    var distance_required : Bool
+    var distance_max : Int?
+    let creationDate : String?
+    let date : String?
     let playlist : Playlist?
-    let members : [User]
-    let adminMembers : [User]
+    var members : [User]
+    var adminMembers : [User]
     let picture : String?
-    enum CodingKeys : CodingKey, String {
+    
+    enum CodingKeys : String, CodingKey{
         case shared = "public"
         case creationDate = "creation_date"
         case date = "event_date"
-        case creator, title, description, location, visibility, playlist, members, adminMembers, picture, _id
+        case hasStarted = "is_start"
+        case creator, title, description, location, visibility, playlist, members, adminMembers, picture, _id, distance_required, distance_max
     }
+
+}
+
+
+struct DataEvent : Codable {
+    var myEvents : [Event]
+    var friendEvents : [Event]
+    let allEvents : [Event]
+}
+
+
+enum EventType {
+    case mine, friends, others
 }
