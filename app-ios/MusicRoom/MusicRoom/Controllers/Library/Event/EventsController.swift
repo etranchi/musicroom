@@ -68,7 +68,11 @@ class EventsController: UITableViewController {
         let vc = EventDetailController(event)
         vc.root = self
         vc.type = type
-        guard event.playlist != nil else { return }
+        guard event.playlist != nil
+            else {
+                ToastView.shared.short(self.view, txt_msg: "Can't open this event, there is no playlist inside", color: UIColor.red)
+                return
+            }
         apiManager.getMe(userManager.currentUser!.token!) { (user) in
             SocketIOManager.sharedInstance.createEventRoom(roomID: event._id!, userID: user.id)
             userID = user.id

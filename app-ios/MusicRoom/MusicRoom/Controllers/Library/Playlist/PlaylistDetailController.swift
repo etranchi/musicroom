@@ -12,7 +12,7 @@ import CoreLocation
 
 var likedTracks : [String] = []
 class PlaylistDetailController: UITableViewController {
-
+    var locationManager : CLLocationManager?
     var playlist: Playlist
     var tracks: [Track]
     let playlistCover: UIImage
@@ -47,6 +47,8 @@ class PlaylistDetailController: UITableViewController {
     }
     
     func toggleLike(id : String)  {
+        
+        guard locationManager!.location != nil else { return }
         let exist = likedTracks.first { (tid) -> Bool in
             return tid == id ? true : false
         }
@@ -86,9 +88,13 @@ class PlaylistDetailController: UITableViewController {
                 self.tableView.reloadData()
             }
         }
-        SocketIOManager.sharedInstance.listenToPlaylistChanges(playlist._id!) { (resp, playlist, tracks) in
+        SocketIOManager.sharedInstance.listenToPlaylistChanges(playlist._id!) { (resp, playlist, tracks, id) in
             print("Je passe dans l'update")
-            if tracks != nil {
+            if id != nil {
+                playerController
+                return
+            }
+            else if tracks != nil {
                 print("update tracks")
                 self.tracks = tracks!
                 self.tableView.reloadData()
@@ -158,6 +164,10 @@ class PlaylistDetailController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let vc = MapController()
+        addChildViewController(vc)
+        vc.setupLocation()
+        locationManager = vc.locationManager
         tableView.separatorStyle = .none
         
         tableView.backgroundColor = UIColor(white: 0.1, alpha: 1)
@@ -263,10 +273,16 @@ class PlaylistDetailController: UITableViewController {
     
     func likeTrack(trackID: String, points: Int) {
         apiManager.getEventById(eventID) { (event) in
-            let coord = event.location.coord
+            guard let location = self.locationManager!.location else { return }
+            let coord = Coord(lat: location.coordinate.latitude, lng: location.coordinate.longitude)
             let like = TrackLike(trackId: trackID, userCoord : coord)
-            apiManager.likeTracksEvent(eventID, like, completion: {
-                SocketIOManager.sharedInstance.updateTrackScore(roomID: eventID, userCoord: coord)
+            apiManager.likeTracksEvent(eventID, like, completion: { ret in
+                if ret {
+                    SocketIOManager.sharedInstance.updateTrackScore(roomID: eventID, userCoord: coord)
+                } else {
+                    likedTracks.removeAll()
+                    self.tableView.reloadData()
+                }
             })
         }
         

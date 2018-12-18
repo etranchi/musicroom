@@ -52,14 +52,19 @@ class MapController: UIViewController {
             }
         })
     }
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    
+    func setupLocation() {
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestWhenInUseAuthorization()
         locationManager.requestAlwaysAuthorization()
         locationManager.requestLocation()
         locationManager.startUpdatingLocation()
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupLocation()
         mapView.delegate = self
         mapView.showsUserLocation = true
         mapView.showsPointsOfInterest = false

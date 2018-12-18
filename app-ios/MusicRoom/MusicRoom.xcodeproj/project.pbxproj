@@ -24,6 +24,7 @@
 		7744A6572195E40D0034F40E /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7744A6562195E40D0034F40E /* libc++.tbd */; };
 		7744A6592195E4220034F40E /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7744A6582195E4220034F40E /* libz.tbd */; };
 		778BF9A921832CB800448FE6 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778BF9A821832CB800448FE6 /* Track.swift */; };
+		77A8822D21C903A0001A5DDE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A8822C21C903A0001A5DDE /* LocationManager.swift */; };
 		77AF56C22199ACF300E5FBB9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 77AF56C12199ACF200E5FBB9 /* GoogleService-Info.plist */; };
 		77B444762181CD0200B3F536 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B444752181CD0200B3F536 /* APIManager.swift */; };
 		77B4775221BA8FD10052B62C /* PlaylistsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B4775121BA8FD10052B62C /* PlaylistsController.swift */; };
@@ -124,6 +125,7 @@
 		7744A6562195E40D0034F40E /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		7744A6582195E4220034F40E /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		778BF9A821832CB800448FE6 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
+		77A8822C21C903A0001A5DDE /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		77AF56C12199ACF200E5FBB9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		77B444752181CD0200B3F536 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		77B4775121BA8FD10052B62C /* PlaylistsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistsController.swift; sourceTree = "<group>"; };
@@ -543,6 +545,7 @@
 				77B444752181CD0200B3F536 /* APIManager.swift */,
 				79A3F9A82193E602007CEB86 /* PlayerManager.swift */,
 				795133F421B01A62004FB227 /* SocketIOManager.swift */,
+				77A8822C21C903A0001A5DDE /* LocationManager.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -803,6 +806,7 @@
 				7999CBA22199E58D004A1F18 /* AlbumTrackListCell.swift in Sources */,
 				79493E962194570600DD03FF /* MinimizedPlayerView.swift in Sources */,
 				79938C8D21A314CD006D7281 /* PlaylistCollectionView.swift in Sources */,
+				77A8822D21C903A0001A5DDE /* LocationManager.swift in Sources */,
 				7991484221889F8D00120E2D /* Extensions.swift in Sources */,
 				79CDCF2B218876ED0095CC63 /* CustomNavigationController.swift in Sources */,
 				795133F521B01A62004FB227 /* SocketIOManager.swift in Sources */,
