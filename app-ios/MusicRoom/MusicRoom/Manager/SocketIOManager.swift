@@ -43,7 +43,14 @@ class                   SocketIOManager: NSObject
     }
     
     func                listenToTracksChanges(completionHandler: @escaping (_ tracks: [Track]?) -> Void) {
- 
+        socket.on("currentTrack") { (dataArray, ack) in
+            guard dataArray.count > 0 else { return }
+            let data = dataArray[0]
+            let jsonData = try? JSONSerialization.data(withJSONObject:data)
+            guard let json = jsonData else { return }
+            let tracks = try? JSONDecoder().decode([Track].self, from: json)
+            completionHandler(tracks)
+        }
     }
     
     func                listenToPlaylistChanges(_ playlistId: String, completionHandler: @escaping (_ trackedUsersListUpdate: Int?, _ playlist: Playlist?, _ tracks : [Track]?, _ id : String?) -> Void) {
@@ -72,7 +79,6 @@ class                   SocketIOManager: NSObject
             completionHandler(1, playlist, nil, nil)
         }
         socket.on("updateScore") { ( dataArray, ack) -> Void in
-            print("")
             guard dataArray.count > 0 else {
                 completionHandler(0, nil, nil, nil)
                 return
@@ -98,6 +104,13 @@ class                   SocketIOManager: NSObject
         }
     }
     
+    func                updateCurrentTrack(trackID: String) {
+        let toSend = CurrentTrack(roomID: eventID, currentTrack: trackID)
+        let json = try? JSONEncoder().encode(toSend)
+        guard json != nil else { return }
+        socket.emit("updateStatus", json!)
+    }
+    
     func                createEventRoom(roomID: String, userID: String) {
         let toSend = CreateEventRoom(roomID: roomID, userID: userID)
         let json = try? JSONEncoder().encode(toSend)
@@ -113,7 +126,6 @@ class                   SocketIOManager: NSObject
     }
     
     func                updateTrackScore(roomID: String, userCoord: Coord) {
-        print("EMIT SCORE")
         socket.emit("updateScore", roomID)
     }
     

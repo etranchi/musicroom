@@ -30,6 +30,12 @@ struct UpdateTracks : Codable {
     let roomID : String
     let tracks : [Track]
 }
+
+struct CurrentTrack: Codable {
+    let roomID : String
+    let currentTrack : String
+}
+
 struct AlbumTrack: Codable {
     var id: Int
     var readable: Bool

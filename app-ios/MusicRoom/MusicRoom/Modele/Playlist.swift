@@ -18,6 +18,7 @@ struct Playlist: Codable {
     var members: [User]?
     var creator: Creator?
     var tracks: PlaylistTrackData?
+    var currentTrackId: String?
     var title: String
     var picture_medium: String?
     var _id : String?

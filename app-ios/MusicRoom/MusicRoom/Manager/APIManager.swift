@@ -233,7 +233,6 @@ class APIManager: NSObject, URLSessionDelegate {
     func likeTracksEvent(_ eventID: String, _ body : TrackLike ,completion: @escaping ((Bool) -> ())) {
         
         let likeTracksUrl = self.url + "track/\(eventID)/like"
-        print(likeTracksUrl)
         var req = URLRequest(url : URL(string: likeTracksUrl)!)
         req.httpMethod = "PUT"
         do {

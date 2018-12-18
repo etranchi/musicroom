@@ -113,6 +113,7 @@ class AlbumController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         (tabBarController as? TabBarController)?.showPlayerForSong(indexPath.row, tracks: tracks!)
+        playerController.isMasteringEvent = false
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {

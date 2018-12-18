@@ -69,6 +69,7 @@ class SearchController: UITableViewController {
     }
     
     func showPlayerForSong(_ index: Int) {
+        playerController.isMasteringEvent = false
         (tabBarController as! TabBarController).showPlayerForSong(index, tracks: tracks)
     }
     

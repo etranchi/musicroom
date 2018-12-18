@@ -80,7 +80,6 @@ class PlaylistDetailController: UITableViewController {
                 self.tableView.reloadData()
             })
         }
-        print(playlist._id!)
         SocketIOManager.sharedInstance.joinPlayList(playlist._id!)
         SocketIOManager.sharedInstance.listenToTracksChanges { (tracks) in
             if let t = tracks {
@@ -89,19 +88,24 @@ class PlaylistDetailController: UITableViewController {
             }
         }
         SocketIOManager.sharedInstance.listenToPlaylistChanges(playlist._id!) { (resp, playlist, tracks, id) in
-            print("Je passe dans l'update")
             if id != nil {
-                playerController
+                if let currentId = id {
+                    if currentTrack != nil {
+                        currentTrack?._id = currentId
+                    } else {
+                        let track = Track(id: 0, _id: currentId, readable: true, link: "plapla", album: nil, status: 0, artist: nil, title: "bite", duration: 111)
+                        currentTrack = track
+                    }
+                }
+                self.tableView.reloadData()
                 return
             }
             else if tracks != nil {
-                print("update tracks")
                 self.tracks = tracks!
                 self.tableView.reloadData()
                 return
             }
             else if playlist != nil {
-                print("update playlist")
                 self.playlist = playlist!
                 self.tracks = playlist!.tracks!.data
                 self.tableView.reloadData()
@@ -302,8 +306,12 @@ class PlaylistDetailController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(isInEvent, type)
         guard isInEvent == false || type == .mine else { return }
+        if isInEvent {
+            playerController.isMasteringEvent = true
+        } else {
+            playerController.isMasteringEvent = false
+        }
         (tabBarController as? TabBarController)?.showPlayerForSong(indexPath.row, tracks: tracks)
     }
     

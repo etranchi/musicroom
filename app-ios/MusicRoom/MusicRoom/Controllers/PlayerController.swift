@@ -14,6 +14,7 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
     var index: Int
     var rootViewController: TabBarController?
     var minimizedPlayer: MinimizedPlayerView?
+    var isMasteringEvent = false
     
     init(_ tracks: [Track], _ index: Int) {
         self.tracks = tracks
@@ -219,6 +220,9 @@ class PlayerController: UIViewController, DZRPlayerDelegate {
                     self.player?.play(res)
                     if self.isPlaying == true {
                         self.playerButtonView?.handlePlay()
+                    }
+                    if self.isMasteringEvent {
+                        SocketIOManager.sharedInstance.updateCurrentTrack(trackID: String(self.tracks[self.index].id))
                     }
                     self.minimizedPlayer?.update(isPlaying: self.isPlaying, title: self.tracks[self.index].title, artist: self.tracks[self.index].artist!.name!)
                     currentTrack = self.tracks[self.index]

@@ -53,6 +53,7 @@ class SeeAllSongsController: UICollectionViewController, UICollectionViewDelegat
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        playerController.isMasteringEvent = false
         (tabBarController as? TabBarController)?.showPlayerForSong(indexPath.row, tracks: tracks)
         currentTrack = tracks[indexPath.item]
     }
