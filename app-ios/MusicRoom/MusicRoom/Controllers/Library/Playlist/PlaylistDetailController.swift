@@ -151,9 +151,10 @@ class PlaylistDetailController: UITableViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
+        if isInEvent {
+            currentTrack = nil
+        }
         let navi = navigationController as? CustomNavigationController
-        
         navi?.animatedShowNavigationBar()
     }
     

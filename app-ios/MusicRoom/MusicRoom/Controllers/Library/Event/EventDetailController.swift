@@ -51,7 +51,7 @@ class EventDetailController: UITableViewController {
         super.viewWillAppear(animated)
         
         let navi = navigationController as? CustomNavigationController
-        if currentTrack != nil { playerController.handlePause() }
+        if currentTrack != nil && currentTrack?.album != nil { playerController.handlePause() }
         (UIApplication.shared.keyWindow?.rootViewController as? TabBarController)?.minimizedPlayer.isUserInteractionEnabled = false
         playerController.view.isUserInteractionEnabled = false
         (UIApplication.shared.keyWindow?.rootViewController as? TabBarController)?.minimizedPlayer.titleLabel.text = "live event"
