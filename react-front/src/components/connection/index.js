@@ -52,7 +52,17 @@ class Connection extends Component {
       current: e.key,
     });
   }
+
+  changeCurrent = (component) => {
+    this.setState({
+      current: component,
+    });
+    this.props.updateParent({'currentComponent': component})
+    console.log("ici")
+  }
+
   render() {
+    console.log(this.state);
     return (
       <div>
         <Row>
@@ -68,7 +78,7 @@ class Connection extends Component {
                 <Menu.Item key="register" onClick={this.props.updateParent.bind(this,{'currentComponent': 'register'})}>
                   <Icon type="form" /> Register
                 </Menu.Item>
-                <Menu.Item key="forgot" onClick={this.props.updateParent.bind(this,{'currentComponent': 'forgot'})}>
+                <Menu.Item key="forgot" onClick={this.props.updateParent.bind(this,{'currentComponent': 'forgot'})} >
                   <Icon type="form" /> Forgot
                 </Menu.Item>
               </Menu>
@@ -77,7 +87,7 @@ class Connection extends Component {
          </Row>
        	  {this.props.state.currentComponent === 'register'? <Register updateParent={this.props.updateParent}/> : null}
           {this.props.state.currentComponent === 'login'? <Login updateParent={this.props.updateParent}/> : null}
-          {this.props.state.currentComponent === 'forgot'? <Forgot updateParent={this.props.updateParent}/> : null}
+          {this.props.state.currentComponent === 'forgot'? <Forgot changeCurrent={this.changeCurrent}/> : null}
          <Row style={{height:'80px'}}>
           <Col span={3} offset={8}>
             <FacebookLogin
