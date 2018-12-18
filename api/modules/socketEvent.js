@@ -65,15 +65,7 @@ module.exports = function (io) {
                 roomID = obj.roomID
                 userID = obj.userID
             }
-            if (ftSocket.manageRooms("join", roomID, userID))
-            {
-                console.log("User joined")
-                socket.join(roomID);
-            } else {
-                console.log("User exist")
-            }
             socket.join(roomID);
-            console.log("Nb clients in room " + roomID + " -> " + io.sockets.adapter.rooms[roomID].length)
         });
         socket.on('leaveRoom', (roomID, userID) => {
             /* For Swift Team */
@@ -123,22 +115,17 @@ module.exports = function (io) {
                 });
             }
         });
-        socket.on('updateStatus', async (eventID, fStatus, fTrackID, sStatus, sTrackID) => {
+        socket.on('updateStatus', async (eventID, trackID) => {
             console.log("[Socket] -> updateStatus");
             /* For Swift Team */
-             
             if (typeof eventID === 'object') {
                 let obj = JSON.parse(eventID);
-                eventID = obj.eventID
-                fStatus = obj.fStatus
-                fTrackID = obj.fTrackID
-                sStatus = obj.sStatus
-                sTrackID = obj.sTrackID
+                eventID = obj.eventID;
+                trackID = obj.trackID;
             }
             /* =============== */
-            let tracks = await ftSocket.updateTrackStatus(eventID, fStatus, fTrackID, sStatus, sTrackID)
-            console.log("Changement de status : ", tracks[1].status)
-            io.in(eventID).emit('updateStatus', tracks);
+            let tracks = await ftSocket.updateTrackStatus(eventID, trackID)
+            io.in(eventID).emit('updateStatus', trackID);
         })
         socket.on('updateScore', async (roomID, userCoord) => {
             console.log("roomid -> " + roomID)

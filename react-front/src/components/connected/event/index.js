@@ -105,6 +105,7 @@ export default class Event extends Component {
 					this.props.state.currentComponent 	=== 'liveEvent' 		&& <LiveEvent 
 																					state={this.props.state} 
 																					roomID={this.props.state.data.event._id}
+																					updateParent={this.props.updateParent} 
 																					openCardEvent={this.openCardEvent} 
 																					playlist={this.props.state.data.event.playlist}
 																					/>

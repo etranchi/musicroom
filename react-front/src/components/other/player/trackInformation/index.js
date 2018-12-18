@@ -13,17 +13,12 @@ export default class TrackInformation extends Component {
         }
 
     }
-
     updateState = (value) =>  {
         this.setState({value})
-        console.log("Personal player old state : ", this.state)
         this.setState(value, () =>{
             console.log("Personal player new state : ", this.state)
         })
     }
-
-
-
 	render() {
         const {artist, album} = this.props.track
         return (

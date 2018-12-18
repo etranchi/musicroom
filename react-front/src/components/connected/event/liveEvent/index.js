@@ -35,10 +35,11 @@ export default class LiveEvent extends Component {
 
         });
 
-        socket.on('updateStatus', (tracks, trackID) => { 
+        socket.on('updateStatus', (currentTrack) => { 
             console.log("updateStatus")
-            console.log(tracks)
-            this.savePlaylist(tracks);
+            this.props.state.data.event.currentTrack = currentTrack
+            this.props.updateParent({data:this.props.state.data})
+            // this.savePlaylist(tracks);
         });
 
         socket.on('updateTracks', (tracks) => {
@@ -118,7 +119,7 @@ export default class LiveEvent extends Component {
                 </Row>
                 <Row>
                     <Col span={24}>
-                        { this.state.playlist.tracks.data.length > 0 && <Player  isCreator={this.state.isCreator} isAdmin={this.state.isAdmin} tracks={this.state.playlist.tracks.data} roomID={this.props.roomID} isPlay={this.props.state.data.event.is_play}/> }
+                        { this.state.playlist.tracks.data.length > 0 && <Player currentTrack={this.props.state.data.event.currentTrack.toString()} isCreator={this.state.isCreator} isAdmin={this.state.isAdmin} tracks={this.state.playlist.tracks.data} roomID={this.props.roomID} isPlay={this.props.state.data.event.is_play}/> }
                     </Col>
                 </Row>
                 <br/>
@@ -152,6 +153,7 @@ export default class LiveEvent extends Component {
                                                                     state={this.props.state}
                                                                     event={this.props.state.data.event}
                                                                     callSocket={this.callSocket}
+                                                                    currentTrack={this.props.state.data.event.currentTrack}
                                                                 />
                                                             </div>
                                                         )
