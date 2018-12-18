@@ -70,7 +70,7 @@ class MinimizedPlayerView: UIView {
         let icon = #imageLiteral(resourceName: "like_icon")
         let tintedIcon = icon.withRenderingMode(.alwaysTemplate)
         button.setImage(tintedIcon, for: .normal)
-        button.tintColor = UIColor(white: 1, alpha: 1)
+        button.tintColor = UIColor(white: 0.6, alpha: 0.8)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.isUserInteractionEnabled = true
         return button
@@ -133,17 +133,60 @@ class MinimizedPlayerView: UIView {
         }
         titleLabel.text = playerController.titleLabel.text
         authorLabel.text = playerController.authorLabel.text
+        
+        
+        guard playerController.index >= 0 else { return }
+        var liked = false
+        let track = playerController.tracks[playerController.index]
+        lovedTracksId.forEach { (trackId) in
+            if track.id == trackId { liked = true }
+        }
+        var icon: UIImage
+        var tintColor: UIColor
+        likeButton.removeTarget(self, action: #selector(handleDislike), for: .touchUpInside)
+        likeButton.removeTarget(self, action: #selector(handleLike), for: .touchUpInside)
+        if liked {
+            icon = #imageLiteral(resourceName: "liked_icon")
+            tintColor = UIColor(red: 40 / 255, green: 210 / 255, blue: 40 / 255, alpha: 1)
+            likeButton.addTarget(self, action: #selector(handleDislike), for: .touchUpInside)
+        } else {
+            icon = #imageLiteral(resourceName: "like_icon")
+            tintColor = UIColor(white: 1, alpha: 1)
+            likeButton.addTarget(self, action: #selector(handleLike), for: .touchUpInside)
+        }
+        let tintedIcon = icon.withRenderingMode(.alwaysTemplate)
+        likeButton.setImage(tintedIcon, for: .normal)
+        likeButton.tintColor = tintColor
     }
     
     @objc func pushPlayer() {
         if playerIsPushable {
-            let tabBarController = UIApplication.shared.keyWindow?.rootViewController as? TabBarController
-            tabBarController?.showPlayerFromMinimized()
+            (UIApplication.shared.keyWindow?.rootViewController as? TabBarController)?.showPlayerFromMinimized()
         }
     }
     
+    @objc func handleDislike() {
+        guard playerController.index >= 0 else { return }
+        let track = playerController.tracks[playerController.index]
+        apiManager.removeTrackFromLibrary(String(track.id))
+        let icon: UIImage = #imageLiteral(resourceName: "like_icon")
+        let tintedIcon = icon.withRenderingMode(.alwaysTemplate)
+        likeButton.setImage(tintedIcon, for: .normal)
+        likeButton.tintColor = UIColor(white: 1, alpha: 1)
+        likeButton.removeTarget(self, action: #selector(handleDislike), for: .touchUpInside)
+        likeButton.addTarget(self, action: #selector(handleLike), for: .touchUpInside)
+    }
+    
     @objc func handleLike() {
-        
+        guard playerController.index >= 0 else { return }
+        let track = playerController.tracks[playerController.index]
+        apiManager.addTrackToLibrary(String(track.id))
+        let icon = #imageLiteral(resourceName: "liked_icon")
+        let tintedIcon = icon.withRenderingMode(.alwaysTemplate)
+        likeButton.setImage(tintedIcon, for: .normal)
+        likeButton.tintColor = UIColor(red: 30 / 255, green: 180 / 255, blue: 30 / 255, alpha: 1)
+        likeButton.removeTarget(self, action: #selector(handleLike), for: .touchUpInside)
+        likeButton.addTarget(self, action: #selector(handleDislike), for: .touchUpInside)
     }
     
     fileprivate func setupPlayerContainerBackground() {
@@ -178,7 +221,6 @@ class MinimizedPlayerView: UIView {
     fileprivate func setupView() {
         titleLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(pushPlayer)))
         authorLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(pushPlayer)))
-        likeButton.addTarget(self, action: #selector(handleLike), for: .touchUpInside)
         translatesAutoresizingMaskIntoConstraints = false
         playerContainerView.backgroundColor = .red
         addSubview(playerContainerView)

@@ -14,7 +14,7 @@ class SongCell: UICollectionViewCell {
         didSet {
             titleLabel.textColor = .white
             if track.id == currentTrack?.id {
-                titleLabel.textColor = UIColor(red: 20 / 255, green: 220 / 255, blue: 20 / 255, alpha: 1)
+                titleLabel.textColor = UIColor(red: 30 / 255, green: 180 / 255, blue: 30 / 255, alpha: 1)
             }
             authorLabel.text = track.artist!.name
             titleLabel.text = track.title
@@ -27,7 +27,7 @@ class SongCell: UICollectionViewCell {
             imageView.loadImageUsingCacheWithUrlString(urlString: (track.album!.cover_big!))
             titleLabel.textColor = .white
             if track.id == currentTrack?.id {
-                titleLabel.textColor = UIColor(red: 20 / 255, green: 220 / 255, blue: 20 / 255, alpha: 1)
+                titleLabel.textColor = UIColor(red: 30 / 255, green: 180 / 255, blue: 30 / 255, alpha: 1)
             }
         }
     }
@@ -82,7 +82,7 @@ class SongCell: UICollectionViewCell {
     let dotsLabel: UILabel = {
         let label = UILabel()
         
-        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        label.font = UIFont.systemFont(ofSize: 16, weight: .heavy)
         label.textColor = .lightGray
         label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -110,10 +110,10 @@ class SongCell: UICollectionViewCell {
             imageView.heightAnchor.constraint(equalToConstant: 50),
             imageView.widthAnchor.constraint(equalToConstant: 50),
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            dotsLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -3),
-            dotsLabel.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -2),
-            dotsLabel.widthAnchor.constraint(equalToConstant: 15),
-            dotsLabel.heightAnchor.constraint(equalToConstant: 30),
+            dotsLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
+            dotsLabel.topAnchor.constraint(equalTo: topAnchor),
+            dotsLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
+            dotsLabel.widthAnchor.constraint(equalToConstant: 40),
             titleLabel.topAnchor.constraint(equalTo: imageView.topAnchor, constant: 2),
             titleLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 14),
             titleLabel.trailingAnchor.constraint(equalTo: dotsLabel.leadingAnchor, constant: -10),

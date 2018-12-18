@@ -17,7 +17,7 @@ class AlbumController: UITableViewController {
     var headerView: AlbumHeaderView!
     let songCellId = "SongCellId"
     
-    private let headerHeight: CGFloat = 200
+    private let headerHeight: CGFloat = 225
     
     init(_ album: Album, _ albumCover: UIImage) {
         self.album = album
@@ -106,12 +106,14 @@ class AlbumController: UITableViewController {
         cell.track = tracks?[indexPath.row]
         cell.authorLabel.text = album.artist?.name
         cell.selectionStyle = .none
+        cell.lockedIcon.isHidden = true
         cell.rootController = self
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         (tabBarController as? TabBarController)?.showPlayerForSong(indexPath.row, tracks: tracks!)
+        playerController.isMasteringEvent = false
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -136,7 +138,7 @@ extension AlbumController {
         var tracks: [Track] = []
         
         album.tracks?.data.forEach({ (track) in
-            let tr = Track.init(id: track.id, readable: track.readable, link: nil, album: album, artist: album.artist, title: track.title, duration: track.duration)
+            let tr = Track.init(id: track.id, _id: nil, readable: track.readable, link: nil, album: album, status: nil, artist: album.artist, title: track.title, duration: track.duration)
             tracks.append(tr)
         })
         return tracks

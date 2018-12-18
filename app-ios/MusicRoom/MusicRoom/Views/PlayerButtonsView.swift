@@ -73,11 +73,11 @@ class PlayerButtonsView: UIView {
     }
     
     @objc func handlePrevious() {
-        playerController.handlePrevious()
+        playerController.handlePrevious(false)
     }
     
     @objc func handleNext() {
-        playerController.handleNext()
+        playerController.handleNext(false)
     }
     
     @objc func handlePlay() {
@@ -99,24 +99,24 @@ class PlayerButtonsView: UIView {
         addSubview(playButton)
         addSubview(nextButton)
         NSLayoutConstraint.activate([
-            previousButton.centerXAnchor.constraint(equalTo: centerXAnchor, constant: -80),
+            previousButton.centerXAnchor.constraint(equalTo: centerXAnchor, constant: -85),
             previousButton.centerYAnchor.constraint(equalTo: playButton.centerYAnchor),
-            previousButton.widthAnchor.constraint(equalToConstant: 30),
-            previousButton.heightAnchor.constraint(equalToConstant: 30),
+            previousButton.widthAnchor.constraint(equalToConstant: 35),
+            previousButton.heightAnchor.constraint(equalToConstant: 35),
             playButton.centerXAnchor.constraint(equalTo: centerXAnchor),
             playButton.bottomAnchor.constraint(equalTo: bottomAnchor),
-            playButton.widthAnchor.constraint(equalToConstant: 80),
-            playButton.heightAnchor.constraint(equalToConstant: 80),
-            nextButton.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 80),
+            playButton.widthAnchor.constraint(equalToConstant: 95),
+            playButton.heightAnchor.constraint(equalToConstant: 95),
+            nextButton.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 85),
             nextButton.centerYAnchor.constraint(equalTo: playButton.centerYAnchor),
-            nextButton.widthAnchor.constraint(equalToConstant: 30),
-            nextButton.heightAnchor.constraint(equalToConstant: 30)
-        ])
+            nextButton.widthAnchor.constraint(equalToConstant: 35),
+            nextButton.heightAnchor.constraint(equalToConstant: 35)
+            ])
         setupProgressCircle()
     }
     
     fileprivate func setupProgressCircle() {
-        progressCircle = ProgressCircle(frame: CGRect(x: 0, y: 0, width: 76, height: 76))
+        progressCircle = ProgressCircle(frame: CGRect(x: -0.5, y: -0.5, width: 90, height: 90))
         addSubview(progressCircle!)
         progressCircle!.translatesAutoresizingMaskIntoConstraints = false
         progressCircle!.isUserInteractionEnabled = false
@@ -124,11 +124,12 @@ class PlayerButtonsView: UIView {
         NSLayoutConstraint.activate([
             progressCircle!.centerXAnchor.constraint(equalTo: centerXAnchor),
             progressCircle!.centerYAnchor.constraint(equalTo: playButton.centerYAnchor),
-            progressCircle!.widthAnchor.constraint(equalToConstant: 76),
-            progressCircle!.heightAnchor.constraint(equalToConstant: 76)
-        ])
+            progressCircle!.widthAnchor.constraint(equalToConstant: 90),
+            progressCircle!.heightAnchor.constraint(equalToConstant: 90)
+            ])
     }
 }
+
 
 
 

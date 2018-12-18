@@ -5,8 +5,7 @@
 	"authors": [
 		"Kevin Vignau <kvignau@student.42.fr>",
 		"Jules Tranchier <jtranchi@student.42.fr>",
-		"Etienne Tranchier <etranchi@student.42.fr>",
-		"Damien Galidie <dgalide@student.42.fr>"
+		"Etienne Tranchier <etranchi@student.42.fr>"
 	],
 	"main": "./app.js",
 	"scripts": {

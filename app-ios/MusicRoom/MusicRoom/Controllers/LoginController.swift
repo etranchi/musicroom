@@ -12,219 +12,230 @@ import FacebookCore
 import GoogleSignIn
 import GoogleToolboxForMac
 
-class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate ,GIDSignInUIDelegate, LoginButtonDelegate {
-    func loginButtonDidCompleteLogin(_ loginButton: LoginButton, result: LoginResult) {
-        
-        switch result {
-            case .failed(let error):
-                print(error)
-            case .cancelled:
-                print("User cancelled login.")
-            case .success(_,_, let accessToken):
-                apiManager.login("facebook", accessToken.authenticationToken, completion: { (data) in
-                    print("login")
-                    let user = userManager.newUser()
-                    user.token = data.token
-                    user.login = data.user.login
-                    userManager.currentUser = user
-                    userManager.save()
-                    let nav = TabBarController()
-                    self.present(nav, animated: true, completion: nil)
-                })
-        }
-    }
-    
-    func loginButtonDidLogOut(_ loginButton: LoginButton) {
-        print("logout")
-    }
-    
+class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate ,GIDSignInUIDelegate, LoginButtonDelegate  {
     var googleButton : GIDSignInButton?
     var facebook : LoginButton?
-    
-    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
-        if let error = error {
-            print("\(error.localizedDescription)")
-        } else {
-            // Perform any operations on signed in user here.
-            /* let userId = user.userID                  // For client-side use only!
-            let idToken = user.authentication.idToken // Safe to send to the server
-            let fullName = user.profile.name
-            let givenName = user.profile.givenName
-            let familyName = user.profile.familyName
-            let email = user.profile.email*/
-            apiManager.login("google", user.authentication.accessToken, completion:  { (data) in
-                let user = userManager.newUser()
-                user.token = data.token
-                user.login = data.user.login
-                userManager.currentUser = user
-                userManager.save()
-                let nav = TabBarController()
-                self.present(nav, animated: true, completion: nil)
-            })
-        }
-    }
-    
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        view.backgroundColor = .black
-        GIDSignIn.sharedInstance().clientID = "479103948820-79bl5vfu07j3u6r28ur77pj76i8apu1l.apps.googleusercontent.com"
-        GIDSignIn.sharedInstance().delegate = self
-        GIDSignIn.sharedInstance().uiDelegate = self
-
-        loginTF.delegate = self
-        loginTF.tag = 0
-        passTF.delegate = self
-        passTF.tag = 1
-        googleButton = GIDSignInButton()
-        
-        facebook = LoginButton(readPermissions: [ReadPermission.publicProfile, ReadPermission.email])
-        let fbButton = UIButton(type: .roundedRect)
-        fbButton.backgroundColor = UIColor.darkGray
-        fbButton.frame = CGRect(x: 0,y : 0,width: 90,height:  40);
-        fbButton.center = view.center;
-        fbButton.setTitle("My Login Button", for: .normal)
-        // Handle clicks on the button
-        facebook!.delegate = self
-        // Add the button to the view
-        // view.addSubview(fbButton)
-        setupView()
-        setupButton()
-    }
-    
-
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        switch textField.tag {
-        case 0 : passTF.becomeFirstResponder()
-        case 1 : handleLogin()
-        default : return true
-        }
-        return true
-    }
-    
-    let loginTF : UITextField = {
-        let tf = UITextField()
-        tf.font = UIFont.systemFont(ofSize: 14, weight: .light)
-        tf.textAlignment = .center
-        tf.borderStyle = .roundedRect
-        tf.textColor = .white
-        tf.returnKeyType = .done
-        tf.enablesReturnKeyAutomatically = true
-        tf.attributedPlaceholder = NSAttributedString(string: "Email", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white])
-        tf.backgroundColor = UIColor.gray
-        tf.translatesAutoresizingMaskIntoConstraints = false
-        return tf
-    }()
-    
-    func setupButton() {
-        let button = UIButton(type: .roundedRect)
-        button.titleEdgeInsets = UIEdgeInsets(top: -10,left: -10,bottom: -10,right: -10)
-        button.setTitle("Register", for: .normal)
-        button.backgroundColor = UIColor.gray
-        button.layer.cornerRadius = 8
-        button.setAttributedTitle(NSAttributedString(string: "Login", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
-        button.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
-        view.addSubview(button)
-        button.translatesAutoresizingMaskIntoConstraints = false
-
-        self.view.addSubview(googleButton!)
-        googleButton!.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(facebook!)
-        facebook?.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            
-            googleButton!.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.6),
-            googleButton!.topAnchor.constraint(equalTo: welcomeTF.bottomAnchor, constant: 50),
-            googleButton!.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            googleButton!.heightAnchor.constraint(equalToConstant: 50),
-            
-            facebook!.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.55),
-            facebook!.topAnchor.constraint(equalTo: googleButton!.bottomAnchor, constant: 5),
-            facebook!.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            facebook!.heightAnchor.constraint(equalToConstant: 40),
-            
-            button.topAnchor.constraint(equalTo: passTF.bottomAnchor, constant: 10),
-            button.widthAnchor.constraint(equalTo: passTF.widthAnchor, multiplier: 0.3),
-            button.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-            ])
-    }
-    let welcomeTF : UILabel = {
-        let tf = UILabel()
-        tf.font = UIFont.systemFont(ofSize: 50, weight: .bold)
-        tf.textAlignment = .center
-        tf.text = "Music Room"
-        tf.textColor = .white
-        tf.translatesAutoresizingMaskIntoConstraints = false
-        return tf
-    }()
-    
-    let imageDeezer : UIImageView = {
-        let iv = UIImageView()
-        
-        iv.contentMode = .scaleAspectFit
-        iv.translatesAutoresizingMaskIntoConstraints = false
-        iv.layer.masksToBounds = true
-
-        return iv
-    }()
+    var rootController: AuthenticationController?
     
     let passTF : UITextField = {
         let tf = UITextField()
-        tf.font = UIFont.systemFont(ofSize: 14, weight: .light)
-        tf.textAlignment = .center
-        tf.backgroundColor = UIColor.gray
-        tf.borderStyle = .roundedRect
-        tf.textColor = .white
+        tf.font = UIFont.systemFont(ofSize: 13, weight: .medium)
         tf.returnKeyType = .done
         tf.enablesReturnKeyAutomatically = true
-        tf.attributedPlaceholder = NSAttributedString(string: "Password", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white])
+        tf.placeholder = "your password..."
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.isSecureTextEntry = true
         return tf
     }()
     
-    @objc func handleLogin() {
-        print("Login")
-        let apiManager = APIManager()
-        let json = [
-            "email" : "toto@yopmail.fr",
-            "password" : "totototo"
-        ]
-        let data = try? JSONSerialization.data(withJSONObject: json, options: [])
-        print(JSONSerialization.isValidJSONObject(json))
-        apiManager.loginUser(data) { (user) in
-            print(user)
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    let loginTF : UITextField = {
+        let tf = UITextField()
+        tf.font = UIFont.systemFont(ofSize: 13, weight: .medium)
+        tf.returnKeyType = .done
+        tf.enablesReturnKeyAutomatically = true
+        tf.placeholder = "your email..."
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        return tf
+    }()
+    
+    let choiceLabel: UILabel = {
+        let label = UILabel()
+        
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.attributedText = NSAttributedString(string: "Or ", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white, .font: UIFont.systemFont(ofSize: 16, weight: .heavy)])
+        label.textAlignment = .center
+        return label
+    }()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .clear
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        GIDSignIn.sharedInstance().clientID = "479103948820-79bl5vfu07j3u6r28ur77pj76i8apu1l.apps.googleusercontent.com"
+        GIDSignIn.sharedInstance().delegate = self
+        GIDSignIn.sharedInstance().uiDelegate = self
+        
+        loginTF.delegate = self
+        passTF.delegate = self
+        googleButton = GIDSignInButton()
+        
+        facebook = LoginButton(readPermissions: [ReadPermission.publicProfile, ReadPermission.email])
+        facebook!.delegate = self
+        setupView()
+    }
+    
+    func loginButtonDidCompleteLogin(_ loginButton: LoginButton, result: LoginResult) {
+        switch result {
+        case .failed(let error):
+            print(error)
+        case .cancelled:
+            view.transform = CGAffineTransform(translationX: 0, y: view.bounds.height)
+            rootController?.animateDownLogoView()
+        case .success(_,_, let accessToken):
+            apiManager.login("facebook", accessToken.authenticationToken, completion: { (data) in
+                let d = data as [String : AnyObject]
+                let user = userManager.newUser()
+                user.token = d["token"] as? String
+                user.login = (d["user"] as! [String : String])["login"]
+                userManager.currentUser = user
+                userManager.logedWith = .fb
+                userManager.save()
+                let kwin = UIApplication.shared.keyWindow
+                let nav = TabBarController()
+                UIView.transition(with: kwin!, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                    kwin?.rootViewController = nav
+                })
+            })
         }
     }
     
-    func setupView() {
-        self.view.addSubview(loginTF)
-        self.view.addSubview(passTF)
-        self.view.addSubview(welcomeTF)
-        self.view.addSubview(imageDeezer)
-
-        imageDeezer.image = #imageLiteral(resourceName: "deezer_logo")
+    @objc func handleLogin() {
+        let apiManager = APIManager()
+        guard let pass = passTF.text, let mail = loginTF.text else { return }
+        let json = [
+            "email" : mail.lowercased(),
+            "password" : pass
+        ]
+        let data = try? JSONSerialization.data(withJSONObject: json, options: [])
+        apiManager.loginUser(data) { (res) in
+            if res != nil {
+                let user = userManager.newUser()
+                user.token = res?.token
+                user.login = res?.user.login
+                userManager.currentUser = user
+                userManager.logedWith = .local
+                userManager.save()
+                let kwin = UIApplication.shared.keyWindow
+                
+                let nav = TabBarController()
+                UIView.transition(with: kwin!, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                    kwin?.rootViewController = nav
+                })
+            }
+        }
+    }
+    
+    
+    
+    func loginButtonDidLogOut(_ loginButton: LoginButton) {
+        print("logout")
+    }
+    
+    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
+        if error != nil {
+            view.transform = CGAffineTransform(translationX: 0, y: view.bounds.height)
+            rootController?.animateDownLogoView()
+            return
+        }
+        apiManager.login("google", user.authentication.accessToken, completion:  { (data) in
+            let d = data as [String : AnyObject]
+            let user = userManager.newUser()
+            user.token = d["token"] as? String
+            user.login = (d["user"] as! [String : String])["login"]
+            userManager.currentUser = user
+            userManager.logedWith = .google
+            userManager.save()
+            let kwin = UIApplication.shared.keyWindow
+            let nav = TabBarController()
+            
+            UIView.transition(with: kwin!, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                kwin?.rootViewController = nav
+            })
+        })
+    }
+    
+    let apiLoginButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Register", for: .normal)
+        button.backgroundColor = UIColor(red: 40 / 255, green: 210 / 255, blue: 40 / 255, alpha: 1)
+        button.layer.cornerRadius = 8
+        button.setAttributedTitle(NSAttributedString(string: "Login", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    let apiLoginContainer: UIView = {
+        let view = UIView()
+        
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.masksToBounds = true
+        view.backgroundColor = UIColor(white: 0.99, alpha: 0.9)
+        view.layer.cornerRadius = 8
+        view.layer.borderColor = UIColor.gray.cgColor
+        view.layer.borderWidth = 1
+        return view
+    }()
+    
+    let separatorView : UIView = {
+        let view = UIView()
+        
+        view.backgroundColor = UIColor.gray
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    func setupLoginContainer() {
+        apiLoginContainer.addSubview(loginTF)
+        apiLoginContainer.addSubview(passTF)
+        apiLoginContainer.addSubview(separatorView)
         NSLayoutConstraint.activate([
-            imageDeezer.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
-            imageDeezer.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
-            imageDeezer.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.3),
-            imageDeezer.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            loginTF.topAnchor.constraint(equalTo: apiLoginContainer.topAnchor),
+            loginTF.leadingAnchor.constraint(equalTo: apiLoginContainer.leadingAnchor, constant: 14),
+            loginTF.trailingAnchor.constraint(equalTo: apiLoginContainer.trailingAnchor, constant: -14),
+            loginTF.heightAnchor.constraint(equalToConstant: 40),
+            separatorView.heightAnchor.constraint(equalToConstant: 1),
+            separatorView.leadingAnchor.constraint(equalTo: apiLoginContainer.leadingAnchor),
+            separatorView.trailingAnchor.constraint(equalTo: apiLoginContainer.trailingAnchor),
+            separatorView.topAnchor.constraint(equalTo: loginTF.bottomAnchor),
+            passTF.topAnchor.constraint(equalTo: separatorView.bottomAnchor),
+            passTF.leadingAnchor.constraint(equalTo: apiLoginContainer.leadingAnchor, constant: 14),
+            passTF.trailingAnchor.constraint(equalTo: apiLoginContainer.trailingAnchor, constant: -14),
+            passTF.heightAnchor.constraint(equalToConstant: 40),
+        ])
+    }
+    
+    func setupView() {
+        apiLoginButton.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
+        googleButton!.translatesAutoresizingMaskIntoConstraints = false
+        facebook!.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(googleButton!)
+        view.addSubview(facebook!)
+        view.addSubview(choiceLabel)
+        view.addSubview(apiLoginContainer)
+        view.addSubview(apiLoginButton)
+        NSLayoutConstraint.activate([
+            googleButton!.topAnchor.constraint(equalTo: view.topAnchor, constant: 275),
+            googleButton!.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: view.bounds.width * 0.12),
+            googleButton!.heightAnchor.constraint(equalToConstant: 40),
+            googleButton!.widthAnchor.constraint(equalToConstant: view.bounds.width * 0.25),
             
-            welcomeTF.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier : 0.9),
-            welcomeTF.topAnchor.constraint(equalTo: imageDeezer.bottomAnchor, constant: 0),
-            welcomeTF.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            facebook!.topAnchor.constraint(equalTo: view.topAnchor, constant: 279),
+            facebook!.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -view.bounds.width * 0.12 - 3),
+            facebook!.heightAnchor.constraint(equalToConstant: 40),
+            facebook!.widthAnchor.constraint(equalToConstant: view.bounds.width * 0.30),
             
-            loginTF.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.6),
-            loginTF.topAnchor.constraint(equalTo: welcomeTF.bottomAnchor, constant: 150),
-            loginTF.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            choiceLabel.topAnchor.constraint(equalTo: facebook!.topAnchor),
+            choiceLabel.bottomAnchor.constraint(equalTo: facebook!.bottomAnchor),
+            choiceLabel.widthAnchor.constraint(equalToConstant: view.bounds.width * 0.14),
+            choiceLabel.trailingAnchor.constraint(equalTo: facebook!.leadingAnchor),
             
-            passTF.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.6),
-            passTF.topAnchor.constraint(equalTo: loginTF.bottomAnchor, constant: 10),
-            passTF.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            apiLoginContainer.topAnchor.constraint(equalTo: facebook!.bottomAnchor, constant: 50),
+            apiLoginContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -view.bounds.width * 0.12 - 3),
+            apiLoginContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: view.bounds.width * 0.12 + 3),
+            apiLoginContainer.heightAnchor.constraint(equalToConstant: 81),
             
-            
+            apiLoginButton.topAnchor.constraint(equalTo: apiLoginContainer.bottomAnchor, constant: 50),
+            apiLoginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -view.bounds.width * 0.12 - 3),
+            apiLoginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: view.bounds.width * 0.12 + 3),
+            apiLoginButton.heightAnchor.constraint(equalToConstant: 40)
             ])
+        setupLoginContainer()
     }
 }
+
