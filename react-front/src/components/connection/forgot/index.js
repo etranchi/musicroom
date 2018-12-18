@@ -24,7 +24,7 @@ class Forgot extends Component {
             console.log(resp)
             console.log("ici");
             message.success("Mail Send !")
-            this.props.updateParent({'currentComponent': 'login'})
+			this.props.changeCurrent('login')
         })
         .catch(err => {
             Error.display_error(err);
