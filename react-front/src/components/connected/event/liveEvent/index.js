@@ -52,12 +52,8 @@ export default class LiveEvent extends Component {
         socket.on('updateScore', (tracks) => {
             console.log('Update score -> ')
             console.log(tracks)
-            if (typeof tracks === 'object') {
-                this.savePlaylist(tracks);
-                this.setState({rotate: {active:false, id:0, liked: false}});
-            }
-            else
-                message.error(tracks)
+            this.savePlaylist(tracks);
+            this.setState({rotate: {active:false, id:0, liked: false}})
         });
         if (this.props.state.data.event.creator.email === this.props.state.user.email)
             this.setState({isCreator:true});
@@ -71,6 +67,7 @@ export default class LiveEvent extends Component {
     savePlaylist = tracks => {
         let playlist            = this.state.playlist;
         playlist.tracks.data    = tracks;
+        console.log("New order : ", playlist.tracks.data)
         this.setState({playlist:playlist});
     }
     isUser = tab => {
