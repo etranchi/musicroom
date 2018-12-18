@@ -30,16 +30,21 @@ export default class LiveEvent extends Component {
         this.roomID = this.props.roomID;
     }
     componentWillMount = () => {
-        console.log("EVENT : ", this.props.state.data.event)
-        socket.on('getRoomPlaylist', (tracks) => {
+        socket.on('getRoomPlaylist', (tracks, trackID) => {
             this.savePlaylist(tracks);
+
         });
 
-        socket.on('updateStatus', (tracks) => { 
-            this.savePlaylist(tracks);
+        socket.on('updateStatus', (currentTrack) => { 
+            console.log("updateStatus")
+            this.props.state.data.event.currentTrack = currentTrack
+            this.props.updateParent({data:this.props.state.data})
+            // this.savePlaylist(tracks);
         });
 
         socket.on('updateTracks', (tracks) => {
+            console.log("updateStatus")
+            console.log(tracks)
             console.log("updateTrakc event recv");
             this.savePlaylist(tracks);
         });
@@ -47,12 +52,8 @@ export default class LiveEvent extends Component {
         socket.on('updateScore', (tracks) => {
             console.log('Update score -> ')
             console.log(tracks)
-            if (typeof tracks === 'object') {
-                this.savePlaylist(tracks);
-                this.setState({rotate: {active:false, id:0, liked: false}});
-            }
-            else
-                message.error(tracks)
+            this.savePlaylist(tracks);
+            this.setState({rotate: {active:false, id:0, liked: false}})
         });
         if (this.props.state.data.event.creator.email === this.props.state.user.email)
             this.setState({isCreator:true});
@@ -66,6 +67,7 @@ export default class LiveEvent extends Component {
     savePlaylist = tracks => {
         let playlist            = this.state.playlist;
         playlist.tracks.data    = tracks;
+        console.log("New order : ", playlist.tracks.data)
         this.setState({playlist:playlist});
     }
     isUser = tab => {
@@ -101,10 +103,7 @@ export default class LiveEvent extends Component {
 		let state = this.state;
 		const items = reorder( this.state.playlist.tracks.data, result.source.index, result.destination.index );
         state.playlist.tracks.data = items;
-        console.log(items);
-        console.log(this.roomID)
         updateTracks(this.roomID, items);
-        console.log("updating tracks")
     }
 
     render() {
@@ -117,7 +116,7 @@ export default class LiveEvent extends Component {
                 </Row>
                 <Row>
                     <Col span={24}>
-                        { this.state.playlist.tracks.data.length > 0 && <Player  isCreator={this.state.isCreator} isAdmin={this.state.isAdmin} tracks={this.state.playlist.tracks.data} roomID={this.props.roomID} isPlay={this.props.state.data.event.is_play}/> }
+                        { this.state.playlist.tracks.data.length > 0 && <Player currentTrack={this.props.state.data.event.currentTrack.toString()} isCreator={this.state.isCreator} isAdmin={this.state.isAdmin} tracks={this.state.playlist.tracks.data} roomID={this.props.roomID} isPlay={this.props.state.data.event.is_play}/> }
                     </Col>
                 </Row>
                 <br/>
@@ -151,6 +150,7 @@ export default class LiveEvent extends Component {
                                                                     state={this.props.state}
                                                                     event={this.props.state.data.event}
                                                                     callSocket={this.callSocket}
+                                                                    currentTrack={this.props.state.data.event.currentTrack}
                                                                 />
                                                             </div>
                                                         )

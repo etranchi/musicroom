@@ -88,6 +88,7 @@ module.exports = {
 			if (!req.body.playlist || !req.body.playlist.tracks || req.body.playlist.tracks.data.length === 0)
 				throw new Error('No tracks in playlist')
 			let event = await modelEvent.create(req.body)
+			event = await modelEvent.findOneAndUpdate({_id : event._id}, {currentTrack: event.playlist.tracks.data[0]._id}, {new: true})
 			res.status(200).send(event)
 		} catch (err) {
 			console.log("ERROR POST EVENT -> " + err)

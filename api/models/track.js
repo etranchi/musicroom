@@ -71,7 +71,8 @@ const Track = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'user',
 		index: true
-	}]
+	}],
+	status: {type:Number, default: 0}
 });
 
 module.exports = mongoose.model('track', Track);

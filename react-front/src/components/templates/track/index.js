@@ -12,7 +12,7 @@ export default  class liveEvent extends Component {
 
     like = () => {
         axios.put(process.env.REACT_APP_API_URL + '/track/' + this.props.event._id + "/like",
-		{'trackId': this.props.track._id},
+		{'trackId': this.props.track._id, 'userCoord': this.props.state.data.userCoord},
 		{'headers': {'Authorization': 'Bearer ' + localStorage.getItem('token')}})
 		.then((resp) => {
             message.success("Successfully liked music")
@@ -23,7 +23,7 @@ export default  class liveEvent extends Component {
     }
 	render() {
         const picture   = this.props.track.album.cover_medium ? this.props.track.album.cover_medium : this.props.track.album.cover_large ? this.props.track.album.cover_large : this.props.track.album.cover_small;
-        const title     = this.props.track.title_short;
+        const title     = this.props.track.title
         const artist    = this.props.track.artist.name;
         let layoutStyle = {
             border: '0.3em solid #bdbdbd',
@@ -31,11 +31,12 @@ export default  class liveEvent extends Component {
             marginBottom: '2%',
             height:'inherit'
 
-        };     
+        };
+        const is_playing = this.props.track._id.toString() === this.props.currentTrack.toString() ? true : false
         if (this.props.userID) {
             layoutStyle = {
-                border: '0.3em solid' +  (this.props.track.status === 1 ?  '#ff8f00' : this.props.track.like > 0 ? '#00c853' : this.props.track.like < 0 ? '#dd2c00 ' : '#bdbdbd'),
-                backgroundColor: this.props.track.status === 1 ?  '#ffb300 ' : this.props.track.like > 0 ? '#c8e6c9' : this.props.track.like < 0 ? '#ffccbc' : '#e0e0e0',
+                border: '0.3em solid' +  (is_playing ?  '#ff8f00' : this.props.track.like > 0 ? '#00c853' : this.props.track.like < 0 ? '#dd2c00 ' : '#bdbdbd'),
+                backgroundColor: is_playing ?  '#ffb300 ' : this.props.track.like > 0 ? '#c8e6c9' : this.props.track.like < 0 ? '#ffccbc' : '#e0e0e0',
                 marginBottom: '2%',
                 height:'inherit'
             };

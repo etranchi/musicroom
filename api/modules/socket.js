@@ -3,8 +3,8 @@
 const playlistModel = require('../models/playlist');
 const eventModel    = require('../models/event');
 
-this.rooms = [];
-
+// if (!this.roomUsersIndex)
+//     this.roomUsersIndex = [];
 this.sortTracksByScore = (tracks) => {
     
     let tmpArray = tracks.reduce( (acc, elem) => {
@@ -63,80 +63,64 @@ module.exports = {
         })
         return ret
     },
-    updateStatus: (room, status, trackID, secondTrackID) => {
-        let newTab = [];
-        if (trackID && room && status) {
-            this.rooms.forEach((tmp) => {
-                if (tmp.id === room.id) {
-                    newTab = tmp.tracks.map((elem) => {
-                        if (elem._id.toString() === trackID.toString() && status === 1) {
-                            elem.status = status
-                        }
-                        else if (elem._id.toString() === secondTrackID.toString() && status === 1) {
-                            elem.status = 0
-                        }
-                        else if (elem._id.toString() === trackID.toString()) {
-                            elem.status = status * -1
-                        }
-                        else if (elem._id.toString() === secondTrackID.toString()) {
-                            elem.status = status
-                        }
-                        return elem
-                    })
-                    // return ;
-                }
-            })
-        }
-        console.log("New Tab : ", newTab.length)
-        return this.sortTracksByScore(newTab)
-    },
-    createRoom: async (roomID, userID) => {
+    updateTrackStatus: async (eventID, trackID) => {
         try {
-            let event = await eventModel.findOne(
-                {_id: roomID,
-                $or: [
-                    {creator: userID},
-                    {'members': {$in: userID}},
-                    {'adminMembers': {$in: userID}},
-                    {public: true}
-                ]})
-            if (!event)
-                throw new Error('you cannot access to this event')
-            let room = {
-                id: roomID,
-                event,
-                tracks: event.playlist.tracks.data,
-                users: [userID]
-            };
-            room.tracks = room.tracks.map((track) => {
-                track = {...track._doc, like: 0, status: 0, userLike: [], userUnLike: []}
-                return track
-            })
-            room.tracks[0].status = 1;
-            this.rooms.push(room);
-            return room
+            return await eventModel.findOneAndUpdate( {_id: eventID}, {currentTrack:trackID});
         } catch (e) {
             throw e
         }
     },
-    joinRoom: (room, userID) => {
-        if (room.users && (room.users.indexOf(userID) === -1)) {
-            room.users.push(userID)
-            return true
-        }
-        return false
-    },
-    deleteRoom: (roomID, userID) => {
-        if (this.rooms && this.rooms.length > 0) {
-            let ret = -1 ;
-            for (let i = 0; i < this.rooms.length; i++) {
-                if (this.rooms[i].id === roomID)
-                    ret = i
-                    break;
-            }
-            ret == -1  ? null : delete this.rooms.splice(ret, 1);
+    updateStatus: async (eventId, trackID) => {
+        try {
+            return await eventModel.findOneAndUpdate({_id: eventId}, {'isPlaying': trackID}, {new: true})
+        } catch (e) {
+            return e
         }
     },
+    // manageRooms: (type, roomID, userID) => {
+    //     let currentRoom = {};
+
+    //     if (type === 'join') {
+    //         if (!this.roomUsersIndex || this.roomUsersIndex.length === 0)
+    //         {
+    //             currentRoom.id = roomID
+    //             currentRoom.users = [userID]
+    //             this.roomUsersIndex.push(currentRoom);
+    //             return true
+    //         } else {
+    //             for (var i = 0; i < this.roomUsersIndex.length; i++) {
+    //                 let room = this.roomUsersIndex[i];
+    //                 if (room.id === roomID)
+    //                 {
+    //                     if (room.users.indexOf(userID) === -1) {
+    //                         room.users.push(userID)
+    //                         return true
+    //                     }
+    //                     else
+    //                         return false
+    //                 }
+    //                 currentRoom.id = roomID
+    //                 currentRoom.users = [userID]
+    //                 this.roomUsersIndex.push(currentRoom);
+    //                 return true
+    //             }
+    //         }
+    //     }
+    //     else {
+    //         for (var i = 0; i < this.roomUsersIndex.length; i++) {
+    //             let room = this.roomUsersIndex[i];
+    //             if (room.id === roomID)
+    //             {
+    //                 let j = 0;
+    //                 if ( (j = room.users.indexOf(userID)) != -1) {
+    //                     room.users.splice(j, 1)
+    //                 }
+    //                 else
+    //                     return false
+    //             }
+    //         }
+    //     }
+    // },
     getRoom: (roomID) => {
         let ret = null
         if (this.rooms) {
@@ -157,32 +141,9 @@ module.exports = {
         if (roomID)
             return await eventModel.updateOne({_id: roomID}, {is_play:value}, {new: true})
     },
-    checkDistance: (event, userCoord) => {
-        this.toRad = value => {
-            return value * Math.PI / 180;
-        }
-        this.getDistance = (coordA, coordB) => {
-            let R     = 6371; // km
-            let dLat  = this.toRad(coordB.lat - coordA.lat);
-            let dLon  = this.toRad(coordB.lng - coordA.lng);
-            let lat1  = this.toRad(coordA.lng);
-            let lat2  = this.toRad(coordB.lng);
-    
-            let a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-            Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
-            let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-            let d = R * c;
-            return d.toFixed(0);
-        }
-        let distance = this.getDistance(event.location.coord, userCoord);
-        return distance < event.distance_max;
-        // return true
-        
-    },
     updateEventTracks : async (eventId, tracks) => {
         try {
             return await eventModel.findOneAndUpdate({_id: eventId}, {'playlist.tracks.data': tracks}, {new: true})
-
         }catch (e) {
             return e
         }
