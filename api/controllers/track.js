@@ -62,8 +62,10 @@ module.exports = {
 					}
 				});
 				let bool = false
+				if (!event.currentTrack)
+					event.currentTrack = event.playlist.tracks.data[0]._id
 				let ret = event.playlist.tracks.data.reduce((acc, track) => {
-					if (track.status === 1) {
+					if (track._id.toString() === event.currentTrack.toString()) {
 						bool = true
 						acc["played"].push(track)
 					} else if (bool === false)

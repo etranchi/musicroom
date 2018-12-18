@@ -35,6 +35,9 @@ const Event = new Schema({
 	isPlaying: {
 		type: Schema.Types.ObjectId
 	},
+	currentTrack:{
+		type: Schema.Types.ObjectId
+	},
 	members : [{
 		type: Schema.Types.ObjectId,
 		ref: 'user'

@@ -19,22 +19,32 @@ export default class Player extends Component {
         };
     }
     componentWillMount = () => {
-        let tracksID    = [];
+        let tracksID = []
         let getPlay     = 0;
-        this.props.tracks.forEach(track => { 
-            if (track.status === 1) getPlay = tracksID.length;
+        this.props.tracks.forEach(track => {
+            if (track._id.toString() === this.props.currentTrack) {
+                getPlay = tracksID.length;
+            } 
             tracksID.push(track.id) 
         });
         this.props.updateParentState({currentTracksID:getPlay})
         this.setState({tracksID:tracksID, tracks:this.props.tracks, currentTracksID:getPlay}, () => {
             DZ.player.playTracks(tracksID, getPlay)
+            this.setState({isPlaying:true})
+            console.log("[BEFORE]")
+            console.log("------------------------------------")
+            console.log("List : ", DZ.player.getTrackList())
+            console.log("Current Track :  : ", DZ.player.getCurrentTrack())
+            console.log("Current Track Index : ", DZ.player.getCurrentIndex())
+            console.log("------------------------------------")
+
             DZ.player.setVolume(50)
         });
     }
 
     componentDidMount = () => {
         socket.on('updatePlayer', (event) => {
-            console.log("Socket : updatePlayer receive data : ", event)
+            console.log("Socket : updatePlayer receive data : ", event, this.props)
             switch (event){
                 case "next":
                     this.nextTrack();
@@ -63,26 +73,21 @@ export default class Player extends Component {
             let index = 0;
             console.log("ici", tracks);
             for (var i = 0; i < tracks.length; i++) {
-                if (tracks[i].status == 1) {
+                if (tracks[i]._id.toString() === this.props.currentTrack) {
                     index = i;
                     break;
                 }
             }
-            // tracks.filter((track, i) => {
-            //     if (track._id.toString() === trackID.toString())
-            //         index = i
-            //     return track
-            // });
             this.setState({currentTracksID:index, tracks:tracks})
             this.props.updateParentState({currentTracksID:index})
             DZ.player.playTracks(tracks, index)
             DZ.player.play()
         });
 
-        socket.on('updateStatus', (tracks, trackID) => {
+        socket.on('updateStatus', (currentTrack) => {
             let index = 0;
-            for (var i = 0; i < tracks.length; i++) {
-                if (tracks[i].status == 1) {
+            for (var i = 0; i < this.state.tracks.length; i++) {
+                if (this.state.tracks[i]._id.toString() === currentTrack) {
                     index = i;
                     break;
                 }
@@ -91,10 +96,36 @@ export default class Player extends Component {
             this.props.updateParentState({currentTracksID:index})
         });
         socket.on('updateScore', (tracksNew) => {
-            console.log("Socket : updateScore receive data : ", tracksNew)
-            this.setState({tracks:tracksNew}, () => {
-                console.log(tracksNew)
-            })  
+            // console.log("Socket : updateScore receive data : ", tracksNew)
+
+            // console.log("[BEFORE]")
+            // console.log("------------------------------------")
+            // console.log("List : ", DZ.player.getTrackList())
+            // console.log("Current Track :  : ", DZ.player.getCurrentTrack())
+            // console.log("Current Track Index : ", DZ.player.getCurrentIndex())
+            // console.log("------------------------------------")
+
+            // let oldArray = this.state.tracks.map((track) => {
+            //     return track.id
+            // })
+            let indexArray = tracksNew.map((track) => {
+                return track.id
+            })
+            // console.log("INDEX ARRAY  :", indexArray, oldArray)
+            
+            this.setState({tracks:tracksNew})
+            // this.setState({tracksID:indexArray})
+            // console.log(DZ.player);
+            // DZ.player.playTracks(indexArray, this.state.currentTracksID)
+            DZ.player.changeTrackOrder(indexArray)
+            
+            // console.log("[AFTER]")
+            // console.log(DZ.player);
+            // console.log("------------------------------------")
+            // console.log("List : ", DZ.player.getTrackList())
+            // console.log("Current Track :  : ", DZ.player.getCurrentTrack())
+            // console.log("Current Track Index : ", DZ.player.getCurrentIndex())
+            // console.log("------------------------------------")
         });
     }
     updateState = value =>
@@ -119,36 +150,33 @@ export default class Player extends Component {
         let index = this.state.currentTracksID + 1;
         if (index >= this.state.tracks.length)
             return ;     
-        if (index - 1 >= 0 && this.props.roomID) {
-            /* 
-                    current Song    :  index -1
-                    current Status  : -1
-                    next Song       :  index
-                    next Status     : 1
-            */
-           console.log('Next track', index, '/', this.state.tracks.length,  this.state.tracks[index-1]._id, this.state.tracks[index]._id)
-            updateStatus(this.props.roomID, -1, this.state.tracks[index-1]._id, 1, this.state.tracks[index]._id)
-        }
+        if (index - 1 >= 0 && this.props.roomID)
+            updateStatus(this.props.roomID, this.state.tracks[index]._id)
         this.setState({currentTracksID:index});
         this.props.updateParentState({currentTracksID:index});
-
+        console.log(this.state.tracks)
+        DZ.player.playTracks(this.state.tracks, this.state.currentTracksID)
         DZ.player.next();
-        DZ.player.seek(0);
+            // 
+
+        console.log(this.state.currentTracksID)
+        // DZ.player.next();
+        // DZ.player.seek(0);
     }
     nextTrackSuiv = () => {
-        console.log("JE PASSE")
         let index = this.state.currentTracksID + 1;
         if (index >= this.state.tracks.length)
             return ;     
         if (index - 1 >= 0 && this.props.roomID) {
-            console.log('Next track Suiv')
-            updateStatus(this.props.roomID, -1, this.state.tracks[index-1]._id, 1, this.state.tracks[index]._id)
+            updateStatus(this.props.roomID, this.state.tracks[index]._id)
         }
         this.setState({currentTracksID:index});
         this.props.updateParentState({currentTracksID:index});
         DZ.Event.subscribe('tracklist_changed', e => {
-            DZ.player.next();
-            DZ.player.seek(0);
+            console.log("itoto keke")
+            DZ.player.playTracks(this.state.tracks, this.state.currentTracksID)
+            // DZ.player.next();
+            // DZ.player.seek(0);
         })
     }
     prevTrack = () => {
@@ -156,15 +184,7 @@ export default class Player extends Component {
         if (index < 0)
             return ;
         if (index + 1 < this.state.tracks.length  && this.props.roomID)
-        {
-            /* 
-                current Song    :  index + 1
-                current Status  : 0
-                next Song       :  index
-                next Status     : 1
-            */
-           updateStatus(this.props.roomID, 0, this.state.tracks[index+1]._id, 1, this.state.tracks[index]._id)
-        }
+           updateStatus(this.props.roomID, this.state.tracks[index]._id)
         this.setState({currentTracksID:index})
         this.props.updateParentState({currentTracksID:index})
         DZ.player.prev();

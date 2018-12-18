@@ -17,7 +17,6 @@ export default class Player extends Component {
         this.setState(value)
     }
 	render() {
-        console.log("CREATOR : ", this.props.isCreator) 
         return ( 
             <Layout.Footer className='player' style={{backgroundColor:this.props.color ? this.props.color : 'white'}}>
                 <div className='defaultComponentProperty default'> 
@@ -30,6 +29,7 @@ export default class Player extends Component {
                                     updateParentState={this.updateState} 
                                     tracks={this.props.tracks} 
                                     roomID={this.props.roomID}
+                                    currentTrack={this.props.currentTrack}
                         />
                     </div>
                     <div style={{height:'30px'}}>
