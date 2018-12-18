@@ -30,6 +30,14 @@ export default class Player extends Component {
         this.props.updateParentState({currentTracksID:getPlay})
         this.setState({tracksID:tracksID, tracks:this.props.tracks, currentTracksID:getPlay}, () => {
             DZ.player.playTracks(tracksID, getPlay)
+            this.setState({isPlaying:true})
+            console.log("[BEFORE]")
+            console.log("------------------------------------")
+            console.log("List : ", DZ.player.getTrackList())
+            console.log("Current Track :  : ", DZ.player.getCurrentTrack())
+            console.log("Current Track Index : ", DZ.player.getCurrentIndex())
+            console.log("------------------------------------")
+
             DZ.player.setVolume(50)
         });
     }
@@ -88,32 +96,36 @@ export default class Player extends Component {
             this.props.updateParentState({currentTracksID:index})
         });
         socket.on('updateScore', (tracksNew) => {
-            console.log("Socket : updateScore receive data : ", tracksNew)
+            // console.log("Socket : updateScore receive data : ", tracksNew)
 
-            console.log("[BEFORE]")
-            console.log("------------------------------------")
-            console.log("List : ", DZ.player.getTrackList())
-            console.log("Current Track :  : ", DZ.player.getCurrentTrack())
-            console.log("Current Track Index : ", DZ.player.getCurrentIndex())
-            console.log("------------------------------------")
+            // console.log("[BEFORE]")
+            // console.log("------------------------------------")
+            // console.log("List : ", DZ.player.getTrackList())
+            // console.log("Current Track :  : ", DZ.player.getCurrentTrack())
+            // console.log("Current Track Index : ", DZ.player.getCurrentIndex())
+            // console.log("------------------------------------")
 
-            let oldArray = this.state.tracks.map((track) => {
-                return track.id
-            })
+            // let oldArray = this.state.tracks.map((track) => {
+            //     return track.id
+            // })
             let indexArray = tracksNew.map((track) => {
                 return track.id
             })
-            console.log("INDEX ARRAY  :", indexArray, oldArray)
+            // console.log("INDEX ARRAY  :", indexArray, oldArray)
             
             this.setState({tracks:tracksNew})
-            this.setState({tracksID:indexArray})
+            // this.setState({tracksID:indexArray})
+            // console.log(DZ.player);
+            // DZ.player.playTracks(indexArray, this.state.currentTracksID)
             DZ.player.changeTrackOrder(indexArray)
-            console.log("[AFTER]")
-            console.log("------------------------------------")
-            console.log("List : ", DZ.player.getTrackList())
-            console.log("Current Track :  : ", DZ.player.getCurrentTrack())
-            console.log("Current Track Index : ", DZ.player.getCurrentIndex())
-            console.log("------------------------------------")
+            
+            // console.log("[AFTER]")
+            // console.log(DZ.player);
+            // console.log("------------------------------------")
+            // console.log("List : ", DZ.player.getTrackList())
+            // console.log("Current Track :  : ", DZ.player.getCurrentTrack())
+            // console.log("Current Track Index : ", DZ.player.getCurrentIndex())
+            // console.log("------------------------------------")
         });
     }
     updateState = value =>
@@ -142,8 +154,14 @@ export default class Player extends Component {
             updateStatus(this.props.roomID, this.state.tracks[index]._id)
         this.setState({currentTracksID:index});
         this.props.updateParentState({currentTracksID:index});
+        console.log(this.state.tracks)
+        DZ.player.playTracks(this.state.tracks, this.state.currentTracksID)
         DZ.player.next();
-        DZ.player.seek(0);
+            // 
+
+        console.log(this.state.currentTracksID)
+        // DZ.player.next();
+        // DZ.player.seek(0);
     }
     nextTrackSuiv = () => {
         let index = this.state.currentTracksID + 1;
@@ -155,8 +173,10 @@ export default class Player extends Component {
         this.setState({currentTracksID:index});
         this.props.updateParentState({currentTracksID:index});
         DZ.Event.subscribe('tracklist_changed', e => {
-            DZ.player.next();
-            DZ.player.seek(0);
+            console.log("itoto keke")
+            DZ.player.playTracks(this.state.tracks, this.state.currentTracksID)
+            // DZ.player.next();
+            // DZ.player.seek(0);
         })
     }
     prevTrack = () => {
