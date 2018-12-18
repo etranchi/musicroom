@@ -23,7 +23,7 @@ export default  class liveEvent extends Component {
     }
 	render() {
         const picture   = this.props.track.album.cover_medium ? this.props.track.album.cover_medium : this.props.track.album.cover_large ? this.props.track.album.cover_large : this.props.track.album.cover_small;
-        const title     = this.props.track.title_short;
+        const title     = this.props.track.title
         const artist    = this.props.track.artist.name;
         let layoutStyle = {
             border: '0.3em solid #bdbdbd',
