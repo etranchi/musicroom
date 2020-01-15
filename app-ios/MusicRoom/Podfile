@@ -10,8 +10,8 @@ target 'MusicRoom' do
   pod 'FBSDKLoginKit', '~>4.38.0'
   pod 'FacebookCore', '0.5.0'
   pod 'FacebookLogin', '0.5.0'
-  pod 'GoogleSignIn'
-  pod 'Alamofire'
+  pod 'GoogleSignIn', '4.4.0'
+  pod 'Alamofire', '4.8.0'
   pod 'Socket.IO-Client-Swift', '~> 13.3.0'
   pod 'Starscream', '<= 3.0.5'
 end
