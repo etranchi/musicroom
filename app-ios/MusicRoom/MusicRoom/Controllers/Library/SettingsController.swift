@@ -129,9 +129,9 @@ class SettingsController: UIViewController, DeezerSessionDelegate {
             let data = try? JSONSerialization.data(withJSONObject: ret, options: [])
             apiManager.updateUser(data!, completion: { (ret) in
                 if ret != nil && ret!.count > 0 {
-                    if ret["error"] == nil {
-                        ToastView.shared.short(self.view, txt_msg: "Your account has been updated", color:  UIColor(red: 40 / 255, green: 210 / 255, blue: 40 / 255, alpha: 1))
-                    }
+//                    if ret["error"] == nil {
+//                        ToastView.shared.short(self.view, txt_msg: "Your account has been updated", color:  UIColor(red: 40 / 255, green: 210 / 255, blue: 40 / 255, alpha: 1))
+//                    }
                 }
             })
         }

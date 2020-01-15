@@ -29,8 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
         
-        if ( GIDSignIn.sharedInstance().handle(url as URL, sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
-                                               annotation: options[UIApplicationOpenURLOptionsKey.annotation])){
+        if ( GIDSignIn.sharedInstance().handle(url as URL)){
             return true
         }
         return FBSDKApplicationDelegate.sharedInstance().application(app, open: url as URL, sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String, annotation: options[UIApplicationOpenURLOptionsKey.annotation])

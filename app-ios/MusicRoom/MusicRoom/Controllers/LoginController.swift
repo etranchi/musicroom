@@ -12,7 +12,7 @@ import FacebookCore
 import GoogleSignIn
 import GoogleToolboxForMac
 
-class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate ,GIDSignInUIDelegate, LoginButtonDelegate  {
+class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate , LoginButtonDelegate  {
     var googleButton : GIDSignInButton?
     var facebook : LoginButton?
     var rootController: AuthenticationController?
@@ -59,7 +59,6 @@ class LoginController: UIViewController, UITextFieldDelegate, GIDSignInDelegate 
         
         GIDSignIn.sharedInstance().clientID = "479103948820-79bl5vfu07j3u6r28ur77pj76i8apu1l.apps.googleusercontent.com"
         GIDSignIn.sharedInstance().delegate = self
-        GIDSignIn.sharedInstance().uiDelegate = self
         
         loginTF.delegate = self
         passTF.delegate = self
