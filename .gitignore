@@ -5,9 +5,3 @@ api/config/config.json
 api/package-lock.json
 api/public/
 api/logs/
-
-
-app-ios/MusicRoom/MusicRoom.xcodeproj/project.xcworkspace/xcuserdata/
-app-ios/MusicRoom/MusicRoom.xcworkspace
-app-ios/MusicRoom/Pods
-app-ios/MusicRoom/Podfile.lock
